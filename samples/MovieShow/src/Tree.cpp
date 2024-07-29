@@ -178,8 +178,9 @@ BOOL CViewTree::OnSelChanged()
 // Set the treeview styles before the window is created.
 void CViewTree::PreCreate(CREATESTRUCT& cs)
 {
-    cs.dwExStyle = WS_EX_CLIENTEDGE;
-    cs.style = TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS | TVS_EDITLABELS | TVS_FULLROWSELECT | WS_CHILD;
+    CTreeView::PreCreate(cs);
+    cs.dwExStyle |= WS_EX_CLIENTEDGE;
+    cs.style |= TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS | TVS_EDITLABELS | TVS_FULLROWSELECT;
 }
 
 // Adjusts the listview image sizes in response to window DPI changes.

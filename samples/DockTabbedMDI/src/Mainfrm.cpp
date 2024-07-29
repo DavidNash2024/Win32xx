@@ -295,7 +295,7 @@ BOOL CMainFrame::OnFileNew()
 // Adds a MDI with a list-view.
 BOOL CMainFrame::OnFileNewList()
 {
-    m_myTabbedMDI.AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
+    m_myTabbedMDI.AddMDIChild(new CViewFiles, _T("Files"), ID_MDI_FILES);
     return TRUE;
 }
 
@@ -323,7 +323,7 @@ BOOL CMainFrame::OnFileNewText()
 // Adds a MDI with a tree-view.
 BOOL CMainFrame::OnFileNewTree()
 {
-    m_myTabbedMDI.AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
+    m_myTabbedMDI.AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
     return TRUE;
 }
 
@@ -441,7 +441,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 // when the dockers are resized. The technique used here is is most
 // appropriate for a complex arrangement of dockers.  It might not suite
 // other docking applications. To support this technique the
-// WS_EX_COMPOSITED extended style has been added to each docker.
+// WS_EX_COMPOSITED extended style has been added to some view windows.
 void CMainFrame::RecalcDockLayout()
 {
     if (GetWinVersion() >= 3000)  // Windows 10 or later.

@@ -58,6 +58,13 @@ void CViewFiles::OnAttach()
     SetColumns();
     InsertItems();
     SetDPIColumnWidths();
+
+#ifndef LVS_EX_DOUBLEBUFFER
+  #define LVS_EX_DOUBLEBUFFER     0x00010000
+#endif
+
+    // Set the extended style to double buffer.
+    SetExtendedStyle(LVS_EX_DOUBLEBUFFER);
 }
 
 // Respond to a mouse click on the window
@@ -166,17 +173,6 @@ CContainFiles::CContainFiles()
     SetView(m_viewFiles);
 }
 
-// Sets the CREATESTRUCT parameters before the window is created.
-void CContainFiles::PreCreate(CREATESTRUCT& cs)
-{
-    // Call base clase to set defaults.
-    CDockContainer::PreCreate(cs);
-
-    // Add the WS_EX_COMPOSITED to reduce flicker.
-    if (GetWinVersion() >= 3000)  // Windows 10 or later.
-        cs.dwExStyle |= WS_EX_COMPOSITED;
-}
-
 // Handle the window's messages.
 LRESULT CContainFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -220,6 +216,28 @@ CDockFiles::CDockFiles()
 
     // Set the width of the splitter bar.
     SetBarWidth(8);
+}
+
+// This function overrides CDocker::RecalcDockLayout to elimate jitter
+// when the dockers are resized. The technique used here is is most
+// appropriate for a complex arrangement of dockers. It might not suite
+// other docking applications. To support this technique the
+// WS_EX_COMPOSITED extended style has been added to each docker.
+void CDockFiles::RecalcDockLayout()
+{
+    if (GetWinVersion() >= 3000)  // Windows 10 or later.
+    {
+        if (GetDockAncestor()->IsWindow())
+        {
+            GetTopmostDocker()->LockWindowUpdate();
+            CRect rc = GetTopmostDocker()->GetViewRect();
+            GetTopmostDocker()->RecalcDockChildLayout(rc);
+            GetTopmostDocker()->UnlockWindowUpdate();
+            GetTopmostDocker()->UpdateWindow();
+        }
+    }
+    else
+        CDocker::RecalcDockLayout();
 }
 
 // Handle the window's messages.

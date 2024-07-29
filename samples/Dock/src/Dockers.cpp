@@ -22,14 +22,26 @@ CDockSimple::CDockSimple()
     SetCaption (_T("Simple View - Docking"));
 }
 
-// Set the CREATESTURCT parameters before the window is created.
-void CDockSimple::PreCreate(CREATESTRUCT& cs)
+// This function overrides CDocker::RecalcDockLayout to elimate jitter
+// when the dockers are resized. The technique used here is is most
+// appropriate for a complex arrangement of dockers. It might not suite
+// other docking applications. To support this technique the
+// WS_EX_COMPOSITED extended style has been added to each docker.
+void CDockSimple::RecalcDockLayout()
 {
-    // Call base clase to set defaults.
-    CDocker::PreCreate(cs);
-
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
-        cs.dwExStyle |= WS_EX_COMPOSITED;
+    {
+        if (GetDockAncestor()->IsWindow())
+        {
+            GetTopmostDocker()->LockWindowUpdate();
+            CRect rc = GetTopmostDocker()->GetViewRect();
+            GetTopmostDocker()->RecalcDockChildLayout(rc);
+            GetTopmostDocker()->UnlockWindowUpdate();
+            GetTopmostDocker()->UpdateWindow();
+        }
+    }
+    else
+        CDocker::RecalcDockLayout();
 }
 
 // Handle the window's messages.
@@ -79,14 +91,26 @@ CDockText::CDockText()
     SetCaption(_T("Text View - Docking"));
 }
 
-// Set the CREATESTURCT parameters before the window is created.
-void CDockText::PreCreate(CREATESTRUCT& cs)
+// This function overrides CDocker::RecalcDockLayout to elimate jitter
+// when the dockers are resized. The technique used here is is most
+// appropriate for a complex arrangement of dockers. It might not suite
+// other docking applications. To support this technique the
+// WS_EX_COMPOSITED extended style has been added to each docker.
+void CDockText::RecalcDockLayout()
 {
-    // Call base clase to set defaults.
-    CDocker::PreCreate(cs);
-
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
-        cs.dwExStyle |= WS_EX_COMPOSITED;
+    {
+        if (GetDockAncestor()->IsWindow())
+        {
+            GetTopmostDocker()->LockWindowUpdate();
+            CRect rc = GetTopmostDocker()->GetViewRect();
+            GetTopmostDocker()->RecalcDockChildLayout(rc);
+            GetTopmostDocker()->UnlockWindowUpdate();
+            GetTopmostDocker()->UpdateWindow();
+        }
+    }
+    else
+        CDocker::RecalcDockLayout();
 }
 
 // Handle the window's messages.
@@ -136,14 +160,26 @@ CDockClasses::CDockClasses()
     SetCaption(_T("Class View - Docking"));
 }
 
-// Set the CREATESTURCT parameters before the window is created.
-void CDockClasses::PreCreate(CREATESTRUCT& cs)
+// This function overrides CDocker::RecalcDockLayout to elimate jitter
+// when the dockers are resized. The technique used here is is most
+// appropriate for a complex arrangement of dockers. It might not suite
+// other docking applications. To support this technique the
+// WS_EX_COMPOSITED extended style has been added to each docker.
+void CDockClasses::RecalcDockLayout()
 {
-    // Call base clase to set defaults.
-    CDocker::PreCreate(cs);
-
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
-       cs.dwExStyle |= WS_EX_COMPOSITED;
+    {
+        if (GetDockAncestor()->IsWindow())
+        {
+            GetTopmostDocker()->LockWindowUpdate();
+            CRect rc = GetTopmostDocker()->GetViewRect();
+            GetTopmostDocker()->RecalcDockChildLayout(rc);
+            GetTopmostDocker()->UnlockWindowUpdate();
+            GetTopmostDocker()->UpdateWindow();
+        }
+    }
+    else
+        CDocker::RecalcDockLayout();
 }
 
 // Handle the window's messages.
@@ -194,14 +230,26 @@ CDockFiles::CDockFiles()
     SetCaption(_T("Files View - Docking"));
 }
 
-// Set the CREATESTURCT parameters before the window is created.
-void CDockFiles::PreCreate(CREATESTRUCT& cs)
+// This function overrides CDocker::RecalcDockLayout to elimate jitter
+// when the dockers are resized. The technique used here is is most
+// appropriate for a complex arrangement of dockers. It might not suite
+// other docking applications. To support this technique the
+// WS_EX_COMPOSITED extended style has been added to each docker.
+void CDockFiles::RecalcDockLayout()
 {
-    // Call base clase to set defaults.
-    CDocker::PreCreate(cs);
-
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
-        cs.dwExStyle |= WS_EX_COMPOSITED;
+    {
+        if (GetDockAncestor()->IsWindow())
+        {
+            GetTopmostDocker()->LockWindowUpdate();
+            CRect rc = GetTopmostDocker()->GetViewRect();
+            GetTopmostDocker()->RecalcDockChildLayout(rc);
+            GetTopmostDocker()->UnlockWindowUpdate();
+            GetTopmostDocker()->UpdateWindow();
+        }
+    }
+    else
+        CDocker::RecalcDockLayout();
 }
 
 // Handle the window's messages.

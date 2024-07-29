@@ -41,7 +41,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void    OnAttach() override;
-    virtual void    OnInitialUpdate();
+    virtual void    OnInitialUpdate() override;
     virtual LRESULT OnNotify(WPARAM, LPARAM lparam) override;
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;

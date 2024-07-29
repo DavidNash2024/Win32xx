@@ -20,6 +20,7 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual void    OnAttach();
+    virtual void    PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -73,6 +74,7 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual void    OnDraw(CDC& dc);
+    virtual void    PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

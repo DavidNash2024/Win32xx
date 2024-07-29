@@ -728,8 +728,8 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
 // Sets the CREATESTRUCT parameters before the window is created.
 void CMyListView::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | LVS_AUTOARRANGE |
-            LVS_ICON | LVS_SHAREIMAGELISTS | LVS_SHOWSELALWAYS;
+    CListView::PreCreate(cs);
+    cs.style |= WS_TABSTOP | LVS_AUTOARRANGE | LVS_ICON | LVS_SHOWSELALWAYS;
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 

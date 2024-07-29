@@ -74,7 +74,7 @@ void CEdgeView::StartBrowser()
                             m_controller->put_Bounds(bounds);
 
                             // Navigate to a web site.
-                            m_webView->Navigate(L"https://www.google.com/");
+                            m_webView->Navigate(L"https://sourceforge.net/projects/win32-framework/");
                         }
                         return S_OK;
                     }).Get());

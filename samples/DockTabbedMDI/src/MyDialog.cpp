@@ -221,17 +221,6 @@ CContainDialog::CContainDialog() : m_viewDialog(IDD_MYDIALOG)
     SetTabIcon(IDI_DIALOGVIEW);
 }
 
-// Sets the CREATESTRUCT parameters before the window is created.
-void CContainDialog::PreCreate(CREATESTRUCT& cs)
-{
-    // Call base clase to set defaults.
-    CDockContainer::PreCreate(cs);
-
-    // Add the WS_EX_COMPOSITED to reduce flicker.
-    if (GetWinVersion() >= 3000)  // Windows 10 or later.
-        cs.dwExStyle |= WS_EX_COMPOSITED;
-}
-
 // Handle the window's messages.
 LRESULT CContainDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -276,6 +265,28 @@ CDockDialog::CDockDialog()
 
     // Set the width of the splitter bar
     SetBarWidth(8);
+}
+
+// This function overrides CDocker::RecalcDockLayout to elimate jitter
+// when the dockers are resized. The technique used here is is most
+// appropriate for a complex arrangement of dockers.  It might not suite
+// other docking applications. To support this technique the
+// WS_EX_COMPOSITED extended style has been added to some view windows.
+void CDockDialog::RecalcDockLayout()
+{
+    if (GetWinVersion() >= 3000)  // Windows 10 or later.
+    {
+        if (GetDockAncestor()->IsWindow())
+        {
+            GetTopmostDocker()->LockWindowUpdate();
+            CRect rc = GetTopmostDocker()->GetViewRect();
+            GetTopmostDocker()->RecalcDockChildLayout(rc);
+            GetTopmostDocker()->UnlockWindowUpdate();
+            GetTopmostDocker()->UpdateWindow();
+        }
+    }
+    else
+        CDocker::RecalcDockLayout();
 }
 
 // Handle the window's messages.

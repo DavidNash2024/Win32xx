@@ -7,7 +7,7 @@
 
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1920) // >= VS2019
-  int WINAPI wWinMain (__in HINSTANCE, __in_opt HINSTANCE, __in LPWSTR, __in int)
+int WINAPI wWinMain (__in HINSTANCE, __in_opt HINSTANCE, __in LPWSTR, __in int)
 #else
 int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 #endif

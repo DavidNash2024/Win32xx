@@ -294,7 +294,8 @@ LRESULT CView::OnUpdateText()
 // Sets the CREATESTRUCT parameters for the window before it is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = LVS_REPORT | LVS_SINGLESEL | WS_CHILD;
+    CListView::PreCreate(cs);
+    cs.style |= LVS_REPORT | LVS_SINGLESEL;
 
     // The LVM_EDITLABEL style is not used. It sounds useful, but it
     // would only allow us to edit the label, not the other subitems.

@@ -21,18 +21,12 @@ public:
     CViewRect() : m_cxClientMax(0), m_cyClientMax(0) {}
     virtual ~CViewRect() {}
 
-// Set the CREATESTURCT parameters before the window is created.
-void PreCreate(CREATESTRUCT& cs)
-{
-    CWnd::PreCreate(cs);
-    cs.style |= WS_CLIPCHILDREN;
-}
-
 protected:
     // Virtual functions that override base class functions
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnDestroy();
     virtual void    OnDraw(CDC& dc);
+    virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

@@ -21,6 +21,7 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual void OnAttach();
+    void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -45,7 +46,6 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual BOOL OnCommand(WPARAM, LPARAM);
-    virtual void PreCreate(CREATESTRUCT& cs);
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -71,7 +71,8 @@ public:
     CDockClasses();
     virtual ~CDockClasses() {}
 
-private:
+protected:
+    virtual void RecalcDockLayout();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

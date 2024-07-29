@@ -258,7 +258,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 // when the dockers are resized. The technique used here is is most
 // appropriate for a complex arrangement of dockers.  It might not suite
 // other docking applications. To support this technique the
-// WS_EX_COMPOSITED extended style has been added to each dock container.
+// WS_EX_COMPOSITED extended style has been added to some view windows.
 void CMainFrame::RecalcDockLayout()
 {
     if (GetWinVersion() >= 3000)  // Windows 10 or later.

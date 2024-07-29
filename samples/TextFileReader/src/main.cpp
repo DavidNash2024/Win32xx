@@ -40,7 +40,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
       // Create and check the semaphore that limits the number of
       // simultaneously executing instances of this application
       // to m_nInstances.
-    LPCTSTR semaphoreName = _T("Win32++_CommonDialogsDemo");
+    LPCTSTR semaphoreName = _T("Win32++_TextFileReader");
     LONG     nInstances = 1; // number of allowed instances
 
     CSemaphore sf(nInstances, nInstances, semaphoreName, NULL);

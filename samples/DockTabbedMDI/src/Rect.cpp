@@ -92,6 +92,18 @@ LRESULT CViewRect::OnTimer(UINT, WPARAM, LPARAM)
     return 0;
 }
 
+// Set the CREATESTURCT parameters before the window is created.
+void CViewRect::PreCreate(CREATESTRUCT& cs)
+{
+    // Call base class to set defaults.
+    CWnd::PreCreate(cs);
+    cs.style |= WS_CLIPCHILDREN;
+
+    // Add the WS_EX_COMPOSITED to reduce flicker.
+    if (GetWinVersion() >= 3000)  // Windows 10 or later.
+        cs.dwExStyle |= WS_EX_COMPOSITED;
+}
+
 // Processes the window's window messages.
 LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {

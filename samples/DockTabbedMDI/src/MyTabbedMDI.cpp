@@ -53,14 +53,6 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int mdiChild)
     return pView;
 }
 
-// Called when the window handle (HWND) is attached to this object.
-void CMyTabbedMDI::OnAttach()
-{
-    CTabbedMDI::OnAttach();
-    if (GetWinVersion() >= 3000)  // Windows 10 or later.
-        SetExStyle(WS_EX_COMPOSITED);
-}
-
 // Called after the window is moved or resized.
 LRESULT CMyTabbedMDI::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {

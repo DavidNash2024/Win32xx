@@ -73,6 +73,16 @@ LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Set the CREATESTURCT parameters before the window is created.
+void CViewClasses::PreCreate(CREATESTRUCT& cs)
+{
+    // Call base clase to set defaults.
+    CTreeView::PreCreate(cs);
+
+    if (GetWinVersion() >= 3000)  // Windows 10 or later.
+        cs.dwExStyle |= WS_EX_COMPOSITED;
+}
+
 // Adjusts the listview image sizes in response to window DPI changes.
 void CViewClasses::SetDPIImages()
 {
@@ -168,6 +178,13 @@ void CViewFiles::OnAttach()
     SetColumns();
     InsertItems();
     SetDPIColumnWidths();
+
+#ifndef LVS_EX_DOUBLEBUFFER
+  #define LVS_EX_DOUBLEBUFFER     0x00010000
+#endif
+
+    // Set the extended style to double buffer.
+    SetExtendedStyle(LVS_EX_DOUBLEBUFFER);
 }
 
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
@@ -282,6 +299,16 @@ LRESULT CViewSimple::OnSize(UINT, WPARAM, LPARAM)
 {
     Invalidate();
     return 0;
+}
+
+// Set the CREATESTURCT parameters before the window is created.
+void CViewSimple::PreCreate(CREATESTRUCT& cs)
+{
+    // Call base clase to set defaults.
+    CWnd::PreCreate(cs);
+
+    if (GetWinVersion() >= 3000)  // Windows 10 or later.
+        cs.dwExStyle |= WS_EX_COMPOSITED;
 }
 
 // Process the window's messages.

@@ -107,10 +107,6 @@ SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MainContainer.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
@@ -140,10 +136,6 @@ SOURCE=..\src\ContainerApp.h
 # Begin Source File
 
 SOURCE=..\src\Files.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MainContainer.h
 # End Source File
 # Begin Source File
 

@@ -32,7 +32,7 @@ int CALLBACK CMyTreeView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM)
     if(FAILED(result))
         return 0;
 
-    return SCODE_CODE(GetScode(result));
+    return (short)HRESULT_CODE(result);
 }
 
 // Identifies the tree view item for the point, and calls DoItemMenu.
@@ -403,9 +403,10 @@ LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
 // Set the CREATESTRUCT parameters before the window is created.
 void CMyTreeView::PreCreate(CREATESTRUCT& cs)
 {
-    cs.dwExStyle = WS_EX_CLIENTEDGE;
-    cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |
-                    TVS_HASBUTTONS | TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS ;
+    CTreeView::PreCreate(cs);
+    cs.dwExStyle |= WS_EX_CLIENTEDGE;
+    cs.style |= WS_TABSTOP | TVS_HASLINES | TVS_HASBUTTONS | 
+        TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS ;
 }
 
 // Updates the tree view based on a selection in the list view.

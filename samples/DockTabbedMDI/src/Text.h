@@ -50,7 +50,6 @@ public:
 
 protected:
     // Virtual functions that override base class functions.
-    virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -71,6 +70,7 @@ public:
     virtual ~CDockText() {}
 
 protected:
+    virtual void RecalcDockLayout();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

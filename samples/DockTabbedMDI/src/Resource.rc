@@ -39,8 +39,8 @@ BEGIN
         MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
-        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
-        MENUITEM "New ListView",                IDM_FILE_NEWLIST
+        MENUITEM "New Classes",                 IDM_FILE_NEWTREE
+        MENUITEM "New Files",                   IDM_FILE_NEWLIST
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
@@ -73,7 +73,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
     END
 END
 
@@ -84,8 +84,8 @@ BEGIN
         MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
-        MENUITEM "New TreeView",                IDM_FILE_NEWTREE
-        MENUITEM "New ListView",                IDM_FILE_NEWLIST
+        MENUITEM "New Classes",                 IDM_FILE_NEWTREE
+        MENUITEM "New Files",                   IDM_FILE_NEWLIST
     END
 END
 

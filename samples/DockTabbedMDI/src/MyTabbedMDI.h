@@ -26,7 +26,6 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual CWnd* NewMDIChildFromID(int mdiChild);
-    virtual void OnAttach();
     virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

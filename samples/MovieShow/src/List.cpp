@@ -344,8 +344,9 @@ LRESULT CViewList::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 // Sets the CREATESTRUCT parameters prior to the window's creation.
 void CViewList::PreCreate(CREATESTRUCT& cs)
 {
-    cs.dwExStyle = WS_EX_CLIENTEDGE;
-    cs.style = LVS_SHOWSELALWAYS | WS_CHILD | LVS_ALIGNLEFT;
+    CListView::PreCreate(cs);
+    cs.dwExStyle |= WS_EX_CLIENTEDGE;
+    cs.style |= LVS_SHOWSELALWAYS | LVS_ALIGNLEFT;
 }
 
 // Configures the columns in the list view's header.
