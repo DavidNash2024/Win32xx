@@ -9,8 +9,8 @@
 using namespace Gdiplus;
 
 
-//////////////////////////////////
-// CMainFrame function definitions
+///////////////////////////////////
+// CMainFrame function definitions.
 //
 
 // Constructor.
@@ -66,7 +66,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\FrameEx"));
+    LoadRegistrySettings(L"Win32++\\FrameEx");
 
     return CFrame::Create(parent);
 }
@@ -79,7 +79,7 @@ BitmapPtr CMainFrame::LoadPngResource(UINT id)
     BitmapPtr bitmap;
     HINSTANCE instance = GetApp()->GetResourceHandle();
 
-    HRSRC resourceInfo = ::FindResource(instance, MAKEINTRESOURCE(id), _T("PNG"));
+    HRSRC resourceInfo = ::FindResource(instance, MAKEINTRESOURCE(id), L"PNG");
     if (resourceInfo != nullptr)
     {
         DWORD bufferSize = ::SizeofResource(instance, resourceInfo);
@@ -97,10 +97,10 @@ BitmapPtr CMainFrame::LoadPngResource(UINT id)
                         CGlobalLock<CHGlobal> buffer(globalMemory);
                         if (buffer != nullptr)
                         {
-                            CopyMemory(buffer, resourceData, bufferSize);
+                            memcpy(buffer, resourceData, bufferSize);
 
-                            IStream* stream;
-                            if (CreateStreamOnHGlobal(buffer, FALSE, &stream) == S_OK)
+                            IStream* stream = nullptr;;
+                            if (::CreateStreamOnHGlobal(buffer, FALSE, &stream) == S_OK)
                             {
                                 bitmap.reset(Gdiplus::Bitmap::FromStream(stream));
                                 stream->Release();
@@ -162,7 +162,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
-    // call the base class function
+    // Call the base class function.
     return CFrame::OnCreate(cs);
 }
 
@@ -198,9 +198,9 @@ BOOL CMainFrame::OnFileOpen()
     CString filter = "Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*|";
     CFileDialog fileDlg(TRUE);    // TRUE for file open
     fileDlg.SetFilter(filter);
-    fileDlg.SetDefExt(_T(".cpp"));
+    fileDlg.SetDefExt(L".cpp");
 
-    // Bring up the file open dialog retrieve the selected filename
+    // Bring up the file open dialog retrieve the selected filename.
     if (fileDlg.DoModal(*this) == IDOK)
     {
         GetDoc().FileLoad(fileDlg.GetPathName());
@@ -215,9 +215,9 @@ BOOL CMainFrame::OnFileSave()
     CString filter = "Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*|";
     CFileDialog fileDlg(FALSE);    // FALSE for file save
     fileDlg.SetFilter(filter);
-    fileDlg.SetDefExt(_T(".cpp"));
+    fileDlg.SetDefExt(L".cpp");
 
-    // Bring up the file save dialog retrieve the selected filename
+    // Bring up the file save dialog retrieve the selected filename.
     if (fileDlg.DoModal(*this) == IDOK)
     {
         GetDoc().FileStore(fileDlg.GetPathName());
@@ -233,7 +233,7 @@ BOOL CMainFrame::OnFilePreview()
     {
         m_isToolbarShown = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
 
-        // Get the device contect of the default or currently chosen printer
+        // Get the device context of the default or currently chosen printer.
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
@@ -247,21 +247,21 @@ BOOL CMainFrame::OnFilePreview()
         // Swap views
         SetView(m_preview);
 
-        // Hide the menu and toolbar
+        // Hide the menu and toolbar.
         ShowMenu(FALSE);
         ShowToolBar(FALSE);
 
-        // Update status
-        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        // Update status.
+        CString status = L"Printer: " + printDlg.GetDeviceName();
         SetStatusText(status);
     }
 
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(GetFrameMenu() != NULL);
+        ShowMenu(GetFrameMenu() != nullptr);
         ShowToolBar(m_isToolbarShown);
     }
 
@@ -277,14 +277,14 @@ BOOL CMainFrame::OnFilePrint()
     {
         if (IDOK == printdlg.DoModal(*this))
         {
-            m_view.QuickPrint(_T("Frame Sample"));
+            m_view.QuickPrint(L"Frame Sample");
         }
     }
 
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 
     return TRUE;
@@ -306,11 +306,11 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Called when the Print Preview's "Close" button is pressed.
 LRESULT CMainFrame::OnPreviewClose()
 {
-    // Swap the view
+    // Swap the view.
     SetView(m_view);
 
-    // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != NULL);
+    // Show the menu and toolbar.
+    ShowMenu(GetFrameMenu() != nullptr);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -322,7 +322,7 @@ LRESULT CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Print Now" button is pressed.
 LRESULT CMainFrame::OnPreviewPrint()
 {
-    m_view.QuickPrint(_T("Frame Sample"));
+    m_view.QuickPrint(L"Frame Sample");
     return 0;
 }
 
@@ -333,10 +333,10 @@ LRESULT CMainFrame::OnPreviewSetup()
     CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
-        // Display the print dialog
+        // Display the print dialog.
         if (printDlg.DoModal(*this) == IDOK)
         {
-            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            CString status = L"Printer: " + printDlg.GetDeviceName();
             SetStatusText(status);
         }
     }
@@ -358,12 +358,11 @@ LRESULT CMainFrame::OnPreviewSetup()
 // parameters used before the frame window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call base clase to set defaults
+    // Call base clase to set defaults.
     CFrame::PreCreate(cs);
 
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above
     // cs.dwExStyle = WS_EX_LAYOUTRTL;  // Set Right-To-Left Window Layout
-    // cs.style &= ~WS_VISIBLE;         // Remove the WS_VISIBLE style. The frame will be initially hidden.;
+    // cs.style &= ~WS_VISIBLE;         // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
 // Specifies the images for some of the menu items.
@@ -389,9 +388,9 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_SAVE  );
 
     AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
-    AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
-    AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
+    AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // Disabled button
+    AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // Disabled button
+    AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // Disabled button
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_FILE_PRINT );
@@ -446,10 +445,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -457,7 +456,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

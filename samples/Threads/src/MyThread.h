@@ -15,17 +15,17 @@ class CMyWinThread : public CWinThread
 {
 public:
     CMyWinThread(int threadNumber, HWND mainWindow);
-    virtual ~CMyWinThread();
+    virtual ~CMyWinThread() override;
     int GetThreadNumber()     { return m_threadNumber; }
     CTestWindow* GetTestWnd() { return &m_testWnd; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CMyWinThread(const CMyWinThread&);               // Disable copy construction
-    CMyWinThread& operator=(const CMyWinThread&);    // Disable assignment operator
+    CMyWinThread(const CMyWinThread&) = delete;
+    CMyWinThread& operator=(const CMyWinThread&) = delete;
 
     void CloseThread();
 

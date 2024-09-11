@@ -21,16 +21,18 @@ class CDoc : public CObject
 {
 public:
     CDoc() {}
-    virtual ~CDoc() {}
+    virtual ~CDoc() override {}
 
-    std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // returns a vector of PlotPoint data
-    void FileOpen(LPCTSTR fileName);
-    void FileSave(LPCTSTR fileName);
-    void Serialize(CArchive &ar);
+    std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // Returns a vector of PlotPoint data.
+    void FileOpen(LPCWSTR fileName);
+    void FileSave(LPCWSTR fileName);
     void StorePoint(int x, int y, bool isPenDown, COLORREF penColor);
 
+protected:
+    virtual void Serialize(CArchive& ar) override;
+
 private:
-    std::vector<PlotPoint> m_points;    // Points of lines to draw
+    std::vector<PlotPoint> m_points;    // Points of lines to draw.
 };
 
 

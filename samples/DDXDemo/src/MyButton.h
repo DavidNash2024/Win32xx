@@ -32,13 +32,13 @@ CMyButton : public CButton                                                  /*
 {
     public:
         CMyButton() {}
-        virtual ~CMyButton() {}
+        virtual ~CMyButton() override {}
 
         void DrawItem(LPDRAWITEMSTRUCT);
 
     private:
-        CMyButton(const CMyButton&);               // Disable copy construction
-        CMyButton& operator=(const CMyButton&);    // Disable assignment operator
+        CMyButton(const CMyButton&) = delete;
+        CMyButton& operator=(const CMyButton&) = delete;
 };
 
 /*----------------------------------------------------------------------------*/

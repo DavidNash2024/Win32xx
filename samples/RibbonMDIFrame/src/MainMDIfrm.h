@@ -17,7 +17,7 @@ class CMainMDIFrame : public CRibbonMDIFrame
 public:
     CMainMDIFrame();
     virtual ~CMainMDIFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual HWND Create(HWND parent = nullptr);
     COLORREF GetColorFromPicker() const;
     CDoc& GetDoc() { return m_doc; }
     IUIRibbon* GetIUIRibbon() const;
@@ -35,8 +35,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMainMDIFrame(const CMainMDIFrame&);               // Disable copy construction
-    CMainMDIFrame& operator=(const CMainMDIFrame&);    // Disable assignment operator
+    CMainMDIFrame(const CMainMDIFrame&) = delete;
+    CMainMDIFrame& operator=(const CMainMDIFrame&) = delete;
 
     // Command handlers
     void OnFileExit();

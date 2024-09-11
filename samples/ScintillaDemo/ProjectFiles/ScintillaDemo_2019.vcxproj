@@ -92,7 +92,6 @@
     <ClInclude Include="..\src\scintillaview.h" />
     <ClInclude Include="..\src\Sci_Position.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

@@ -33,15 +33,17 @@ public:
     virtual ~CEventSink() {}
 
     // IUnknown Methods
-    virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
-    virtual STDMETHODIMP_(ULONG) AddRef();
-    virtual STDMETHODIMP_(ULONG) Release();
+    virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) override;
+    virtual STDMETHODIMP_(ULONG) AddRef() override;
+    virtual STDMETHODIMP_(ULONG) Release() override;
 
     // IDispatch Methods
-    virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid);
-    virtual STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
-    virtual STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
-    virtual STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
+    virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames,
+        LCID lcid, DISPID* rgdispid) override;
+    virtual STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo) override;
+    virtual STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo) override;
+    virtual STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags,
+        DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr) override;
 };
 
 #endif // EVENTSINK_H

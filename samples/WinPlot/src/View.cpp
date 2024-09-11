@@ -46,7 +46,7 @@ void CView::CalcPoints(double xmin, double xmax)
     }
 
     // Find the first valid value.
-    std::vector<PointData>::iterator index = m_points.begin();
+    auto index = m_points.begin();
     while (index != m_points.end() && (*index).status != st_OK)
         index++;
 
@@ -56,12 +56,12 @@ void CView::CalcPoints(double xmin, double xmax)
         double ymin = (*index).y;
         double ymax = (*index).y;
 
-        for (std::vector<PointData>::iterator i = index; i != m_points.end(); ++i)
+        for (auto it = index; it != m_points.end(); ++it)
         {
-            if ((*i).status == st_OK)
+            if ((*it).status == st_OK)
             {
-                ymin = std::min(ymin, (*i).y);
-                ymax = std::max(ymax, (*i).y);
+                ymin = std::min(ymin, (*it).y);
+                ymax = std::max(ymax, (*it).y);
             }
         }
 
@@ -119,8 +119,8 @@ void CView::DoPlot(CDC& dc)
     double yoffset = (m_ymin + m_ymax) / 2;
 
     PrepareDC(dc);
-    PlotXAxis(dc, xnorm, ynorm, xoffset, yoffset);
-    PlotYAxis(dc, xnorm, ynorm, xoffset, yoffset);
+    DrawXAxis(dc, xnorm, ynorm, xoffset, yoffset);
+    DrawYAxis(dc, xnorm, ynorm, xoffset, yoffset);
     PlotFunction(dc, xnorm, ynorm, xoffset, yoffset);
     DrawLabel(dc);
 }
@@ -131,7 +131,7 @@ void CView::DrawLabel(CDC& dc)
     CFont font;
     CRect rc = GetClientRect();
     int pointSize = 4 + 2 * std::min(rc.Width(), rc.Height()) / GetWindowDpi(*this);
-    font.CreatePointFont(pointSize, _T("Candara"));
+    font.CreatePointFont(pointSize, L"Candara");
     LOGFONT lf = DpiScaleLogfont(font.GetLogFont(), pointSize);
     dc.CreateFontIndirect(lf);
 
@@ -169,7 +169,7 @@ void CView::PrepareDC(CDC& dc)
     CFont font;
     CRect rc = GetClientRect();
     int pointSize = 4 + 3*std::min(rc.Width(), rc.Height()) /(2* GetWindowDpi(*this));
-    font.CreatePointFont(pointSize, _T("Microsoft Sans Serif"));
+    font.CreatePointFont(pointSize, L"Microsoft Sans Serif");
     LOGFONT lf = DpiScaleLogfont(font.GetLogFont(), pointSize);
     dc.CreateFontIndirect(lf);
 
@@ -180,7 +180,7 @@ void CView::PrepareDC(CDC& dc)
 }
 
 // Draws the x axis, including the ticks and tick labels.
-void CView::PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
+void CView::DrawXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
 {
     CRect rc = GetClientRect();
     CSize size(rc.right, rc.bottom);
@@ -222,16 +222,17 @@ void CView::PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
         if ((x != 0) || ((ymin * ymax >= 0) && (ymin >= 0)))
         {
             CString str;
-            str.Format(_T("%g"), x);
+            str.Format(L"%g", x);
             size = dc.GetTextExtentPoint32(str);  //Determine the size of the text.
-            dc.TextOut((int)(xnorm * (x - xoffset) - size.cx / 2), (int)(ynorm * (ylinepos - yoffset - 2 * xtickheight)), str);
+            dc.TextOut((int)(xnorm * (x - xoffset) - size.cx / 2),
+                (int)(ynorm * (ylinepos - yoffset - 2 * xtickheight)), str);
         }
         x = ++xticknum * xtickgap;
     }
 }
 
 // Draws the y axis, including the ticks and tick labels.
-void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
+void CView::DrawYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
 {
     CRect rc = GetClientRect();
     CSize size(rc.right, rc.bottom);
@@ -273,9 +274,10 @@ void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
         if ((y != 0) || ((GetXMin() * GetXMax() >= 0) && (GetXMin() >= 0)))
         {
             CString str;
-            str.Format(_T("%g"), y);
+            str.Format(L"%g", y);
             size = dc.GetTextExtentPoint32(str);  //Determine the size of the text.
-            dc.TextOut((int)(xnorm * (xlinepos - xoffset - 2 * ytickwidth) - size.cx), (int)(ynorm * (y - yoffset) + size.cy / 2), str);
+            dc.TextOut((int)(xnorm * (xlinepos - xoffset - 2 * ytickwidth) - size.cx),
+                (int)(ynorm * (y - yoffset) + size.cy / 2), str);
         }
         y = ++yticknum * ytickgap;
     }
@@ -323,13 +325,13 @@ void CView::PreCreate(CREATESTRUCT& cs)
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Set the Window Class name
-    wc.lpszClassName = _T("Win32++ View");
+    wc.lpszClassName = L"Win32++ View";
 
     // Set a background brush to white
     wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
 
     // Set the default cursor
-    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
 
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
@@ -356,10 +358,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -367,7 +369,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

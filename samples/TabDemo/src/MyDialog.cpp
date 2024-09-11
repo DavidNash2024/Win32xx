@@ -17,7 +17,7 @@ CViewDialog::~CViewDialog()
 {
 }
 
-void CViewDialog::AppendText(int id, LPCTSTR text)
+void CViewDialog::AppendText(int id, LPCWSTR text)
 {
     // This function appends text to an edit control.
 
@@ -26,7 +26,7 @@ void CViewDialog::AppendText(int id, LPCTSTR text)
     if (ndx)
     {
         SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
-        SendDlgItemMessage(id, EM_REPLACESEL, 0, (LPARAM)(_T("\r\n")));
+        SendDlgItemMessage(id, EM_REPLACESEL, 0, (LPARAM)(L"\r\n"));
     }
 
     // Append text.
@@ -56,10 +56,10 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -67,7 +67,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -96,7 +96,7 @@ void CViewDialog::OnCancel()
 {
     // Suppress default handling of OnCancel.
 
-    AppendText(IDC_RICHEDIT2, _T("OnCancel called"));
+    AppendText(IDC_RICHEDIT2, L"OnCancel called");
     TRACE("OnCancel called \n");
 }
 
@@ -123,8 +123,8 @@ BOOL CViewDialog::OnInitDialog()
     AttachItem(IDC_RICHEDIT2, m_richEdit2);
 
     // Put some text in the edit boxes.
-    m_richEdit1.SetWindowText(_T("Rich Edit Window"));
-    m_richEdit2.SetWindowText(_T("Rich Edit Window"));
+    m_richEdit1.SetWindowText(L"Rich Edit Window");
+    m_richEdit2.SetWindowText(L"Rich Edit Window");
 
     // Initialize dialog resizing.
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
@@ -148,34 +148,34 @@ void CViewDialog::OnOK()
 {
     // Suppress default handling of OnOK.
 
-    AppendText(IDC_RICHEDIT2, _T("OnOK called"));
+    AppendText(IDC_RICHEDIT2, L"OnOK called");
     TRACE("OnOK called \n");
 }
 
 BOOL CViewDialog::OnButton()
 {
-    AppendText(IDC_RICHEDIT2, _T("Button Pressed"));
+    AppendText(IDC_RICHEDIT2, L"Button Pressed");
     TRACE("Button Pressed\n");
     return TRUE;
 }
 
 BOOL CViewDialog::OnCheck1()
 {
-    AppendText(IDC_RICHEDIT2, _T("Check Box 1"));
+    AppendText(IDC_RICHEDIT2, L"Check Box 1");
     TRACE("Check Box 1\n");
     return TRUE;
 }
 
 BOOL CViewDialog::OnCheck2()
 {
-    AppendText(IDC_RICHEDIT2, _T("Check Box 2"));
+    AppendText(IDC_RICHEDIT2, L"Check Box 2");
     TRACE("Check Box 2\n");
     return TRUE;
 }
 
 BOOL CViewDialog::OnCheck3()
 {
-    AppendText(IDC_RICHEDIT2, _T("Check Box 3"));
+    AppendText(IDC_RICHEDIT2, L"Check Box 3");
     TRACE("Check Box 3\n");
     return TRUE;
 }
@@ -186,7 +186,7 @@ BOOL CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 
     CString str;
     int nButton = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), nButton);
+    str.Format(L"Radio%d", nButton);
     AppendText(IDC_RICHEDIT2, str);
     TRACE(str); TRACE("\n");
 

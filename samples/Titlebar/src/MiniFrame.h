@@ -47,7 +47,7 @@ public:
                    m_aboutDialog(IDW_ABOUT),
                    m_accel(0)
               {}
-    virtual ~CMiniFrame() {}
+    virtual ~CMiniFrame() override {}
 
     // Accessors
     ButtonRects    GetButtonRects() const;
@@ -60,17 +60,17 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnDestroy();
-    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnDestroy() override;
+
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMiniFrame(const CMiniFrame&) = delete;               // Disable copy construction
-    CMiniFrame& operator=(const CMiniFrame&) = delete;    // Disable assignment operator
+    CMiniFrame(const CMiniFrame&) = delete;
+    CMiniFrame& operator=(const CMiniFrame&) = delete;
 
     void DrawBackground(CDC& dc) const;
     void DrawCloseButton(CDC& dc) const;
@@ -88,6 +88,7 @@ private:
     // Message handlers
     LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnEraseBkGnd(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
     LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCCalcSize(UINT msg, WPARAM wparam, LPARAM lparam);

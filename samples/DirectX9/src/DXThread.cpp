@@ -11,7 +11,7 @@
 //
 
 // Constructor
-CDXThread::CDXThread() : m_pView(NULL)
+CDXThread::CDXThread() : m_pView(nullptr)
 {
 }
 
@@ -31,7 +31,7 @@ BOOL CDXThread::InitInstance()
 
     // Set CDXView as this thread's window.
     m_pView = &view;
-    view.CreateEx(NULL, _T("DXView"), NULL, WS_CHILD | WS_VISIBLE, CRect(), frame, 0);
+    view.CreateEx(0, L"DXView", nullptr, WS_CHILD | WS_VISIBLE, CRect(), frame, 0);
 
     return TRUE;    // return TRUE to run the message loop
 }
@@ -39,8 +39,7 @@ BOOL CDXThread::InitInstance()
 // Here we override CWinThread::MessageLoop to accommodate the special needs of DirectX
 int CDXThread::MessageLoop()
 {
-    MSG msg;
-    ZeroMemory(&msg, sizeof(msg));
+    MSG msg{};
     while( msg.message != WM_QUIT )
     {
         if ( PeekMessage(&msg, 0, 0, 0, PM_REMOVE))

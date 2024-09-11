@@ -15,16 +15,16 @@ class CExplorerApp : public CWinApp
 {
 public:
     CExplorerApp();
-    virtual ~CExplorerApp();
+    virtual ~CExplorerApp() override;
     CMainFrame& GetMainFrame() { return m_frame; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CExplorerApp(const CExplorerApp&);               // Disable copy construction
-    CExplorerApp& operator=(const CExplorerApp&);    // Disable assignment operator
+    CExplorerApp(const CExplorerApp&) = delete;
+    CExplorerApp& operator=(const CExplorerApp&) = delete;
 
     CMainFrame m_frame;
 };

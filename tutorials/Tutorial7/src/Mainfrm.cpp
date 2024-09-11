@@ -1,7 +1,6 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+///////////////////////////////////////////////////////
+// Mainfrm.cpp  - definitions for the CMainFrame class.
 
-#include "targetver.h"
 #include "Mainfrm.h"
 #include "resource.h"
 
@@ -18,7 +17,7 @@ CMainFrame::~CMainFrame()
 {
 }
 
-// Process the messages from the Menu and Toolbar.
+// Process the messages from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     switch (LOWORD(wparam))
@@ -56,7 +55,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
-    // call the base class function
+    // Call the base class function.
     return CFrame::OnCreate(cs);
 }
 
@@ -70,53 +69,54 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnFileNew()
 {
-    ::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File New  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileOpen()
 {
-    ::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Open  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFilePrint()
 {
-    ::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Print  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileSave()
 {
-    ::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Save  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileSaveAs()
 {
-    ::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File SaveAs  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 // Initiates the Choose Color dialog.
 BOOL CMainFrame::OnPenColor()
 {
-    // array of custom colors, initialized to white
-    static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
+    // An array of custom colors, initialized to white.
+    constexpr COLORREF white = RGB(255, 255, 255);
+    static COLORREF custColors[16] = { white, white, white, white,
+                                        white, white, white, white,
+                                        white, white, white, white,
+                                        white, white, white, white };
 
     CColorDialog colorDlg;
     colorDlg.SetCustomColors(custColors);
 
-    // Initialize the Choose Color dialog
+    // Initialize the Choose Color dialog.
     if (colorDlg.DoModal(*this) == IDOK)
     {
-        // Store the custom colors in the static array
+        // Store the custom colors in the static array.
         memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
 
-        // Retrieve the chosen color
+        // Retrieve the chosen color.
         m_view.SetPenColor(colorDlg.GetColor());
     }
 

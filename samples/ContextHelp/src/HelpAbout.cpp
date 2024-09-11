@@ -13,7 +13,7 @@
 // Constructor.
 CAboutHelp::CAboutHelp() : CDialog(IDW_ABOUT)
 {
-    m_credits = _T("Use the SetCredits function to specify this dialog's text");
+    m_credits = "Use the SetCredits function to specify this dialog's text";
 }
 
 // Called before the dialog is displayed.

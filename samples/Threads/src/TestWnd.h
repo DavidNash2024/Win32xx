@@ -12,18 +12,18 @@ class CTestWindow : public CWnd
 {
 public:
     CTestWindow(int thread, HWND mainWindow);
-    virtual ~CTestWindow() {}
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CTestWindow() override {}
+    virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnClose();
-    virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnClose() override;
+    virtual void OnInitialUpdate() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CTestWindow(const CTestWindow&);               // Disable copy construction
-    CTestWindow& operator=(const CTestWindow&);    // Disable assignment operator
+    CTestWindow(const CTestWindow&) = delete;
+    CTestWindow& operator=(const CTestWindow&) = delete;
 
     int  m_threadNumber;
     HWND m_mainWindow;

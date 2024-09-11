@@ -28,7 +28,7 @@ void CDialogHolder::ShowDialog(CWnd* pFrame, unsigned char* dlgArray)
     Create();
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
-    SetWindowText(_T("Dialog Holder"));
+    SetWindowText(L"Dialog Holder");
 
     try
     {
@@ -67,7 +67,7 @@ void CDialogHolder::ShowDialog(CWnd* pFrame, unsigned char* dlgArray)
     {
         CString error = "Error reported by GetLastError:\n";
         error << e.GetErrorString();
-        MessageBox(error, _T("Failed to create dialog"), MB_OK);
+        MessageBox(error, L"Failed to create dialog", MB_OK);
     }
 }
 
@@ -84,10 +84,10 @@ LRESULT CDialogHolder::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -95,7 +95,7 @@ LRESULT CDialogHolder::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

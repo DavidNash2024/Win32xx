@@ -5,10 +5,10 @@
 #include "stdafx.h"
 
 #if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
-#pragma warning (disable : 4458) // disable warning: declaration hides class member
+#pragma warning (disable : 4458) // disable warning: declaration hides class member.
 #endif
 
-// Declare min and max for older versions of Visual Studio
+// Declare min and max for older versions of Visual Studio.
 #if defined (_MSC_VER) && (_MSC_VER < 1920) // < VS2019
 using std::min;
 using std::max;
@@ -17,15 +17,15 @@ using std::max;
 #include <gdiplus.h>
 
 #if defined(_MSC_VER) && (_MSC_VER == 1900)
-#pragma warning (default : 4458) // return warning to default
+#pragma warning (default : 4458) // return warning to default.
 #endif
 
 #include "CoverImage.h"
 
 using namespace Gdiplus;
 
-///////////////////////////////////
-// CCoverImage function definitions
+////////////////////////////////////
+// CCoverImage function definitions.
 //
 
 // Constructor.
@@ -39,9 +39,7 @@ CCoverImage::CCoverImage()
     CString className = L"CoverImage";
 
     // Register the window class for the dialog's picture control.
-    WNDCLASS wc;
-    ZeroMemory(&wc, sizeof(WNDCLASS));
-
+    WNDCLASS wc{};
     HINSTANCE instance = GetApp()->GetInstanceHandle();
     if (!::GetClassInfo(instance, className, &wc))
     {
@@ -64,7 +62,7 @@ CCoverImage::~CCoverImage()
 // Draws the cover image to the specified device context.
 void CCoverImage::DrawImage(CDC& dc)
 {
-    // Convert the image string to binary
+    // Convert the image string to binary.
     size_t  bufferSize = m_imageData.size();
     if (bufferSize > 0)
     {
@@ -79,14 +77,14 @@ void CCoverImage::DrawImage(CDC& dc)
                 VERIFY(S_OK == ::CreateStreamOnHGlobal(globalMemory, FALSE, &stream));
                 Image cover(stream);
 
-                // Draw the image
+                // Draw the image.
                 UINT width = GetClientRect().Width();
                 UINT height = GetClientRect().Height();
                 Rect destRect(0, 0, width, height);
                 Graphics graphics(dc);
                 graphics.DrawImage(&cover, destRect);
 
-                // Cleanup
+                // Cleanup.
                 stream->Release();
             }
         }
@@ -101,13 +99,13 @@ void CCoverImage::DrawImage(CDC& dc)
     }
 }
 
-// Calls OnDraw to preform painting for this custom control.
+// Calls OnDraw to perform painting for this custom control.
 LRESULT CCoverImage::OnPaint(UINT, WPARAM, LPARAM)
 {
     CPaintDC dc(*this);
     DrawImage(dc);
 
-    // No more drawing required
+    // No more drawing required.
     return 0;
 }
 
@@ -134,7 +132,7 @@ LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -145,7 +143,7 @@ LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

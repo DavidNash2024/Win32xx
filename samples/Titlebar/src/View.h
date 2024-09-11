@@ -12,17 +12,17 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView(){}
+    virtual ~CView() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDraw(CDC& dc);
-    virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual void OnInitialUpdate() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&) = delete;               // Disable copy construction
-    CView& operator=(const CView&) = delete;    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 };
 
 

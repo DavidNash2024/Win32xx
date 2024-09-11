@@ -28,7 +28,8 @@ void CView::OnDraw(CDC& dc)
 
     // Display some text in our view window.
     CRect rc = GetClientRect();
-    dc.DrawText(_T("Press the arrows to change the rebar's orientation"), -1, rc,  DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    dc.DrawText(L"Press the arrows to change the rebar's orientation",
+        -1, rc,  DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 // Called after the window is created.
@@ -56,13 +57,13 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     // take more precise control over the type of window we create.
 
     // Set the Window Class name
-    wc.lpszClassName = _T("Win32++ View");
+    wc.lpszClassName = L"Win32++ View";
 
     // Set a background brush to white
     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 
     // Set the default cursor
-    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
 
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
@@ -88,10 +89,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -99,7 +100,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

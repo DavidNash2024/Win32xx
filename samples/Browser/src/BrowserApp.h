@@ -15,14 +15,14 @@ class CBrowserApp : public CWinApp
 {
 public:
     CBrowserApp();
-    virtual ~CBrowserApp() {}
+    virtual ~CBrowserApp() override {}
 
 protected:
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CBrowserApp(const CBrowserApp&);               // Disable copy construction
-    CBrowserApp& operator=(const CBrowserApp&);    // Disable assignment operator
+    CBrowserApp(const CBrowserApp&) = delete;
+    CBrowserApp& operator=(const CBrowserApp&) = delete;
     CMainFrame m_frame;
 };
 

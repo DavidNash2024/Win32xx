@@ -20,12 +20,12 @@ CBitmap CView::CreateMaskBitmap()
 {
     BITMAP bm = m_blue.GetBitmapData();
     CBitmap mask;
-    mask.CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
+    mask.CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, nullptr);
     m_ballSize.cx = bm.bmWidth;
     m_ballSize.cy = bm.bmHeight;
 
-    CMemDC dcMem(NULL);
-    CMemDC dcMem2(NULL);
+    CMemDC dcMem(nullptr);
+    CMemDC dcMem2(nullptr);
 
     SelectObject(dcMem, m_blue);
     dcMem2.SelectObject(mask);
@@ -54,7 +54,7 @@ void CView::OnInitialUpdate()
     TRACE("View window created\n");
 
     // Start the timer
-    SetTimer(ID_TIMER, 10, NULL);
+    SetTimer(ID_TIMER, 10, nullptr);
 }
 
 // Redraws the balls in new positions when a timer event occurs.
@@ -132,13 +132,13 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     // take more precise control over the type of window we create.
 
     // Set the Window Class name
-    wc.lpszClassName = _T("Win32++ View");
+    wc.lpszClassName = L"Win32++ View";
 
     // Set a background brush to white
     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 
     // Set the default cursor
-    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
 
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
@@ -163,10 +163,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -174,7 +174,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

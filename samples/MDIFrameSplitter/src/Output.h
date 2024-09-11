@@ -16,17 +16,17 @@ class CViewOutput : public CRichEdit
 {
 public:
     CViewOutput();
-    virtual ~CViewOutput();
+    virtual ~CViewOutput() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewOutput(const CViewOutput&);               // Disable copy construction
-    CViewOutput& operator=(const CViewOutput&);    // Disable assignment operator
+    CViewOutput(const CViewOutput&) = delete;
+    CViewOutput& operator=(const CViewOutput&) = delete;
 };
 
 
@@ -37,13 +37,13 @@ class CContainOutput : public CDockContainer
 {
 public:
     CContainOutput();
-    virtual ~CContainOutput() {}
+    virtual ~CContainOutput() override {}
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 private:
-    CContainOutput(const CContainOutput&);                // Disable copy construction
-    CContainOutput& operator=(const CContainOutput&);   // Disable assignment operator
+    CContainOutput(const CContainOutput&) = delete;
+    CContainOutput& operator=(const CContainOutput&) = delete;
 
     CViewOutput m_viewOutput;
 };
@@ -56,15 +56,15 @@ class CDockOutput : public CDocker
 {
 public:
     CDockOutput();
-    virtual ~CDockOutput() {}
+    virtual ~CDockOutput() override {}
 
 protected:
-    virtual int OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockOutput(const CDockOutput&);                // Disable copy construction
-    CDockOutput& operator=(const CDockOutput&);   // Disable assignment operator
+    CDockOutput(const CDockOutput&) = delete;
+    CDockOutput& operator=(const CDockOutput&) = delete;
 
     CContainOutput m_view;
 };

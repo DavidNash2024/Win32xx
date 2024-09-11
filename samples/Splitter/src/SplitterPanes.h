@@ -15,14 +15,14 @@ class CDockText : public CDocker
 {
 public:
     CDockText();
-    virtual ~CDockText() {}
+    virtual ~CDockText() override {}
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockText(const CDockText&);               // Disable copy construction
-    CDockText& operator=(const CDockText&);    // Disable assignment operator
+    CDockText(const CDockText&) = delete;
+    CDockText& operator=(const CDockText&) = delete;
 
     CViewText m_view;
 };
@@ -35,14 +35,14 @@ class CDockTree : public CDocker
 {
 public:
     CDockTree();
-    virtual ~CDockTree() {}
+    virtual ~CDockTree() override {}
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockTree(const CDockTree&);                // Disable copy construction
-    CDockTree& operator=(const CDockTree&);   // Disable assignment operator
+    CDockTree(const CDockTree&) = delete;
+    CDockTree& operator=(const CDockTree&) = delete;
 
     CViewTree m_view;
 };
@@ -55,14 +55,14 @@ class CDockList : public CDocker
 {
 public:
     CDockList();
-    virtual ~CDockList() {}
+    virtual ~CDockList() override {}
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockList(const CDockList&);                // Disable copy construction
-    CDockList& operator=(const CDockList&);   // Disable assignment operator
+    CDockList(const CDockList&) = delete;
+    CDockList& operator=(const CDockList&) = delete;
 
     CViewList m_view;
 };

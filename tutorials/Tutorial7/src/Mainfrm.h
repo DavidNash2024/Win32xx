@@ -5,7 +5,6 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "targetver.h"
 #include "wxx_frame.h"
 #include "wxx_commondlg.h"
 #include "View.h"
@@ -19,7 +18,18 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
+    virtual ~CMainFrame() override;
+
+protected:
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+
+private:
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
+
     BOOL OnFileExit();
     BOOL OnFileNew();
     BOOL OnFileOpen();
@@ -28,18 +38,8 @@ public:
     BOOL OnFilePrint();
     BOOL OnPenColor();
 
-protected:
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
-
     CView m_view;
 };
 
-#endif //MAINFRM_H
+#endif // MAINFRM_H
 

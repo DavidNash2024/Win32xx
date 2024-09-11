@@ -16,16 +16,16 @@ class CDXThread : public CWinThread
 {
 public:
     CDXThread();
-    virtual ~CDXThread();
+    virtual ~CDXThread() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
-    virtual int MessageLoop();
+    virtual BOOL InitInstance() override;
+    virtual int MessageLoop() override;
 
 private:
-    CDXThread(const CDXThread&);               // Disable copy construction
-    CDXThread& operator=(const CDXThread&);    // Disable assignment operator
+    CDXThread(const CDXThread&) = delete;
+    CDXThread& operator=(const CDXThread&) = delete;
 
     CDXView* m_pView;
 };

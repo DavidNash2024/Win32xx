@@ -38,9 +38,9 @@ CColorChoice   : public CColorDialog                                        /*
 {
     public:
         CColorChoice();
-        virtual ~CColorChoice(){}
+        virtual ~CColorChoice() override {}
 
-        void    AddColorChoice(UINT, LPCTSTR, COLORREF);
+        void    AddColorChoice(UINT, LPCWSTR, COLORREF);
         void    ClearColorTable(){m_colorTable.clear();}
         void    InitCustomColors();
         INT_PTR DoModal(HWND owner = 0);
@@ -50,18 +50,18 @@ CColorChoice   : public CColorDialog                                        /*
         COLORREF GetTableColor(UINT id) const;
         UINT    GetTableIndex(UINT id) const;
         CString GetTableUsage(UINT id) const;
-        void    SetBoxTitle(LPCTSTR title) {m_boxTitle = title;}
+        void    SetBoxTitle(LPCWSTR title) {m_boxTitle = title;}
         void    SetTableColor(UINT id, COLORREF rgb);
-        void    SetTableUsage(UINT id, LPCTSTR s);
+        void    SetTableUsage(UINT id, LPCWSTR s);
 
     protected:
-        virtual BOOL    OnInitDialog();
+        virtual BOOL    OnInitDialog() override;
         virtual void    SetWindowTitle() const {SetWindowText(m_boxTitle);}
-        virtual void    Serialize(CArchive &ar);
+        virtual void    Serialize(CArchive &ar) override;
 
     private:
-        CColorChoice(const CColorChoice&);               // Disable copy construction
-        CColorChoice& operator=(const CColorChoice&);    // Disable assignment operator
+        CColorChoice(const CColorChoice&) = delete;
+        CColorChoice& operator=(const CColorChoice&) = delete;
 
         CListBoxDlg m_LBDlg;                 // the list box dialog
         CString     m_boxTitle;              // the color dialog box title

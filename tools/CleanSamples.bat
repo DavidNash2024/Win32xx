@@ -6,13 +6,11 @@ REM: Change the directory to the parent
 pushd ..\Samples
 
 ::Remove directories
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Borland"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Debug"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Debug_Build"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++\Debug"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++\Release"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\GNU"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Microsoft"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Release"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Release_Build"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\x64"

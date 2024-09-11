@@ -17,8 +17,8 @@ class CSplashThread : public CWinThread
 public:
     CSplashThread();
     virtual ~CSplashThread() override;
-    CSplashThread(const CSplashThread&) = delete;               // Disable copy construction
-    CSplashThread& operator=(const CSplashThread&) = delete;    // Disable assignment operator
+    CSplashThread(const CSplashThread&) = delete;
+    CSplashThread& operator=(const CSplashThread&) = delete;
 
     CSplash* GetSplash() { return &m_splash; }
     CEvent& GetSplashCreated() { return m_splashCreated; }

@@ -28,7 +28,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\Fast GDI Demo"));
+    LoadRegistrySettings(L"Win32++\\Fast GDI Demo");
 
     // Load the settings from the registry with 4 MRU entries.
     LoadRegistryMRUSettings(4);
@@ -58,7 +58,7 @@ BOOL CMainFrame::OnAdjustImage()
             ModifyBitmap(dlg.GetRed(), dlg.GetGreen(), dlg.GetBlue(), dlg.IsGray());
     }
     else
-        MessageBox(_T("Open a Bitmap file first!"), _T("Error"), MB_OK);
+        MessageBox(L"Open a Bitmap file first!", L"Error", MB_OK);
 
     return TRUE;
 }
@@ -171,7 +171,7 @@ BOOL CMainFrame::OnFileNew()
     m_view.LoadFileImage(0);
 
     // Set the caption
-    SetWindowText(_T("FastGDI"));
+    SetWindowText(L"FastGDI");
 
     return TRUE;
 }
@@ -203,7 +203,7 @@ BOOL CMainFrame::LoadFile(CString& fileName)
         m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
         // Set the caption
-        CString str = _T("FastGDI - ") + m_pathName;
+        CString str = L"FastGDI - " + m_pathName;
         SetWindowText(str);
     }
 
@@ -213,7 +213,7 @@ BOOL CMainFrame::LoadFile(CString& fileName)
 // Displays the File Open dialog, to choose a file to load.
 BOOL CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
+    CFileDialog fileDlg(TRUE, L"bmp", nullptr, OFN_FILEMUSTEXIST, L"Bitmap Files (*.bmp)\0*.bmp\0\0");
 
     if (fileDlg.DoModal(*this) == IDOK)
     {
@@ -259,7 +259,7 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM)
     m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
     // Set the caption
-    CString str = _T("FastGDI - ") + m_pathName;
+    CString str = L"FastGDI - " + m_pathName;
     SetWindowText(str);
 
     return TRUE;
@@ -291,16 +291,16 @@ BOOL CMainFrame::OnFilePreview()
         ShowToolBar(FALSE);
 
         // Update status
-        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        CString status = L"Printer: " + printDlg.GetDeviceName();
         SetStatusText(status);
     }
 
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(GetFrameMenu() != NULL);
+        ShowMenu(GetFrameMenu() != nullptr);
         ShowToolBar(m_isToolbarShown);
     }
 
@@ -318,7 +318,7 @@ BOOL CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 
     return TRUE;
@@ -334,7 +334,7 @@ BOOL CMainFrame::OnFileSave()
 // Save the bitmap to the specified file.
 BOOL CMainFrame::OnFileSaveAs()
 {
-    CFileDialog FileDlg(FALSE, _T("bmp"), NULL, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
+    CFileDialog FileDlg(FALSE, L"bmp", nullptr, 0, L"Bitmap Files (*.bmp)\0*.bmp\0\0");
 
     if (FileDlg.DoModal(*this) == IDOK)
     {
@@ -389,7 +389,7 @@ LRESULT CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != NULL);
+    ShowMenu(GetFrameMenu() != nullptr);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -425,7 +425,7 @@ LRESULT CMainFrame::OnPreviewSetup()
         // Display the print dialog
         if (printDlg.DoModal(*this) == IDOK)
         {
-            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            CString status = L"Printer: " + printDlg.GetDeviceName();
             SetStatusText(status);
         }
     }
@@ -448,7 +448,7 @@ LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     // The DPI can change when the window is moved to a different monitor.
     if (m_isDPIChanging)
     {
-        if (m_view.GetImage().GetHandle() != NULL)
+        if (m_view.GetImage().GetHandle() != nullptr)
         {
             // Adjust the frame size to fit the view.
             AdjustFrameRect(m_viewRect);
@@ -475,8 +475,11 @@ void CMainFrame::SaveFile(CString& fileName)
         CFile File;
         File.Open(fileName, OPEN_EXISTING);
 
-        if (IDYES != MessageBox(_T("File already exists. Do you wish to overwrite it?"), _T("Saving file ") + fileName, MB_YESNO | MB_ICONWARNING))
+        if (IDYES != MessageBox(L"File already exists. Do you wish to overwrite it?",
+            L"Saving file " + fileName, MB_YESNO | MB_ICONWARNING))
+        {
             doSave = false;
+        }
     }
 
     catch (const CFileException&)
@@ -489,7 +492,7 @@ void CMainFrame::SaveFile(CString& fileName)
         m_pathName = fileName;
 
         // Set the caption
-        CString Title = _T("FastGDI - ") + m_pathName;
+        CString Title = L"FastGDI - " + m_pathName;
         SetWindowText(Title);
 
         // Save the file
@@ -503,7 +506,7 @@ void CMainFrame::SaveFile(CString& fileName)
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -546,10 +549,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -557,7 +560,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

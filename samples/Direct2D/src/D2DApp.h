@@ -18,16 +18,16 @@ class CD2DApp : public CWinApp
 {
 public:
     CD2DApp();
-    virtual ~CD2DApp();
+    virtual ~CD2DApp() override;
     ID2D1Factory* GetD2DFactory() { return m_pDirect2dFactory; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CD2DApp(const CD2DApp&);               // Disable copy construction
-    CD2DApp& operator=(const CD2DApp&);    // Disable assignment operator
+    CD2DApp(const CD2DApp&) = delete;
+    CD2DApp& operator=(const CD2DApp&) = delete;
 
     HRESULT CreateDeviceIndependentResources();
 

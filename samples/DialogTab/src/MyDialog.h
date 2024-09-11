@@ -13,14 +13,14 @@ class CButtonDialog : public CDialog
 {
 public:
     CButtonDialog(UINT resID);
-    virtual ~CButtonDialog();
+    virtual ~CButtonDialog() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnOK() {}      // suppress closing dialog with the enter key
-    virtual void OnCancel() {}  // suppress closing dialog with the esc key
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual void OnOK() override {}      // suppress closing dialog with the enter key
+    virtual void OnCancel() override {}  // suppress closing dialog with the esc key
 
 private:
     CButtonDialog(const CButtonDialog&);               // Disable copy construction
@@ -47,14 +47,14 @@ class CComboBoxDialog : public CDialog
 {
 public:
     CComboBoxDialog (int resID);
-    virtual ~CComboBoxDialog();
+    virtual ~CComboBoxDialog() override;
 
 protected:
     // Virtual functions overriding base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnInitDialog();
-    virtual void OnOK() {}      // supress closing dialog with the enter key
-    virtual void OnCancel() {}  // supress closing dialog with the esc key
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnInitDialog() override;
+    virtual void OnOK() override {}      // supress closing dialog with the enter key
+    virtual void OnCancel() override {}  // supress closing dialog with the esc key
 
 private:
     CComboBoxDialog(const CComboBoxDialog&);                // Disable copy construction
@@ -73,14 +73,14 @@ class CMyDialog : public CDialog
 {
 public:
     CMyDialog(int resID);
-    virtual ~CMyDialog();
+    virtual ~CMyDialog() override;
 
 protected:
     // Virtual functions overriding base class functions
-    virtual void OnDestroy();
-    virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnOK();
+    virtual void OnDestroy() override;
+    virtual BOOL OnInitDialog() override;
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void OnOK() override;
 
 private:
     CMyDialog(const CMyDialog&);                // Disable copy construction

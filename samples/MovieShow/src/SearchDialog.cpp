@@ -6,8 +6,8 @@
 #include "SearchDialog.h"
 #include "resource.h"
 
-/////////////////////////////////////
-// CSearchDialog function definitions
+//////////////////////////////////////
+// CSearchDialog function definitions.
 //
 
 // Constructor.
@@ -34,7 +34,7 @@ INT_PTR CSearchDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -45,7 +45,7 @@ INT_PTR CSearchDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -103,7 +103,7 @@ BOOL CSearchDialog::OnInitDialog()
     return TRUE;
 }
 
-// Called when the Enter key or OK button is pressed
+// Called when the Enter key or OK button is pressed.
 void CSearchDialog::OnOK()
 {
     if (m_titleButton.GetState() & BST_CHECKED)

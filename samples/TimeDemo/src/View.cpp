@@ -157,7 +157,7 @@ Serialize(CArchive& ar)                                                     /*
     else    // recovering
     {
           // recover m_hfFont
-        LOGFONT lf = {};
+        LOGFONT lf{};
         ArchiveObject f(&lf, sizeof(LOGFONT));
         ar >> f;
         // recover view colors
@@ -227,16 +227,16 @@ SetDefaultFont()                                                            /*
     CClientDC dc(HWND_DESKTOP);
       // define default size and face
     int nDefaultFontSize = 10;
-    TCHAR lpszFaceDefault[] = _T("Courier New");
+    wchar_t lpszFaceDefault[] = L"Courier New";
       // compute the character height
     long lfHeight = -MulDiv(nDefaultFontSize,
         dc.GetDeviceCaps(LOGPIXELSY), POINTS_PER_INCH);
       // set default font characteristics
-    int nHeight = lfHeight;     // logical height of font
-    int nWidth = 0;         // logical average character width
-    int nEscapement = 0;        // angle of escapement
+    int nHeight = lfHeight;         // logical height of font
+    int nWidth = 0;                 // logical average character width
+    int nEscapement = 0;            // angle of escapement
     int nOrientation = 0;           // base-line orientation angle
-    int fnWeight = FW_REGULAR;  // font weight
+    int fnWeight = FW_REGULAR;      // font weight
     DWORD fdwItalic = 0;            // italic attribute flag
     DWORD fdwUnderline = 0;         // underline attribute flag
     DWORD fdwStrikeOut = 0;         // strikeout attribute flag
@@ -245,7 +245,7 @@ SetDefaultFont()                                                            /*
     DWORD fdwClipPrecision = 0;     // clipping precision
     DWORD fdwQuality = 0;           // output quality
     DWORD fdwPitchAndFamily = 0;    // pitch and  family
-    LPCTSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
+    LPCWSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
 
       // create the default font
     m_font.CreateFont(nHeight, nWidth, nEscapement, nOrientation,
@@ -271,7 +271,7 @@ SetDefaults()                                                               /*
 
 /*============================================================================*/
     void    CView::
-TextLineOut(CDC& dc, UINT leftcol, UINT line, LPCTSTR s) const              /*
+TextLineOut(CDC& dc, UINT leftcol, UINT line, LPCWSTR s) const              /*
 
     Output the character string s beginning at leftcol on the given line of
     the client area with device context dc, within the client rectangle rc
@@ -305,10 +305,10 @@ LRESULT CView::
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -316,7 +316,7 @@ LRESULT CView::
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

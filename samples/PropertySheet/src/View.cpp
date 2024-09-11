@@ -27,7 +27,8 @@ void CView::OnDraw(CDC& dc)
 
     // Centre some text in our view window.
     CRect rc = GetClientRect();
-    dc.DrawText(_T("Choose a Property Sheet from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    dc.DrawText(L"Choose a Property Sheet from the menu",
+        -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 // Called after the view window is created.
@@ -44,7 +45,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     // take more precise control over the window we create.
 
     // Set the Window Class name
-    cs.lpszClass = _T("View");
+    cs.lpszClass = L"View";
 
     // Set the extended style
     cs.dwExStyle = WS_EX_CLIENTEDGE;
@@ -71,10 +72,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -82,7 +83,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

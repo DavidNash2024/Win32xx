@@ -4,34 +4,34 @@
 
 #include "StdAfx.h"
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1920) // >= VS2019
-  int WINAPI WinMain (__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
-#else
-  int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
+#pragma warning( disable : 28251 )  // Ignore the annotation requirement for wWinMain.
 #endif
+
+int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
     // Displays a dialog contained in MyDLL.dll.
 
     // Load the MyDLL.dll
-    HMODULE hModule = LoadLibrary(_T("MyDLL.dll"));
-    if (hModule == NULL)
+    HMODULE hModule = LoadLibrary(L"MyDLL.dll");
+    if (hModule == nullptr)
     {
-        ::MessageBox(NULL, _T("Failed to load MyDLL.dll"), _T("Error"), MB_OK);
+        ::MessageBox(nullptr, L"Failed to load MyDLL.dll", L"Error", MB_OK);
         return 0;
     }
 
     // Create a pointer to MyDLL's ShowDialog function.
-    typedef void WINAPI SHOWDIALOG();
-    SHOWDIALOG* pfnShowDialog = (SHOWDIALOG*)::GetProcAddress(hModule, "ShowDialog");
+    using SHOWDIALOG = void (WINAPI*)();
+    SHOWDIALOG pfnShowDialog = (SHOWDIALOG)::GetProcAddress(hModule, "ShowDialog");
     assert(pfnShowDialog);
 
-    if (pfnShowDialog != NULL)
+    if (pfnShowDialog != nullptr)
     {
         // Call MyDLL's ShowDialog function.
         pfnShowDialog();
     }
     else
-        ::MessageBox(NULL, _T("Failed to run ShowDialog"), _T("Error"), MB_OK);
+        ::MessageBox(nullptr, L"Failed to run ShowDialog", L"Error", MB_OK);
 
     // We get here when the dialog is closed.
     FreeLibrary(hModule);

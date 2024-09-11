@@ -27,7 +27,7 @@
 #include "App.h"
 #include "resource.h"
 
-static const LPCTSTR registryKeyName = _T("Win32++\\DDX-DDVDemo");
+static const LPCWSTR registryKeyName = L"Win32++\\DDX-DDVDemo";
 
 /*============================================================================*/
     CMainFrame::
@@ -67,13 +67,13 @@ FeatureNotImplemented()                                                     /*
     program.
 *-----------------------------------------------------------------------------*/
 {
-    ::MessageBox(NULL, _T("This feature is not yet implemented."), _T(""),
+    ::MessageBox(nullptr, L"This feature is not yet implemented.", L"",
         MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-LoadRegistrySettings(LPCTSTR keyName)                                     /*
+LoadRegistrySettings(LPCWSTR keyName)                                     /*
 
     Load the main frame and document persistent data from the registry
     section marked by keyName. The frame values were automatically
@@ -217,14 +217,11 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
-    // call the base class function
+      // call the base class function
     int rtn = CFrame::OnCreate(cs);
 
-    if (IsReBarSupported())
-    {
-        //Set our theme colors
-        SetThemeColors();
-    }
+      //Set our theme colors
+    SetThemeColors();
 
       // show the initial document and status
     UpdateDialog(SENDTOCONTROL);
@@ -391,24 +388,20 @@ SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
     Set the colors to be used in the rebar theme.
 *-----------------------------------------------------------------------------*/
 {
-    if (IsReBarSupported())
-    {
-        ReBarTheme rt;
-        ZeroMemory(&rt, sizeof(rt));
-        rt.UseThemes    = TRUE;
-        rt.clrBkgnd1    = clrBkGnd1;
-        rt.clrBkgnd2    = clrBkGnd2;
-        rt.clrBand1     = clrBand1;
-        rt.clrBand2     = clrBand2;
-        rt.FlatStyle    = FALSE;
-        rt.BandsLeft    = TRUE;
-        rt.LockMenuBand = TRUE;
-        rt.RoundBorders = TRUE;
-        rt.ShortBands   = TRUE;
-        rt.UseLines     = TRUE;
+    ReBarTheme rt{};
+    rt.UseThemes    = TRUE;
+    rt.clrBkgnd1    = clrBkGnd1;
+    rt.clrBkgnd2    = clrBkGnd2;
+    rt.clrBand1     = clrBand1;
+    rt.clrBand2     = clrBand2;
+    rt.FlatStyle    = FALSE;
+    rt.BandsLeft    = TRUE;
+    rt.LockMenuBand = TRUE;
+    rt.RoundBorders = TRUE;
+    rt.ShortBands   = TRUE;
+    rt.UseLines     = TRUE;
 
-        SetReBarTheme(rt);
-    }
+    SetReBarTheme(rt);
 }
 
 /*============================================================================*/
@@ -445,7 +438,7 @@ void CMainFrame::
     *-----------------------------------------------------------------------------*/
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -501,10 +494,10 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -512,7 +505,7 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

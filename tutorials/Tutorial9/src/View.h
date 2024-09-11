@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 // View.h
-//  Declaration of the CView class
+//  Declaration of the CView class.
 
 #ifndef VIEW_H
 #define VIEW_H
@@ -8,8 +8,8 @@
 #include "Doc.h"
 
 
-// Message - sent to the parent (Frame) window when a file is dropped on the View window
-//   WPARAM: A pointer to the filename (LPCTSTR)
+// Message - sent to the parent (Frame) window when a file is dropped on the View window.
+//   WPARAM: A pointer to the filename (LPCWSTR)
 //   LPARAM: unused
 #define UWM_DROPFILE (WM_APP + 0x0001)
 
@@ -27,28 +27,29 @@ public:
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
     COLORREF GetPenColor() { return m_penColor; }
-    void Print(LPCTSTR docName);
-    void PrintPage(CDC& dc, int page = 1);
-    void QuickPrint(LPCTSTR docName);
     void SetPenColor(COLORREF color) { m_penColor = color; }
-
-protected:
-    virtual int OnCreate(CREATESTRUCT&);
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
 
     CMemDC Draw();
     void DrawLine(int x, int y);
+    void Print(LPCWSTR docName);
+    void PrintPage(CDC& dc, int page = 1);
+    void QuickPrint(LPCWSTR docName);
+
+protected:
+    virtual int OnCreate(CREATESTRUCT&) override;
+    virtual void OnDraw(CDC& dc) override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual void PreRegisterClass(WNDCLASS& wc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+
+private:
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
+
+    LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CDoc m_doc;
     CBrush m_brush;

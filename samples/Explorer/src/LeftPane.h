@@ -18,14 +18,14 @@ class CLeftPane : public CDocker
 {
 public:
     CLeftPane();
-    virtual ~CLeftPane() {}
+    virtual ~CLeftPane() override {}
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CLeftPane(const CLeftPane&);               // Disable copy construction
-    CLeftPane& operator=(const CLeftPane&);    // Disable assignment operator
+    CLeftPane(const CLeftPane&) = delete;
+    CLeftPane& operator=(const CLeftPane&) = delete;
 
     CMyTreeView m_view;
 };

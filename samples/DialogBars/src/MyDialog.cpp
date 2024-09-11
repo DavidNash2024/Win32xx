@@ -38,10 +38,10 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -49,7 +49,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -100,7 +100,7 @@ BOOL CMyDialog::OnInitDialog()
 // Called when the OK button or Enter key is pressed.
 void CMyDialog::OnOK()
 {
-    MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
+    MessageBox(L"OK Button Pressed.  Program will exit now.", L"Button", MB_OK);
     CDialog::OnOK();
 }
 
@@ -127,9 +127,9 @@ void CMyDialog::SetStatic(bool isSlider, int pos)
 {
     CString str;
     if (isSlider)
-        str.Format(_T("Slider Position %d"), pos);
+        str.Format(L"Slider Position %d", pos);
     else
-        str.Format(_T("Scroll Position %d"), pos);
+        str.Format(L"Scroll Position %d", pos);
 
     // Set the text in the static control
     SetDlgItemText(IDC_STATIC2, str);

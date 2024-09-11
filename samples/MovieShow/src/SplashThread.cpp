@@ -6,8 +6,8 @@
 #include "SplashThread.h"
 
 
-///////////////////////////////
-// CSplashThread function definitions
+//////////////////////////////////////
+// CSplashThread function definitions.
 //
 
 // Constructor.

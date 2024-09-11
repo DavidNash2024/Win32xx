@@ -13,12 +13,10 @@
 CWebControl::CWebControl()
 {
     // The entry for the dialog's control in resource.rc must match this name.
-    CString className = _T("WebControl");
+    CString className = "WebControl";
 
     // Register the window class
-    WNDCLASS wc;
-    ZeroMemory(&wc, sizeof(wc));
-
+    WNDCLASS wc{};
     HINSTANCE instance = GetApp()->GetInstanceHandle();
     if (!::GetClassInfo(instance, className, &wc))
     {
@@ -38,7 +36,7 @@ void CWebControl::OnInitialUpdate()
     GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
 
     // Load web page.
-    Navigate2(_T("www.google.com"));
+    Navigate2(L"www.google.com");
 }
 
 // Handle the window's messages.
@@ -54,10 +52,10 @@ LRESULT CWebControl::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << '\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -65,7 +63,7 @@ LRESULT CWebControl::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

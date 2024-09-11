@@ -27,24 +27,24 @@ CListBoxDlg : public CDialog                                                  /*
 {
     public:
         CListBoxDlg();
-        virtual ~CListBoxDlg(){}
+        virtual ~CListBoxDlg() override {}
 
-        void   AddListItem(LPCTSTR s)
+        void   AddListItem(LPCWSTR s)
                    { m_listContent.push_back(s);}
         void    ClearList(){ m_listContent.clear();}
-        void    SetBoxTitle(LPCTSTR title)
+        void    SetBoxTitle(LPCWSTR title)
                           { m_boxTitle = title;}
 
     protected:
-        virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-        virtual void    OnCancel();
-        virtual BOOL    OnInitDialog();
-        virtual void    OnOK();
+        virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM) override;
+        virtual void    OnCancel() override;
+        virtual BOOL    OnInitDialog() override;
+        virtual void    OnOK() override;
         virtual void    SetWindowTitle() const;
 
     private:
-        CListBoxDlg(const CListBoxDlg&);               // Disable copy construction
-        CListBoxDlg& operator=(const CListBoxDlg&);    // Disable assignment operator
+        CListBoxDlg(const CListBoxDlg&) = delete;
+        CListBoxDlg& operator=(const CListBoxDlg&) = delete;
 
         CListBox    m_listBox;      // the IDC_LIST_BOX control
         CString     m_boxTitle;     // the list box title

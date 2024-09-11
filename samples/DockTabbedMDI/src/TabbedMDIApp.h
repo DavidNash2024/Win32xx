@@ -16,15 +16,15 @@ class CTabbedMDIApp : public CWinApp
 {
 public:
     CTabbedMDIApp();
-    virtual ~CTabbedMDIApp();
+    virtual ~CTabbedMDIApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CTabbedMDIApp(const CTabbedMDIApp&);               // Disable copy construction
-    CTabbedMDIApp& operator=(const CTabbedMDIApp&);    // Disable assignment operator
+    CTabbedMDIApp(const CTabbedMDIApp&) = delete;
+    CTabbedMDIApp& operator=(const CTabbedMDIApp&) = delete;
 
     CMainFrame m_frame;
 };

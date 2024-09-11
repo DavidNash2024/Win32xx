@@ -6,6 +6,7 @@
 #include "MyDialog.h"
 #include "resource.h"
 
+using namespace std;
 
 /////////////////////////////////////
 // CButtonDialog function definitions
@@ -41,10 +42,10 @@ INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -52,7 +53,7 @@ INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -130,7 +131,7 @@ BOOL CButtonDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 
     CString str;
     int button = clickedID - firstID + 1;
-    str.Format(_T("Radio%d"), button);
+    str.Format(L"Radio%d", button);
     TRACE(str); TRACE("\n");
 
     return  TRUE;
@@ -179,10 +180,10 @@ INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -190,7 +191,7 @@ INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -202,9 +203,9 @@ BOOL CComboBoxDialog::OnInitDialog()
     // Put some text in the Combo Boxes
     for (int i = 0 ; i < 6 ; i++)
     {
-        SendDlgItemMessage(IDC_COMBO1, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("C Box 1")));
-        SendDlgItemMessage(IDC_COMBO2, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("C Box 2")));
-        SendDlgItemMessage(IDC_COMBO3, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("C Box 3")));
+        SendDlgItemMessage(IDC_COMBO1, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"C Box 1"));
+        SendDlgItemMessage(IDC_COMBO2, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"C Box 2"));
+        SendDlgItemMessage(IDC_COMBO3, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"C Box 3"));
     }
 
     return TRUE;
@@ -217,8 +218,8 @@ BOOL CComboBoxDialog::OnInitDialog()
 // Constructor.
 CMyDialog::CMyDialog(int resID) : CDialog(resID)
 {
-    m_pButtonDlg = NULL;
-    m_pComboDlg = NULL;
+    m_pButtonDlg = nullptr;
+    m_pComboDlg = nullptr;
 }
 
 // Destructor.
@@ -243,10 +244,10 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -254,7 +255,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -276,8 +277,8 @@ BOOL CMyDialog::OnInitDialog()
 
     AttachItem(IDC_TAB1, m_tab);
 
-    m_pButtonDlg = static_cast<CButtonDialog*>(m_tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog")));
-    m_pComboDlg = static_cast<CComboBoxDialog*>(m_tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog")));
+    m_pButtonDlg = static_cast<CButtonDialog*>(m_tab.AddTabPage(make_unique<CButtonDialog>(IDD_BUTTONS), L"Button Dialog"));
+    m_pComboDlg = static_cast<CComboBoxDialog*>(m_tab.AddTabPage(make_unique<CComboBoxDialog>(IDD_COMBOBOXES), L"ComboBox Dialog"));
     m_tab.SelectPage(0);
 
     // Add some checkmarks to buttons to the button dialog

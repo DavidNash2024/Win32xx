@@ -51,16 +51,16 @@ class CServerSocket : public CSocket
 {
 public:
     CServerSocket() { }
-    virtual ~CServerSocket() { }
+    virtual ~CServerSocket() override { }
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAccept();
-    virtual void OnReceive();
+    virtual void OnAccept() override;
+    virtual void OnReceive() override;
 
 private:
-    CServerSocket(const CServerSocket&);               // Disable copy construction
-    CServerSocket& operator=(const CServerSocket&);    // Disable assignment operator
+    CServerSocket(const CServerSocket&) = delete;
+    CServerSocket& operator=(const CServerSocket&) = delete;
 };
 
 
@@ -72,16 +72,16 @@ class CWorkerSocket : public CSocket
 {
 public:
     CWorkerSocket() { }
-    virtual ~CWorkerSocket() { }
+    virtual ~CWorkerSocket() override { }
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDisconnect();
-    virtual void OnReceive();
+    virtual void OnDisconnect() override;
+    virtual void OnReceive() override;
 
 private:
-    CWorkerSocket(const CWorkerSocket&);                // Disable copy construction
-    CWorkerSocket& operator=(const CWorkerSocket&);   // Disable assignment operator
+    CWorkerSocket(const CWorkerSocket&) = delete;
+    CWorkerSocket& operator=(const CWorkerSocket&) = delete;
 };
 
 

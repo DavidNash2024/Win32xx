@@ -13,15 +13,14 @@ namespace ShellWrapper
 
     // Retrieves the display name for the file from its pidl.
     // This is the name as it appears in Windows Explorer.
-    BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName)
+    BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPWSTR pszDisplayName)
     {
-        SHFILEINFO     sfi;
-        ZeroMemory(&sfi, sizeof(sfi));
+        SHFILEINFO sfi{};
 
         // Get the display name of the item
-        if(!::SHGetFileInfo((LPCTSTR)pidlFull, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+        if(!::SHGetFileInfo((LPCWSTR)pidlFull, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
         {
-            pszDisplayName[0] = _T('\0');
+            pszDisplayName[0] = L'\0';
             return FALSE;
         }
 
@@ -30,11 +29,11 @@ namespace ShellWrapper
     }
 
     // Retrieves the file's path name from its pidl.
-    BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName)
+    BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPWSTR pszPathName)
     {
         if (!::SHGetPathFromIDList(pidlFull, pszPathName))
         {
-            pszPathName[0] = _T('\0');
+            pszPathName[0] = L'\0';
             return FALSE;
         }
 
@@ -48,12 +47,12 @@ namespace ShellWrapper
     }
 
 
-    ///////////////////////////////////
-    //CContextMenu function definitions
+    ////////////////////////////////////
+    // CContextMenu function definitions
     //
 
     // Constructor.
-    CContextMenu::CContextMenu() : m_pIContextMenu(NULL)
+    CContextMenu::CContextMenu() : m_pIContextMenu(nullptr)
     {
     }
 
@@ -78,9 +77,9 @@ namespace ShellWrapper
         HRESULT result = 0;
         REFIID iid = IID_IContextMenu2;
 
-        IContextMenu2* pIContextMenu2 = NULL;
+        IContextMenu2* pIContextMenu2 = nullptr;
         result = m_pIContextMenu->QueryInterface(iid, (VOID**)&pIContextMenu2);
-        if (S_OK == result)
+        if (result == S_OK)
             ccm2.Attach(pIContextMenu2);
 
         return result;
@@ -99,12 +98,12 @@ namespace ShellWrapper
     }
 
 
-    ////////////////////////////////////
-    //CContextMenu2 function definitions
+    /////////////////////////////////////
+    // CContextMenu2 function definitions
     //
 
     // Constructor.
-    CContextMenu2::CContextMenu2() : m_pIContextMenu2(NULL)
+    CContextMenu2::CContextMenu2() : m_pIContextMenu2(nullptr)
     {
     }
 
@@ -140,21 +139,21 @@ namespace ShellWrapper
         if (m_pIContextMenu2)
             m_pIContextMenu2->Release();
 
-        m_pIContextMenu2 = NULL;
+        m_pIContextMenu2 = nullptr;
     }
 
 
-    ///////////////////////////////////
-    //CShellFolder function definitions
+    ////////////////////////////////////
+    // CShellFolder function definitions
     //
 
     // Constructor.
-    CShellFolder::CShellFolder() : m_pIShellFolder(NULL)
+    CShellFolder::CShellFolder() : m_pIShellFolder(nullptr)
     {
     }
 
     // Copy constructor.
-    CShellFolder::CShellFolder(const CShellFolder& source) : m_pIShellFolder(NULL)
+    CShellFolder::CShellFolder(const CShellFolder& source) : m_pIShellFolder(nullptr)
     {
         Copy(source);
     }
@@ -267,7 +266,7 @@ namespace ShellWrapper
         HRESULT result = E_POINTER;
         if (m_pIShellFolder)
         {
-            result = m_pIShellFolder->GetUIObjectOf(owner, items, pidlArray, riid, NULL, (VOID**)&ppv);
+            result = m_pIShellFolder->GetUIObjectOf(owner, items, pidlArray, riid, nullptr, (VOID**)&ppv);
             if (result == S_OK)
                 cm.Attach(ppv);
         }
@@ -308,8 +307,8 @@ namespace ShellWrapper
         HRESULT result = E_POINTER;
         if (m_pIShellFolder)
         {
-            result = m_pIShellFolder->BindToObject(pidl, NULL, riid, (VOID**)&ifolder);
-            if (S_OK == result)
+            result = m_pIShellFolder->BindToObject(pidl, nullptr, riid, (VOID**)&ifolder);
+            if (result == S_OK)
                 subFolder.Attach(ifolder);
         }
 
@@ -326,13 +325,13 @@ namespace ShellWrapper
     {
         if (m_pIShellFolder)
             m_pIShellFolder->Release();
-        m_pIShellFolder = NULL;
+        m_pIShellFolder = nullptr;
     }
 
 
-    //////////////////////////////////
-    //CEnumIDList function definitions
-    CEnumIDList::CEnumIDList() : m_pEnumIDList(NULL)
+    ///////////////////////////////////
+    // CEnumIDList function definitions
+    CEnumIDList::CEnumIDList() : m_pEnumIDList(nullptr)
     {
     }
 
@@ -342,7 +341,7 @@ namespace ShellWrapper
             m_pEnumIDList->Release();
     }
 
-    //Converts a LPENUMIDLIST to a CEnumIDList object.
+    // Converts a LPENUMIDLIST to a CEnumIDList object.
     //  The destructor will release memory allocated for the LPENUMIDLIST
     void CEnumIDList::Attach(LPENUMIDLIST EnumList)
     {
@@ -356,7 +355,7 @@ namespace ShellWrapper
         if (m_pEnumIDList)
         {
             HRESULT result = m_pEnumIDList->Next(Elements, &pidl, &ulFetched);
-            if (NOERROR == result)
+            if (result == NOERROR)
                 cpidl.Attach(pidl);
 
             if ((NOERROR != result) && (S_FALSE != result))
@@ -374,12 +373,12 @@ namespace ShellWrapper
     //
 
     // Constructor.
-    Cpidl::Cpidl() : m_pidl(NULL), m_pidlParent(NULL)
+    Cpidl::Cpidl() : m_pidl(nullptr), m_pidlParent(nullptr)
     {
     }
 
     // Copy Constructor.
-    Cpidl::Cpidl(const Cpidl& cpidlSource) : m_pidl(NULL), m_pidlParent(NULL)
+    Cpidl::Cpidl(const Cpidl& cpidlSource) : m_pidl(nullptr), m_pidlParent(nullptr)
     {
         Copy(cpidlSource);
     }
@@ -422,7 +421,7 @@ namespace ShellWrapper
         if (m_pidl)
             ::CoTaskMemFree(m_pidl);
 
-        m_pidl = NULL;
+        m_pidl = nullptr;
     }
 
     // Creates a new Cpidl object by concatenating (chaining together)
@@ -438,11 +437,11 @@ namespace ShellWrapper
     {
         Delete();
         if (!pidlRel)
-            return; // pidlRel should not be NULL
+            return; // pidlRel should not be nullptr
 
         size_t cb1 = 0;
 
-        // Calculate the size of pidlParent without the two bytes of NULL terminator.
+        // Calculate the size of pidlParent without the two bytes of nullptr terminator.
         // This size can be zero if pidlParent points to the desktop.
         if (pidlParent)
             cb1 = GetSize(pidlParent) - (2 * sizeof(BYTE));
@@ -453,7 +452,7 @@ namespace ShellWrapper
         // then copy pidlParent and pidlRel to the new list.
         m_pidl = (LPITEMIDLIST)::CoTaskMemAlloc(cb1 + cb2);
         if (!m_pidl)
-            throw CWinException(_T("Failed to allocate memory for pidl"));
+            throw CWinException(L"Failed to allocate memory for pidl");
 
         ::ZeroMemory(m_pidl, cb1 + cb2);
         if (pidlParent)
@@ -476,13 +475,13 @@ namespace ShellWrapper
         size_t cbSource;
         Delete();
 
-        if(NULL == pidlSource) return;
+        if(nullptr == pidlSource) return;
 
-        //Allocate memory for m_pidl
+        // Allocate memory for m_pidl
         cbSource = GetSize(pidlSource);
         m_pidl = (LPITEMIDLIST)::CoTaskMemAlloc(cbSource);
         if (!m_pidl)
-            throw CWinException(_T("Failed to allocate memory for pidl"));
+            throw CWinException(L"Failed to allocate memory for pidl");
 
         ::CopyMemory(m_pidl, pidlSource, cbSource);
     }
@@ -492,22 +491,22 @@ namespace ShellWrapper
     DWORD_PTR Cpidl::GetFileInfo(DWORD dwFileAttributes, SHFILEINFO& sfi, UINT uFlags)
     {
         LPITEMIDLIST pidl = m_pidl;
-        return (DWORD_PTR)::SHGetFileInfo((LPCTSTR)pidl, dwFileAttributes, &sfi, sizeof(SHFILEINFO), uFlags);
+        return (DWORD_PTR)::SHGetFileInfo((LPCWSTR)pidl, dwFileAttributes, &sfi, sizeof(SHFILEINFO), uFlags);
     }
 
     // Returns the next item in the item identifier list.
     LPITEMIDLIST Cpidl::GetNextItem(LPCITEMIDLIST pidl)
     {
         // Check for valid pidl.
-        if (NULL == pidl)
-            return NULL;
+        if (nullptr == pidl)
+            return nullptr;
 
         // Get the size of the specified item identifier.
         int cb = pidl->mkid.cb;
 
         // If the size is zero, it is the end of the list.
-        if (0 == cb)
-            return NULL;
+        if (cb == 0)
+            return nullptr;
 
         // Add cb to pidl (casting to increment by bytes).
         return (LPITEMIDLIST)(((LPBYTE)pidl) + cb);
@@ -517,19 +516,19 @@ namespace ShellWrapper
     LPITEMIDLIST Cpidl::GetParent()
     {
         // Make sure it's a valid PIDL.
-        if (NULL == m_pidl)
-            return(NULL);
+        if (nullptr == m_pidl)
+            return(nullptr);
 
         // Delete m_pidlParent
         if (m_pidlParent)
             ::CoTaskMemFree(m_pidlParent);
-        m_pidlParent = NULL;
+        m_pidlParent = nullptr;
 
         // Copy m_pidl to m_pidlParent
         UINT size = GetSize(m_pidl);
         m_pidlParent = (LPITEMIDLIST)::CoTaskMemAlloc(size);
         if (!m_pidlParent)
-            throw CWinException(_T("Failed to allocate pidlParent memory"));
+            throw CWinException(L"Failed to allocate pidlParent memory");
 
         ::CopyMemory(m_pidlParent, m_pidl, size);
 
@@ -554,7 +553,7 @@ namespace ShellWrapper
     // Stores a copy of the relative pidl obtained from a fully qualified pidl source.
     LPITEMIDLIST Cpidl::GetRelative()
     {
-        if(NULL == m_pidl) return NULL;
+        if(nullptr == m_pidl) return nullptr;
 
         LPITEMIDLIST pidlNext = m_pidl;
         LPITEMIDLIST pidlRel  = m_pidl;
@@ -582,7 +581,7 @@ namespace ShellWrapper
             pidl = GetNextItem(pidl);
         }
 
-        // Requires a 16 bit zero value for the NULL terminator
+        // Requires a 16 bit zero value for the nullptr terminator
         cbTotal += 2 * sizeof(BYTE);
 
         return cbTotal;

@@ -15,12 +15,12 @@ public:
     CWebControl();
 
 protected:
-    virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnInitialUpdate() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CWebControl(const CWebControl&);               // Disable copy construction
-    CWebControl& operator=(const CWebControl&);    // Disable assignment operator
+    CWebControl(const CWebControl&) = delete;
+    CWebControl& operator=(const CWebControl&) = delete;
 };
 
 

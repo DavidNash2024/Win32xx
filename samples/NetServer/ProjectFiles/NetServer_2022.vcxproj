@@ -90,7 +90,6 @@
     <ClInclude Include="..\src\Server.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\SvrDialog.h" />
-    <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

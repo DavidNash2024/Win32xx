@@ -33,7 +33,7 @@ Features demonstrated in this example
 * Using the Window API functions write and read to an INI file, including:
    - WritePrivateProfileString
    - GetPrivateProfileInt
-* Using a string stream to convert between an int and a TCHAR array or CString
+* Using a string stream to convert between an int and a wchar_t array or CString
    - CMainFrame::ItoT
    - CMainFrame::TtoI
 * Support for print preview.

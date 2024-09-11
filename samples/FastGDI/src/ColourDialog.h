@@ -12,7 +12,7 @@ class CColourDialog : public CDialog
 {
 public:
     CColourDialog(UINT resID, CBitmap& image);
-    virtual ~CColourDialog();
+    virtual ~CColourDialog() override;
     int  GetBlue() const   { return m_cBlue; }
     int  GetGreen() const  { return m_cGreen; }
     int  GetRed() const    { return m_cRed; }
@@ -20,14 +20,14 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual BOOL    OnInitDialog();
-    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL    OnInitDialog() override;
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CColourDialog(const CColourDialog&);               // Disable copy construction
-    CColourDialog& operator=(const CColourDialog&);    // Disable assignment operator
+    CColourDialog(const CColourDialog&) = delete;
+    CColourDialog& operator=(const CColourDialog&) = delete;
 
     void    CreateImagePreviews();
     BOOL    OnGrayScale();

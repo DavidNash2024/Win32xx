@@ -28,19 +28,19 @@ class CView : public CWnd
 
 public:
     CView();
-    virtual ~CView();
+    virtual ~CView() override;
     virtual IWebBrowser2* GetIWebBrowser2() {return m_pInetExplorer;}
-    virtual void Navigate(LPCTSTR str);
+    virtual void Navigate(LPCWSTR str);
 
 protected:
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual void OnInitialUpdate();
-    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnDestroy() override;
+    virtual void OnInitialUpdate() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
 
 private:
-    CView(const CView&);                // Disable copy construction
-    CView& operator=(const CView&);     // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     MyModule m_module;                  // Instanciates (initializes) ATL
     IWebBrowser2* m_pInetExplorer;      // pointer to IWebBrowser2

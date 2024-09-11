@@ -185,9 +185,6 @@
     <ClInclude Include="..\src\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_menumetrics.h">
       <Filter>Win32++</Filter>
     </ClInclude>

@@ -41,7 +41,7 @@ namespace Calc
     Calculator::Calculator(const CString& buffer)
         : m_status(st_ERROR), m_parse(buffer)
     {
-        m_pTree = NULL;
+        m_pTree = nullptr;
     }
 
     // Destructor.
@@ -58,7 +58,7 @@ namespace Calc
 
         // Delete the old node tree
         delete m_pTree;
-        m_pTree = NULL;
+        m_pTree = nullptr;
 
         m_status = st_OK;
         m_pTree = Expression();
@@ -70,7 +70,7 @@ namespace Calc
             m_status = st_ERROR;
             // delete the invalid tree if it exists
             delete m_pTree;
-            m_pTree = NULL;
+            m_pTree = nullptr;
         }
     }
 
@@ -181,7 +181,7 @@ namespace Calc
     // Builds the expression from nodes which are constants or variables.
     Node* Calculator::Unit()
     {
-        Node* pnode = NULL;
+        Node* pnode = nullptr;
         eToken Token = m_parse.GetToken();
 
         switch (Token)
@@ -243,7 +243,7 @@ namespace Calc
                 FunctionTable funTab;
                 CString FunctionName = m_parse.GetAlphaName();
                 PFun pFun = funTab.GetFun(FunctionName);  // pointer to the function
-                if (pFun != NULL)
+                if (pFun != nullptr)
                 {
                     m_parse.AcceptToken();
 
@@ -273,7 +273,7 @@ namespace Calc
         if (m_status == st_ERROR)
         {
             delete pnode;
-            pnode = NULL;
+            pnode = nullptr;
         }
         return pnode;
     }
@@ -320,7 +320,7 @@ namespace Calc
     {
         eToken Token;
         int Index = m_index;
-        LPCTSTR charArray = m_buffer.c_str();
+        LPCWSTR charArray = m_buffer.c_str();
 
         // Move past white space
         while (isspace(charArray[Index]))
@@ -398,8 +398,8 @@ namespace Calc
         {
         case tNumber:
         {
-            LPTSTR p;
-            LPCTSTR charArray = m_buffer.c_str();
+            LPWSTR p;
+            LPCWSTR charArray = m_buffer.c_str();
             double value = _tcstod(charArray + m_index, &p);
             if (p != charArray)
             {

@@ -13,17 +13,17 @@ class CViewClasses : public CTreeView
 {
 public:
     CViewClasses();
-    virtual ~CViewClasses();
+    virtual ~CViewClasses() override;
     void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewClasses(const CViewClasses&);               // Disable copy construction
-    CViewClasses& operator=(const CViewClasses&);    // Disable assignment operator
+    CViewClasses(const CViewClasses&) = delete;
+    CViewClasses& operator=(const CViewClasses&) = delete;
 
     // Command handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);

@@ -1,15 +1,10 @@
 ///////////////////////////////////////
 // main.cpp
 
-// VS6 requires these macros to be defined.
-#define WINVER          0x0410
-#define _WIN32_WINDOWS  0x0410
-#define _WIN32_IE       0x0401
-
 #include "wxx_wincore.h"
 
 // Note:
-//  * Add the Win32++\include  directory to project's additional include directories
+//  * Add the Win32++\include  directory to project's additional include directories.
 
 
 //////////////////////////////////////////////
@@ -18,13 +13,13 @@ class CMyWindow : public CWnd
 {
 public:
     CMyWindow() {}
-    virtual void OnDestroy() { PostQuitMessage(0); }    // Ends the program
-    virtual ~CMyWindow() {}
+    virtual void OnDestroy() override { PostQuitMessage(0); }    // End the program.
+    virtual ~CMyWindow() override {}
 };
 
 
 // WinMain is the program's entry point. The program starts here.
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
     // Start Win32++.
     CWinApp theApp;

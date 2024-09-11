@@ -13,18 +13,18 @@ class CSimpleView : public CWnd
 {
 public:
     CSimpleView();
-    virtual ~CSimpleView() {}
+    virtual ~CSimpleView() override {}
     COLORREF GetColor() { return m_color; }
     void SetColor(COLORREF color) { m_color = color; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CSimpleView(const CSimpleView&);                // Disable copy construction
-    CSimpleView& operator = (const CSimpleView&);   // Disable assignment operator
+    CSimpleView(const CSimpleView&) = delete;
+    CSimpleView& operator = (const CSimpleView&) = delete;
 
     // Message handlers
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -41,17 +41,17 @@ class CSimpleMDIChild : public CMDIChild
 {
 public:
     CSimpleMDIChild();
-    virtual ~CSimpleMDIChild();
+    virtual ~CSimpleMDIChild() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CSimpleMDIChild(const CSimpleMDIChild&);                // Disable copy construction
-    CSimpleMDIChild& operator = (const CSimpleMDIChild&);   // Disable assignment operator
+    CSimpleMDIChild(const CSimpleMDIChild&) = delete;
+    CSimpleMDIChild& operator = (const CSimpleMDIChild&) = delete;
 
     CSimpleView m_view;
     CMenu m_menu;

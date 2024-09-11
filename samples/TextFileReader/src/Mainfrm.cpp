@@ -28,7 +28,7 @@ CMainFrame() : m_xWin(0), m_yWin(0), m_cxWin(0), m_cyWin(0), m_maxMRU(0)        
       // Set m_view as the view window of the frame.
     SetView(m_view);
 
-    ZeroMemory(&m_wndPl, sizeof(WINDOWPLACEMENT));
+    m_wndPl = {};
     m_wndPl.length = sizeof(WINDOWPLACEMENT);
 }
 
@@ -156,10 +156,10 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
       // determine the availability of the archive file
     if (::_taccess(m_arcvPath, 4) != 0)
     {
-        CString msg = _T("Default values are being used on this first\n")
-            _T("startup. Your customized settings, colors, and font\n")
-            _T("will be restored in future usages.\n");
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        CString msg = L"Default values are being used on this first\n"
+            L"startup. Your customized settings, colors, and font\n"
+            L"will be restored in future usages.\n";
+        ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         return 0;
     }
@@ -177,16 +177,16 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     {
         CString text = e.GetText();
         if (!text.IsEmpty())
-            text += _T("\n");
-        CString msg = (CString)"Error restoring program's previous state.\n" +
-            text + e.GetErrorString() + _T("\n") + e.what();
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+            text += L"\n";
+        CString msg = "Error restoring program's previous state.\n" +
+            text + e.GetErrorString() + L"\n" + e.what();
+        ::MessageBox(nullptr, msg.c_str(), L"Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...) // catch all other exception events
     {
-        CString msg = _T("Program's previous state not restored.\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
+        CString msg = L"Program's previous state not restored.\n";
+        ::MessageBox(nullptr, msg.c_str(), L"Unknown Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     m_wndPl.showCmd = SW_RESTORE;
@@ -232,7 +232,7 @@ OnFileOpen()                                                                /*
 {
       // Bring up the dialog, and open the file
     CString filter = LoadString(IDS_FILE_FILTER);
-    CFileDialog fd(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filter);
+    CFileDialog fd(TRUE, nullptr, nullptr, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filter);
     if (fd.DoModal(*this) != IDOK)
         return;
 
@@ -353,16 +353,16 @@ SaveSettings()                                                              /*
     {
         CString text = e.GetText();
         if (!text.IsEmpty())
-            text += _T("\n");
-        CString msg = (CString)"Error while saving program's state.\n" + text +
-            e.GetErrorString() + _T("\n") + e.what();
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+            text += L"\n";
+        CString msg = L"Error while saving program's state.\n" + text +
+            e.GetErrorString() + L"\n" + e.what();
+        ::MessageBox(nullptr, msg.c_str(), L"Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...) // catch all other exception events
     {
-        CString msg = _T("Program's current state not saved.\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
+        CString msg = "Program's current state not saved.\n";
+        ::MessageBox(nullptr, msg.c_str(), L"Unknown Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
 }
@@ -381,7 +381,7 @@ Serialize(CArchive& ar)                                                     /*
     if (ar.IsStoring())
     {
           // save current window placement information
-        ZeroMemory(&m_wndPl, sizeof(WINDOWPLACEMENT));
+        m_wndPl = {};
         m_wndPl.length = sizeof(WINDOWPLACEMENT);
         GetWindowPlacement(m_wndPl);
         ar << w;

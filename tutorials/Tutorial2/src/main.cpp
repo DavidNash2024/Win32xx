@@ -2,12 +2,7 @@
 // main.cpp
 
 // Note:
-//  * Add the Win32++\include  directory to project's additional include directories
-
-// VS6 requires these macros to be defined.
-#define WINVER          0x0410
-#define _WIN32_WINDOWS  0x0410
-#define _WIN32_IE       0x0401
+//  * Add the Win32++\include  directory to project's additional include directories.
 
 #include "wxx_wincore.h"
 
@@ -18,8 +13,8 @@ class CView : public CWnd
 {
 public:
     CView() {}
-    virtual void OnDestroy() { PostQuitMessage(0); } // Ends the program
-    virtual ~CView() {}
+    virtual void OnDestroy() override { PostQuitMessage(0); } // End the program.
+    virtual ~CView() override {}
 };
 
 
@@ -30,8 +25,10 @@ class CSimpleApp : public CWinApp
 {
 public:
     CSimpleApp() {}
-    virtual ~CSimpleApp() {}
-    virtual BOOL InitInstance();
+    virtual ~CSimpleApp() override {}
+
+protected:
+    virtual BOOL InitInstance() override;
 
 private:
     CView m_view;
@@ -48,7 +45,7 @@ BOOL CSimpleApp::InitInstance()
 
 
 // WinMain is the program's entry point. The program starts here.
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
     // Start Win32++.
     CSimpleApp theApp;

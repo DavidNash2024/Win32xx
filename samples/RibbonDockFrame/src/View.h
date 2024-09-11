@@ -24,16 +24,16 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView();
+    virtual ~CView() override;
     void SetPenColor(COLORREF Color) { m_penColor = Color; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual int OnCreate(CREATESTRUCT&);
-    virtual void OnDraw(CDC& dc);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int OnCreate(CREATESTRUCT&) override;
+    virtual void OnDraw(CDC& dc) override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual void PreRegisterClass(WNDCLASS& wc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CView(const CView&);               // Disable copy construction

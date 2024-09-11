@@ -17,28 +17,28 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
     void UpdateToolbar();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT id);
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void SetStatusIndicators();
-    virtual void SetStatusParts();
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnClose() override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void OnInitialUpdate() override;
+    virtual void OnMenuUpdate(UINT id) override;
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+    virtual void SetStatusIndicators() override;
+    virtual void SetStatusParts() override;
+    virtual void SetupMenuIcons() override;
+    virtual void SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Static callback functions
     static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
@@ -78,16 +78,16 @@ private:
     int  AdjustForDPI(int value) const;
     void ClearContents();
     void DetermineEncoding(CFile& file);
-    int  GetTextPartWidth(LPCTSTR text) const;
-    BOOL ReadFile(LPCTSTR fileName);
+    int  GetTextPartWidth(LPCWSTR text) const;
+    BOOL ReadFile(LPCWSTR fileName);
     void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
     void SetEncoding(int encoding);
-    void SetPathName(LPCTSTR fullFileName);
+    void SetPathName(LPCWSTR fullFileName);
 
     void SetWindowTitle();
-    BOOL WriteFile(LPCTSTR fileName);
+    BOOL WriteFile(LPCWSTR fileName);
 
     // Member variables
     CRichView m_richView;

@@ -19,10 +19,8 @@
 #include <richedit.h>
 #include "resource.h"
 
-  // Registry key for saving and loading the program's persistent data, which
-  // is placed in the registry location
-  // "Software\\" + LPCTSTR FRAME_REGISTRY_KEY + "\\Frame Settings"
-static const LPCTSTR FRAME_REGISTRY_KEY = _T("Win32++\\FilePrintPreview");
+  // Registry key for saving and loading the program's persistent data
+static const LPCWSTR FRAME_REGISTRY_KEY = L"Win32++\\FilePrintPreview";
   // set the allowed number of MRU items
 static const int MAXMRU = 5;
 
@@ -144,7 +142,7 @@ OnDropFiles(HDROP dropInfo)                                                 /*
     currently open is closed.
 *-----------------------------------------------------------------------------*/
 {
-    TCHAR filePath[_MAX_PATH];
+    wchar_t filePath[_MAX_PATH];
     ::DragQueryFile(dropInfo, 0, filePath, _MAX_PATH);
 
     if (ReadFile(filePath))
@@ -267,8 +265,8 @@ OnFileNew()                                                                 /*
       //Check for unsaved text
     SaveModifiedText();
       // reset the rich view object
-    m_richView.SetWindowText(_T(""));
-    SetPath(_T(""));
+    m_richView.SetWindowText(L"");
+    SetPath(L"");
     m_richView.SetFontDefaults();
     m_richView.SetModify(FALSE);
     return TRUE;
@@ -284,8 +282,8 @@ OnFileOpen()                                                                /*
 {
       // define two-part CFileDialog filter, one for text strings and another
       // for all files.
-    LPCTSTR filter = _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*||");
-    CFileDialog fileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, filter);
+    LPCWSTR filter = L"Text Files (*.txt)|*.txt|All Files (*.*)|*.*||";
+    CFileDialog fileDlg(TRUE, L"txt", nullptr, OFN_FILEMUSTEXIST, filter);
       // open the dialog and get the path
     if (fileDlg.DoModal(*this) == IDOK)
     {
@@ -337,8 +335,8 @@ OnFilePrint(HWND parent)                                                    /*
     catch (const CWinException& /* e */)
     {
           // no default printer chosen
-        MessageBox(_T("Unable to display print dialog"),
-            _T("Print Failed"), MB_OK);
+        MessageBox(L"Unable to display print dialog",
+            L"Print Failed", MB_OK);
         return FALSE;
     }
     return TRUE;
@@ -370,8 +368,8 @@ OnFilePrintSetup(HWND parent)                                               /*
     catch (const CWinException& /* e */)
     {
           // No default printer
-        MessageBox(_T("Unable to display print dialog"),
-            _T("Print Failed"), MB_OK);
+        MessageBox(L"Unable to display print dialog",
+            L"Print Failed", MB_OK);
         return FALSE;
     }
     return TRUE;
@@ -416,8 +414,8 @@ OnFileSaveAs()                                                              /*
 {
       // define two-part CFileDialog filter, one for text strings and another
       // for all files.
-    LPCTSTR filter = _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*||");
-    CFileDialog fileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, filter);
+    LPCWSTR filter = L"Text Files (*.txt)|*.txt|All Files (*.*)|*.*||";
+    CFileDialog fileDlg(FALSE, L"txt", nullptr, OFN_OVERWRITEPROMPT, filter);
       // bring up the dialog and get the file path
     if (fileDlg.DoModal(*this) == IDOK)
     {
@@ -521,10 +519,10 @@ QuickPrint(CPrintDialog& printDlg)                                          /*
 {
     CPrintDialog dlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     HDC hPrinter = dlg.GetPrinterDC();
-    if (hPrinter == NULL)
+    if (hPrinter == nullptr)
     {
-        MessageBox(_T("Quick Print requires a printer"),_T("No Printer found"),
-            MB_ICONWARNING);
+        MessageBox(L"Quick Print requires a printer",
+            L"No Printer found", MB_ICONWARNING);
         return;
     }
     GetRichView().PrintPages(printDlg);
@@ -532,7 +530,7 @@ QuickPrint(CPrintDialog& printDlg)                                          /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-ReadFile(LPCTSTR filePath)                                                  /*
+ReadFile(LPCWSTR filePath)                                                  /*
 
     Open the filePath file as a rich edit view stream for display in
     the main window.
@@ -553,8 +551,8 @@ SaveModifiedText()                                                          /*
 {
       //Check for unsaved text
     if (m_richView.GetModify())
-        if (MessageBox(_T("Save changes to this document?"),
-            _T("Question..."), MB_YESNO | MB_ICONQUESTION) == IDYES)
+        if (MessageBox(L"Save changes to this document?",
+            L"Question...", MB_YESNO | MB_ICONQUESTION) == IDYES)
             OnFileSave();
 }
 
@@ -605,7 +603,7 @@ SetupToolBar()                                                              /*
 
 /*============================================================================*/
     void CMainFrame::
-SetPath(LPCTSTR path)                                                       /*
+SetPath(LPCWSTR path)                                                       /*
 
     Set the document path and display it in the window caption if it is non
     null. Put the app title in the caption if not.
@@ -613,13 +611,13 @@ SetPath(LPCTSTR path)                                                       /*
 {
     m_path = path;
     CString title = (m_path.IsEmpty() ?
-        _T("FilePrintPreview Sample Program") : m_path.c_str());
+        L"FilePrintPreview Sample Program" : m_path.c_str());
     SetWindowText(title);
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-WriteFile(LPCTSTR filePath)                                                 /*
+WriteFile(LPCWSTR filePath)                                                 /*
 
     Write the contents of the rich view control into the given file path.
 *-----------------------------------------------------------------------------*/
@@ -655,8 +653,8 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     {
           // Display the exception and continue.
         CString str;
-        str << e.GetText() << _T("\n") << e.GetErrorString();
-        ::MessageBox(NULL, str, _T("An exception occurred"), MB_ICONERROR);
+        str << e.GetText() << L'\n' << e.GetErrorString();
+        ::MessageBox(nullptr, str, L"An exception occurred", MB_ICONERROR);
         return 0;
     }
 }

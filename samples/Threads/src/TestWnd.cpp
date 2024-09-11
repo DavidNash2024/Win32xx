@@ -21,12 +21,12 @@ CTestWindow::CTestWindow(int thread, HWND mainWindow)
 HWND CTestWindow::Create(HWND)
 {
     CString Title;
-    Title.Format( _T("Test Window %d"), m_threadNumber );
+    Title.Format(L"Test Window %d", m_threadNumber );
     int left = 380 + 20 * m_threadNumber;
     int top = 40 + 20 * m_threadNumber;
     CRect rc(left, top, left + 300, top + 200);
     rc = DpiScaleRect(rc);
-    return CreateEx(0, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, rc, 0, 0);
+    return CreateEx(0, nullptr, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, rc, 0, 0);
 }
 
 // Called when the test window is manually closed by the user.
@@ -66,10 +66,10 @@ LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -77,7 +77,7 @@ LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

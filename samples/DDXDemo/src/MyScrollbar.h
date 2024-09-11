@@ -31,14 +31,14 @@ CMyScrollBar : public CScrollBar                                         /*
 {
     public:
         CMyScrollBar();
-        virtual ~CMyScrollBar() {}
+        virtual ~CMyScrollBar() override {}
 
         int     GetHScrollPos(UINT, WPARAM, LPARAM);
         void    SetScrollInfo(int lo, int hi, int pos, int page);
 
     private:
-        CMyScrollBar(const CMyScrollBar&);               // Disable copy construction
-        CMyScrollBar& operator=(const CMyScrollBar&);    // Disable assignment operator
+        CMyScrollBar(const CMyScrollBar&) = delete;
+        CMyScrollBar& operator=(const CMyScrollBar&) = delete;
 
         SCROLLINFO m_scrollInfo;
 };

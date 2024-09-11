@@ -19,7 +19,7 @@ CDockSimple::CDockSimple()
     // Set the width of the splitter bar.
     SetBarWidth(8);
 
-    SetCaption (_T("Simple View - Docking"));
+    SetCaption (L"Simple View - Docking");
 }
 
 // This function overrides CDocker::RecalcDockLayout to elimate jitter
@@ -58,10 +58,10 @@ LRESULT CDockSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -69,7 +69,7 @@ LRESULT CDockSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -88,7 +88,7 @@ CDockText::CDockText()
     // Set the width of the splitter bar.
     SetBarWidth(8);
 
-    SetCaption(_T("Text View - Docking"));
+    SetCaption(L"Text View - Docking");
 }
 
 // This function overrides CDocker::RecalcDockLayout to elimate jitter
@@ -127,10 +127,10 @@ LRESULT CDockText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -138,7 +138,7 @@ LRESULT CDockText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -157,7 +157,7 @@ CDockClasses::CDockClasses()
     // Set the width of the splitter bar.
     SetBarWidth(8);
 
-    SetCaption(_T("Class View - Docking"));
+    SetCaption(L"Class View - Docking");
 }
 
 // This function overrides CDocker::RecalcDockLayout to elimate jitter
@@ -196,10 +196,10 @@ LRESULT CDockClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -207,7 +207,7 @@ LRESULT CDockClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -227,7 +227,7 @@ CDockFiles::CDockFiles()
     // Set the width of the splitter bar.
     SetBarWidth(8);
 
-    SetCaption(_T("Files View - Docking"));
+    SetCaption(L"Files View - Docking");
 }
 
 // This function overrides CDocker::RecalcDockLayout to elimate jitter
@@ -266,10 +266,10 @@ LRESULT CDockFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -277,7 +277,7 @@ LRESULT CDockFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

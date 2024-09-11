@@ -1,5 +1,5 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+///////////////////////////////////////////////////////
+// Mainfrm.cpp  - definitions for the CMainFrame class.
 
 
 #include "Mainfrm.h"
@@ -19,7 +19,7 @@ CMainFrame::~CMainFrame()
 }
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message.
-void CMainFrame::LoadFile(LPCTSTR fileName)
+void CMainFrame::LoadFile(LPCWSTR fileName)
 {
     try
     {
@@ -34,12 +34,12 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
-        m_pathName = _T("");
+        m_pathName = L"";
         GetDoc().GetAllPoints().clear();
     }
 }
 
-// Process the messages from the Menu and Toolbar.
+// Process the messages from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     switch (LOWORD(wparam))
@@ -77,7 +77,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
-    // call the base class function
+    // Call the base class function.
     return CFrame::OnCreate(cs);
 }
 
@@ -86,11 +86,11 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     try
     {
-        // wparam is a pointer (LPCTSTR) to the filename
-        LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+        // wparam is a pointer (LPCWSTR) to the filename.
+        LPCWSTR fileName = reinterpret_cast<LPCWSTR>(wparam);
         assert(fileName);
 
-        // Load the file
+        // Load the file.
         LoadFile(fileName);
     }
 
@@ -116,7 +116,7 @@ BOOL CMainFrame::OnFileExit()
 BOOL CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
-    m_pathName = _T("");
+    m_pathName = L"";
     GetView().Invalidate();
     return TRUE;
 }
@@ -126,13 +126,14 @@ BOOL CMainFrame::OnFileOpen()
 {
     try
     {
-        CFileDialog fileDlg(TRUE, _T("dat"), NULL, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-        fileDlg.SetTitle(_T("Open File"));
+        CFileDialog fileDlg(TRUE, L"dat", nullptr, OFN_FILEMUSTEXIST,
+            L"Scribble Files (*.dat)\0*.dat\0\0");
+        fileDlg.SetTitle(L"Open File");
 
-        // Bring up the file open dialog retrieve the selected filename
+        // Bring up the file open dialog retrieve the selected filename.
         if (fileDlg.DoModal(*this) == IDOK)
         {
-            // Load the file
+            // Load the file.
             LoadFile(fileDlg.GetPathName());
         }
     }
@@ -153,7 +154,7 @@ BOOL CMainFrame::OnFileSave()
 {
     try
     {
-        if (m_pathName == _T(""))
+        if (m_pathName == L"")
             OnFileSaveAs();
         else
             GetDoc().FileSave(m_pathName);
@@ -173,15 +174,16 @@ BOOL CMainFrame::OnFileSaveAs()
 {
     try
     {
-        CFileDialog fileDlg(FALSE, _T("dat"), NULL, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-        fileDlg.SetTitle(_T("Save File"));
+        CFileDialog fileDlg(FALSE, L"dat", nullptr, OFN_OVERWRITEPROMPT,
+            L"Scribble Files (*.dat)\0*.dat\0\0");
+        fileDlg.SetTitle(L"Save File");
 
         // Bring up the file open dialog retrieve the selected filename.
         if (fileDlg.DoModal(*this) == IDOK)
         {
             CString fileName = fileDlg.GetPathName();
 
-            // Save the file
+            // Save the file.
             GetDoc().FileSave(fileName);
             m_pathName = fileName;
             AddMRUEntry(m_pathName);
@@ -202,8 +204,8 @@ BOOL CMainFrame::OnFilePrint()
 {
     try
     {
-        // print the view window
-        m_view.Print(_T("Scribble Output"));
+        // Print the view window.
+        m_view.Print(L"Scribble Output");
     }
 
     catch (const CException& e)
@@ -218,22 +220,23 @@ BOOL CMainFrame::OnFilePrint()
 // Initiate the Choose Color dialog to select a color.
 BOOL CMainFrame::OnPenColor()
 {
-    // array of custom colors, initialized to white
-    static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
+    // An array of custom colors, initialized to white.
+    constexpr COLORREF white = RGB(255, 255, 255);
+    static COLORREF custColors[16] = { white, white, white, white,
+                                        white, white, white, white,
+                                        white, white, white, white,
+                                        white, white, white, white };
 
     CColorDialog colorDlg;
     colorDlg.SetCustomColors(custColors);
 
-    // Initialize the Choose Color dialog
+    // Initialize the Choose Color dialog.
     if (colorDlg.DoModal(*this) == IDOK)
     {
-        // Store the custom colors in the static array
+        // Store the custom colors in the static array.
         memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
 
-        // Retrieve the chosen color
+        // Retrieve the chosen color.
         m_view.SetPenColor(colorDlg.GetColor());
     }
 
@@ -243,7 +246,7 @@ BOOL CMainFrame::OnPenColor()
 // Configures the ToolBar.
 void CMainFrame::SetupToolBar()
 {
-    // Define our toolbar buttons
+    // Define our toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );

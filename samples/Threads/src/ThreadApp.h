@@ -16,14 +16,14 @@ class CThreadApp : public CWinApp
 {
 public:
     CThreadApp();
-    virtual ~CThreadApp();
+    virtual ~CThreadApp() override;
 
 protected:
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CThreadApp(const CThreadApp&);               // Disable copy construction
-    CThreadApp& operator=(const CThreadApp&);    // Disable assignment operator
+    CThreadApp(const CThreadApp&) = delete;
+    CThreadApp& operator=(const CThreadApp&) = delete;
 
     CMainWindow m_mainWnd;
 };

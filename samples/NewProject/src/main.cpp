@@ -20,14 +20,17 @@ class CView : public CWnd
 {
 public:
     CView() {}
-    virtual ~CView() {}
-    virtual void OnDestroy() { PostQuitMessage(0); }    // Ends the program
+    virtual ~CView() override {}
+    virtual void OnDestroy() override { PostQuitMessage(0); }    // Ends the program
 };
 
 
-// We can use WinMain as the entry point for application using
-// either ANSI (char) or Unicode (wide) character sets.
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
+#pragma warning( disable : 28251 )  // Ignore the annotation requirement for wWinMain.
+#endif
+
+int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
     // Start Win32++.
     CWinApp theApp;

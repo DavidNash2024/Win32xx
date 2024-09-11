@@ -15,7 +15,7 @@
 LRESULT CMyButton::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_MOUSEMOVE Message\n");
-    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_MOUSEMOVE"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)L"WM_MOUSEMOVE");
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -23,7 +23,7 @@ LRESULT CMyButton::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_NCHITTEST Message\n");
-    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_NCHITTEST"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)L"WM_NCHITTEST");
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -31,7 +31,7 @@ LRESULT CMyButton::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_SETCURSOR Message\n");
-    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_SETCURSOR"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)L"WM_SETCURSOR");
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -39,7 +39,7 @@ LRESULT CMyButton::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_LBUTTONDOWN Message\n");
-    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_LBUTTONDOWN"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)L"WM_LBUTTONDOWN");
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -47,7 +47,7 @@ LRESULT CMyButton::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_LBUTTONUP Message\n");
-    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_LBUTTONUP"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)L"WM_LBUTTONUP");
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -55,7 +55,7 @@ LRESULT CMyButton::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_RBUTTONDOWN Message\n");
-    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_RBUTTONDOWN"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)L"WM_RBUTTONDOWN");
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -83,10 +83,10 @@ LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << '\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -94,7 +94,7 @@ LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

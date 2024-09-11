@@ -12,21 +12,21 @@ class CRichView : public CRichEdit
 {
 public:
     CRichView();
-    virtual ~CRichView(){}
+    virtual ~CRichView() override {}
     int CollatePages();
-    void DoPrint(LPCTSTR docName);
+    void DoPrint(LPCWSTR docName);
     void PrintPage(CDC& dc, int page = 1);
-    void QuickPrint(LPCTSTR docName);
+    void QuickPrint(LPCWSTR docName);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnAttach();
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnAttach() override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CRichView(const CRichView&);               // Disable copy construction
-    CRichView& operator=(const CRichView&);    // Disable assignment operator
+    CRichView(const CRichView&) = delete;
+    CRichView& operator=(const CRichView&) = delete;
 
     // Message handlers
     LRESULT OnDropFiles(UINT, WPARAM wparam, LPARAM);

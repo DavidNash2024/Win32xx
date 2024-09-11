@@ -16,16 +16,16 @@ class CTextApp : public CWinApp
 {
 public:
     CTextApp();
-    virtual ~CTextApp()  {}
+    virtual ~CTextApp() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
-    virtual BOOL OnIdle(LONG count);
+    virtual BOOL InitInstance() override;
+    virtual BOOL OnIdle(LONG count) override;
 
 private:
-    CTextApp(const CTextApp&);               // Disable copy construction
-    CTextApp& operator=(const CTextApp&);    // Disable assignment operator
+    CTextApp(const CTextApp&) = delete;
+    CTextApp& operator=(const CTextApp&) = delete;
 
     CMainFrame m_frame;
 };

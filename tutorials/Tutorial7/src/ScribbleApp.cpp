@@ -1,7 +1,6 @@
 //////////////////////////////////////
 // ScribbleApp.h
 
-#include "targetver.h"
 #include "ScribbleApp.h"
 
 // Constructor.

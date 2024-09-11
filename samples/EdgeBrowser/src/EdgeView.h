@@ -17,12 +17,12 @@ public:
     void StartBrowser();
 
 protected:
-    virtual int OnCreate(CREATESTRUCT&);
-    virtual void OnDestroy();
+    virtual int OnCreate(CREATESTRUCT&) override;
+    virtual void OnDestroy() override;
     virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnInitialUpdate();
+    virtual void OnInitialUpdate() override;
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     wil::com_ptr<ICoreWebView2Controller> m_controller;

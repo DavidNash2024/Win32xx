@@ -13,16 +13,16 @@ class CViewWeb : public CWebBrowser
 {
 public:
     CViewWeb() {}
-    virtual ~CViewWeb() {}
+    virtual ~CViewWeb() override {}
 
 protected:
     // Virtual functions that override base class functions.
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewWeb(const CViewWeb&);               // Disable copy construction
-    CViewWeb& operator=(const CViewWeb&);    // Disable assignment operator
+    CViewWeb(const CViewWeb&) = delete;
+    CViewWeb& operator=(const CViewWeb&) = delete;
 };
 
 

@@ -27,17 +27,17 @@ CApp : public CWinApp                                                       /*
 {
     public:
         CApp() {}
-        virtual ~CApp(){}
+        virtual ~CApp() override {}
 
         CString MakeAppDataPath(const CString&) const;
 
     protected:
-        virtual BOOL    InitInstance();
-        virtual BOOL    OnIdle(LONG);
+        virtual BOOL    InitInstance() override;
+        virtual BOOL    OnIdle(LONG) override;
 
     private:
-        CApp(const CApp&);               // Disable copy construction
-        CApp& operator=(const CApp&);    // Disable assignment operator
+        CApp(const CApp&) = delete;
+        CApp& operator=(const CApp&) = delete;
 
         CMainFrame  m_frame;              // the main frame object
 };

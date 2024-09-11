@@ -1,5 +1,5 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+///////////////////////////////////////////////////////
+// Mainfrm.cpp  - definitions for the CMainFrame class.
 
 
 #include "Mainfrm.h"
@@ -69,31 +69,31 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnFileNew()
 {
-    ::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File New  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileOpen()
 {
-    ::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Open  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFilePrint()
 {
-    ::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Print  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileSave()
 {
-    ::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Save  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileSaveAs()
 {
-    ::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File SaveAs  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 

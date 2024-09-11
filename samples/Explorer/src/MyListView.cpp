@@ -157,12 +157,11 @@ void CMyListView::DoBackgroundMenu(CPoint& point)
                     ccm.GetContextMenu2(m_ccm2);
 
                     idCmd = popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-                        point.x, point.y, *this, NULL);
+                        point.x, point.y, *this, nullptr);
 
                     if(idCmd)
                     {
-                        CMINVOKECOMMANDINFO  cmi;
-                        ZeroMemory(&cmi, sizeof(cmi));
+                        CMINVOKECOMMANDINFO  cmi{};
                         cmi.cbSize = sizeof(cmi);
                         cmi.hwnd = GetParent();
                         cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
@@ -196,7 +195,7 @@ void CMyListView::DoContextMenu(CPoint& point)
         // Get the selected items.
         UINT  items = GetSelectedCount();
         std::vector<int> vItems(items, 0);
-        int* pItemArray = &vItems.front();
+        int* pItemArray = vItems.data();
 
         if(pItemArray)
         {
@@ -226,8 +225,7 @@ void CMyListView::DoContextMenu(CPoint& point)
 // Typically that would open a folder or run a file.
 void CMyListView::DoDefault(int item)
 {
-    LVITEM   lvItem;
-    ZeroMemory(&lvItem, sizeof(LVITEM));
+    LVITEM lvItem{};
     lvItem.mask = LVIF_PARAM;
     lvItem.iItem = item;
 
@@ -271,8 +269,7 @@ void CMyListView::DoDefault(int item)
                             }
                             else
                             {
-                                CMINVOKECOMMANDINFO  cmi;
-                                ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
+                                CMINVOKECOMMANDINFO  cmi{};
                                 cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
                                 cmi.hwnd = GetParent();
                                 cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
@@ -295,7 +292,7 @@ void CMyListView::DoDisplay()
 
     if(m_csfCurFolder.GetIShellFolder())
     {
-        HCURSOR  hCur = ::LoadCursor(NULL, IDC_WAIT);
+        HCURSOR  hCur = ::LoadCursor(nullptr, IDC_WAIT);
         hCur = ::SetCursor(hCur);
 
         // Turn redrawing off in the ListView.
@@ -316,12 +313,11 @@ void CMyListView::DoDisplay()
 void CMyListView::DoItemMenu(LPINT pItems, UINT items, CPoint& point)
 {
     std::vector<LPCITEMIDLIST> vpidl(items);
-    LPCITEMIDLIST* pidlArray = &vpidl.front();
+    LPCITEMIDLIST* pidlArray = vpidl.data();
 
     for(UINT i = 0; i < items; ++i)
     {
-        LVITEM lvItem;
-        ZeroMemory(&lvItem, sizeof(LVITEM));
+        LVITEM lvItem{};
         lvItem.mask = LVIF_PARAM;
         lvItem.iItem = pItems[i];
         if(GetItem(lvItem))
@@ -352,12 +348,11 @@ void CMyListView::DoItemMenu(LPINT pItems, UINT items, CPoint& point)
                         ccm.GetContextMenu2(m_ccm2);
                         UINT  idCmd;
                         idCmd = popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-                                    point.x, point.y, *this, NULL);
+                                    point.x, point.y, *this, nullptr);
 
                         if(idCmd)
                         {
-                            CMINVOKECOMMANDINFO  cmi;
-                            ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
+                            CMINVOKECOMMANDINFO  cmi{};
                             cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
                             cmi.hwnd = GetParent();
                             cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
@@ -398,17 +393,18 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
         // Enumerate the item's PIDLs.
         while (S_OK == (list.Next(1, cpidlRel, fetched)) && fetched)
         {
-            LVITEM lvItem;
-            ZeroMemory(&lvItem, sizeof(lvItem));
+            LVITEM lvItem{};
 
             // Fill in the TV_ITEM structure for this item.
             lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
 
-            // Store a pointer to the ListItemData in the lParam and m_pItems.
-            ListItemDataPtr pItem(new ListItemData(cpidlParent, cpidlRel, folder));
+            // Create the ListItemDataPtr unique_ptr.
+            ListItemDataPtr pItem = std::make_unique<ListItemData>(cpidlParent, cpidlRel, folder);
+
+            // Store a pointer to the ListItemData in the lParam.
             lvItem.lParam = reinterpret_cast<LPARAM>(pItem.get());
 
-            TCHAR fileName[MAX_PATH];
+            wchar_t fileName[MAX_PATH];
             GetFullFileName(pItem->GetFullCpidl().GetPidl(), fileName);
 
             ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
@@ -416,7 +412,7 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
 
             // Retrieve the file find handle for an existing file.
-            if (lstrcmp(fileName, _T("")) != 0)
+            if (lstrcmp(fileName, L"") != 0)
             {
                 CFileFind file;
                 if (file.FindFirstFile(fileName))
@@ -427,16 +423,15 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             }
 
             // Retrieve the file type.
-            SHFILEINFO sfi;
-            ZeroMemory(&sfi, sizeof(SHFILEINFO));
+            SHFILEINFO sfi{};
             if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
             {
                 pItem->m_fileType = sfi.szTypeName;
             }
 
-            // m_pItems is a vector of smart pointers. The memory allocated by
-            // new is automatically deleted when the vector goes out of scope.
-            m_pItems.push_back(pItem);
+            // m_pItems is a vector of unique pointers. The object is
+            // automatically deleted when the vector goes out of scope.
+            m_pItems.push_back(std::move(pItem));
 
             // Text and images are done on a callback basis.
             lvItem.pszText = LPSTR_TEXTCALLBACK;
@@ -483,18 +478,18 @@ ULONGLONG CMyListView::FileTimeToULL(FILETIME ft)
 }
 
 // Retrieves the file's size and stores the text in string.
-void CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
+void CMyListView::GetFileSizeText(ULONGLONG fileSize, LPWSTR string)
 {
     // Convert the fileSize to a string using Locale information.
     CString preFormat;
-    preFormat.Format(_T("%d"), ((1023 + fileSize) >> 10));
+    preFormat.Format(L"%d", ((1023 + fileSize) >> 10));
     CString postFormat;
     const int maxSize = 31;
-    ::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, preFormat, NULL, postFormat.GetBuffer(maxSize), maxSize);
+    ::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, preFormat, nullptr, postFormat.GetBuffer(maxSize), maxSize);
     postFormat.ReleaseBuffer();
 
     // Get our decimal point character from Locale information.
-    int buffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, NULL, 0 );
+    int buffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, nullptr, 0 );
     assert(buffLen > 0);
     CString decimal;
     ::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, decimal.GetBuffer(buffLen), buffLen);
@@ -505,25 +500,23 @@ void CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
     if (pos > 0)
         postFormat = postFormat.Left(pos);
 
-    postFormat += _T(" KB");
+    postFormat += L" KB";
     StrCopy(string, postFormat, maxSize);
 }
 
 // Retrieves the file's last write time and stores the text in string.
-void CMyListView::GetLastWriteTime(FILETIME modified, LPTSTR string)
+void CMyListView::GetLastWriteTime(FILETIME modified, LPWSTR string)
 {
-    SYSTEMTIME localSysTime, utcTime;
-    FILETIME localFileTime;
-    ZeroMemory(&localSysTime, sizeof(localSysTime));
-    ZeroMemory(&utcTime, sizeof(utcTime));
-    ZeroMemory(&localFileTime, sizeof(localFileTime));
+    SYSTEMTIME localSysTime{};
+    SYSTEMTIME utcTime{};
+    FILETIME localFileTime{};
 
     // Convert the last-write time to local time.
     if (GetWinVersion() > 2501)
     {
         // For Windows Vista and later.
         ::FileTimeToSystemTime(&modified, &utcTime);
-        ::SystemTimeToTzSpecificLocalTime(NULL, &utcTime, &localSysTime);
+        ::SystemTimeToTzSpecificLocalTime(nullptr, &utcTime, &localSysTime);
     }
     else
     {
@@ -534,10 +527,10 @@ void CMyListView::GetLastWriteTime(FILETIME modified, LPTSTR string)
 
     // Convert the localSysTime into date and time text strings with regional settings.
     const int maxChars = 32;
-    TCHAR time[maxChars];
-    TCHAR date[maxChars];
-    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, NULL, date, maxChars-1);
-    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, NULL, time, maxChars-1);
+    wchar_t time[maxChars];
+    wchar_t date[maxChars];
+    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, nullptr, date, maxChars-1);
+    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, nullptr, time, maxChars-1);
 
     // Assign the date and time text strings to the string variable.
     CString dateTime;
@@ -552,8 +545,7 @@ void CMyListView::OnAttach()
     SetImageLists();
 
     // Set up the columns for report mode.
-    LVCOLUMN lvc;
-    ZeroMemory(&lvc, sizeof(LVCOLUMN));
+    LVCOLUMN lvc{};
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
     int columns = 4;   // Number of columns
     int colSizes[4] = {150, 70, 100, 120}; // Width of columns in pixels
@@ -562,7 +554,7 @@ void CMyListView::OnAttach()
     {
         CString str = LoadString(IDS_COLUMN1 + i);
         lvc.iSubItem = i;
-        lvc.pszText = const_cast<LPTSTR>(str.c_str());
+        lvc.pszText = const_cast<LPWSTR>(str.c_str());
         lvc.cx = colSizes[i];
 
         if (i == 1) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
@@ -593,8 +585,7 @@ void CMyListView::OnDestroy()
 LRESULT CMyListView::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
 {
     // Determine the required sort order.
-    HDITEM  hdrItem;
-    ZeroMemory(&hdrItem, sizeof(hdrItem));
+    HDITEM  hdrItem{};
     hdrItem.mask = HDI_FORMAT;
     int column = pnmitem->iSubItem;
     VERIFY(Header_GetItem(GetHeader(), column, &hdrItem));
@@ -619,9 +610,8 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
 
         const int maxLength = 32;
-        TCHAR text[maxLength];
-        SHFILEINFO sfi;
-        ZeroMemory(&sfi, sizeof(sfi));
+        wchar_t text[maxLength];
+        SHFILEINFO sfi{};
         bool isTimeValid = (pItem->m_fileTime.dwHighDateTime != 0 && pItem->m_fileTime.dwLowDateTime != 0);
 
         switch (pdi->item.iSubItem)
@@ -643,7 +633,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 StrCopy(pdi->item.pszText, text, maxLength);
             }
             else
-                StrCopy(pdi->item.pszText, _T(""), 1);
+                StrCopy(pdi->item.pszText, L"", 1);
         }
         break;
         case 2: // Type
@@ -663,7 +653,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 StrCopy(pdi->item.pszText, text, maxLength);
             }
             else
-                StrCopy(pdi->item.pszText, _T(""), 1);
+                StrCopy(pdi->item.pszText, L"", 1);
         }
         break;
         }
@@ -672,8 +662,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
     // Add the unselected image.
     if (pdi->item.mask & LVIF_IMAGE)
     {
-        SHFILEINFO sfi;
-        ZeroMemory(&sfi, sizeof(SHFILEINFO));
+        SHFILEINFO sfi{};
 
         // Get the unselected image for this item.
         UINT flags = SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON;
@@ -730,15 +719,14 @@ void CMyListView::PreCreate(CREATESTRUCT& cs)
 {
     CListView::PreCreate(cs);
     cs.style |= WS_TABSTOP | LVS_AUTOARRANGE | LVS_ICON | LVS_SHOWSELALWAYS;
-    cs.dwExStyle = WS_EX_CLIENTEDGE;
+    cs.dwExStyle |= WS_EX_CLIENTEDGE;
 }
 
 // Sets the up and down sort arrows in the listview's header.
 BOOL CMyListView::SetHeaderSortImage(int  columnIndex, int showArrow)
 {
     HWND    hHeader = 0;
-    HDITEM  hdrItem;
-    ZeroMemory(&hdrItem, sizeof(hdrItem));
+    HDITEM  hdrItem{};
 
     hHeader = GetHeader();
     if (hHeader)
@@ -770,14 +758,13 @@ BOOL CMyListView::SetHeaderSortImage(int  columnIndex, int showArrow)
 // Sets the image lists for the list-view control.
 void CMyListView::SetImageLists()
 {
-    SHFILEINFO  sfi;
-    ZeroMemory(&sfi, sizeof(sfi));
+    SHFILEINFO  sfi{};
 
     // Get the system image list
-    HIMAGELIST hLargeImages = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
+    HIMAGELIST hLargeImages = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(L"C:\\", 0, &sfi,
                                 sizeof(SHFILEINFO), SHGFI_SYSICONINDEX));
 
-    HIMAGELIST hSmallImages = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
+    HIMAGELIST hSmallImages = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(L"C:\\", 0, &sfi,
                                 sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
 
     SetImageList(hLargeImages, LVSIL_NORMAL);
@@ -863,10 +850,10 @@ LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -874,7 +861,7 @@ LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -893,7 +880,7 @@ CMyListView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CSh
     m_cpidlRel     = cpidlRel;
 
     m_fileSize = 0;
-    ZeroMemory(&m_fileTime, sizeof(m_fileTime));
+    m_fileTime = {};
     m_isFolder = false;
 }
 

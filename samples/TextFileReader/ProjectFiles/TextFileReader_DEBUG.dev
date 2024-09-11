@@ -1,7 +1,7 @@
 [Project]
 FileName=TextFileReader_DEBUG.dev
 Name=TextFileReader
-UnitCount=19
+UnitCount=18
 Type=0
 Ver=2
 ObjFiles=
@@ -11,8 +11,8 @@ PrivateResource=ScrollTextFile_DEBUG_private.rc
 ResourceIncludes=C:\Tausware\Win32++\include;..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-DDEBUG_@@_-D_DEBUG_@@_-g_@@_-O0_@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lws2_32_@@__@@_
+CppCompiler=-DDEBUG_@@_-D_DEBUG_@@_-g_@@_-O0_@@_-DUNICODE_@@_-D_UNICODE_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lws2_32_@@_-municode_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -51,7 +51,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit2]
-FileName=..\src\targetver.h
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -61,16 +61,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\src\View.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
@@ -80,7 +70,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=..\src\App.h
 CompileCpp=1
 Folder=Header
@@ -90,7 +80,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=..\src\Doc.h
 CompileCpp=1
 Folder=Header
@@ -100,7 +90,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=..\src\Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -110,7 +100,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=..\src\Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -120,7 +110,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=..\src\AboutBox.cpp
 CompileCpp=1
 Folder=Source
@@ -130,27 +120,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
-FileName=..\src\FontEx.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
-FileName=..\src\FontEx.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
+[Unit10]
 FileName=..\src\AboutBox.h
 CompileCpp=1
 Folder=Header
@@ -160,7 +130,27 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit16]
+FileName=..\src\FontEx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=..\src\StdAfx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
 FileName=..\src\Doc.cpp
 CompileCpp=1
 Folder=Source
@@ -170,7 +160,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit12]
 FileName=..\src\App.cpp
 CompileCpp=1
 Folder=Source
@@ -180,7 +170,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit13]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -190,8 +180,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit14]
 FileName=..\src\StdApp.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=..\src\FontEx.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -240,9 +240,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\src\View.h
+FileName=..\src\View.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -250,7 +250,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

@@ -13,16 +13,16 @@ class CViewTree : public CTreeView
 {
 public:
     CViewTree();
-    virtual ~CViewTree();
+    virtual ~CViewTree() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewTree(const CViewTree&);               // Disable copy construction
-    CViewTree& operator=(const CViewTree&);    // Disable assignment operator
+    CViewTree(const CViewTree&) = delete;
+    CViewTree& operator=(const CViewTree&) = delete;
 };
 
 
@@ -33,16 +33,16 @@ class CMDIChildTree : public CMDIChild
 {
 public:
     CMDIChildTree();
-    virtual ~CMDIChildTree();
+    virtual ~CMDIChildTree() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMDIChildTree(const CMDIChildTree&);                // Disable copy construction
-    CMDIChildTree& operator=(const CMDIChildTree&);   // Disable assignment operator
+    CMDIChildTree(const CMDIChildTree&) = delete;
+    CMDIChildTree& operator=(const CMDIChildTree&) = delete;
 
     CViewTree m_treeView;
     CMenu m_menu;

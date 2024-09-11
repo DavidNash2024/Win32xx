@@ -1,7 +1,7 @@
 [Project]
 FileName=Tutorial10.dev
 Name=Tutorial10
-UnitCount=12
+UnitCount=11
 Type=0
 Ver=2
 ObjFiles=
@@ -11,8 +11,8 @@ PrivateResource=Tutorial10_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D NDEBUG_@@_
-Linker=-lComctl32_@@_
+CppCompiler=-D NDEBUG_@@_-DUNICODE_@@_-D_UNICODE_@@_
+Linker=-lComctl32_@@_-lole32_@@_-municode_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=3
-CompilerSettings=0000000100000000000000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -140,9 +140,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\src\targetver.h
+FileName=..\src\View.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -150,9 +150,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\src\View.cpp
+FileName=..\src\View.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

@@ -12,16 +12,16 @@ class CViewSimple : public CWnd
 {
 public:
     CViewSimple() {}
-    virtual ~CViewSimple() {}
+    virtual ~CViewSimple() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewSimple(const CViewSimple&);               // Disable copy construction
-    CViewSimple& operator=(const CViewSimple&);    // Disable assignment operator
+    CViewSimple(const CViewSimple&) = delete;
+    CViewSimple& operator=(const CViewSimple&) = delete;
 };
 
 
@@ -32,17 +32,17 @@ class CViewText : public CRichEdit
 {
 public:
     CViewText() {}
-    virtual ~CViewText() {}
+    virtual ~CViewText() override {}
     void SetDPIFont();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewText(const CViewText&);                // Disable copy construction
-    CViewText& operator=(const CViewText&);   // Disable assignment operator
+    CViewText(const CViewText&) = delete;
+    CViewText& operator=(const CViewText&) = delete;
 
     CFont m_font;
 };
@@ -55,17 +55,17 @@ class CViewTree : public CTreeView
 {
 public:
     CViewTree();
-    virtual ~CViewTree();
+    virtual ~CViewTree() override;
     void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewTree(const CViewTree&);                // Disable copy construction
-    CViewTree& operator=(const CViewTree&);   // Disable assignment operator
+    CViewTree(const CViewTree&) = delete;
+    CViewTree& operator=(const CViewTree&) = delete;
 
     // Message handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -78,7 +78,7 @@ class CViewList : public CListView
 {
 public:
     CViewList();
-    virtual ~CViewList();
+    virtual ~CViewList() override;
     void InsertItems();
     void SetColumns();
     void SetDPIColumnWidths();
@@ -86,12 +86,12 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewList(const CViewList&);                // Disable copy construction
-    CViewList& operator=(const CViewList&);   // Disable assignment operator
+    CViewList(const CViewList&) = delete;
+    CViewList& operator=(const CViewList&) = delete;
 
     // Message handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);

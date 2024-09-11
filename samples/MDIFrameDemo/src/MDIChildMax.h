@@ -12,16 +12,16 @@ class CViewMax : public CWnd
 {
 public:
     CViewMax() {}
-    virtual ~CViewMax() {}
+    virtual ~CViewMax() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewMax(const CViewMax&);               // Disable copy construction
-    CViewMax& operator=(const CViewMax&);    // Disable assignment operator
+    CViewMax(const CViewMax&) = delete;
+    CViewMax& operator=(const CViewMax&) = delete;
 };
 
 
@@ -32,17 +32,17 @@ class CMDIChildMax : public CMDIChild
 {
 public:
     CMDIChildMax();
-    virtual ~CMDIChildMax();
+    virtual ~CMDIChildMax() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual int OnCreate(CREATESTRUCT& cs);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int OnCreate(CREATESTRUCT& cs) override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMDIChildMax(const CMDIChildMax&);                // Disable copy construction
-    CMDIChildMax& operator=(const CMDIChildMax&);   // Disable assignment operator
+    CMDIChildMax(const CMDIChildMax&) = delete;
+    CMDIChildMax& operator=(const CMDIChildMax&) = delete;
 
     CViewMax m_maxView;
     CMenu m_menu;

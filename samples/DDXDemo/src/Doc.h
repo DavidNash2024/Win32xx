@@ -35,14 +35,14 @@ CDoc    : public CObject                                                    /*
 {
     public:
         CDoc();
-        virtual ~CDoc() {}
+        virtual ~CDoc() override {}
 
-        void    LoadDocRegistry(LPCTSTR keyName);
-        void    SaveDocRegistry(LPCTSTR keyName);
-        BOOL    RegQueryBOOLValue(CRegKey& key, LPCTSTR pName);
-        DWORD   RegQueryDWORDValue(CRegKey& key, LPCTSTR pName);
-        CString RegQueryStringValue(CRegKey& key, LPCTSTR pName);
-        SYSTEMTIME RegQuerySYSTEMTIMEValue(CRegKey &key, LPCTSTR pName);
+        void    LoadDocRegistry(LPCWSTR keyName);
+        void    SaveDocRegistry(LPCWSTR keyName);
+        BOOL    RegQueryBOOLValue(CRegKey& key, LPCWSTR pName);
+        DWORD   RegQueryDWORDValue(CRegKey& key, LPCWSTR pName);
+        CString RegQueryStringValue(CRegKey& key, LPCWSTR pName);
+        SYSTEMTIME RegQuerySYSTEMTIMEValue(CRegKey &key, LPCWSTR pName);
         BOOL    GetCheckA() const {return m_checkVal[0];}
         void    SetCheckA(BOOL IsChecked) { m_checkVal[0] = IsChecked;}
 
@@ -100,8 +100,8 @@ CDoc    : public CObject                                                    /*
         const CString& GetString() const {return m_editVal;}
         void     SetString(const CString& val) {m_editVal = val;}
 
-        LPCTSTR GetLPTSTR() const {return m_LPTSTRVal;}
-        void SetLPTSTR(LPCTSTR val) {StrCopy(m_LPTSTRVal, val, 256); }
+        LPCWSTR GetLPWSTR() const {return m_LPWSTRVal;}
+        void SetLPWSTR(LPCWSTR val) {StrCopy(m_LPWSTRVal, val, 256); }
 
         int     GetSlider() const {return m_sliderVal;}
         void    SetSlider(int val) {m_sliderVal = val;}
@@ -130,7 +130,7 @@ CDoc    : public CObject                                                    /*
         CString     m_comboBoxVal;
         CString     m_editVal;
         CString     m_richEditVal;
-        TCHAR       m_LPTSTRVal[256];
+        wchar_t     m_LPWSTRVal[256];
         SYSTEMTIME  m_dateSysTime;
         SYSTEMTIME  m_calDateSysTime;
 };

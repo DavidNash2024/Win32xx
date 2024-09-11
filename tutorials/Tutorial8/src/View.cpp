@@ -41,7 +41,7 @@ std::vector<PlotPoint>& CView::GetAllPoints()
 // Called during window creation.
 int CView::OnCreate(CREATESTRUCT&)
 {
-    // Support Drag and Drop on this window
+    // Support Drag and Drop on this window.
     DragAcceptFiles(TRUE);
     return 0;
 }
@@ -77,7 +77,7 @@ LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
         DragQueryFile(hDrop, 0, fileName.GetBuffer(length), length+1);
         fileName.ReleaseBuffer();
 
-        // Send a user defined message to the frame window
+        // Send a user defined message to the frame window.
         GetParent().SendMessage(UWM_DROPFILE, (WPARAM)fileName.c_str(), 0);
 
         DragFinish(hDrop);
@@ -98,7 +98,7 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    //Release the capture on the mouse
+    //Release the capture on the mouse.
     ReleaseCapture();
     GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), false, m_penColor);
     return FinalWindowProc(msg, wparam, lparam);
@@ -120,16 +120,16 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called before window creation to update the window's CREATESTRUCT.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-    // Set the extra style to provide a sunken effect
+    // Set the extra style to provide a sunken effect.
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
 // Called before the window is registered to update the window's WNDCLASS.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
-    // Set the background brush, class name and cursor
+    // Set the background brush, class name and cursor.
     wc.hbrBackground = m_brush;
-    wc.lpszClassName = _T("Scribble Window");
+    wc.lpszClassName = L"Scribble Window";
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 

@@ -18,8 +18,8 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
 
     // Accessors
     CMyListView& GetListView() const { return static_cast<CMyListView&>(m_rightPane.GetView()); }
@@ -28,18 +28,18 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual BOOL    SaveRegistrySettings();
-    virtual void    SetupMenuIcons();
-    virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnInitialUpdate() override;
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL    SaveRegistrySettings() override;
+    virtual void    SetupMenuIcons() override;
+    virtual void    SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Command handlers
     BOOL OnFileExit();
@@ -58,7 +58,7 @@ private:
     void LoadListViewRegistrySettings();
 
     // Member variables
-    CLeftPane* m_pLeftPane;
+    CDocker* m_pLeftPane;
     CRightPane m_rightPane;
     bool m_showHidden;
 };

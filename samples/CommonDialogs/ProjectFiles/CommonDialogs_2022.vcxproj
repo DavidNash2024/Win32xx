@@ -108,7 +108,6 @@
     <ClInclude Include="..\src\RichEditView.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\StdApp.h" />
-    <ClInclude Include="..\src\targetver.h" />
     <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>

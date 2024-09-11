@@ -162,9 +162,6 @@
     <ClInclude Include="..\src\PrintUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_commondlg.h">
       <Filter>Win32++</Filter>
     </ClInclude>

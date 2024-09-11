@@ -26,15 +26,15 @@ AboutBox : public CDialog                                                   /*
 {
     public:
         AboutBox() : CDialog(IDW_ABOUT) {}
-        virtual ~AboutBox(){}
+        virtual ~AboutBox() override {}
         void SetStatus(const CString& about) { m_about = about; }
 
     protected:
-        virtual BOOL OnInitDialog();
+        virtual BOOL OnInitDialog() override;
 
     private:
-        AboutBox(const AboutBox&);               // Disable copy construction
-        AboutBox& operator=(const AboutBox&);    // Disable assignment operator
+        AboutBox(const AboutBox&) = delete;
+        AboutBox& operator=(const AboutBox&) = delete;
 
         CString m_about;
 };

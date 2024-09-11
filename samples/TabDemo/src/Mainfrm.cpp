@@ -9,6 +9,8 @@
 #include "MyDialog.h"
 #include "resource.h"
 
+using namespace std;
+
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
@@ -30,7 +32,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\Tab Demo"));
+    LoadRegistrySettings(L"Win32++\\Tab Demo");
 
     return CFrame::Create(parent);
 }
@@ -99,12 +101,12 @@ BOOL CMainFrame::OnFileExit()
 // Called after the frame is created.
 void CMainFrame::OnInitialUpdate()
 {
-    // Add some tabs to the tab control
-    m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-    m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-    m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-    m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-    m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+    // Add some tabs to the tab control.
+    m_view.AddTabPage(make_unique<CViewClasses>(), L"Classes", IDI_CLASSVIEW);
+    m_view.AddTabPage(make_unique<CViewFiles>(), L"Files", IDI_FILEVIEW);
+    m_view.AddTabPage(make_unique<CViewClasses>(), L"Classes", IDI_CLASSVIEW);
+    m_view.AddTabPage(make_unique<CViewFiles>(), L"Files", IDI_FILEVIEW);
+    m_view.AddTabPage(make_unique<CViewDialog>(IDD_MYDIALOG), L"Dialog", IDI_DIALOGVIEW);
 
     m_view.SelectPage(0);
 
@@ -160,21 +162,21 @@ void CMainFrame::OnMenuUpdate(UINT id)
 // Add a Files tab.
 BOOL CMainFrame::OnNewFilesTab()
 {
-    m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+    m_view.AddTabPage(new CViewFiles, L"Files", IDI_FILEVIEW);
     return TRUE;
 }
 
 // Add a Classes tab.
 BOOL CMainFrame::OnNewClassesTab()
 {
-    m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+    m_view.AddTabPage(new CViewClasses, L"Classes", IDI_CLASSVIEW);
     return TRUE;
 }
 
 // Add a Dialog tab.
 BOOL CMainFrame::OnNewDialogTab()
 {
-    m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+    m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), L"Dialog", IDI_DIALOGVIEW);
     return TRUE;
 }
 
@@ -258,7 +260,7 @@ void CMainFrame::SetupMenuIcons()
 {
     // Use the MenuIcons bitmap for images in menu items.
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -305,10 +307,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -316,7 +318,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

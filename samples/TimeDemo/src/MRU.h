@@ -35,22 +35,22 @@ CMRU : public CObject                                                   /*
     public:
           // construction/destruction
         CMRU();
-        virtual ~CMRU(){}
+        virtual ~CMRU() override {}
 
-        void    AddEntry(LPCTSTR entryName);
+        void    AddEntry(LPCWSTR entryName);
         void    AssignMenu(CMenu frameMenu, size_t maxMRU = 0);
         void    EmptyList();
         CString GetEntry(size_t index);
-        void    RemoveEntry(LPCTSTR entryName);
+        void    RemoveEntry(LPCWSTR entryName);
         void    UpdateMenu();
         void    ValidateMRU();
 
     protected:
-        virtual void    Serialize(CArchive& ar);
+        virtual void    Serialize(CArchive& ar) override;
 
     private:
-        CMRU(const CMRU&);              // Disable copy construction
-        CMRU& operator=(const CMRU&);   // Disable assignment operator
+        CMRU(const CMRU&) = delete;
+        CMRU& operator=(const CMRU&) = delete;
 
         std::vector<CString> m_MRUEntries; // MRU array entries
         size_t      m_maxMRU;           // maximum MRU entries, this app

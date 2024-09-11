@@ -26,7 +26,7 @@ HWND CMainMDIFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\MDIFrameSplitter"));
+    LoadRegistrySettings(L"Win32++\\MDIFrameSplitter");
 
     return CMDIFrame::Create(parent);
 }
@@ -115,7 +115,7 @@ BOOL CMainMDIFrame::OnFileExit()
 // Adds a new splitter MDI child.
 BOOL CMainMDIFrame::OnFileNew()
 {
-    AddMDIChild(new CSplitterMDIChild);
+    AddMDIChild(std::make_unique<CSplitterMDIChild>());
     return TRUE;
 }
 
@@ -151,10 +151,9 @@ BOOL CMainMDIFrame::OnMDITile()
 LRESULT CMainMDIFrame::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Redraw all MDI children to update docker caption.
-    std::vector<MDIChildPtr>::const_iterator iter;
-    for (iter = GetAllMDIChildren().begin(); iter != GetAllMDIChildren().end(); ++iter)
+    for (const MDIChildPtr& ptr : GetAllMDIChildren())
     {
-        (*iter)->RedrawWindow();
+        ptr->RedrawWindow();
     }
 
     return FinalWindowProc(msg, wparam, lparam);
@@ -164,7 +163,7 @@ LRESULT CMainMDIFrame::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 void CMainMDIFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_DIS);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -209,10 +208,10 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -220,7 +219,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

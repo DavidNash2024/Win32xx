@@ -27,14 +27,14 @@ CApp : public CWinApp                                                       /*
 {
     public:
         CApp() {}
-        virtual ~CApp()  {}
+        virtual ~CApp() override {}
 
-        virtual BOOL    InitInstance();
+        virtual BOOL    InitInstance() override;
         CMainFrame& TheFrame() { return m_frame; }
 
     private:
-        CApp(const CApp&);               // Disable copy construction
-        CApp& operator=(const CApp&);    // Disable assignment operator
+        CApp(const CApp&) = delete;
+        CApp& operator=(const CApp&) = delete;
 
         CMainFrame m_frame;
 };

@@ -45,8 +45,7 @@ int main()
 {
     // Create the main server socket.
     // It is used to listen for clients
-    CServerSocket server;
-    ZeroMemory(&g_saUDPClient, sizeof(g_saUDPClient));
+    CServerSocket server{};
 
     if (!server.Create(AF_INET, SOCK_DGRAM))
     {

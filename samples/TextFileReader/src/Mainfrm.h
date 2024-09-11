@@ -31,7 +31,7 @@ CMainFrame : public CFrame                                                  /*
 {
     public:
         CMainFrame(void);
-        virtual     ~CMainFrame(){}
+        virtual     ~CMainFrame() override {}
         CDoc&       TheDoc()      {return m_view.TheDoc();}
 
         AboutBox&   GetAboutBox()   { return m_aboutDialog; }
@@ -41,26 +41,28 @@ CMainFrame : public CFrame                                                  /*
         void        SetMaxMRUSlots(UINT maxMRU) { m_maxMRU = maxMRU; }
 
     protected:
-        virtual void OnClose();
-        void         OnColorChoice();
-        virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-        virtual int  OnCreate(CREATESTRUCT& cs);
-        virtual void OnFileClose();
-        virtual void OnFileExit();
-        virtual void OnFileOpenMRU(UINT);
-        virtual void OnFileOpen();
-        virtual void OnFontChoice() { m_view.ClientFontChoice(); }
-        virtual BOOL OnHelp();
-        virtual void OnInitialUpdate();
-        virtual BOOL OnProcessMRU(WPARAM wparam, LPARAM lparam);
-        virtual void PreCreate(CREATESTRUCT& cs);
-        virtual void Serialize(CArchive& ar);
-        virtual void SetupMenuIcons();
-        virtual void SetupToolBar();
+        virtual void OnClose() override;
+
+        virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+        virtual int  OnCreate(CREATESTRUCT& cs) override;
+        virtual BOOL OnHelp() override;
+        virtual void OnInitialUpdate() override;
+        virtual void PreCreate(CREATESTRUCT& cs) override;
+        virtual void Serialize(CArchive& ar) override;
+        virtual void SetupMenuIcons() override;
+        virtual void SetupToolBar() override;
 
     private:
-        CMainFrame(const CMainFrame&);               // Disable copy construction
-        CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+        CMainFrame(const CMainFrame&) = delete;
+        CMainFrame& operator=(const CMainFrame&) = delete;
+
+        void OnColorChoice();
+        void OnFileClose();
+        void OnFileExit();
+        void OnFileOpenMRU(UINT);
+        void OnFileOpen();
+        void OnFontChoice() { m_view.ClientFontChoice(); }
+        BOOL OnProcessMRU(WPARAM wparam, LPARAM lparam);
 
           // private data members
          CString    m_arcvPath;       // archived data path

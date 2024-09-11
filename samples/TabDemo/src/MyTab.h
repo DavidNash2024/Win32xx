@@ -13,15 +13,15 @@ class CMyTab : public CTab
 {
 public:
     CMyTab() {}
-    virtual ~CMyTab() {}
-    virtual void UpdateTabs();
+    virtual ~CMyTab() override {}
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void UpdateTabs() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMyTab(const CMyTab&);              // Disable copy construction
-    CMyTab& operator=(const CMyTab&); // Disable assignment operator
+    CMyTab(const CMyTab&) = delete;
+    CMyTab& operator=(const CMyTab&) = delete;
 };
 
 

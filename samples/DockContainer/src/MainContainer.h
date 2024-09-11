@@ -13,17 +13,17 @@ class CMainContainer : public CDockContainer
 {
 public:
     CMainContainer() {}
-    virtual ~CMainContainer() {}
+    virtual ~CMainContainer() override {}
 
 protected:
     // Virtual functions that override base class functions.
-    virtual void AddContainer(CDockContainer* pContainer, BOOL insert, BOOL selectPage);
-    virtual void RemoveContainer(CDockContainer* pContainer, BOOL updateParent);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void AddContainer(CDockContainer* pContainer, BOOL insert, BOOL selectPage) override;
+    virtual void RemoveContainer(CDockContainer* pContainer, BOOL updateParent) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainContainer(const CMainContainer&);               // Disable copy construction
-    CMainContainer& operator=(const CMainContainer&);    // Disable assignment operator
+    CMainContainer(const CMainContainer&) = delete;
+    CMainContainer& operator=(const CMainContainer&) = delete;
 };
 
 #endif  // _MAIN_CONTAINER_H_

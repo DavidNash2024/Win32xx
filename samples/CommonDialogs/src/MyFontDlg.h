@@ -26,32 +26,37 @@ MyFontDialog : public CFontDialog                                       /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        MyFontDialog(DWORD dwFlags = 0, HDC hdcPrinter = NULL);
-        virtual ~MyFontDialog(){}
+        MyFontDialog(DWORD dwFlags = 0, HDC hdcPrinter = nullptr);
+        virtual ~MyFontDialog() override {}
 
-        virtual SIZE    GetAvgSize() const { return m_fontSize;}
-        virtual CFont   GetChoiceFont() const { return m_font;}
-        virtual LOGFONT GetCurrentLogFont() const { return m_logFont;}
-        virtual void    OnOK();
-        virtual void    SetBoxTitle(const CString& title){ m_boxTitle = title;}
-        virtual void    SetChoiceFont(const CFont& f)
-                    { LOGFONT lf = f.GetLogFont();
-                      SetChoiceLogFont(lf);}
+        SIZE    GetAvgSize() const { return m_fontSize;}
+        CFont   GetChoiceFont() const { return m_font;}
+        LOGFONT GetCurrentLogFont() const { return m_logFont;}
+        TEXTMETRIC* GetTextMetric() { return &m_tm; }
+        void    OnOK() override;
+        void    SetBoxTitle(const CString& title){ m_boxTitle = title;}
+        void    SetChoiceFont(const CFont& f)
+        {
+            LOGFONT lf = f.GetLogFont();
+            SetChoiceLogFont(lf);
+        }
+        void    RecordFontMetrics();
+        void    Serialize(CArchive& ar) override;
+        void    SetChoiceLogFont(LOGFONT& lf)
+        {
+            SetFontIndirect(lf);
+            RecordFontMetrics();
+        }
+        void    SetFontIndirect(const LOGFONT& lf);
+        void    SetTextMetric(const TEXTMETRIC& tm) { m_tm = tm; }
+        void    SetWindowTitle() const { SetWindowText(m_boxTitle); }
 
     protected:
-        virtual TEXTMETRIC* GetTextMetric() { return &m_tm;}
-        virtual BOOL    OnInitDialog();
-        virtual void    RecordFontMetrics();
-        virtual void    Serialize(CArchive &ar);
-        virtual void    SetChoiceLogFont(LOGFONT& lf)
-                            { SetFontIndirect(lf); RecordFontMetrics();}
-        virtual void    SetFontIndirect(const LOGFONT& lf);
-        virtual void    SetTextMetric(const TEXTMETRIC& tm) { m_tm = tm;}
-        virtual void    SetWindowTitle() const { SetWindowText(m_boxTitle); }
+        virtual BOOL    OnInitDialog() override;
 
     private:
-        MyFontDialog(const MyFontDialog&);               // Disable copy construction
-        MyFontDialog& operator=(const MyFontDialog&);    // Disable assignment operator
+        MyFontDialog(const MyFontDialog&) = delete;
+        MyFontDialog& operator=(const MyFontDialog&) = delete;
 
         CString     m_boxTitle;
         TEXTMETRIC  m_tm;       // font text metrics

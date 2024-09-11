@@ -20,19 +20,19 @@ class CHyperlink :  public CStatic
 {
 public:
     CHyperlink();
-    virtual ~CHyperlink();
+    virtual ~CHyperlink() override;
 
     const CString& GetLinkName() const { return m_urlName; }
 
 protected:
     // Virtual functions that override base class functions.
-    virtual void    OnAttach();
-    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnAttach() override;
+    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CHyperlink(const CHyperlink&);               // Disable copy construction
-    CHyperlink& operator=(const CHyperlink&);    // Disable assignment operator
+    CHyperlink(const CHyperlink&) = delete;
+    CHyperlink& operator=(const CHyperlink&) = delete;
 
     // Message handlers
     LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);

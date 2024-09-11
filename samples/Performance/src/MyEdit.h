@@ -13,19 +13,19 @@ class CMyEdit : public CEdit
 {
 public:
     CMyEdit();
-    virtual ~CMyEdit() {}
+    virtual ~CMyEdit() override {}
 
     void DPISetFont();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMyEdit(const CMyEdit&);               // Disable copy construction
-    CMyEdit& operator=(const CMyEdit&);    // Disable assignment operator
+    CMyEdit(const CMyEdit&) = delete;
+    CMyEdit& operator=(const CMyEdit&) = delete;
 
     CFont m_font;
 };

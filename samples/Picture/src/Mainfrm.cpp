@@ -28,7 +28,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\Picture Sample"));
+    LoadRegistrySettings(L"Win32++\\Picture Sample");
 
     // Load the settings from the registry with 4 MRU entries.
     LoadRegistryMRUSettings(4);
@@ -150,10 +150,10 @@ BOOL CMainFrame::OnFileNew()
 // Displays the file choose dialog an loads an image file.
 BOOL CMainFrame::OnFileOpen()
 {
-    LPCTSTR filters = _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
+    LPCWSTR filters = L"Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0";
 
     DWORD flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-    CFileDialog fileDlg(TRUE, NULL, NULL, flags, filters);
+    CFileDialog fileDlg(TRUE, nullptr, nullptr, flags, filters);
 
     if (fileDlg.DoModal(*this) == IDOK)
     {
@@ -165,7 +165,7 @@ BOOL CMainFrame::OnFileOpen()
 }
 
 // Called when an image has been loaded from a file.
-LRESULT CMainFrame::OnFileLoaded(LPCTSTR fileName)
+LRESULT CMainFrame::OnFileLoaded(LPCWSTR fileName)
 {
     SetWindowText(fileName);
     AdjustFrameRect(m_view.GetImageRect());
@@ -180,33 +180,33 @@ BOOL CMainFrame::OnFileSaveAs()
     {
         SHORT Type;
         m_view.GetPicture()->get_Type(&Type);
-        LPCTSTR filter = NULL;
-        LPCTSTR ext    = NULL;
+        LPCWSTR filter = nullptr;
+        LPCWSTR ext    = nullptr;
 
         // Assign the default file extension and filter.
         // Note: iPicture doesn't convert between file types
         switch(Type)
         {
         case PICTYPE_BITMAP:
-            filter = _T("Supported Files Type(*.bmp)\0*.bmp;\0Bitmap (*.bmp)\0*.bmp\0\0");
-            ext = _T("bmp");
+            filter = L"Supported Files Type(*.bmp)\0*.bmp;\0Bitmap (*.bmp)\0*.bmp\0\0";
+            ext = L"bmp";
             break;
         case PICTYPE_METAFILE:
-            filter = _T("Supported Files Type(*.wmf)\0*.bmp;\0Metafile (*.wmf)\0*.wmf\0\0");
-            ext = _T("wmf");
+            filter = L"Supported Files Type(*.wmf)\0*.bmp;\0Metafile (*.wmf)\0*.wmf\0\0";
+            ext = L"wmf";
             break;
         case PICTYPE_ICON:
-            filter = _T("Supported Files Type(*.ico)\0*.ico;\0Icon File (*.ico)\0*.ico\0\0");
-            ext = _T("ico");
+            filter = L"Supported Files Type(*.ico)\0*.ico;\0Icon File (*.ico)\0*.ico\0\0";
+            ext = L"ico";
             break;
         case PICTYPE_ENHMETAFILE:
-            filter = _T("Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0");
-            ext = _T("emf");
+            filter = L"Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0";
+            ext = L"emf";
             break;
         }
 
         DWORD flags = OFN_OVERWRITEPROMPT;
-        CFileDialog fileDlg(FALSE, ext, NULL, flags, filter);
+        CFileDialog fileDlg(FALSE, ext, nullptr, flags, filter);
 
         if (fileDlg.DoModal(*this) == IDOK)
         {
@@ -227,7 +227,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     case IDM_FILE_SAVE:
     {
         // Enable FileSave menu item if a picture is loaded.
-        UINT enabled = m_view.GetPicture() != NULL ? MF_ENABLED : MF_GRAYED;
+        UINT enabled = m_view.GetPicture() != nullptr ? MF_ENABLED : MF_GRAYED;
         GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
@@ -259,7 +259,7 @@ LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -292,7 +292,7 @@ void CMainFrame::SetupToolBar()
 void CMainFrame::UpdateToolbar()
 {
     // Enable the FileSave toolbar button if a picture is loaded.
-    BOOL enabled = (m_view.GetPicture() != NULL);
+    BOOL enabled = (m_view.GetPicture() != nullptr);
     GetToolBar().EnableButton(IDM_FILE_SAVE, enabled);
 }
 
@@ -303,7 +303,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_FILELOADED:       return OnFileLoaded((LPCTSTR)lparam);
+        case UWM_FILELOADED:       return OnFileLoaded((LPCWSTR)lparam);
         case WM_WINDOWPOSCHANGED:  return OnWindowPosChanged(msg, wparam, lparam);
         }
 
@@ -316,10 +316,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -327,7 +327,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

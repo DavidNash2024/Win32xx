@@ -15,24 +15,24 @@ class CView : public CScrollView
 {
 public:
     CView();
-    virtual ~CView();
+    virtual ~CView() override;
     CRect GetImageRect();
     LPPICTURE GetPicture()  { return m_pPicture; }
-    BOOL LoadPictureFile(LPCTSTR fileName);
+    BOOL LoadPictureFile(LPCWSTR fileName);
+    LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
     void NewPictureFile();
-    void SavePicture(LPCTSTR fileName);
+    void SavePicture(LPCWSTR fileName);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnDraw(CDC& dc);
-    virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnDraw(CDC& dc) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     LPPICTURE m_pPicture;
     CBrush  m_brush;

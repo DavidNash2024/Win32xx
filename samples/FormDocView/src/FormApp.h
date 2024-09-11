@@ -16,15 +16,15 @@ class CFormApp : public CWinApp
 {
 public:
     CFormApp();
-    virtual ~CFormApp();
+    virtual ~CFormApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CFormApp(const CFormApp&);               // Disable copy construction
-    CFormApp& operator=(const CFormApp&);    // Disable assignment operator
+    CFormApp(const CFormApp&) = delete;
+    CFormApp& operator=(const CFormApp&) = delete;
 
     CMainFrame m_frame;
 };

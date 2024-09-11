@@ -17,7 +17,7 @@ CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 }
 
 // Constructor.
-CMyDialog::CMyDialog(LPCTSTR resName) : CDialog(resName)
+CMyDialog::CMyDialog(LPCWSTR resName) : CDialog(resName)
 {
 }
 
@@ -45,10 +45,10 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << '\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -56,7 +56,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -103,12 +103,12 @@ BOOL CMyDialog::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Put some text in the rich edit box
-    SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
+    SetDlgItemText(IDC_RICHEDIT1, L"Rich Edit Window");
 
     // Put some text in the list box
     AttachItem(IDC_LIST1, m_listBox);
     for (int i = 0 ; i < 8 ; i++)
-        m_listBox.AddString(_T("List Box"));
+        m_listBox.AddString(L"List Box");
 
     // Turn our button into a MyButton object
     AttachItem(IDC_BUTTON2, m_button);
@@ -131,14 +131,14 @@ BOOL CMyDialog::OnInitDialog()
 // Called when the OK button or Enter key is pressed.
 void CMyDialog::OnOK()
 {
-    MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
+    MessageBox(L"OK Button Pressed.  Program will exit now.", L"Button", MB_OK);
     CDialog::OnOK();
 }
 
 // Called when the button is pressed.
 BOOL CMyDialog::OnButton()
 {
-    SetStatic(_T("Button Pressed"));
+    SetStatic(L"Button Pressed");
     TRACE("Button Pressed\n");
     return TRUE;
 }
@@ -146,7 +146,7 @@ BOOL CMyDialog::OnButton()
 // Called when check box 1 is clicked.
 BOOL CMyDialog::OnCheck1()
 {
-    SetStatic(_T("Check Box 1"));
+    SetStatic(L"Check Box 1");
     TRACE("Check Box 1\n");
     return TRUE;
 }
@@ -154,7 +154,7 @@ BOOL CMyDialog::OnCheck1()
 // Called when check box 2 is clicked.
 BOOL CMyDialog::OnCheck2()
 {
-    SetStatic(_T("Check Box 2"));
+    SetStatic(L"Check Box 2");
     TRACE("Check Box 2\n");
     return TRUE;
 }
@@ -162,7 +162,7 @@ BOOL CMyDialog::OnCheck2()
 // Called when check box 3 is clicked.
 BOOL CMyDialog::OnCheck3()
 {
-    SetStatic(_T("Check Box 3"));
+    SetStatic(L"Check Box 3");
     TRACE("Check Box 3\n");
     return TRUE;
 }
@@ -174,7 +174,7 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 
     CString str;
     int button = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), button);
+    str.Format(L"Radio%d", button);
     TRACE(str); TRACE("\n");
     SetStatic(str);
 
@@ -184,12 +184,12 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 // Called in response the UWM_SETSTATIC message to update the static text.
 INT_PTR CMyDialog::OnSetStatic(WPARAM wparam)
 {
-    SetStatic(reinterpret_cast<LPCTSTR>(wparam));
+    SetStatic(reinterpret_cast<LPCWSTR>(wparam));
     return 0;
 }
 
 // Sets the text in the static control.
-void CMyDialog::SetStatic(LPCTSTR text)
+void CMyDialog::SetStatic(LPCWSTR text)
 {
     SetDlgItemText(IDC_STATIC3, text);
 }

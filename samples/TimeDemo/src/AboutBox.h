@@ -23,21 +23,18 @@ AboutBox        : public CDialog                                        /*
 
 *-----------------------------------------------------------------------------*/
 {
-      // public declarations
     public:
         AboutBox();
-        virtual ~AboutBox(){}
+        virtual ~AboutBox() override {}
 
         void SetStatus(const CString& status) { m_status = status; }
 
-      // protected declarations
     protected:
-        virtual BOOL OnInitDialog();
+        virtual BOOL OnInitDialog() override;
 
-      // private declarations
     private:
-        AboutBox(const AboutBox&);               // Disable copy construction
-        AboutBox& operator=(const AboutBox&);    // Disable assignment operator
+        AboutBox(const AboutBox&) = delete;
+        AboutBox& operator=(const AboutBox&) = delete;
 
         CString m_status;
 

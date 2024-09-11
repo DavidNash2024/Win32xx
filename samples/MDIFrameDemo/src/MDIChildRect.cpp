@@ -14,7 +14,7 @@
 // Called when the window is created
 int CViewRect::OnCreate(CREATESTRUCT&)
 {
-    SetTimer (1, 250, NULL) ;
+    SetTimer (1, 250, nullptr) ;
     return 0;
 }
 
@@ -85,10 +85,10 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -96,7 +96,7 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -109,8 +109,8 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Constructor.
 CMDIChildRect::CMDIChildRect()
 {
-    m_menu.LoadMenu(_T("MdiMenuRect"));
-    SetHandles(m_menu, NULL);
+    m_menu.LoadMenu(L"MdiMenuRect");
+    SetHandles(m_menu, nullptr);
     SetView(m_rectView);
 }
 
@@ -122,7 +122,7 @@ CMDIChildRect::~CMDIChildRect()
 // Called when the window is created.
 int CMDIChildRect::OnCreate(CREATESTRUCT& cs)
 {
-    SetWindowText(_T("Rectangle Window"));
+    SetWindowText(L"Rectangle Window");
     SetIconLarge(IDI_RECT);
     SetIconSmall(IDI_RECT);
 
@@ -143,10 +143,10 @@ LRESULT CMDIChildRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -154,7 +154,7 @@ LRESULT CMDIChildRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

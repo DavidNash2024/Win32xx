@@ -58,7 +58,7 @@ ClientFontChoice()                                                          /*
 *-----------------------------------------------------------------------------*/
 {
       // set font metric to pixels
-    m_fontEx.Choose(_T("Select Font..."));
+    m_fontEx.Choose(L"Select Font...");
     SetAppSize(TRUE);    // document extents will change
     Invalidate();
 }
@@ -101,7 +101,7 @@ OnColorChoice()                                                             /*
     CColorExDialog cd(GetWndBkColor());
       // setup the CColorChoice object
     cd.SetCustomColors(m_colors);
-    cd.SetBoxTitle(_T("Select background color..."));
+    cd.SetBoxTitle(L"Select background color...");
     if (cd.DoModal(*this) == IDOK)
     {
         SetWndBkColor(cd.GetColor());
@@ -152,7 +152,7 @@ OnDraw(CDC& memDC)                                                          /*
                 line_no.Format(fmt, i + 1);
             if (i == doc_length)
             {
-                if (m_endOfView != NULL)
+                if (m_endOfView != nullptr)
                     TextLineOut(memDC, 0, i, m_endOfView);
             }
             else

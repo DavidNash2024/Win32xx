@@ -32,19 +32,19 @@ void CViewClasses::OnAttach()
     DeleteAllItems();
 
     // Add some tree-view items.
-    HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
-    HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
-    InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("GetMainFrame()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("InitInstance()"), 3, 3, htiCTreeViewApp);
-    HTREEITEM htiMainFrame = InsertItem(_T("CMainFrame"), 1, 1, htiRoot);
-    InsertItem(_T("CMainFrame()"), 3, 3, htiMainFrame);
-    InsertItem(_T("OnCommand()"), 4, 4, htiMainFrame);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiMainFrame);
-    HTREEITEM htiView = InsertItem(_T("CView"), 1, 1, htiRoot);
-    InsertItem(_T("CView()"), 3, 3, htiView);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
-    InsertItem(_T("WndProc()"), 4, 4, htiView);
+    HTREEITEM htiRoot = InsertItem(L"TreeView", 0, 0);
+    HTREEITEM htiCTreeViewApp = InsertItem(L"CTreeViewApp", 1, 1, htiRoot);
+    InsertItem(L"CTreeViewApp()", 3, 3, htiCTreeViewApp);
+    InsertItem(L"GetMainFrame()", 3, 3, htiCTreeViewApp);
+    InsertItem(L"InitInstance()", 3, 3, htiCTreeViewApp);
+    HTREEITEM htiMainFrame = InsertItem(L"CMainFrame", 1, 1, htiRoot);
+    InsertItem(L"CMainFrame()", 3, 3, htiMainFrame);
+    InsertItem(L"OnCommand()", 4, 4, htiMainFrame);
+    InsertItem(L"OnInitialUpdate()", 4, 4, htiMainFrame);
+    HTREEITEM htiView = InsertItem(L"CView", 1, 1, htiRoot);
+    InsertItem(L"CView()", 3, 3, htiView);
+    InsertItem(L"OnInitialUpdate()", 4, 4, htiView);
+    InsertItem(L"WndProc()", 4, 4, htiView);
 
     // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
@@ -95,8 +95,8 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str;
-        str << e.GetText() << _T("\n") << e.GetErrorString();
-        ::MessageBox(NULL, str, _T("An exception occurred"), MB_ICONERROR);
+        str << e.GetText() << L'\n' << e.GetErrorString();
+        ::MessageBox(nullptr, str, L"An exception occurred", MB_ICONERROR);
 
         return 0;
     }

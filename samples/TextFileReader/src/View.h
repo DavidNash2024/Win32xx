@@ -30,19 +30,21 @@ CColorExDialog : public CColorDialog                                      /*
     public:
         CColorExDialog(COLORREF init = 0, DWORD flags = 0)
             : CColorDialog(init, flags | CC_ENABLEHOOK | CC_RGBINIT | CC_ANYCOLOR)
-                { SetBoxTitle(_T("Color..."));}
-        virtual ~CColorExDialog(){}
+                { SetBoxTitle(L"Color...");}
+        virtual ~CColorExDialog() override {}
 
         void    SetBoxTitle(const CString& title) { m_boxTitle = title;}
 
     protected:
-        virtual BOOL OnInitDialog()
-                     { SetWindowText(m_boxTitle);
-                       return TRUE; }
+        virtual BOOL OnInitDialog() override
+        {
+            SetWindowText(m_boxTitle);
+            return TRUE;
+        }
 
     private:
-        CColorExDialog(const CColorExDialog&);               // Disable copy construction
-        CColorExDialog& operator=(const CColorExDialog&);    // Disable assignment operator
+        CColorExDialog(const CColorExDialog&) = delete;
+        CColorExDialog& operator=(const CColorExDialog&) = delete;
 
         CString m_boxTitle;
 };
@@ -57,7 +59,7 @@ CView : public CScrollView                                                  /*
 {
     public:
         CView();
-        virtual ~CView(){}
+        virtual ~CView() override {}
 
         COLORREF GetWndBkColor() const
                     { return GetScrollBkgnd().GetLogBrush().lbColor; }
@@ -75,15 +77,15 @@ CView : public CScrollView                                                  /*
         BOOL    ToggleLineNumbers();
 
     protected:
-        virtual void    OnInitialUpdate();
-        virtual void    OnDraw(CDC& memDC);
-        virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void    PreCreate(CREATESTRUCT& cs);
-        virtual void    Serialize(CArchive& ar);
+        virtual void    OnInitialUpdate() override;
+        virtual void    OnDraw(CDC& memDC) override;
+        virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
+        virtual void    PreCreate(CREATESTRUCT& cs) override;
+        virtual void    Serialize(CArchive& ar) override;
 
     private:
-        CView(const CView&);                // Disable copy construction
-        CView& operator=(const CView&);   // Disable assignment operator
+        CView(const CView&) = delete;
+        CView& operator=(const CView&) = delete;
 
         void    InitViewColors();
         void    TextLineOut(CDC&, UINT, UINT, LPCWSTR) const;

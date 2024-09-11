@@ -26,7 +26,7 @@ CView(UINT id)                                                              /*
 
     Construct default window main view object.
 *-----------------------------------------------------------------------------*/
-    : CDialog(id), m_parent(NULL)
+    : CDialog(id), m_parent(nullptr)
 {
 }
 
@@ -43,14 +43,14 @@ AddToolTip(HWND parent, UINT id)                                            /*
 
 /*============================================================================*/
     BOOL CView::
-AddToolTip(HWND parent, UINT id, LPCTSTR toolTip)                          /*
+AddToolTip(HWND parent, UINT id, LPCWSTR toolTip)                          /*
 
     Add the toolTip string to the control whose resource identifier is
     id. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
     HWND hCtl = ::GetDlgItem(parent, id);
-    if (hCtl == NULL)
+    if (hCtl == nullptr)
     {
         TRACE(CString("cannot connect tooltip: ") + toolTip);
         return FALSE;
@@ -73,10 +73,10 @@ AssignToolTips()                                                            /*
     HWND client = HWND((CWnd &)(*this));
     if (!m_toolTip.Create(client))
     {
-        TRACE(_T("unable to create tool tips\n"));
+        TRACE("unable to create tool tips\n");
         return;
     }
-    m_toolTip.AddTool(client, _T("Client area"));
+    m_toolTip.AddTool(client, L"Client area");
       // for the only control in the client area
     AddToolTip(client, IDC_RICHEDITBOX);
       // ok, now activate these
@@ -85,7 +85,7 @@ AssignToolTips()                                                            /*
 
 /*============================================================================*/
     HWND CView::
-Create(HWND parent = NULL)                                                    /*
+Create(HWND parent = nullptr)                                                    /*
 
     Show the view window as a modeless dialog.
 **----------------------------------------------------------------------------*/
@@ -124,9 +124,9 @@ NoDocOpen()                                                                 /*
     Announce that no document is currently open.
 *-----------------------------------------------------------------------------*/
 {
-    m_richView.SetWindowText(_T("\n\n\t\tNo document is now open.\n\n\t")
-        _T("Load or create one using a File menu command,\n\t")
-        _T("or drag and drop a text file name in this area."));
+    m_richView.SetWindowText(L"\n\n\t\tNo document is now open.\n\n\t"
+        L"Load or create one using a File menu command,\n\t"
+        L"or drag and drop a text file name in this area.");
 }
 
 /*============================================================================*/
@@ -213,7 +213,7 @@ OnPageSetup()                                                               /*
 *-----------------------------------------------------------------------------*/
 {
     MyPageSetup PSD(PSD_MARGINS);
-    PSD.SetBoxTitle(_T("Page Parameter Setup"));
+    PSD.SetBoxTitle(L"Page Parameter Setup");
     PSD.DoModal(GetParent());
 
     // TODO: Add code here to set up the printer.  Note: control does not
@@ -222,7 +222,7 @@ OnPageSetup()                                                               /*
 
 /*============================================================================*/
     void CView::
-OnPrintDocument(LPCTSTR path)                                               /*
+OnPrintDocument(LPCWSTR path)                                               /*
 
     Invoke a MyPrintDialog dialog to get printing parameters and then print
     the contents of the rich view control.

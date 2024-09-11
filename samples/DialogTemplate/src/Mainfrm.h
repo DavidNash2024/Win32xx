@@ -20,28 +20,28 @@ public:
     CMainFrame();
 
     // Virtual functions that override public base class functions
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
 
     void DialogFromTemplateText();
     CString GetFileName() const;
     CDialogsTree* GetTree();
     void UpdateToolbar();
-    void ShowTemplateText(HMODULE module, LPCTSTR dialogRes);
+    void ShowTemplateText(HMODULE module, LPCWSTR dialogRes);
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnInitialUpdate();
-    virtual void    OnMenuUpdate(UINT id);
-    virtual void    SetupMenuIcons();
-    virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnInitialUpdate() override;
+    virtual void    OnMenuUpdate(UINT id) override;
+    virtual void    SetupMenuIcons() override;
+    virtual void    SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Command handlers
     BOOL OnEditCopy();
@@ -64,7 +64,7 @@ private:
 
     // Private member functions
     void Reset();
-    BOOL WriteFile(LPCTSTR szFileName);
+    BOOL WriteFile(LPCWSTR szFileName);
 
     // Private member variables
     CRichView m_richView;

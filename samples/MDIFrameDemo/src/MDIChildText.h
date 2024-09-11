@@ -13,16 +13,16 @@ class CViewText : public CRichEdit
 {
 public:
     CViewText();
-    virtual ~CViewText();
+    virtual ~CViewText() override;
 
 protected:
-    virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewText(const CViewText&);               // Disable copy construction
-    CViewText& operator=(const CViewText&);    // Disable assignment operator
+    CViewText(const CViewText&) = delete;
+    CViewText& operator=(const CViewText&) = delete;
 
     CFont   m_font;
 };
@@ -35,17 +35,17 @@ class CMDIChildText : public CMDIChild
 {
 public:
     CMDIChildText();
-    virtual ~CMDIChildText();
+    virtual ~CMDIChildText() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMDIChildText(const CMDIChildText&);                // Disable copy construction
-    CMDIChildText& operator=(const CMDIChildText&);   // Disable assignment operator
+    CMDIChildText(const CMDIChildText&) = delete;
+    CMDIChildText& operator=(const CMDIChildText&) = delete;
 
     CViewText m_textView;
     CMenu m_menu;

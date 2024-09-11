@@ -13,8 +13,8 @@ class CView : public CDialog
 {
 public:
     CView(UINT resID);
-    virtual ~CView();
-    virtual HWND Create(HWND hParent);
+    virtual ~CView() override;
+    virtual HWND Create(HWND hParent) override;
 
     void DpiScaleImage();
     CDoc& GetDoc();
@@ -31,16 +31,16 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnCancel();
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnInitDialog();
-    virtual void OnOK();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void OnCancel() override;
+    virtual void OnClose() override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnInitDialog() override;
+    virtual void OnOK() override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     // Member variables
     CDoc     m_doc;

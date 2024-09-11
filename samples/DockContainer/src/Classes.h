@@ -15,18 +15,18 @@ class CViewClasses : public CTreeView
 {
 public:
     CViewClasses();
-    virtual ~CViewClasses();
+    virtual ~CViewClasses() override;
     void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions.
-    virtual void OnAttach();
-    void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewClasses(const CViewClasses&);               // Disable copy construction
-    CViewClasses& operator=(const CViewClasses&);    // Disable assignment operator
+    CViewClasses(const CViewClasses&) = delete;
+    CViewClasses& operator=(const CViewClasses&) = delete;
 
     // Command handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -41,17 +41,17 @@ class CContainClasses : public CDockContainer
 {
 public:
     CContainClasses();
-    virtual ~CContainClasses() {}
+    virtual ~CContainClasses() override {}
 
 protected:
     // Virtual functions that override base class functions.
-    virtual BOOL OnCommand(WPARAM, LPARAM);
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM, LPARAM) override;
+    virtual void SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CContainClasses(const CContainClasses&);              // Disable copy construction
-    CContainClasses& operator=(const CContainClasses&);   // Disable assignment operator
+    CContainClasses(const CContainClasses&) = delete;
+    CContainClasses& operator=(const CContainClasses&) = delete;
 
     // Command handlers
     BOOL OnFileNew();
@@ -69,15 +69,15 @@ class CDockClasses : public CDocker
 {
 public:
     CDockClasses();
-    virtual ~CDockClasses() {}
+    virtual ~CDockClasses() override {}
 
 protected:
-    virtual void RecalcDockLayout();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void RecalcDockLayout() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockClasses(const CDockClasses&);              // Disable copy construction
-    CDockClasses& operator=(const CDockClasses&);   // Disable assignment operator
+    CDockClasses(const CDockClasses&) = delete;
+    CDockClasses& operator=(const CDockClasses&) = delete;
 
     CContainClasses m_classes;
 };

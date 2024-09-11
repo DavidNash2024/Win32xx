@@ -41,10 +41,10 @@ INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -52,7 +52,7 @@ INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -67,7 +67,7 @@ CFormDoc& CFormView::GetDoc()
 // Called when the button is pressed.
 BOOL CFormView::OnButton()
 {
-    SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
+    SetDlgItemText(IDC_STATUS, L"Button Pressed");
     TRACE("Button Pressed\n");
     return TRUE;
 }
@@ -75,7 +75,7 @@ BOOL CFormView::OnButton()
 // Suppress closing the dialog when the esc key is pressed.
 void CFormView::OnCancel()
 {
-    SetDlgItemText(IDC_STATUS, _T("Cancel Pressed."));
+    SetDlgItemText(IDC_STATUS, L"Cancel Pressed.");
     TRACE("Cancel Pressed.\n");
 }
 
@@ -128,13 +128,13 @@ BOOL CFormView::OnInitDialog()
     AttachItem(IDC_BITMAP1, m_picture);
 
     // Put some text in the edit boxes
-    SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
-    SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
+    SetDlgItemText(IDC_EDIT1, L"Edit Control");
+    SetDlgItemText(IDC_RICHEDIT1, L"Rich Edit Window");
 
     // Put some text in the list box
     for (int i = 0 ; i < 8 ; i++)
     {
-        m_listBox.AddString(_T("List Box"));
+        m_listBox.AddString(L"List Box");
     }
 
     // Set initial button states
@@ -176,7 +176,7 @@ BOOL CFormView::OnInitDialog()
 // Suppress closing the dialog when the return key is pressed.
 void CFormView::OnOK()
 {
-    SetDlgItemText(IDC_STATUS, _T("Button Pressed."));
+    SetDlgItemText(IDC_STATUS, L"Button Pressed.");
     TRACE("Button Pressed.\n");
 }
 
@@ -234,7 +234,7 @@ BOOL CFormView::OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked)
 
     CString str;
     int button = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), button);
+    str.Format(L"Radio%d", button);
     TRACE(str); TRACE("\n");
     SetDlgItemText(IDC_STATUS, str);
 

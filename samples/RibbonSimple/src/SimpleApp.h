@@ -16,15 +16,15 @@ class CSimpleRibbonApp : public CWinApp
 {
 public:
     CSimpleRibbonApp();
-    virtual ~CSimpleRibbonApp();
+    virtual ~CSimpleRibbonApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CSimpleRibbonApp(const CSimpleRibbonApp&);               // Disable copy construction
-    CSimpleRibbonApp& operator=(const CSimpleRibbonApp&);    // Disable assignment operator
+    CSimpleRibbonApp(const CSimpleRibbonApp&) = delete;
+    CSimpleRibbonApp& operator=(const CSimpleRibbonApp&) = delete;
 
     CView m_view;
 };

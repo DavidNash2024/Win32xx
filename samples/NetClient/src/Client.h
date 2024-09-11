@@ -19,17 +19,17 @@ class CClientSocket : public CSocket
 {
 public:
     CClientSocket() {}
-    virtual ~CClientSocket() {}
+    virtual ~CClientSocket() override {}
 
 protected:
     // Virtual functions that override base class functions,
-    virtual void OnDisconnect();
-    virtual void OnConnect();
-    virtual void OnReceive();
+    virtual void OnDisconnect() override;
+    virtual void OnConnect() override;
+    virtual void OnReceive() override;
 
 private:
-    CClientSocket(const CClientSocket&);               // Disable copy construction
-    CClientSocket& operator=(const CClientSocket&);    // Disable assignment operator
+    CClientSocket(const CClientSocket&) = delete;
+    CClientSocket& operator=(const CClientSocket&) = delete;
 };
 
 

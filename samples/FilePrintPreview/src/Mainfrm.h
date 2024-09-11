@@ -29,8 +29,8 @@ CMainFrame : public CFrame                                                  /*
 {
     public:
         CMainFrame();
-        virtual ~CMainFrame() {}
-        virtual HWND Create(HWND parent = NULL);
+        virtual ~CMainFrame() override {}
+        virtual HWND Create(HWND parent = nullptr) override;
         const CString& GetPath() const  { return m_path;}
         CRichView&  GetRichView()       { return m_richView; }
 
@@ -55,26 +55,26 @@ CMainFrame : public CFrame                                                  /*
         BOOL    OnOptionsWrap(WordWrapType);
 
         void    QuickPrint(CPrintDialog& printDlg);
-        BOOL    ReadFile(LPCTSTR path);
-        void    SetPath(LPCTSTR path);
-        BOOL    WriteFile(LPCTSTR path);
+        BOOL    ReadFile(LPCWSTR path);
+        void    SaveModifiedText();
+        void    SetPath(LPCWSTR path);
+        BOOL    WriteFile(LPCWSTR path);
 
     protected:
-        virtual void    OnClose();
-        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-        virtual int     OnCreate(CREATESTRUCT& cs);
-        virtual void    OnInitialUpdate();
-        virtual void    OnMenuUpdate(UINT id);
-        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-        virtual void    PreCreate(CREATESTRUCT& cs);
-                void    SaveModifiedText();
-        virtual void    SetupMenuIcons();
-        virtual void    SetupToolBar();
-        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual void    OnClose() override;
+        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+        virtual int     OnCreate(CREATESTRUCT& cs) override;
+        virtual void    OnInitialUpdate() override;
+        virtual void    OnMenuUpdate(UINT id) override;
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+        virtual void    PreCreate(CREATESTRUCT& cs) override;
+        virtual void    SetupMenuIcons() override;
+        virtual void    SetupToolBar() override;
+        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
     private:
-        CMainFrame(const CMainFrame&);               // Disable copy construction
-        CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+        CMainFrame(const CMainFrame&) = delete;
+        CMainFrame& operator=(const CMainFrame&) = delete;
 
         CPrintPreviewEx m_printPreview;
         CRichView       m_richView;

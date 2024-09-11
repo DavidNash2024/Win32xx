@@ -11,12 +11,12 @@
 //
 
 // Finds the resources in the specified executable or DLL file.
-void CResourceFinder::FindResources(LPCTSTR fileName)
+void CResourceFinder::FindResources(LPCWSTR fileName)
 {
     m_fileName.Empty();
     m_allInfo.clear();
-    HMODULE module = LoadLibraryEx(fileName, NULL, LOAD_LIBRARY_AS_DATAFILE);
-    if (module != NULL)
+    HMODULE module = LoadLibraryEx(fileName, nullptr, LOAD_LIBRARY_AS_DATAFILE);
+    if (module != nullptr)
     {
         // Find all of the loaded file's resources.
         EnumResourceTypes(module, reinterpret_cast<ENUMRESTYPEPROC>(EnumTypesProc),
@@ -28,7 +28,7 @@ void CResourceFinder::FindResources(LPCTSTR fileName)
 }
 
 // Resource type callback procedure.
-BOOL CResourceFinder::EnumTypesProc(HANDLE module, LPTSTR typeName, LONG_PTR lparam)
+BOOL CResourceFinder::EnumTypesProc(HANDLE module, LPWSTR typeName, LONG_PTR lparam)
 {
     CResourceFinder* pFinder = reinterpret_cast<CResourceFinder*>(lparam);
     CString type;
@@ -52,8 +52,8 @@ BOOL CResourceFinder::EnumTypesProc(HANDLE module, LPTSTR typeName, LONG_PTR lpa
 }
 
 // Resource name callback procedure.
-BOOL CResourceFinder::EnumNamesProc(HANDLE module, LPCTSTR typeName,
-                                    LPCTSTR resourceName, LONG_PTR lparam)
+BOOL CResourceFinder::EnumNamesProc(HANDLE module, LPCWSTR typeName,
+                                    LPCWSTR resourceName, LONG_PTR lparam)
 {
     CResourceFinder* pFinder = reinterpret_cast<CResourceFinder*>(lparam);
     CString name;
@@ -77,7 +77,7 @@ BOOL CResourceFinder::EnumNamesProc(HANDLE module, LPCTSTR typeName,
 }
 
 // Resource language callback procedure.
-BOOL CResourceFinder::EnumLangsProc(HANDLE module, LPCTSTR typeName, LPCTSTR resourceName,
+BOOL CResourceFinder::EnumLangsProc(HANDLE module, LPCWSTR typeName, LPCWSTR resourceName,
     WORD languageID, LONG_PTR lparam)
 {
     CResourceFinder* pFinder = reinterpret_cast<CResourceFinder*>(lparam);

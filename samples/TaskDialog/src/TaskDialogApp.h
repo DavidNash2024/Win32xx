@@ -14,15 +14,15 @@ class CTaskDialogApp : public CWinApp
 {
 public:
     CTaskDialogApp();
-    virtual ~CTaskDialogApp();
+    virtual ~CTaskDialogApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CTaskDialogApp(const CTaskDialogApp&);               // Disable copy construction
-    CTaskDialogApp& operator=(const CTaskDialogApp&);    // Disable assignment operator
+    CTaskDialogApp(const CTaskDialogApp&) = delete;
+    CTaskDialogApp& operator=(const CTaskDialogApp&) = delete;
 };
 
 

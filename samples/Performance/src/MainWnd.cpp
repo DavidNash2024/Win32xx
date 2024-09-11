@@ -26,15 +26,15 @@ CMainWindow::~CMainWindow()
 }
 
 // Creates the main window.
-HWND CMainWindow::Create(HWND hParent /*= NULL*/)
+HWND CMainWindow::Create(HWND hParent /*= nullptr*/)
 {
-    CString str = _T("Main Window");
+    CString str = L"Main Window";
 
     // Create the main window
     CRect rc(20, 50, 400, 300);
     CRect rcDPI = DpiScaleRect(rc);
 
-    return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+    return CreateEx(WS_EX_TOPMOST, nullptr, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         rcDPI, hParent, 0);
 }
 
@@ -46,8 +46,7 @@ void CMainWindow::CreateTestWindows(int windows)
     for (int i = 0 ; i < windows; i++)
     {
         // Create the test windows
-        TestWindowPtr pTestWindow(new CTestWindow());
-        m_pTestWindows.push_back(pTestWindow);
+        m_pTestWindows.push_back(std::make_unique<CTestWindow>());
         m_pTestWindows[i]->CreateWin(i);
     }
 }
@@ -119,11 +118,12 @@ LRESULT CMainWindow::OnWindowCreated()
 void CMainWindow::OnAllWindowsCreated()
 {
     CString str;
-    str.Format(_T("%d  Windows Created"), m_testWindows);
+    str.Format(L"%d  Windows Created", m_testWindows);
     SendText(str);
-    SendText(_T("Ready to run performance test"));
+    SendText(L"Ready to run performance test");
 
-    int result = MessageBox(_T("Start the Performance Test?"), _T("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);
+    int result = MessageBox(L"Start the Performance Test?",
+        L"Ready", MB_OKCANCEL | MB_ICONEXCLAMATION);
     if (result != IDOK) return;
 
     PerformanceTest();
@@ -132,12 +132,12 @@ void CMainWindow::OnAllWindowsCreated()
     result = IDYES;
     while(result == IDYES)
     {
-        result = MessageBox(_T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
+        result = MessageBox(L"Run Test Again?", L"Ready", MB_YESNO | MB_ICONEXCLAMATION);
         if (result != IDYES) break;
 
         PerformanceTest();
     }
-    SendText(_T("Testing complete"));
+    SendText(L"Testing complete");
 }
 
 // Do the performance test.
@@ -147,7 +147,7 @@ void CMainWindow::PerformanceTest() const
     int messages = 0;
 
     CString str;
-    str.Format(str, _T("Sending %d  Messages\n"), m_testMessages);
+    str.Format(str, L"Sending %d  Messages\n", m_testMessages);
     SendText(str);
 
     // Choose a Window handle(HWND) to send the messages to
@@ -165,20 +165,20 @@ void CMainWindow::PerformanceTest() const
     double mSeconds = 1000.0 * (end - start) / m_frequency;
 
     // Display the results
-    str.Format(_T("%.2f milliseconds to process %d messages"), mSeconds, m_testMessages);
+    str.Format(L"%.2f milliseconds to process %d messages", mSeconds, m_testMessages);
     SendText(str);
 
-    str.Format(_T("%d total messages sent\n"), result);
+    str.Format(L"%d total messages sent\n", result);
     TRACE(str);
 
-    MessageBox(str, _T("Info"), MB_OK);
+    MessageBox(str, L"Info", MB_OK);
 }
 
 // Send text to the edit window.
-void CMainWindow::SendText(LPCTSTR str) const
+void CMainWindow::SendText(LPCWSTR str) const
 {
     m_edit.AppendText(str);
-    m_edit.AppendText(_T("\r\n"));
+    m_edit.AppendText(L"\r\n");
 
     TRACE(str);
     TRACE("\n");
@@ -204,10 +204,10 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -215,7 +215,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

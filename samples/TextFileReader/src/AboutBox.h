@@ -25,16 +25,16 @@ AboutBox    : public CDialog                                            /*
 {
     public:
         AboutBox();
-        virtual ~AboutBox(){}
+        virtual ~AboutBox() override {}
 
-        void    SetAboutBoxInfo(LPCTSTR info) { m_aboutBoxInfo = info;}
+        void    SetAboutBoxInfo(LPCWSTR info) { m_aboutBoxInfo = info;}
 
     protected:
-        virtual BOOL OnInitDialog();
+        virtual BOOL OnInitDialog() override;
 
     private:
-        AboutBox(const AboutBox&);               // Disable copy construction
-        AboutBox& operator=(const AboutBox&);    // Disable assignment operator
+        AboutBox(const AboutBox&) = delete;
+        AboutBox& operator=(const AboutBox&) = delete;
 
         CString m_aboutBoxInfo; // about the program, credits, etc.
 };

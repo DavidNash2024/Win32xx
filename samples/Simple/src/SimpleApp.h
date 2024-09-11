@@ -16,15 +16,15 @@ class CSimpleApp : public CWinApp
 {
 public:
     CSimpleApp();
-    virtual ~CSimpleApp() {}
+    virtual ~CSimpleApp() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CSimpleApp(const CSimpleApp&);               // Disable copy construction
-    CSimpleApp& operator=(const CSimpleApp&);    // Disable assignment operator
+    CSimpleApp(const CSimpleApp&) = delete;
+    CSimpleApp& operator=(const CSimpleApp&) = delete;
 
     CView m_view;
 };

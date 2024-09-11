@@ -13,7 +13,7 @@
 
 //////////////////////////////////
 // CMainFrame function definitions
-CMainFrame::CMainFrame() : m_pIUIRibbon(NULL)
+CMainFrame::CMainFrame() : m_pIUIRibbon(nullptr)
 {
     // Set m_view as the view window of the frame.
     SetView(m_view);
@@ -90,7 +90,7 @@ IUIRibbon* CMainFrame::GetIUIRibbon() const
 }
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message.
-void CMainFrame::LoadFile(LPCTSTR fileName)
+void CMainFrame::LoadFile(LPCWSTR fileName)
 {
     // Retrieve the PlotPoint data
     if (GetDoc().FileOpen(fileName))
@@ -159,8 +159,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 // Called in response to a UWM_DROPFILE message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
-    // wParam is a pointer (LPCTSTR) to the filename
-    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+    // wParam is a pointer (LPCWSTR) to the filename
+    LPCWSTR fileName = reinterpret_cast<LPCWSTR>(wparam);
     assert(fileName);
 
     // Load the file
@@ -176,7 +176,7 @@ void CMainFrame::OnFileExit()
 
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE, L"dat", NULL, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
+    CFileDialog fileDlg(TRUE, L"dat", nullptr, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
     fileDlg.SetTitle(L"Open File");
 
     // Bring up the file open dialog retrieve the selected filename
@@ -221,8 +221,8 @@ void CMainFrame::OnFilePrint()
             memset(&di, 0, sizeof(DOCINFO));
             di.cbSize = sizeof(DOCINFO);
             di.lpszDocName = L"Scribble Printout";
-            di.lpszOutput = static_cast<LPTSTR>(NULL);
-            di.lpszDatatype = static_cast<LPTSTR>(NULL);
+            di.lpszOutput = static_cast<LPWSTR>(nullptr);
+            di.lpszDatatype = static_cast<LPWSTR>(nullptr);
             di.fwType = 0;
 
             // Begin a print job by calling the StartDoc function.
@@ -232,8 +232,7 @@ void CMainFrame::OnFilePrint()
             // Inform the driver that the application is about to begin sending data.
             printDC.StartPage();
 
-            BITMAPINFOHEADER bi;
-            ZeroMemory(&bi, sizeof(bi));
+            BITMAPINFOHEADER bi{};
             bi.biSize = sizeof(bi);
             bi.biHeight = height;
             bi.biWidth = width;
@@ -243,11 +242,11 @@ void CMainFrame::OnFilePrint()
 
             // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
             // Get the size of the image data
-            VERIFY(memDC.GetDIBits(bmView, 0, height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS));
+            VERIFY(memDC.GetDIBits(bmView, 0, height, nullptr, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS));
 
             // Retrieve the image data
             std::vector<byte> vBits(bi.biSizeImage, 0); // a vector to hold the byte array
-            byte* pByteArray = &vBits.front();
+            byte* pByteArray = vBits.data();
             VERIFY(memDC.GetDIBits(bmView, 0, height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS));
 
             // Determine the scaling factors required to print the bitmap and retain its original proportions.
@@ -276,7 +275,7 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 }
 
@@ -290,7 +289,7 @@ void CMainFrame::OnFileSave()
 
 void CMainFrame::OnFileSaveAs()
 {
-    CFileDialog fileDlg(FALSE, L"dat", NULL, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
+    CFileDialog fileDlg(FALSE, L"dat", nullptr, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
     fileDlg.SetTitle(L"Save File");
 
     // Bring up the file open dialog retrieve the selected filename
@@ -320,11 +319,13 @@ LRESULT CMainFrame::OnGetAllPoints()
 
 void CMainFrame::OnInitialUpdate()
 {
+    using namespace std;
+
     // Add some Dockers to the Ribbon Frame
     DWORD style = DS_CLIENTEDGE; // The style added to each docker
     int dockWidth = DpiScaleInt(150);
-    CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | style, dockWidth);
-    CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | style, dockWidth);
+    CDocker* pDock1 = AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_LEFT | style, dockWidth);
+    CDocker* pDock2 = AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_RIGHT | style, dockWidth);
 
     assert(pDock1->GetContainer());
     assert(pDock2->GetContainer());
@@ -334,7 +335,7 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
 {
-    if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
+    if (ppropvarValue != nullptr && key != nullptr && UI_PKEY_SelectedItem == *key)
     {
         UINT mruItem = ppropvarValue->ulVal;
         MRUFileOpen(mruItem);
@@ -344,13 +345,13 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
 // Called when the DropdownColorPicker button is pressed.
 void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    if (ppropvarValue != NULL)
+    if (ppropvarValue != nullptr)
     {
         // Retrieve color type.
         UINT type = ppropvarValue->uintVal;
 
         // The Ribbon framework passes color as additional property if the color type is RGB.
-        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
+        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != nullptr)
         {
             // Retrieve color.
             PROPVARIANT var;
@@ -487,10 +488,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -498,7 +499,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

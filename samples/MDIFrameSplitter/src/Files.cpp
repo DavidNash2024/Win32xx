@@ -26,23 +26,23 @@ CViewFiles::~CViewFiles()
 void CViewFiles::InsertItems()
 {
     // Add 4th item.
-    int item = InsertItem(0, _T("ListViewApp.h"), 2);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C Header file"));
+    int item = InsertItem(0, L"ListViewApp.h", 2);
+    SetItemText(item, 1, L"1 KB");
+    SetItemText(item, 2, L"C Header file");
 
     // Add 3rd item.
-    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
-    SetItemText(item, 1, _T("3 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
+    item = InsertItem(item, L"ListViewApp.cpp", 1);
+    SetItemText(item, 1, L"3 KB");
+    SetItemText(item, 2, L"C++ Source file");
 
     // Add 2nd item.
-    item = InsertItem(item, _T("main.cpp"), 1);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
+    item = InsertItem(item, L"main.cpp", 1);
+    SetItemText(item, 1, L"1 KB");
+    SetItemText(item, 2, L"C++ Source file");
 
     // Add 1st item.
-    item = InsertItem(item, _T("ListView"), 0);
-    SetItemText(item, 2, _T("Folder"));
+    item = InsertItem(item, L"ListView", 0);
+    SetItemText(item, 2, L"Folder");
 }
 
 // Called when a window handle (HWND) is attached to CViewFiles.
@@ -80,9 +80,9 @@ void CViewFiles::SetColumns()
     DeleteAllItems();
 
     // Add the column items.
-    InsertColumn(0, _T("Name"), 0, DpiScaleInt(120));
-    InsertColumn(1, _T("Size"), 0, DpiScaleInt(50));
-    InsertColumn(2, _T("Type"), 0, DpiScaleInt(120));
+    InsertColumn(0, L"Name", 0, DpiScaleInt(120));
+    InsertColumn(1, L"Size", 0, DpiScaleInt(50));
+    InsertColumn(2, L"Type", 0, DpiScaleInt(120));
 }
 
 // Process the list view's window messages.
@@ -103,10 +103,10 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -114,7 +114,7 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -125,9 +125,9 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // CContainFiles functions
 CContainFiles::CContainFiles()
 {
-    SetTabText(_T("FileView"));
+    SetTabText(L"FileView");
     SetTabIcon(IDI_FILEVIEW);
-    SetDockCaption (_T("File View - Docking container"));
+    SetDockCaption (L"File View - Docking container");
     SetView(m_viewFiles);
 }
 
@@ -145,10 +145,10 @@ LRESULT CContainFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -156,7 +156,7 @@ LRESULT CContainFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -192,10 +192,10 @@ LRESULT CDockFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -203,7 +203,7 @@ LRESULT CDockFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

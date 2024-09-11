@@ -201,9 +201,6 @@
     <ClInclude Include="..\src\UserMessages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\CustomPrintDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>

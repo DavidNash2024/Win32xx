@@ -20,8 +20,8 @@ namespace ShellWrapper
     ///////////////////
     // Global functions
     //
-    BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName);
-    BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName);
+    BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPWSTR pszDisplayName);
+    BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPWSTR pszPathName);
 
 
     ////////////////////////////////////////////////////////////////

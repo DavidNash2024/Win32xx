@@ -16,16 +16,16 @@ class CPerformanceApp : public CWinApp
 {
 public:
     CPerformanceApp();
-    virtual ~CPerformanceApp();
+    virtual ~CPerformanceApp() override;
     CMainWindow& GetMainWnd() {return m_mainWnd;}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CPerformanceApp(const CPerformanceApp&);               // Disable copy construction
-    CPerformanceApp& operator=(const CPerformanceApp&);    // Disable assignment operator
+    CPerformanceApp(const CPerformanceApp&) = delete;
+    CPerformanceApp& operator=(const CPerformanceApp&) = delete;
 
     CMainWindow m_mainWnd;
 };

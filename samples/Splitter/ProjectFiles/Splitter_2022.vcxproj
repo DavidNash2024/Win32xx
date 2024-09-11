@@ -91,7 +91,6 @@
     <ClInclude Include="..\src\SplitterApp.h" />
     <ClInclude Include="..\src\SplitterPanes.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
     <ClInclude Include="..\src\Views.h" />
   </ItemGroup>
   <ItemGroup>

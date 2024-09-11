@@ -29,8 +29,8 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList() override;
-    CViewList(const CViewList&) = delete;               // Disable copy construction
-    CViewList& operator=(const CViewList&) = delete;    // Disable assignment operator
+    CViewList(const CViewList&) = delete;
+    CViewList& operator=(const CViewList&) = delete;
 
     void    AddItem(const MovieInfo& mi);
     void    SetDPIImages();
@@ -39,7 +39,7 @@ public:
     void    UpdateItemImage(int item);
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void    OnAttach() override;
     virtual void    OnInitialUpdate() override;
     virtual LRESULT OnNotify(WPARAM, LPARAM lparam) override;
@@ -50,7 +50,7 @@ protected:
 private:
     static int CALLBACK CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems);
 
-    // Message handlers
+    // Message handlers.
     LRESULT OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw);
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnItemActivate(LPNMLISTVIEW pListView);
@@ -64,7 +64,7 @@ private:
     void    SetColumn();
     BOOL    SetHeaderSortImage(int  columnIndex, int showArrow);
 
-    // Member variables
+    // Member variables.
     int m_oldDPI;
 };
 

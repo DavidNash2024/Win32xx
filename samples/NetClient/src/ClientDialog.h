@@ -17,19 +17,20 @@ class CClientDialog : public CDialog
 {
 public:
     CClientDialog(UINT resID);
-    virtual ~CClientDialog();
+    virtual ~CClientDialog() override;
+
+    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnClose();
-    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
-    virtual BOOL    OnInitDialog();
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual void    OnClose() override;
+    virtual BOOL    OnInitDialog() override;
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CClientDialog(const CClientDialog&);               // Disable copy construction
-    CClientDialog& operator=(const CClientDialog&);    // Disable assignment operator
+    CClientDialog(const CClientDialog&) = delete;
+    CClientDialog& operator=(const CClientDialog&) = delete;
 
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
@@ -54,8 +55,7 @@ private:
     BOOL OnSocketConnect();
     BOOL OnSocketReceive();
 
-    void AppendText(const CEdit& edit, LPCTSTR text);
-    void LoadCommonControlsEx();
+    void AppendText(const CEdit& edit, LPCWSTR text);
     void OnStartClient();
     void OnSend();
 

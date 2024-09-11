@@ -16,18 +16,18 @@ class CMetaView : public CWnd
 {
 public:
     CMetaView() {}
-    virtual ~CMetaView() {}
+    virtual ~CMetaView() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual int OnCreate(CREATESTRUCT&);
-    virtual void OnDraw(CDC& dc);
-    virtual void OnDestroy();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int OnCreate(CREATESTRUCT&) override;
+    virtual void OnDraw(CDC& dc) override;
+    virtual void OnDestroy() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMetaView(const CMetaView&);               // Disable copy construction
-    CMetaView& operator=(const CMetaView&);    // Disable assignment operator
+    CMetaView(const CMetaView&) = delete;
+    CMetaView& operator=(const CMetaView&) = delete;
 
     CEnhMetaFile  m_enhMetaFile;
 };

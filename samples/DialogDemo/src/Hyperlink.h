@@ -18,18 +18,18 @@ class CHyperlink :  public CStatic
 {
 public:
     CHyperlink();
-    virtual ~CHyperlink();
+    virtual ~CHyperlink() override;
 
     void SetUrlFont(CFont urlFont) { m_urlFont = urlFont; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CHyperlink(const CHyperlink&);               // Disable copy construction
-    CHyperlink& operator=(const CHyperlink&);    // Disable assignment operator
+    CHyperlink(const CHyperlink&) = delete;
+    CHyperlink& operator=(const CHyperlink&) = delete;
     void OpenUrl();
 
     // Message handlers

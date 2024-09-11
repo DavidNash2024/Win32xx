@@ -84,7 +84,6 @@
     <ClInclude Include="..\src\Splash.h" />
     <ClInclude Include="..\src\SplashThread.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
     <ClInclude Include="..\src\Tree.h" />
     <ClInclude Include="..\src\UserMessages.h" />
   </ItemGroup>

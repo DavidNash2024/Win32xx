@@ -22,7 +22,7 @@ void CViewSimple::OnDraw(CDC& dc)
 
     // Centre some text in the window.
     CRect rc = GetClientRect();
-    dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    dc.DrawText(L"Simple View", -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -44,10 +44,10 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -55,7 +55,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -77,28 +77,31 @@ CViewList::~CViewList()
 void CViewList::InsertItems()
 {
     // Add 4th item.
-    int item = InsertItem(0, _T("ListViewApp.h"), 2);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C Header file"));
+    int item = InsertItem(0, L"ListViewApp.h", 2);
+    SetItemText(item, 1, L"1 KB");
+    SetItemText(item, 2, L"C Header file");
 
     // Add 3rd item.
-    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
-    SetItemText(item, 1, _T("3 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
+    item = InsertItem(item, L"ListViewApp.cpp", 1);
+    SetItemText(item, 1, L"3 KB");
+    SetItemText(item, 2, L"C++ Source file");
 
     // Add 2nd item.
-    item = InsertItem(item, _T("main.cpp"), 1);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
+    item = InsertItem(item, L"main.cpp", 1);
+    SetItemText(item, 1, L"1 KB");
+    SetItemText(item, 2, L"C++ Source file");
 
     // Add 1st item.
-    item = InsertItem(item, _T("ListView"), 0);
-    SetItemText(item, 2, _T("Folder"));
+    item = InsertItem(item, L"ListView", 0);
+    SetItemText(item, 2, L"Folder");
 }
 
 
 void CViewList::OnAttach()
 {
+    // Call the base class function.
+    CListView::OnAttach();
+
     // Set the image lists
     SetDPIImages();
 
@@ -127,9 +130,9 @@ void CViewList::SetColumns()
     DeleteAllItems();
 
     // Add the column items.
-    InsertColumn(0, _T("Name"));
-    InsertColumn(1, _T("Size"));
-    InsertColumn(2, _T("Type"));
+    InsertColumn(0, L"Name");
+    InsertColumn(1, L"Size");
+    InsertColumn(2, L"Type");
     SetDPIColumnWidths();
 
 }
@@ -172,10 +175,10 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -183,7 +186,7 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -215,19 +218,19 @@ void CViewTree::OnAttach()
     DeleteAllItems();
 
     // Add some tree-view items.
-    HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
-    HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
-    InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("GetMainFrame()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("InitInstance()"), 3, 3, htiCTreeViewApp);
-    HTREEITEM htiMainFrame = InsertItem(_T("CMainFrame"), 1, 1, htiRoot);
-    InsertItem(_T("CMainFrame()"), 3, 3, htiMainFrame);
-    InsertItem(_T("OnCommand()"), 4, 4, htiMainFrame);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiMainFrame);
-    HTREEITEM htiView = InsertItem(_T("CView"), 1, 1, htiRoot);
-    InsertItem(_T("CView()"), 3, 3, htiView);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
-    InsertItem(_T("WndProc()"), 4, 4, htiView);
+    HTREEITEM htiRoot = InsertItem(L"TreeView", 0, 0);
+    HTREEITEM htiCTreeViewApp = InsertItem(L"CTreeViewApp", 1, 1, htiRoot);
+    InsertItem(L"CTreeViewApp()", 3, 3, htiCTreeViewApp);
+    InsertItem(L"GetMainFrame()", 3, 3, htiCTreeViewApp);
+    InsertItem(L"InitInstance()", 3, 3, htiCTreeViewApp);
+    HTREEITEM htiMainFrame = InsertItem(L"CMainFrame", 1, 1, htiRoot);
+    InsertItem(L"CMainFrame()", 3, 3, htiMainFrame);
+    InsertItem(L"OnCommand()", 4, 4, htiMainFrame);
+    InsertItem(L"OnInitialUpdate()", 4, 4, htiMainFrame);
+    HTREEITEM htiView = InsertItem(L"CView", 1, 1, htiRoot);
+    InsertItem(L"CView()", 3, 3, htiView);
+    InsertItem(L"OnInitialUpdate()", 4, 4, htiView);
+    InsertItem(L"WndProc()", 4, 4, htiView);
 
     // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
@@ -277,10 +280,10 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -288,7 +291,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -301,13 +304,13 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 void CViewText::OnAttach()
 {
     SetDPIFont();
-    SetWindowText(_T("Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ..."));
+    SetWindowText(L"Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ...");
 }
 
 // Adjusts the font size in response to window DPI changes.
 void CViewText::SetDPIFont()
 {
-    m_font.CreatePointFont(100, _T("Courier New"));
+    m_font.CreatePointFont(100, L"Courier New");
     m_font = DpiScaleFont(m_font, 9);
     SetFont(m_font);
 }
@@ -326,10 +329,10 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -337,7 +340,7 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

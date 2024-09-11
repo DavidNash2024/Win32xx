@@ -9,7 +9,7 @@
 ////////////////////////////
 // CDoc function definitions
 //
-BOOL CDoc::FileOpen(LPCTSTR filename)
+BOOL CDoc::FileOpen(LPCWSTR filename)
 {
     GetAllPoints().clear();
     BOOL result = FALSE;
@@ -24,7 +24,7 @@ BOOL CDoc::FileOpen(LPCTSTR filename)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         GetAllPoints().clear();
     }
@@ -32,7 +32,7 @@ BOOL CDoc::FileOpen(LPCTSTR filename)
     return result;
 }
 
-BOOL CDoc::FileSave(LPCTSTR filename)
+BOOL CDoc::FileSave(LPCWSTR filename)
 {
     BOOL result = TRUE;
 
@@ -44,7 +44,7 @@ BOOL CDoc::FileSave(LPCTSTR filename)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
         result = FALSE;
     }
 
@@ -62,11 +62,9 @@ void CDoc::Serialize(CArchive &ar)
         ar << points;
 
         // Store the PlotPoint data
-        std::vector<PlotPoint>::iterator iter;
-        for (iter = GetAllPoints().begin(); iter != GetAllPoints().end(); ++iter)
+        for (PlotPoint& pp : GetAllPoints())
         {
-            PlotPoint pp = (*iter);
-            ArchiveObject ao( &pp, sizeof(PlotPoint) );
+            ArchiveObject ao(&pp, sizeof(pp));
             ar << ao;
         }
     }
@@ -82,7 +80,7 @@ void CDoc::Serialize(CArchive &ar)
         // Load the PlotPoint data
         for (UINT u = 0; u < points; ++u)
         {
-            ArchiveObject ao( &pp, sizeof(pp) );
+            ArchiveObject ao(&pp, sizeof(pp));
             ar >> ao;
             GetAllPoints().push_back(pp);
         }

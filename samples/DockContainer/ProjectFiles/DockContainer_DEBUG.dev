@@ -1,7 +1,7 @@
 [Project]
 FileName=DockContainer_DEBUG.dev
 Name=ContainerDocking
-UnitCount=20
+UnitCount=19
 Type=0
 Ver=2
 ObjFiles=
@@ -11,8 +11,8 @@ PrivateResource=ContainerDocking_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _DEBUG_@@__@@__@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_
+CppCompiler=-D _DEBUG_@@_-DUNICODE_@@_-D_UNICODE_@@__@@__@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_-municode_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -141,16 +141,6 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit16]
-FileName=..\src\targetver.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
 FileName=..\src\Text.cpp
 CompileCpp=1
 Folder=Source
@@ -160,7 +150,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit17]
 FileName=..\src\Text.h
 CompileCpp=1
 Folder=Header
@@ -170,10 +160,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit18]
 FileName=..\src\MainContainer.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=..\src\MainContainer.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

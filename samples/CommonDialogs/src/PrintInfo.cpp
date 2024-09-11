@@ -52,7 +52,7 @@ CPrintInfo()                                                            /*
 
 *-----------------------------------------------------------------------------*/
 {
-    m_pPD = NULL;
+    m_pPD = nullptr;
     m_bPreview   = FALSE;       // initialize to not preview
     m_bDirect    = FALSE;       // initialize to not direct
     m_bDocObject = FALSE;       // initialize to not IPrint
@@ -63,16 +63,16 @@ CPrintInfo()                                                            /*
 
     m_nCopies    = 1;       // number of copies to print
     m_nFromPage  = 1;       // first printed page, 1 based
-    m_nMaxPage   = 0xffff;      // maximum page limit
+    m_nMaxPage   = 0xffff;  // maximum page limit
     m_nMinPage   = 1;       // minimum page limit
-    m_nToPage    = 0xffff;      // last printed page
+    m_nToPage    = 0xffff;  // last printed page
     m_nCurPage   = 0;       // Current page
 
-    m_lpUserData = NULL;        // pointer to user created struct
-    m_nNumPreviewPages = 0;     // (not supported)
+    m_lpUserData = nullptr;         // pointer to user created struct
+    m_nNumPreviewPages = 0;         // (not supported)
     m_rectDraw.SetRect(0, 0, 0, 0); // rect of current usable page area
-    m_strPageDesc = _T("Page %u");  // Format string for page number display
-    m_nMargin     = 0;     // page margin, in twips
+    m_strPageDesc = L"Page %u";     // Format string for page number display
+    m_nMargin     = 0;              // page margin, in twips
 }
 
 /*============================================================================*/

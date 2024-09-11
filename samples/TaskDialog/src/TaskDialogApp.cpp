@@ -23,7 +23,7 @@ BOOL CTaskDialogApp::InitInstance()
     if (!CTaskDialog::IsSupported())
     {
         // Task Dialogs are only supported on Vista and above.
-        ::MessageBoxW(NULL, L"Vista or later is required for Task Dialogs", L"Not Supported!", MB_ICONERROR);
+        ::MessageBoxW(nullptr, L"Vista or later is required for Task Dialogs", L"Not Supported!", MB_ICONERROR);
         return FALSE;
     }
 

@@ -9,9 +9,7 @@
 #include "MyThread.h"
 #include "MyEdit.h"
 
-// Note: Modern C++ compilers can use this typedef instead.
-// typedef std::shared_ptr<CMyWinThread> MyThreadPtr;
-typedef Shared_Ptr<CMyWinThread> MyThreadPtr;
+using MyThreadPtr = std::unique_ptr<CMyWinThread>;
 
 
 /////////////////////////////////////////////////////
@@ -20,20 +18,20 @@ class CMainWindow : public CWnd
 {
 public:
     CMainWindow();
-    virtual ~CMainWindow() {}
-    HWND Create(HWND parent = NULL);
+    virtual ~CMainWindow() override {}
+    HWND Create(HWND parent = nullptr) override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnDestroy() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainWindow(const CMainWindow&);               // Disable copy construction
-    CMainWindow& operator=(const CMainWindow&);    // Disable assignment operator
+    CMainWindow(const CMainWindow&) = delete;
+    CMainWindow& operator=(const CMainWindow&) = delete;
 
-    void AppendText(LPCTSTR text);
+    void AppendText(LPCWSTR text);
 
     // Message handlers
     void    OnAllWindowsCreated();

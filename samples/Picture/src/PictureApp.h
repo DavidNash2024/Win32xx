@@ -16,16 +16,16 @@ class CPictureApp : public CWinApp
 {
 public:
     CPictureApp();
-    virtual ~CPictureApp();
+    virtual ~CPictureApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
-    virtual BOOL OnIdle(LONG);
+    virtual BOOL InitInstance() override;
+    virtual BOOL OnIdle(LONG) override;
 
 private:
-    CPictureApp(const CPictureApp&);               // Disable copy construction
-    CPictureApp& operator=(const CPictureApp&);    // Disable assignment operator
+    CPictureApp(const CPictureApp&) = delete;
+    CPictureApp& operator=(const CPictureApp&) = delete;
 
     CMainFrame m_frame;
 };

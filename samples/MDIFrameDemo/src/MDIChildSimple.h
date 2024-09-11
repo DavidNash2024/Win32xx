@@ -13,19 +13,19 @@ class CViewSimple : public CWnd
 {
 public:
     CViewSimple();
-    virtual ~CViewSimple() {}
+    virtual ~CViewSimple() override {}
 
     COLORREF GetColor() {return m_color;}
     void SetColor(COLORREF color) { m_color = color; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewSimple(const CViewSimple&);               // Disable copy construction
-    CViewSimple& operator=(const CViewSimple&);    // Disable assignment operator
+    CViewSimple(const CViewSimple&) = delete;
+    CViewSimple& operator=(const CViewSimple&) = delete;
 
     COLORREF m_color;
 };
@@ -38,18 +38,18 @@ class CMDIChildSimple : public CMDIChild
 {
 public:
     CMDIChildSimple();
-    virtual ~CMDIChildSimple();
+    virtual ~CMDIChildSimple() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnClose() override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMDIChildSimple(const CMDIChildSimple&);                // Disable copy construction
-    CMDIChildSimple& operator=(const CMDIChildSimple&);   // Disable assignment operator
+    CMDIChildSimple(const CMDIChildSimple&) = delete;
+    CMDIChildSimple& operator=(const CMDIChildSimple&) = delete;
 
     CViewSimple m_view;
     CMenu m_menu;

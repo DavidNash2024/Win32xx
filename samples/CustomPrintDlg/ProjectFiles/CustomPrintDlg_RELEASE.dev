@@ -1,7 +1,7 @@
 [Project]
 FileName=CustomPrintDlg_RELEASE.dev
 Name=CustomPrintDlg
-UnitCount=15
+UnitCount=14
 Type=0
 Ver=2
 ObjFiles=
@@ -11,8 +11,8 @@ PrivateResource=CustomPrintDlg_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D NDEBUG_@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_-lWinspool_@@_-s_@@_
+CppCompiler=-D NDEBUG_@@_-DUNICODE_@@_-D_UNICODE_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_-lWinspool_@@_-s_@@_-municode_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release
@@ -140,16 +140,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\src\targetver.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
 FileName=..\src\TextApp.cpp
 CompileCpp=1
 Folder=Source
@@ -159,7 +149,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit11]
 FileName=..\src\TextApp.h
 CompileCpp=1
 Folder=Header
@@ -169,7 +159,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit12]
 FileName=..\src\UserMessages.h
 CompileCpp=1
 Folder=Header
@@ -179,10 +169,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit13]
 FileName=..\src\CustomPrintDlg.cpp
 CompileCpp=1
 Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\CustomPrintDlg.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

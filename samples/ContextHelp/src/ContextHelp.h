@@ -42,22 +42,22 @@ class CContextHelp : public CWnd
 {
 public:
     CContextHelp();
-    virtual ~CContextHelp();
+    virtual ~CContextHelp() override;
 
-    void  AddHelpTopic(UINT id, LPCTSTR topic);
+    void  AddHelpTopic(UINT id, LPCWSTR topic);
     const CString& GetHelpFilePath() const     { return m_helpFilePath; }
-    void  SetHelpFilePath(LPCTSTR chmName)     { m_helpFilePath = chmName; }
+    void  SetHelpFilePath(LPCWSTR chmName)     { m_helpFilePath = chmName; }
     void  ShowHelpTopic(UINT id);
-    void  ShowHelpTopic(LPCTSTR topic);
+    void  ShowHelpTopic(LPCWSTR topic);
 
 protected:
-    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CContextHelp(const CContextHelp&);               // Disable copy construction
-    CContextHelp& operator=(const CContextHelp&);    // Disable assignment operator
+    CContextHelp(const CContextHelp&) = delete;
+    CContextHelp& operator=(const CContextHelp&) = delete;
 
-    HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
+    HWND    CreateHtmlHelp(HWND hwndCaller, LPCWSTR string, UINT command, DWORD data);
 
     // Member variables
     CString m_helpFilePath;                 // Help file path

@@ -38,7 +38,7 @@ CView : public CDialog                                                      /*
 {
     public:
         CView(UINT nResID);
-        virtual ~CView() {}
+        virtual ~CView() override {}
 
         void    AdjustStatus();
         BOOL    GetCheckA() const       { return m_checkVal[0]; }
@@ -60,17 +60,17 @@ CView : public CDialog                                                      /*
         void    UpdateDocument();
 
     protected:
-        virtual void    DoDataExchange(CDataExchange& dx);
-        virtual BOOL    OnInitDialog();
-        virtual void    OnOK();
-        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-        virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-        virtual void    OnCancel() {}   // Suppress esc key closing the dialog
-        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+        virtual void    DoDataExchange(CDataExchange& dx) override;
+        virtual BOOL    OnInitDialog() override;
+        virtual void    OnOK() override;
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+        virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM) override;
+        virtual void    OnCancel() override {}   // Suppress esc key closing the dialog
+        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
 
     private:
-        CView(const CView&);               // Disable copy construction
-        CView& operator=(const CView&);    // Disable assignment operator
+        CView(const CView&) = delete;
+        CView& operator=(const CView&) = delete;
 
         BOOL    AddToolTip(UINT id);
         BOOL    AddToolTip(UINT id, const CString & s);
@@ -105,7 +105,7 @@ CView : public CDialog                                                      /*
         CString     m_editVal;
         CString     m_richEditVal;
         CString     m_statusBoxVal;
-        TCHAR       m_LPTSTRVal[256];
+        WCHAR       m_LPWSTRVal[256];
         SYSTEMTIME  m_dateSysTime;
         SYSTEMTIME  m_calDateSysTime;
 

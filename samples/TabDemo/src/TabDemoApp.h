@@ -17,15 +17,15 @@ class CTabDemoApp : public CWinApp
 {
 public:
     CTabDemoApp();
-    virtual ~CTabDemoApp();
+    virtual ~CTabDemoApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CTabDemoApp(const CTabDemoApp&);               // Disable copy construction
-    CTabDemoApp& operator=(const CTabDemoApp&);    // Disable assignment operator
+    CTabDemoApp(const CTabDemoApp&) = delete;
+    CTabDemoApp& operator=(const CTabDemoApp&) = delete;
 
     CMainFrame m_frame;
 };

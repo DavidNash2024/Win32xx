@@ -29,7 +29,7 @@ void CViewSimple::OnDraw(CDC& dc)
     // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);
-    dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    dc.DrawText(L"View Window", -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 // Process the simple view's window messages.
@@ -54,10 +54,10 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -65,7 +65,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -78,8 +78,8 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Constructor.
 CMDIChildSimple::CMDIChildSimple()
 {
-    m_menu.LoadMenu(_T("MdiMenuView"));
-    SetHandles(m_menu, NULL);
+    m_menu.LoadMenu(L"MdiMenuView");
+    SetHandles(m_menu, nullptr);
     SetView(m_view);
 }
 
@@ -91,7 +91,7 @@ CMDIChildSimple::~CMDIChildSimple()
 // Called when the window is created.
 int CMDIChildSimple::OnCreate(CREATESTRUCT& cs)
 {
-    SetWindowText(_T("Simple Window"));
+    SetWindowText(L"Simple Window");
     SetIconLarge(IDI_VIEW);
     SetIconSmall(IDI_VIEW);
 
@@ -101,7 +101,7 @@ int CMDIChildSimple::OnCreate(CREATESTRUCT& cs)
 // Called when the window is asked to close.
 void CMDIChildSimple::OnClose()
 {
-    int nResult = MessageBox(_T("OK to close Window?"), _T("File Close"), MB_YESNO);
+    int nResult = MessageBox(L"OK to close Window?", L"File Close", MB_YESNO);
 
     if (nResult == IDYES)
         MDIDestroy();
@@ -159,10 +159,10 @@ LRESULT CMDIChildSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -170,7 +170,7 @@ LRESULT CMDIChildSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

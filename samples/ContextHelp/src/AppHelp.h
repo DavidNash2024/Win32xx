@@ -18,14 +18,14 @@ public:
     CHelp();
     virtual ~CHelp() {}
 
-    BOOL About(HWND hParent = NULL);
-    void SetCredits(LPCTSTR credits);
-    void SetHelpFilePath(LPCTSTR chmName);
+    BOOL About(HWND hParent = nullptr);
+    void SetCredits(LPCWSTR credits);
+    void SetHelpFilePath(LPCWSTR chmName);
     void ShowHelpTopic(UINT id);
-    void ShowHelpTopic(LPCTSTR topic);
+    void ShowHelpTopic(LPCWSTR topic);
 
 private:
-    void AddHelpTopic(UINT id, LPCTSTR topic);
+    void AddHelpTopic(UINT id, LPCWSTR topic);
     void SetCommandHelpTopics();
     void SetClientHelpTopics();
     void SetFrameHelpTopics();

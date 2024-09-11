@@ -16,15 +16,15 @@ class CRibbonFrameApp : public CWinApp
 {
 public:
     CRibbonFrameApp();
-    virtual ~CRibbonFrameApp();
+    virtual ~CRibbonFrameApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CRibbonFrameApp(const CRibbonFrameApp&);               // Disable copy construction
-    CRibbonFrameApp& operator=(const CRibbonFrameApp&);    // Disable assignment operator
+    CRibbonFrameApp(const CRibbonFrameApp&) = delete;
+    CRibbonFrameApp& operator=(const CRibbonFrameApp&) = delete;
 
     CMainMDIFrame m_Frame;
 };

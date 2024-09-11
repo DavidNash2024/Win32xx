@@ -22,8 +22,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewRect(const CViewRect&);               // Disable copy construction
-    CViewRect& operator=(const CViewRect&);    // Disable assignment operator
+    CViewRect(const CViewRect&) = delete;
+    CViewRect& operator=(const CViewRect&) = delete;
 
     // Message Handlers
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -42,16 +42,16 @@ class CMDIChildRect : public CMDIChild
 {
 public:
     CMDIChildRect();
-    virtual ~CMDIChildRect();
+    virtual ~CMDIChildRect() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual int OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMDIChildRect(const CMDIChildRect&);                // Disable copy construction
-    CMDIChildRect& operator=(const CMDIChildRect&);   // Disable assignment operator
+    CMDIChildRect(const CMDIChildRect&) = delete;
+    CMDIChildRect& operator=(const CMDIChildRect&) = delete;
 
     CViewRect m_rectView;
     CMenu m_menu;

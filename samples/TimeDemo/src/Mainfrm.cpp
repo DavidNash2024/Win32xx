@@ -40,7 +40,7 @@ CMainFrame()                                                                /*
     m_yWin  = 100;
     m_cxWin = 800;
     m_cyWin = 700;
-    ZeroMemory(&m_plWnd, sizeof(WINDOWPLACEMENT));
+    m_plWnd = {};
 
       // Set m_view as the view window of the frame.
     SetView(m_view);
@@ -142,9 +142,9 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
           // Process the exception and  quit
         CString msg;
         CString what(e.what());
-        msg.Format(_T("Error restoring previous parameters.\n%s\n%s"),
+        msg.Format(L"Error restoring previous parameters.\n%s\n%s",
             e.GetText(), e.GetErrorString());
-        ::MessageBox(NULL, msg.c_str(), what.c_str(),
+        ::MessageBox(nullptr, msg.c_str(), what.c_str(),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
           // remove the corrupted application archive file
         ::DeleteFile(m_arcName);
@@ -152,8 +152,8 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     }
     catch(...)
     {
-        CString msg = _T("Error restoring previous parameters.\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+        CString msg = L"Error restoring previous parameters.\n";
+        ::MessageBox(nullptr, msg.c_str(), L"Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         m_view.SetDefaults();
     }
@@ -189,15 +189,15 @@ OnDestroy()                                                                 /*
           // Process the exception and  quit
         CString msg;
         CString what(e.what());
-        msg.Format(_T("Error while saving program settings:\n%s\n%s"),
+        msg.Format(L"Error while saving program settings:\n%s\n%s",
             e.GetText(), e.GetErrorString());
-        ::MessageBox(NULL, msg.c_str(), what.c_str(),
+        ::MessageBox(nullptr, msg.c_str(), what.c_str(),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...)
     {
-        CString msg = _T("Error while saving program settings:\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+        CString msg = L"Error while saving program settings:\n";
+        ::MessageBox(nullptr, msg.c_str(), L"Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     CFrame::OnDestroy();
@@ -239,7 +239,7 @@ OnFileOpen()                                                                /*
 {
     // Bring up the dialog, and  open the file
     CString str =
-        ThisDoc().GetDocOpenFileName(_T("Name the file to open..."));
+        ThisDoc().GetDocOpenFileName(L"Name the file to open...");
     if (str.IsEmpty())
         return;
 
@@ -335,9 +335,8 @@ OnFontChoice()                                                              /*
 
         catch (const CResourceException&)
         {
-            ::MessageBox(NULL, _T("Font creation error."),
-                _T("Error"), MB_OK | MB_ICONEXCLAMATION |
-                MB_TASKMODAL);
+            ::MessageBox(nullptr, L"Font creation error.", L"Error",
+                MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
         }
     }
 
@@ -431,7 +430,7 @@ Serialize(CArchive &ar)                                                     /*
           // reconstructed.
 
           // save current window placement information
-        ZeroMemory(&m_plWnd, sizeof(WINDOWPLACEMENT));
+        m_plWnd = {};
         m_plWnd.length = sizeof(WINDOWPLACEMENT);
         GetWindowPlacement(m_plWnd);
         ArchiveObject w(&m_plWnd, m_plWnd.length);
@@ -447,7 +446,7 @@ Serialize(CArchive &ar)                                                     /*
         ar << m_MRU;
         ar << m_view;
 
-        CString str = _T("Complete");
+        CString str = L"Complete";
         ar << str;
 
     }
@@ -481,8 +480,8 @@ Serialize(CArchive &ar)                                                     /*
         // ensure we've read the entire archive
         CString str;
         ar >> str;
-        if (str != _T("Complete"))
-            throw CUserException(_T("Invalid archive"));
+        if (str != L"Complete")
+            throw CUserException(L"Invalid archive");
     }
 }
 
@@ -495,7 +494,7 @@ Called from the CFrame::OnCreate() function to load the menu icons.
 {
       // Specify the bitmap and mask for the menu icons.
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(255, 0, 255), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(255, 0, 255), IDB_MENUICONS);
@@ -528,13 +527,13 @@ SetupToolBar()                                                              /*
 
 /*============================================================================*/
     void CMainFrame::
-SetWindowTitle(const CString &docPath /* = _T("") */)                       /*
+SetWindowTitle(const CString &docPath /* = L"" */)                          /*
 
     Set the window title to the application base title plus the document
     file name.
 *-----------------------------------------------------------------------------*/
 {
-    CString s = m_appName + _T(":   ") + docPath;
+    CString s = m_appName + L":   " + docPath;
     SetTitle(s);
 }
 
@@ -557,10 +556,10 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L"\n" << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -568,7 +567,7 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

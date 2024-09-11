@@ -70,7 +70,7 @@ int CRichView::CollatePages(const CDC& printerDC, int startChar, int endChar)
 }
 
 // Choose the printer and print the document.
-void CRichView::DoPrint(LPCTSTR docName)
+void CRichView::DoPrint(LPCWSTR docName)
 {
     // Prepare the print dialog
     CPrintDialog printDlg;
@@ -161,8 +161,7 @@ void CRichView::PrintPage(CDC& dc, int page)
     CDC printerDC = printDlg.GetPrinterDC();
 
     // Assign values to the FORMATRANGE struct
-    FORMATRANGE fr;
-    ZeroMemory(&fr, sizeof(fr));
+    FORMATRANGE fr{};
     fr.hdcTarget = printerDC;
     fr.hdc = dc;
     fr.rcPage = GetPageRect(printerDC);
@@ -180,15 +179,14 @@ void CRichView::PrintPage(CDC& dc, int page)
 
 // Print the document without bringing up a print dialog.
 // docName - specifies the document name for the print job.
-void CRichView::QuickPrint(LPCTSTR docName)
+void CRichView::QuickPrint(LPCWSTR docName)
 {
     // Acquire the currently selected printer and page settings
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
 
     // Assign values to the FORMATRANGE struct
-    FORMATRANGE fr;
-    ZeroMemory(&fr, sizeof(fr));
+    FORMATRANGE fr{};
     fr.hdc = printerDC;
     fr.hdcTarget = printerDC;
 
@@ -200,11 +198,10 @@ void CRichView::QuickPrint(LPCTSTR docName)
     fr.chrg.cpMax = -1;
 
     // Start print job.
-    DOCINFO di;
-    ZeroMemory(&di, sizeof(di));
+    DOCINFO di{};
     di.cbSize = sizeof(DOCINFO);
     di.lpszDocName = docName;
-    di.lpszOutput = NULL;   // Do not print to file.
+    di.lpszOutput = nullptr;   // Do not print to file.
     printerDC.StartDoc(&di);
 
     int maxPages = CollatePages(printerDC);
@@ -228,11 +225,10 @@ void CRichView::QuickPrint(LPCTSTR docName)
 void CRichView::SetFontDefaults()
 {
     // Set font to Courier New, size 10.
-    CHARFORMAT cf;
-    ZeroMemory(&cf, sizeof(cf));
+    CHARFORMAT cf{};
     cf.cbSize = sizeof(cf);
     cf.dwMask = CFM_SIZE | CFM_FACE | CFM_EFFECTS;
-    StrCopy(cf.szFaceName, _T("Courier New"), 32);
+    StrCopy(cf.szFaceName, L"Courier New", 32);
     cf.yHeight = 204;
     SetDefaultCharFormat(cf);
 
@@ -256,10 +252,10 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -267,7 +263,7 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

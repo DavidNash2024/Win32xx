@@ -15,11 +15,11 @@ struct MovieInfo
     CString description;
     CString genre;
     CString actors;
-    CString videoType;  // Movie; Live Performance
+    CString videoType;  // Movie or Live Performance.
     CString boxset;
     DWORD   flags;    // for favourites etc.
 };
 
-typedef std::list<MovieInfo> MoviesData;
+using MoviesData = std::list<MovieInfo>;
 
 #endif // _MOVIEINFO_H_

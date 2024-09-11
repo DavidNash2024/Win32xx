@@ -16,15 +16,15 @@ class CRoundApp : public CWinApp
 {
 public:
     CRoundApp();
-    virtual ~CRoundApp() {}
+    virtual ~CRoundApp() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CRoundApp(const CRoundApp&);               // Disable copy construction
-    CRoundApp& operator=(const CRoundApp&);    // Disable assignment operator
+    CRoundApp(const CRoundApp&) = delete;
+    CRoundApp& operator=(const CRoundApp&) = delete;
 
     CView m_view;
 };

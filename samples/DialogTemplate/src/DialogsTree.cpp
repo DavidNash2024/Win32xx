@@ -26,7 +26,7 @@ CDialogsTree::~CDialogsTree()
     if (IsWindow()) DeleteAllItems();
 }
 
-void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fileName)
+void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCWSTR fileName)
 {
     DeleteAllItems();
     CString rootName;
@@ -35,8 +35,7 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fi
     HTREEITEM currentItem = rootItem;
     HTREEITEM prevItem = rootItem;
 
-    std::vector<ResourceInfo>::const_iterator it;
-    for (it = allInfo.begin(); it != allInfo.end(); ++it)
+    for (const ResourceInfo& ri : allInfo)
     {
         CString prevType;
         ResourceInfo* prevInfo = (ResourceInfo*)GetItemData(prevItem);
@@ -46,16 +45,17 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fi
         }
 
         CString dialogName("5");
-        if ((*it).typeName == dialogName)
+        if (ri.typeName == dialogName)
         {
             CString itemName;
-            itemName << (*it).resourceName << "   " << (*it).languageID;
+            itemName << ri.resourceName << "   " << ri.languageID;
             currentItem = InsertItem(itemName, 1, 1, rootItem);
-            SetItemData(currentItem, (DWORD_PTR)&(*it));
+            SetItemData(currentItem, (DWORD_PTR)&ri);
         }
 
-        prevItem = currentItem;
-    }
+            prevItem = currentItem;
+        }
+
 
     // Expand some tree-view items
     Expand(rootItem, TVE_EXPAND);
@@ -118,10 +118,10 @@ LRESULT CDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -129,7 +129,7 @@ LRESULT CDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -162,10 +162,10 @@ LRESULT CDockDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -173,7 +173,7 @@ LRESULT CDockDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

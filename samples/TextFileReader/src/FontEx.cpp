@@ -31,7 +31,7 @@ CFontEx()                                                                   /*
 
 /*============================================================================*/
     void CFontEx::
-Choose(LPCTSTR wintitle /* =  NULL */)                                      /*
+Choose(LPCWSTR wintitle /* =  nullptr */)                                      /*
 
     Select the object font typeface, characteristics, color, and size in the
     device context dc. The font background color is presumed to be supplied by
@@ -42,13 +42,12 @@ Choose(LPCTSTR wintitle /* =  NULL */)                                      /*
     LOGFONT lf = m_font.GetLogFont();
       // open the dialog
     CFontExDialog fd;
-    if (wintitle != NULL)
+    if (wintitle != nullptr)
         fd.SetBoxTitle(wintitle);
     CHOOSEFONT cf = fd.GetParameters();
       // display effects and color boxes, and use logfont provided, as
       // well as any other initializations in flags
-    cf.Flags |= CF_SCREENFONTS |CF_EFFECTS | CF_INITTOLOGFONTSTRUCT |
-        m_flags;
+    cf.Flags |= CF_SCREENFONTS |CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | m_flags;
     cf.lpLogFont = &lf;
     cf.rgbColors = m_txcolor;
     fd.SetParameters(cf);
@@ -109,9 +108,8 @@ Serialize(CArchive &ar)                                                     /*
         ar >> f;    // recover the top part
         ar >> face; // recover the face name and put it in the LOGFONT
         UINT size = face.GetLength() + 1;
-        memcpy(lf.lfFaceName, face.c_str(),
-            size * sizeof(TCHAR));
-        m_font.CreateFontIndirect((const LOGFONT&)lf);
+        memcpy(lf.lfFaceName, face.c_str(), size * sizeof(wchar_t));
+        m_font.CreateFontIndirect(lf);
         SaveFontSize();
          // recover the rest
         ar >> m_txcolor;
@@ -127,7 +125,7 @@ SetDefault()                                                                /*
 *-----------------------------------------------------------------------------*/
 {
     const int fontSize = 10;
-    LPCTSTR fontName   = _T("Courier New");
+    LPCWSTR fontName   = L"Courier New";
     m_txcolor          = RGB(0, 0, 0);
     m_font.CreatePointFont(10 * fontSize, fontName);
     SaveFontSize();

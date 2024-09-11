@@ -12,18 +12,18 @@ class CMyScrollBar : public CScrollBar
 {
 public:
     CMyScrollBar();
-    virtual ~CMyScrollBar() {}
+    virtual ~CMyScrollBar() override {}
 
     int  GetPos(WPARAM wparam);
     void SetPos(int pos);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnInitialUpdate();
+    virtual void OnInitialUpdate() override;
 
 private:
-    CMyScrollBar(const CMyScrollBar&);               // Disable copy construction
-    CMyScrollBar& operator=(const CMyScrollBar&);    // Disable assignment operator
+    CMyScrollBar(const CMyScrollBar&) = delete;
+    CMyScrollBar& operator=(const CMyScrollBar&) = delete;
 
     SCROLLINFO m_si;
 };

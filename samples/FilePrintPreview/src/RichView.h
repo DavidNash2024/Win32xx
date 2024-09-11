@@ -31,21 +31,21 @@ CRichView : public CRichEdit                                                /*
 {
     public:
         CRichView() {}
-        virtual ~CRichView() {}
+        virtual ~CRichView() override {}
 
         UINT    GetPageBreaks(CDC& dcPrinter);
         BOOL    GetNewFont() const;
         void    PrintDC(UINT, CDC&, CDC&);
-        BOOL    ReadFile(LPCTSTR filePath);
+        BOOL    ReadFile(LPCWSTR filePath);
         void    SetFontDefaults();
-        void    SetDocName(LPCTSTR &filePath) { m_docPath = filePath;}
+        void    SetDocName(LPCWSTR &filePath) { m_docPath = filePath;}
         void    PrintPages(CPrintDialog& printDlg);
         void    WordWrap(WordWrapType setting);
-        BOOL    WriteFile(LPCTSTR filePath);
+        BOOL    WriteFile(LPCWSTR filePath);
 
     protected:
-        virtual void    OnAttach();
-        virtual void    PreCreate(CREATESTRUCT& cs);
+        virtual void    OnAttach() override;
+        virtual void    PreCreate(CREATESTRUCT& cs) override;
 
     private:
         CRichView(const CRichView&);               // Disable copy construction

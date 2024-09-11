@@ -23,25 +23,25 @@ public:
     void SetDarkTheme();
 
     // Virtual functions that override public base class functions
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = nullptr);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnClose();
-    virtual BOOL    OnCommand(WPARAM, LPARAM);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual BOOL    OnHelp();
-    virtual void    OnInitialUpdate();
-    virtual LRESULT OnSysColorChange(UINT, WPARAM, LPARAM);
-    virtual void    SetTheme();
-    virtual void    SetupMenuIcons();
-    virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT, WPARAM, LPARAM);
+    virtual void    OnClose() override;
+    virtual BOOL    OnCommand(WPARAM, LPARAM) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual BOOL    OnHelp() override;
+    virtual void    OnInitialUpdate() override;
+    virtual LRESULT OnSysColorChange(UINT, WPARAM, LPARAM) override;
+    virtual void    SetTheme() override;
+    virtual void    SetupMenuIcons() override;
+    virtual void    SetupToolBar() override;
+    virtual LRESULT WndProc(UINT, WPARAM, LPARAM) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Command Handlers
     BOOL OnFileExit();

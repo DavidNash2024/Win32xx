@@ -16,16 +16,16 @@ class CRightPane : public CDocker
 {
 public:
     CRightPane();
-    virtual ~CRightPane() {}
+    virtual ~CRightPane() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual CDocker* NewDockerFromID(int id);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual DockPtr NewDockerFromID(int id) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CRightPane(const CRightPane&);               // Disable copy construction
-    CRightPane& operator=(const CRightPane&);    // Disable assignment operator
+    CRightPane(const CRightPane&) = delete;
+    CRightPane& operator=(const CRightPane&) = delete;
 
     CMyListView m_view;
 };

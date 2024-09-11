@@ -8,6 +8,8 @@
 #include "Output.h"
 #include "resource.h"
 
+using namespace std;
+
 ///////////////////////////////////
 // CDockSimple function definitions
 //
@@ -31,10 +33,10 @@ LRESULT CDockSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -42,7 +44,7 @@ LRESULT CDockSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -72,7 +74,7 @@ void CSimpleView::OnDraw(CDC& dc)
     // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);
-    dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    dc.DrawText(L"View Window", -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 // Respond to a mouse click on the window
@@ -110,10 +112,10 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -121,7 +123,7 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -138,7 +140,7 @@ CSplitterMDIChild::CSplitterMDIChild()
     SetView(m_view);
 
     // Set the menu for this MDI child.
-    SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), NULL);
+    SetHandles(LoadMenu(GetApp()->GetResourceHandle(), L"MdiMenuView"), nullptr);
 }
 
 // Destructor.
@@ -150,7 +152,7 @@ CSplitterMDIChild::~CSplitterMDIChild()
 int CSplitterMDIChild::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window caption.
-    SetWindowText( _T("Splitter Window") );
+    SetWindowText(L"Splitter Window");
 
     // Set the window icons.
     SetIconLarge(IDI_VIEW);
@@ -167,10 +169,12 @@ void CSplitterMDIChild::OnInitialUpdate()
     DWORD style = DS_CLIENTEDGE;// | DS_NO_UNDOCK;
     m_view.SetDockStyle(style);
     int width = DpiScaleInt(200);
-    CDocker* pDockLeft  = m_view.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | style, width, 0);
-    CDocker* pDockRight = m_view.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | style, width, 0);
-    pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 0, 0);
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 0, 0);
+    CDocker* pDockLeft  = m_view.AddDockedChild(make_unique<CDockOutput>(),
+        DS_DOCKED_LEFT  | style, width, 0);
+    CDocker* pDockRight = m_view.AddDockedChild(make_unique<CDockOutput>(),
+        DS_DOCKED_RIGHT | style, width, 0);
+    pDockLeft->AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_CONTAINER | style, 0, 0);
+    pDockRight->AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_CONTAINER | style, 0, 0);
 }
 
 // Respond to menu and toolbar input.
@@ -228,10 +232,10 @@ LRESULT CSplitterMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -239,7 +243,7 @@ LRESULT CSplitterMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

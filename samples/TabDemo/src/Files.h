@@ -13,7 +13,7 @@ class CViewFiles : public CListView
 {
 public:
     CViewFiles();
-    virtual ~CViewFiles();
+    virtual ~CViewFiles() override;
     void InsertItems();
     void SetColumns();
     void SetDPIColumnWidths();
@@ -21,12 +21,12 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewFiles(const CViewFiles&);               // Disable copy construction
-    CViewFiles& operator=(const CViewFiles&);    // Disable assignment operator
+    CViewFiles(const CViewFiles&) = delete;
+    CViewFiles& operator=(const CViewFiles&) = delete;
 
     // Command handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);

@@ -18,22 +18,22 @@ public:
     CRichView();
     virtual ~CRichView();
     int   CollatePages(const CDC& printerDC);
-    void  DoPrint(LPCTSTR docName);
+    void  DoPrint(LPCWSTR docName);
     void  PrintPage(CDC& dc, int page);
-    void  QuickPrint(LPCTSTR docName);
+    void  QuickPrint(LPCWSTR docName);
     void  SetDefaultPrintOptions();
     void  SetFontDefaults();
     std::vector<int> SetPagesToPrint(const CDC& printerDC);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT, WPARAM, LPARAM);
+    virtual void OnAttach() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT, WPARAM, LPARAM) override;
 
 private:
-    CRichView(const CRichView&);               // Disable copy construction
-    CRichView& operator=(const CRichView&);    // Disable assignment operator
+    CRichView(const CRichView&) = delete;
+    CRichView& operator=(const CRichView&) = delete;
 
     CRect GetPageRect(const CDC& dc);
     CRect GetPrintRect(const CDC& dc);

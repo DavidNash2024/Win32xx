@@ -11,18 +11,18 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView(){}
+    virtual ~CView() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnInitialUpdate();
-    virtual void    PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnInitialUpdate() override;
+    virtual void    PreRegisterClass(WNDCLASS& wc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     // Command handlers
     LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);

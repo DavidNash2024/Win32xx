@@ -16,15 +16,15 @@ class CDockingApp : public CWinApp
 {
 public:
     CDockingApp();
-    virtual ~CDockingApp() {}
+    virtual ~CDockingApp() override {}
 
 protected:
     // Virtual functions that override base class functions.
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CDockingApp(const CDockingApp&);               // Disable copy construction
-    CDockingApp& operator=(const CDockingApp&);    // Disable assignment operator
+    CDockingApp(const CDockingApp&) = delete;
+    CDockingApp& operator=(const CDockingApp&) = delete;
 
     CMainFrame m_MainFrame;
 };

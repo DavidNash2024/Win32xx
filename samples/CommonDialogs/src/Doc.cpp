@@ -31,7 +31,7 @@
 CDoc()                                                                      /*
 
 *-----------------------------------------------------------------------------*/
-    : m_isOpen(FALSE), m_data(NULL)
+    : m_isOpen(FALSE), m_data(nullptr)
 {
 }
 
@@ -61,7 +61,7 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)                        /*
       // get current location or selection
     FINDTEXTEX ftx;
     ftx.chrg = r;
-    ftx.lpstrText = const_cast<LPTSTR>(m_findNext.c_str());
+    ftx.lpstrText = const_cast<LPWSTR>(m_findNext.c_str());
     GetRichView().FindText(dwFlags, ftx);
     return ftx.chrgText;
 }
@@ -88,7 +88,7 @@ IsDirty()                                                                   /*
 
 /*============================================================================*/
     BOOL CDoc::
-MakeNewDoc(LPCTSTR docPath)                                                 /*
+MakeNewDoc(LPCWSTR docPath)                                                 /*
 
     Open a new document with the given filename; return TRUE if able to do
     so, or FALSE otherwise.
@@ -105,8 +105,9 @@ MakeNewDoc(LPCTSTR docPath)                                                 /*
     }
     catch (...) // if there was an error in opening the file
     {
-        CString msg = (CString)"Could not create document file:\n" + docPath;
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        CString msg = "Could not create document file:\n";
+        msg += docPath;
+        ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         return FALSE;
     }
@@ -124,11 +125,11 @@ NotFound(const MyFindReplaceDialog& FR)                                     /*
     BOOL match = FR.MatchCase();
     BOOL whole = FR.MatchWholeWord();
     CString msg;
-    LPCTSTR wholeword = (whole ? _T("\nas a whole word") : _T(""));
-    LPCTSTR matchcase = (match ? _T("\nmatching case") : _T(""));
-    msg.Format(_T("'%s'was not found%s%s."), m_findNext.c_str(),
+    LPCWSTR wholeword = (whole ? L"\nas a whole word" : L"");
+    LPCWSTR matchcase = (match ? L"\nmatching case" : L"");
+    msg.Format(L"'%s'was not found%s%s.", m_findNext.c_str(),
         wholeword, matchcase);
-    ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+    ::MessageBox(nullptr, msg, L"Information", MB_OK |
         MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
@@ -146,10 +147,10 @@ OnCloseDoc()                                                                /*
 
       //Check for unsaved text
     CString msg;
-    msg.Format(_T("Save changes to this document?\n    %s"),
+    msg.Format(L"Save changes to this document?\n    %s",
         m_docPath.c_str());
-    if (m_isOpen && IsDirty() && (::MessageBox(NULL, msg,
-        _T("Question..."), MB_YESNO | MB_ICONQUESTION) == IDYES))
+    if (m_isOpen && IsDirty() && (::MessageBox(nullptr, msg,
+        L"Question...", MB_YESNO | MB_ICONQUESTION) == IDYES))
     {
         OnSaveDoc();
         return;
@@ -173,7 +174,7 @@ OnFindReplace(UINT msg, WPARAM wparam, LPARAM lparam)                       /*
 
     MyFindReplaceDialog* fr =
         (MyFindReplaceDialog*)MyFindReplaceDialog::GetNotifier(lparam);
-    assert(fr != NULL);
+    assert(fr != nullptr);
     if (fr->IsTerminating())
         OnFRTerminating(fr);
     else if (fr->FindNext())
@@ -297,8 +298,8 @@ OnSaveDoc()                                                                 /*
       // make sure the file is ok to save
     if (m_docPath.IsEmpty())
     {
-        CString msg = _T("Attempt to save an invalid file.");
-        ::MessageBox(NULL, msg, _T("Information"),
+        CString msg = "Attempt to save an invalid file.";
+        ::MessageBox(nullptr, msg, L"Information",
             MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
         m_isOpen = FALSE;
         return FALSE;
@@ -314,9 +315,9 @@ OnSaveDoc()                                                                 /*
     }
     catch (...) // if there was an error
     {
-        CString msg = (CString)"Document file did not save." +
-             m_docPath;
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        CString msg = "Document file did not save.";
+        msg += m_docPath;
+        ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         m_isOpen = FALSE;
         m_docPath.Empty();
@@ -329,7 +330,7 @@ OnSaveDoc()                                                                 /*
 
 /*============================================================================*/
     BOOL CDoc::
-OpenDoc(LPCTSTR docPath)                                                    /*
+OpenDoc(LPCWSTR docPath)                                                    /*
 
     Open the document from the given path. Previous state parameters that
     were serialized in the prior execution will have already been loaded.
@@ -339,9 +340,9 @@ OpenDoc(LPCTSTR docPath)                                                    /*
     CString msg;
     if (CString(docPath).CompareNoCase(m_docPath) == 0)
     {
-        msg.Format(_T("Document file\n    '%s'\nis already open."),
+        msg.Format(L"Document file\n    '%s'\nis already open.",
             m_docPath.c_str());
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
           // not deemed a failure, as the file is open, as specified
         return TRUE;
@@ -357,8 +358,8 @@ OpenDoc(LPCTSTR docPath)                                                    /*
     }
     catch (...) // if there was an error in opening the file
     {
-        msg.Format(_T("Document file\n    '%s'\ndid not open."), docPath);
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        msg.Format(L"Document file\n    '%s'\ndid not open.", docPath);
+        ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         m_isOpen = FALSE;
           // if the_path was in the MRU list, remove it

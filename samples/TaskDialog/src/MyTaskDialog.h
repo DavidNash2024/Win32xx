@@ -13,26 +13,26 @@ class CMyTaskDialog : public CTaskDialog
 {
 public:
     CMyTaskDialog() {}
-    virtual ~CMyTaskDialog() {}
+    virtual ~CMyTaskDialog() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL OnTDButtonClicked(int buttonID);
-    virtual void OnTDConstructed();
-    virtual void OnTDCreated();
-    virtual void OnTDDestroyed();
-    virtual void OnTDExpandButtonClicked(BOOL isExpanded);
-    virtual void OnTDHelp();
-    virtual void OnTDHyperlinkClicked(LPCWSTR hyperlink);
-    virtual void OnTDNavigatePage();
-    virtual BOOL OnTDRadioButtonClicked(int radioButtonID);
-    virtual BOOL OnTDTimer(DWORD tickCount);
-    virtual void OnTDVerificationCheckboxClicked(BOOL isChecked);
-    virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnTDButtonClicked(int buttonID) override;
+    virtual void OnTDConstructed() override;
+    virtual void OnTDCreated() override;
+    virtual void OnTDDestroyed() override;
+    virtual void OnTDExpandButtonClicked(BOOL isExpanded) override;
+    virtual void OnTDHelp() override;
+    virtual void OnTDHyperlinkClicked(LPCWSTR hyperlink) override;
+    virtual void OnTDNavigatePage() override;
+    virtual BOOL OnTDRadioButtonClicked(int radioButtonID) override;
+    virtual BOOL OnTDTimer(DWORD tickCount) override;
+    virtual void OnTDVerificationCheckboxClicked(BOOL isChecked) override;
+    virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMyTaskDialog(const CMyTaskDialog&);               // Disable copy construction
-    CMyTaskDialog& operator=(const CMyTaskDialog&);    // Disable assignment operator
+    CMyTaskDialog(const CMyTaskDialog&) = delete;
+    CMyTaskDialog& operator=(const CMyTaskDialog&) = delete;
 };
 
 

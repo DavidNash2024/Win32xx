@@ -1,7 +1,7 @@
 [Project]
 FileName=Tutorial9.dev
 Name=Tutorial9
-UnitCount=12
+UnitCount=11
 Type=0
 Ver=2
 ObjFiles=
@@ -11,8 +11,8 @@ PrivateResource=Tutorial9_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _DEBUG_@@__@@__@@_
-Linker=-lComctl32_@@__@@_
+CppCompiler=-D NDEBUG_@@_-DUNICODE_@@_-D_UNICODE_@@__@@_
+Linker=-lComctl32_@@_-lole32_@@_-municode_@@__@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\DEBUG
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000000
+CompilerSettings=0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -81,17 +81,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit11]
-FileName=..\src\View.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit14]
-FileName=..\..\Tutorial10\src\targetver.h
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -161,9 +151,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=..\src\targetver.h
+FileName=..\src\View.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

@@ -76,7 +76,6 @@
     <ClInclude Include="..\src\D2DApp.h" />
     <ClInclude Include="..\src\D2DView.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\D2DApp.cpp" />

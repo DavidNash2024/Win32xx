@@ -22,8 +22,7 @@ BOOL CDXApp::InitInstance()
 int CDXApp::MessageLoop()
 {
     // Main message loop
-    MSG msg;
-    ZeroMemory(&msg, sizeof(msg));
+    MSG msg{};
     while (WM_QUIT != msg.message)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))

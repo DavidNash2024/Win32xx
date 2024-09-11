@@ -391,9 +391,6 @@
         <None Include="..\src\stdafx.h">
             <BuildOrder>78</BuildOrder>
         </None>
-        <None Include="..\src\targetver.h">
-            <BuildOrder>78</BuildOrder>
-        </None>
         <CppCompile Include="..\src\Tree.cpp">
             <BuildOrder>79</BuildOrder>
         </CppCompile>

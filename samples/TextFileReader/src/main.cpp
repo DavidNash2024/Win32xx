@@ -26,8 +26,13 @@
     Windows application entry point.
 
 *=============================================================================*/
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
+#pragma warning( disable : 28251 )  // Ignore the annotation requirement for wWinMain.
+#endif
+
     int WINAPI
-WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
+wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int )                                /*
 
     This function is called by the system as the initial entry point for
     a WinApi-based application. None of the passed parameters are used by
@@ -40,16 +45,16 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
       // Create and check the semaphore that limits the number of
       // simultaneously executing instances of this application
       // to m_nInstances.
-    LPCTSTR semaphoreName = _T("Win32++_TextFileReader");
+    LPCWSTR semaphoreName = L"Win32++_TextFileReader";
     LONG     nInstances = 1; // number of allowed instances
 
-    CSemaphore sf(nInstances, nInstances, semaphoreName, NULL);
+    CSemaphore sf(nInstances, nInstances, semaphoreName, nullptr);
     if (WaitForSingleObject(sf, 0) == WAIT_TIMEOUT)
     {
-        ::MessageBox(NULL, _T("The allowed number of instances of this\n")
-        _T("application are already running."), _T("Stop"),
+        ::MessageBox(nullptr, L"The allowed number of instances of this\n"
+        L"application are already running.", L"Stop",
         MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-        sf.ReleaseSemaphore(1, NULL);
+        sf.ReleaseSemaphore(1, nullptr);
         return 0;  // before entering the message loop
     }
       // declare the CApp object and run the application
@@ -62,19 +67,18 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
     catch (const CException& e)   // catch all CException events
     {
           // Process the exception and quit
-        CString msg = e.what() + (CString)_T("\n") +
-            e.GetText() + (CString)_T("\nWinMain Goodbye...");
-        ::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
+        CString msg;
+        msg << e.what() << L'\n' << e.GetText() << L"\nWinMain Goodbye...";
+        ::MessageBox(nullptr, msg, L"Standard Exception", MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...)      // catch all other exception events
     {
-        CString msg = _T("Unregistered exception event.\n")
-            _T("WinMain Goodbye...");
-        ::MessageBox(NULL, msg, _T("Unknown Exception"), MB_OK |
+        CString msg = "Unregistered exception event.\nWinMain Goodbye...";
+        ::MessageBox(nullptr, msg, L"Unknown Exception", MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
     }
       // release the semaphore
-    sf.ReleaseSemaphore(1, NULL);
+    sf.ReleaseSemaphore(1, nullptr);
     return rtn;
 }

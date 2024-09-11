@@ -26,7 +26,7 @@ void CViewText::OnAttach()
     // Set the font.
     if (!m_font)
     {
-        m_font.CreatePointFont(96, _T("Courier New"));
+        m_font.CreatePointFont(96, L"Courier New");
     }
 
     SetFont(m_font);
@@ -53,10 +53,10 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -64,7 +64,7 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -78,8 +78,8 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Constructor.
 CMDIChildText::CMDIChildText()
 {
-    m_menu.LoadMenu(_T("MdiMenuText"));
-    SetHandles(m_menu, NULL);
+    m_menu.LoadMenu(L"MdiMenuText");
+    SetHandles(m_menu, nullptr);
     SetView(m_textView);
 }
 
@@ -109,7 +109,7 @@ BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM)
 // Called when the window is created.
 int CMDIChildText::OnCreate(CREATESTRUCT& cs)
 {
-    SetWindowText(_T("Text Window"));
+    SetWindowText(L"Text Window");
     SetIconLarge(IDI_TEXT);
     SetIconSmall(IDI_TEXT);
 
@@ -130,10 +130,10 @@ LRESULT CMDIChildText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -141,7 +141,7 @@ LRESULT CMDIChildText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

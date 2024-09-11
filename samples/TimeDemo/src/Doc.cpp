@@ -43,11 +43,11 @@ CDoc()                                                                      /*
       // initial document state
 
     m_fileDlgFilter =
-        _T("Time Demo Files (*.arc)\0")
-        _T("*.arc\0")
-        _T("All Files (*.*)\0")
-        _T("*.*\0")
-        _T("\0");
+        L"Time Demo Files (*.arc)\0"
+        L"*.arc\0"
+        L"All Files (*.*)\0"
+        L"*.*\0"
+        L"\0";
 
     m_docPath.Empty();
     m_docWidth   = 0;
@@ -78,14 +78,14 @@ GetDocOpenFileName(const CString &title) const                              /*
     // Bring up the dialog, and  open the file
     CString str;
     DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-    CFileDialog FileDlg(TRUE, NULL, NULL, dwFlags, m_fileDlgFilter);
+    CFileDialog FileDlg(TRUE, nullptr, nullptr, dwFlags, m_fileDlgFilter);
     FileDlg.SetTitle(title);
     if (FileDlg.DoModal() == IDOK)
         str = FileDlg.GetPathName();
     else
-        ::MessageBox(NULL, _T("No document name was selected.\n")
-            _T("The document cannot be opened."),
-            _T("Information"), MB_OK | MB_ICONINFORMATION |
+        ::MessageBox(nullptr, L"No document name was selected.\n"
+            L"The document cannot be opened.",
+            L"Information", MB_OK | MB_ICONINFORMATION |
             MB_TASKMODAL);
     return str;
 }
@@ -100,7 +100,7 @@ GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const      /*
 {
     int size = GetDocLength();
     if (size == 0 || rcd >= size || rcd < 0)
-        return _T("");
+        return L"";
 
     CString s  = m_docContent[rcd];
       // compute length of text to extract
@@ -123,14 +123,14 @@ GetDocSaveFileName(const CString &title) const                              /*
     CString str;
     TCHAR extbuff[10];
     DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-    CFileDialog FileDlg(FALSE, extbuff, NULL, dwFlags, m_fileDlgFilter);
+    CFileDialog FileDlg(FALSE, extbuff, nullptr, dwFlags, m_fileDlgFilter);
     FileDlg.SetTitle(title);
     if (FileDlg.DoModal() == IDOK)
         str = FileDlg.GetPathName();
     else
-        ::MessageBox(NULL, _T("No document name was selected.\n")
-            _T("The current document will not be saved."),
-            _T("Information"), MB_OK | MB_ICONINFORMATION |
+        ::MessageBox(nullptr, L"No document name was selected.\n"
+            L"The current document will not be saved.",
+            L"Information", MB_OK | MB_ICONINFORMATION |
             MB_TASKMODAL);
     return str;
 }
@@ -159,9 +159,9 @@ OpenDoc(const CString &docFileName)                                         /*
     if (!m_docPath.IsEmpty() && m_docPath.CompareNoCase(docFileName) == 0)
     {
         CString s;
-        s.Format(_T("This file is already open:\n    %s"),
+        s.Format(L"This file is already open:\n    %s",
             docFileName.c_str());
-        ::MessageBox(NULL, s, _T("Error"), MB_OK |
+        ::MessageBox(nullptr, s, L"Error", MB_OK |
             MB_ICONEXCLAMATION | MB_TASKMODAL);
         return true;
     }
@@ -180,16 +180,16 @@ OpenDoc(const CString &docFileName)                                         /*
     {     // Process the exception and  quit
         CString msg;
         CString what(e.what());
-        msg.Format(_T("Error restoring the document.\n%s\n%s"),
+        msg.Format(L"Error restoring the document.\n%s\n%s",
             e.GetText(), e.GetErrorString());
-        ::MessageBox(NULL, msg.c_str(), what.c_str(),
+        ::MessageBox(nullptr, msg.c_str(), what.c_str(),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
     catch(...) // catch everything else
     {
-        CString msg = _T("Error restoring the document.\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+        CString msg = L"Error restoring the document.\n";
+        ::MessageBox(nullptr, msg.c_str(), L"Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
@@ -207,27 +207,21 @@ MakeAppDataPath(const CString & subpath)                                    /*
         an error is encountered, throw a user exception.
 *-----------------------------------------------------------------------------*/
 {
-    CString appdata = GetAppDataPath();
+    CString appDataPath = GetAppDataPath();
 
-    int from, to, next;
-    for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
+    if (!appDataPath.IsEmpty())
     {
-        int nextbk = subpath.Find(_T("\\"), from);
-        int nextfwd = subpath.Find(_T("/"), from);
-        next = std::max(nextbk, nextfwd);
-        if (next < 0)
-            next = to;
+        appDataPath += L"\\" + subpath;
+        ::SHCreateDirectory(nullptr, appDataPath);
 
-        CString add = subpath.Mid(from, next - from);
-        appdata += _T("\\") + add;
-        if ((::CreateDirectory(appdata, 0) == 0) &&
-            GetLastError() != ERROR_ALREADY_EXISTS)
-        {
-            CString msg = appdata + _T("\nDirectory creation error.");
-            throw CUserException(msg);
-        }
+        DWORD attributes = GetFileAttributes(appDataPath);
+        if ((attributes == INVALID_FILE_ATTRIBUTES) || !(attributes & FILE_ATTRIBUTE_DIRECTORY))
+            throw CFileException(appDataPath, L"Failed to access app directory");
     }
-    return appdata;
+    else
+        appDataPath = L".";
+
+    return appDataPath;
 }
 
 /*============================================================================*/
@@ -241,69 +235,69 @@ NewDocument()                                                               /*
     m_docContent.clear();
     m_docWidth = 0;
     CString s;
-    s = _T("  -------------------------------------------------------");
+    s = L"  -------------------------------------------------------";
     PushContent(s);
-    s.Format(_T("    CTime functions test results"),
+    s.Format(L"    CTime functions test results",
         8 * sizeof(size_t));
     PushContent(s);
-    s = _T("  -------------------------------------------------------");
+    s = L"  -------------------------------------------------------";
     PushContent(s);
-    PushContent(_T(""));
+    PushContent(L"");
     CTime t1;
-    PushContent(_T("   1. CTime t1; (long date format)               ")
+    PushContent(L"   1. CTime t1; (long date format)               "
         + t1.Format(longDateFmt));
 
     CTime t2(t1);
-    PushContent(_T("   2. CTime t2(t1); (as UTC)                     ")
+    PushContent(L"   2. CTime t2(t1); (as UTC)                     "
         + t2.FormatGmt(longDateFmt));
 
     CTime t3(time_t(0));
-    PushContent(_T("   3. CTime t3(time_t(0)); (short date format)   ")
+    PushContent(L"   3. CTime t3(time_t(0)); (short date format)   "
         + t3.FormatGmt(shortDateFmt));
-    PushContent(_T("   4. CTime t3(time_t(0)); (simple HMS format)   ")
+    PushContent(L"   4. CTime t3(time_t(0)); (simple HMS format)   "
         + t3.FormatGmt(simpleHMSFmt));
 
     t3 = t3.GetCurrentTime();
-    PushContent(_T("   5. CTime t3 = t3.GetCurrentTime()             ")
+    PushContent(L"   5. CTime t3 = t3.GetCurrentTime()             "
         + t3.Format(longDateFmt));
 
     CTime t4(2024, 3, 9, 3, 37, 40);
-    PushContent(_T("   6. CTime t4(2024, 3, 9, 3, 37, 40);           ")
+    PushContent(L"   6. CTime t4(2024, 3, 9, 3, 37, 40);           "
         + t4.Format(longDateFmt));
 
     CTime t5(2024, 3, 9, 3, 37, 40);
-    PushContent(_T("   7. CTime t5(2024, 3, 9, 3, 37, 40);           ")
+    PushContent(L"   7. CTime t5(2024, 3, 9, 3, 37, 40);           "
         + t5.Format(longDateFmt));
 
     CTime t6(2024, 3, 9, 3, 37, 40);
-    PushContent(_T("   8. CTime t6(2024, 3, 9, 3, 37, 40);           ")
+    PushContent(L"   8. CTime t6(2024, 3, 9, 3, 37, 40);           "
         + t6.Format(longDateFmt));
 
-    CString s9(_T("09-Mar-2024 3:37:40"));
+    CString s9(L"09-Mar-2024 3:37:40");
     CTime t9(GetTimeFromStr(s9));  // a CString conversion
-    PushContent(_T("   9. CTime t9(\"09-Mar-2024 3:37:40\")   CString  ")
+    PushContent(L"   9. CTime t9(\"09-Mar-2024 3:37:40\")   CString  "
         + t9.Format(longDateFmt));
 
-    CTime t10(GetTimeFromStr(_T("09-Mar-2024 3:37:40")));  // a LPCTSTR conversion
-    PushContent(_T("  10. CTime t10(\"09-Mar-2024 3:37:40\")  LPCTSTR  ")
+    CTime t10(GetTimeFromStr(L"09-Mar-2024 3:37:40"));  // a LPCWSTR conversion
+    PushContent(L"  10. CTime t10(\"09-Mar-2024 3:37:40\")  LPCWSTR  "
         + t10.Format(longDateFmt));
 
     SYSTEMTIME st;
     t10.GetAsSystemTime(st);
     CTime t11(st);
-    PushContent(_T("  11. GetAsSystemTime(t10);                      ")
+    PushContent(L"  11. GetAsSystemTime(t10);                      "
         + t11.Format(longDateFmt));
 
     FILETIME ft;
     t10.GetAsFileTime(ft);
     CTime t12(ft, 0);
-    PushContent(_T("  12. GetAsFileTime(t10);                        ")
+    PushContent(L"  12. GetAsFileTime(t10);                        "
         + t12.Format(longDateFmt));
 
     WORD fatdate, fattime;
     ::FileTimeToDosDateTime(&ft, &fatdate, &fattime);
     CTime t13(fatdate, fattime, 0);
-    PushContent(_T("  13. CTime t13(fatdate, fattime)                ")
+    PushContent(L"  13. CTime t13(fatdate, fattime)                "
         + t13.Format(longDateFmt));
 
     int yr = t13.GetYear();
@@ -314,9 +308,9 @@ NewDocument()                                                               /*
     int sc = t13.GetSecond();
     int dw = t13.GetDayOfWeek();
     int dy = t13.GetDayOfYear();
-    CString fmt = _T("%04d-%02d-%02d %02d:%02d:%02d [%03d] (%d) ");
-    s.Format(fmt + _T("local"), yr, mo, da, hr, mn, sc, dy, dw);
-    PushContent(_T("  14. t13, yr-mo-day hr:min:sec [doy] (wk)       ")
+    CString fmt = L"%04d-%02d-%02d %02d:%02d:%02d [%03d] (%d) ";
+    s.Format(fmt + L"local", yr, mo, da, hr, mn, sc, dy, dw);
+    PushContent(L"  14. t13, yr-mo-day hr:min:sec [doy] (wk)       "
         + s);
 
     yr = t13.GetYear(false);
@@ -327,88 +321,88 @@ NewDocument()                                                               /*
     sc = t13.GetSecond(false);
     dw = t13.GetDayOfWeek(false);
     dy = t13.GetDayOfYear(false);
-    s.Format(fmt + _T("UTC"), yr, mo, da, hr, mn, sc, dy, dw);
+    s.Format(fmt + L"UTC", yr, mo, da, hr, mn, sc, dy, dw);
     PushContent("  15. t13, yr-mo-day hr:min:sec [doy] (wk)       "
         + s);
 
     CTimeSpan ts = t10 - t1;
-    s = ts.Format(_T("%D days, %H:%M:%S"));
-    PushContent(_T("  16. t10 - t1 =                                 ")
+    s = ts.Format(L"%D days, %H:%M:%S");
+    PushContent(L"  16. t10 - t1 =                                 "
         + s);
 
-    s.Format(_T("%ld total hrs, %ld min, %ld sec"),
+    s.Format(L"%ld total hrs, %ld min, %ld sec",
         ts.GetTotalHours(), ts.GetTotalMinutes(), ts.GetTotalSeconds());
-    PushContent(_T("  17. t10 - t1 =                                 ")
+    PushContent(L"  17. t10 - t1 =                                 "
         + s);
 
     ts = t1 - t10;
-    s = ts.Format(_T("%D days, %H:%M:%S"));
-    PushContent(_T("  18. t1 - t10 =                                 ")
+    s = ts.Format(L"%D days, %H:%M:%S");
+    PushContent(L"  18. t1 - t10 =                                 "
         + s);
 
     CTime t16 = t10 + (t1 - t10);
-    PushContent(_T("  19. t16 = t10 + (t1 - t10) =  t1               ")
+    PushContent(L"  19. t16 = t10 + (t1 - t10) =  t1               "
         + t16.Format(longDateFmt));
 
     t16 -= (t1 - t10);
-    PushContent(_T("  20. t16 -= (t1 - t10) =  t10                   ")
+    PushContent(L"  20. t16 -= (t1 - t10) =  t10                   "
         + t16.Format(longDateFmt));
 
     t16 += (t1 - t10);
-    PushContent(_T("  21. t16 += (t1 - t10) =  t1                    ")
+    PushContent(L"  21. t16 += (t1 - t10) =  t1                    "
         + t16.Format(longDateFmt));
 
     t16 = t1 - (t1 - t10);
-    PushContent(_T("  22. t16 = t1 - (t1 - t10) =  t10               ")
+    PushContent(L"  22. t16 = t1 - (t1 - t10) =  t10               "
         + t16.Format(longDateFmt));
 
     ts = -(t1 - t10);
-    s = ts.Format(_T("%D days, %H:%M:%S"));
-    PushContent(_T("  23. -(t1 - t10) =                              ")
+    s = ts.Format(L"%D days, %H:%M:%S");
+    PushContent(L"  23. -(t1 - t10) =                              "
         + s);
 
-    PushContent(_T("  24. t5 == t6;                                  ")
+    PushContent(L"  24. t5 == t6;                                  "
         + Truth(t5 == t6));
 
-    PushContent(_T("  25. t5 != t6;                                  ")
+    PushContent(L"  25. t5 != t6;                                  "
         + Truth(t5 != t6));
 
-    PushContent(_T("  26. t5 < t6;                                   ")
+    PushContent(L"  26. t5 < t6;                                   "
         + Truth(t5 < t6));
 
-    PushContent(_T("  27. t5 > t6;                                   ")
+    PushContent(L"  27. t5 > t6;                                   "
         + Truth(t5 > t6));
 
-    PushContent(_T(""));
-    s.Format(_T("  -------------------------------------------------------"));
+    PushContent(L"");
+    s.Format(L"  -------------------------------------------------------");
     PushContent(s);
-    s = _T("    Platform values for this machine");
+    s = L"    Platform values for this machine";
     PushContent(s);
-    s.Format(_T("  -------------------------------------------------------"));
+    s.Format(L"  -------------------------------------------------------");
     PushContent(s);
-    PushContent(_T(""));
-    s.Format(_T("  WINVER        = 0x%x"), WINVER);
+    PushContent(L"");
+    s.Format(L"  WINVER        = 0x%x", WINVER);
     PushContent(s);
 
 #ifdef WIN32_WINNT
-    s.Format(_T("  WIN32_WINNT   = 0x%x"), _WIN32_WINNT);
+    s.Format(L"  WIN32_WINNT   = 0x%x", _WIN32_WINNT);
     PushContent(s);
 #endif
 
-    s.Format(_T("  _WIN32_IE     = 0x%x"), _WIN32_IE);
+    s.Format(L"  _WIN32_IE     = 0x%x", _WIN32_IE);
     PushContent(s);
 
 #ifdef NTDDI_VERSION
-    s.Format(_T("  NTDDI_VERSION = 0x%x"), NTDDI_VERSION);
+    s.Format(L"  NTDDI_VERSION = 0x%x", NTDDI_VERSION);
     PushContent(s);
 #endif
 
-    PushContent(_T(""));
+    PushContent(L"");
 
     s = ::GetCommandLine();
-    s.Format(_T("  Command line: %s"), s.c_str());
+    s.Format(L"  Command line: %s", s.c_str());
     PushContent(s);
-    PushContent(_T(""));
+    PushContent(L"");
 
       // Here we process the Win32++ access to command line arguments, and
       // display them among the other tests in this demo. GetCommandLineArgs
@@ -418,51 +412,51 @@ NewDocument()                                                               /*
       // The second argument (if any) contains this app file name.
     for (size_t i = 0; i < args.size(); i++)
     {
-        s.Format(_T("  argv(%d) = %s"), i, args[i].c_str());
+        s.Format(L"  argv(%d) = %s", i, args[i].c_str());
         PushContent(s);
     }
 
-    PushContent(_T(""));
-    s.Format(_T("  -------------------------------------------------------"));
+    PushContent(L"");
+    s.Format(L"  -------------------------------------------------------");
     PushContent(s);
-    s.Format(_T("    C++ data type sizes for this %d-bit Windows program."),
+    s.Format(L"    C++ data type sizes for this %d-bit Windows program.",
         8 * sizeof(size_t));
     PushContent(s);
-    s.Format(_T("  -------------------------------------------------------"));
+    s.Format(L"  -------------------------------------------------------");
     PushContent(s);
-    PushContent(_T(""));
-    s.Format(_T("  char                     %lu bytes"), sizeof(char));
+    PushContent(L"");
+    s.Format(L"  char                     %lu bytes", sizeof(char));
     PushContent(s);
-    s.Format(_T("  short                    %lu bytes"), sizeof(short));
+    s.Format(L"  short                    %lu bytes", sizeof(short));
     PushContent(s);
-    s.Format(_T("  int                      %lu bytes"), sizeof(int));
+    s.Format(L"  int                      %lu bytes", sizeof(int));
     PushContent(s);
-    s.Format(_T("  long                     %lu bytes"), sizeof(long));
+    s.Format(L"  long                     %lu bytes", sizeof(long));
     PushContent(s);
-    s.Format(_T("  LONGLONG                 %lu bytes"), sizeof(LONGLONG));
+    s.Format(L"  LONGLONG                 %lu bytes", sizeof(LONGLONG));
     PushContent(s);
-    PushContent(_T(""));
-    s.Format(_T("  UINT                     %lu bytes"), sizeof(UINT));
+    PushContent(L"");
+    s.Format(L"  UINT                     %lu bytes", sizeof(UINT));
     PushContent(s);
-    s.Format(_T("  TCHAR                    %lu bytes"), sizeof(TCHAR));
+    s.Format(L"  TCHAR                    %lu bytes", sizeof(TCHAR));
     PushContent(s);
-    s.Format(_T("  WORD                     %lu bytes"), sizeof(WORD));
+    s.Format(L"  WORD                     %lu bytes", sizeof(WORD));
     PushContent(s);
-    s.Format(_T("  DWORD                    %lu bytes"), sizeof(DWORD));
+    s.Format(L"  DWORD                    %lu bytes", sizeof(DWORD));
     PushContent(s);
-    s.Format(_T("  size_t                   %lu bytes"), sizeof(size_t));
+    s.Format(L"  size_t                   %lu bytes", sizeof(size_t));
     PushContent(s);
-    s.Format(_T("  LPTSTR                   %lu bytes"), sizeof(LPTSTR));
+    s.Format(L"  LPWSTR                   %lu bytes", sizeof(LPWSTR));
     PushContent(s);
-    s.Format(_T("  double                   %lu bytes"), sizeof(double));
+    s.Format(L"  double                   %lu bytes", sizeof(double));
     PushContent(s);
-    PushContent(_T(""));
+    PushContent(L"");
     m_docPath.Empty();
 }
 
 /*============================================================================*/
     CTime CDoc::
-GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
+GetTimeFromStr(LPCWSTR szTime, int nDST /* = -1 */) const                   /*
 
     Construct a CTime as directed by the formatting CString timestr, whose
     specifications appear below. Any nonconformity between timestr  and
@@ -497,37 +491,37 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
     int M;  // minute of hour 0 - 59
     int S;  // seconds of minute 0 - 61 (leap years)
 
-    CString Month[] =   {_T("January"), _T("February"),
-                  _T("March"), _T("April"), _T("May"),
-                  _T("June"), _T("July"), _T("August"),
-                  _T("September"), _T("October"),
-                  _T("November"), _T("December")};
-    CString AbMonth[] = {_T("Jan"), _T("Feb"), _T("Mar"),
-                  _T("Apr"), _T("May"), _T("Jun"),
-                  _T("Jul"), _T("Aug"), _T("Sep"),
-                  _T("Oct"), _T("Nov"), _T("Dec")};
+    CString Month[] =   {L"January", L"February",
+                  L"March", L"April", L"May",
+                  L"June", L"July", L"August",
+                  L"September", L"October",
+                  L"November", L"December"};
+    CString AbMonth[] = {L"Jan", L"Feb", L"Mar",
+                  L"Apr", L"May", L"Jun",
+                  L"Jul", L"Aug", L"Sep",
+                  L"Oct", L"Nov", L"Dec"};
 
     // find  H:M:S values
-    p1 = std::min(timestr.Find(_T(":")), len);
+    p1 = std::min(timestr.Find(L':'), len);
     if (p1 >= 0)
     {     // the time of day is present
-        p2 = timestr.ReverseFind(_T(':'));
+        p2 = timestr.ReverseFind(L':');
         CString timestrLeft = timestr.Left(p1);
 
         if (p1 == p2) // H:M only
         {
-            p2 = std::max(timestrLeft.ReverseFind(_T(' ')), 0);
-            p3 = std::max(timestr.Find(_T(" "), p1), len);
+            p2 = std::max(timestrLeft.ReverseFind(L' '), 0);
+            p3 = std::max(timestr.Find(L" ", p1), len);
             H = _ttoi(timestr.Mid(p2 + 1, p1 - p2).c_str());
             M = _ttoi(timestr.Mid(p1 + 1, p3 - p1).c_str());
             S = 0;
         }
         else // H:M:S
         {
-            p3 = std::max(timestrLeft.ReverseFind(_T(' ')), 0);
+            p3 = std::max(timestrLeft.ReverseFind(L' '), 0);
             H = _ttoi(timestr.Mid(p3, p1 - p3).c_str());
             M = _ttoi(timestr.Mid(p1 + 1, p2 - p1).c_str());
-            p3 = std::max(timestr.Find(_T(" "), p1), len);
+            p3 = std::max(timestr.Find(L' ', p1), len);
             S = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
         }
 
@@ -536,13 +530,13 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
         H = M = S = 0;
 
     // now handle the year, month and  day formats
-    p1 = timestr.Find(_T("/"));
+    p1 = timestr.Find(L'/');
     if (p1 >= 0) // "yyyy/mo/da H:M:S"
     {
-        p2 = timestr.Find(_T("/"), p1 + 1);
+        p2 = timestr.Find(L'/', p1 + 1);
         assert(p2 <= len);  // Invalid time conversion format.
 
-        p3   = std::min(timestr.Find(_T(" "), p2), len);
+        p3   = std::min(timestr.Find(L' ', p2), len);
         yyyy = _ttoi(timestr.Mid(0, p1).c_str());
         mo   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
         da   = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
@@ -550,13 +544,13 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
         return t;
     }
 
-    p1 = timestr.Find(_T("-"));
+    p1 = timestr.Find(L'-');
     if (p1 >= 0)  // "da-Mon-yyyy H:M:D"
     {
-        p2 = timestr.Find(_T("-"), p1 + 1);
+        p2 = timestr.Find(L'-', p1 + 1);
         assert(p2 <= len);  // Invalid time conversion format.
 
-        p3   = std::min(timestr.Find(_T(" "), p2), len);
+        p3   = std::min(timestr.Find(L' ', p2), len);
         da   = _ttoi(timestr.Mid(0, p1).c_str());
         CString mon  = timestr.Mid(p1 + 1, p2 - p1 - 1);
         yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
@@ -570,13 +564,13 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
         return t;
     }
 
-    p2 = timestr.Find(_T(", "));
+    p2 = timestr.Find(L", ");
     if (p2 >= 0)  // "Month da, yyyy H:M:S"
     {
-        p1 = timestr.Find(_T(" "));
+        p1 = timestr.Find(L' ');
         assert(p1 <= p2);  // Invalid time conversion format.
 
-        p3   = std::min(timestr.Find(_T(" "), p2 + 2), len);
+        p3   = std::min(timestr.Find(L' ', p2 + 2), len);
         CString month = timestr.Mid(0, p1);
         da   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
         yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
@@ -590,11 +584,11 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
         return t;
     }
 
-    p1 = timestr.Find(_T("+"));
+    p1 = timestr.Find(L'+');
     assert(p1 >= 0);  // Invalid time conversion format.
     if (p1 >= 0)  // "yyyy+doy H:M:S"
     {
-        p2 = std::min(timestr.Find(_T(" ")), len);
+        p2 = std::min(timestr.Find(L' '), len);
         yyyy = _ttoi(timestr.Mid(0, p1).c_str());
         doy  = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
         CTime t(yyyy, doy, H, M, S, nDST);
@@ -629,7 +623,7 @@ SaveDoc()                                                                   /*
     if (m_docPath.IsEmpty())
     {
         m_docPath =
-            GetDocSaveFileName(_T("Save the current document as..."));
+            GetDocSaveFileName(L"Save the current document as...");
     }
     if (m_docPath.IsEmpty())
         return false;
@@ -644,16 +638,16 @@ SaveDoc()                                                                   /*
     {     // Process the exception and  quit
         CString msg;
         CString what(e.what());
-        msg.Format(_T("Error while saving document:\n%s\n%s"),
+        msg.Format(L"Error while saving document:\n%s\n%s",
             e.GetText(), e.GetErrorString());
-        ::MessageBox(NULL, msg.c_str(), what.c_str(),
+        ::MessageBox(nullptr, msg.c_str(), what.c_str(),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
     catch(...)
     {
-        CString msg = _T("Error while saving document:\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+        CString msg = L"Error while saving document:\n";
+        ::MessageBox(nullptr, msg.c_str(), L"Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
@@ -669,7 +663,7 @@ SaveDocAs()                                                                 /*
     document in memory. Return true if able to do so, false otherwise.
 *-----------------------------------------------------------------------------*/
 {
-    CString str = GetDocSaveFileName( _T("Save file as..."));
+    CString str = GetDocSaveFileName(L"Save file as...");
       // check for user bail-out
     if (str.IsEmpty())
         return false;

@@ -17,15 +17,15 @@ class CApp : public CWinApp
 {
 public:
     CApp();
-    virtual ~CApp() {}
+    virtual ~CApp() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CApp(const CApp&) = delete;               // Disable copy construction
-    CApp& operator=(const CApp&) = delete;    // Disable assignment operator
+    CApp(const CApp&) = delete;
+    CApp& operator=(const CApp&) = delete;
 
     CMiniFrame m_view;
 };

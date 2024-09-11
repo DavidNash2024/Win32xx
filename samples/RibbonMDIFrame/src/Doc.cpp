@@ -8,7 +8,7 @@
 /////////////////////////////
 // CDoc function definitions.
 //
-BOOL CDoc::FileLoad(LPCTSTR filename)
+BOOL CDoc::FileLoad(LPCWSTR filename)
 {
     BOOL isLoaded = FALSE;
 
@@ -22,7 +22,7 @@ BOOL CDoc::FileLoad(LPCTSTR filename)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         // Return CDoc data to default
     }
@@ -30,7 +30,7 @@ BOOL CDoc::FileLoad(LPCTSTR filename)
     return isLoaded;
 }
 
-BOOL CDoc::FileStore(LPCTSTR /* filename */)
+BOOL CDoc::FileStore(LPCWSTR /* filename */)
 {
     BOOL isStored = FALSE;
 
@@ -43,7 +43,7 @@ BOOL CDoc::FileStore(LPCTSTR /* filename */)
 //  catch (const CFileException &e)
 //  {
 //      // An exception occurred. Display the relevant information.
-//      ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+//      ::MessageBox(nullptr, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 //  }
 
     return isStored;

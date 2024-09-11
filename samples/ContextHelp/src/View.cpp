@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CView::CView(UINT resID) : CDialog(resID), m_parent(NULL)
+CView::CView(UINT resID) : CDialog(resID), m_parent(nullptr)
 {
 }
 
@@ -21,7 +21,7 @@ CView::~CView()
 }
 
 // Creates the view window. Its a modeless dialog.
-HWND CView::Create(HWND parent = NULL)
+HWND CView::Create(HWND parent = nullptr)
 {
     m_parent = parent;
     return DoModeless(parent);
@@ -48,10 +48,10 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -59,7 +59,7 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -82,7 +82,7 @@ CDoc& CView::GetDoc()
 // Called when the button is pressed.
 BOOL CView::OnButton()
 {
-    SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
+    SetDlgItemText(IDC_STATUS, L"Button Pressed");
     TRACE("Button Pressed\n");
     return TRUE;
 }
@@ -91,7 +91,7 @@ BOOL CView::OnButton()
 void CView::OnCancel()
 {
     // Discard these messages
-    SetDlgItemText(IDC_STATUS, _T("Cancel Pressed."));
+    SetDlgItemText(IDC_STATUS, L"Cancel Pressed.");
     TRACE("Cancel Pressed.\n");
 }
 
@@ -146,13 +146,13 @@ BOOL CView::OnInitDialog()
     AttachItem(IDC_BITMAP1, m_picture);
 
     // Put some text in the edit boxes
-    SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
-    SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
+    SetDlgItemText(IDC_EDIT1, L"Edit Control");
+    SetDlgItemText(IDC_RICHEDIT1, L"Rich Edit Window");
 
     // Put some text in the list box
     for (int i = 0 ; i < 8 ; i++)
     {
-        m_listBox.AddString(_T("List Box"));
+        m_listBox.AddString(L"List Box");
     }
 
     // Set initial button states
@@ -194,7 +194,7 @@ BOOL CView::OnInitDialog()
 // Called when the OK button is pressed.
 void CView::OnOK()
 {
-    SetDlgItemText(IDC_STATUS, _T("OK Button Pressed."));
+    SetDlgItemText(IDC_STATUS, L"OK Button Pressed.");
     TRACE("OK Button Pressed.\n");
 }
 
@@ -208,7 +208,7 @@ BOOL CView::OnCheckA()
     CheckDlgButton(ID_CHECK_A, checkFlag);
     GetDoc().SetCheckA(isCheckA);
 
-    SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
+    SetDlgItemText(IDC_STATUS, L"Check Box A toggled");
     return TRUE;
 }
 
@@ -222,7 +222,7 @@ BOOL CView::OnCheckB()
     CheckDlgButton(ID_CHECK_B, checkFlag);
     GetDoc().SetCheckB(isCheckB);
 
-    SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
+    SetDlgItemText(IDC_STATUS, L"Check Box B toggled");
     return TRUE;
 }
 
@@ -236,7 +236,7 @@ BOOL CView::OnCheckC()
     CheckDlgButton(ID_CHECK_C, checkFlag);
     GetDoc().SetCheckC(isCheckC);
 
-    SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
+    SetDlgItemText(IDC_STATUS, L"Check Box C toggled");
     return TRUE;
 }
 
@@ -246,7 +246,7 @@ BOOL CView::OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID)
     CheckRadioButton(firstID, lastID, clickedID);
 
     GetDoc().SetRadio(clickedID);
-    SetDlgItemText(IDC_STATUS, _T("Radio changed"));
+    SetDlgItemText(IDC_STATUS, L"Radio changed");
     TRACE("Radio changed\n");
 
     return TRUE;

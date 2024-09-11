@@ -26,8 +26,8 @@ CListBoxDlg()                                                               /*
 *-----------------------------------------------------------------------------*/
     :  CDialog(IDD_CLISTVIEWBOX)
 {
-    SetBoxTitle(_T("List"));
-    AddListItem(_T("default item 0"));
+    SetBoxTitle(L"List");
+    AddListItem(L"default item 0");
 }
 
 /*============================================================================*/

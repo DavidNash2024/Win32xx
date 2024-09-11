@@ -92,8 +92,6 @@
     <ClInclude Include="..\src\ScintillaApp.h" />
     <ClInclude Include="..\src\scintillaview.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
-    <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

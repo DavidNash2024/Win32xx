@@ -18,28 +18,28 @@ public:
     CMainFrame();
 
     // Virtual functions that override public base class functions
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
     CString GetFileName();
     void SetWindowTitle();
     void UpdateToolbar();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnClose();
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnInitialUpdate();
-    virtual void    OnMenuUpdate(UINT id);
-    virtual void    SetupMenuIcons();
-    virtual void    SetStatusIndicators();
-    virtual void    SetStatusParts();
-    virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnClose() override;
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnInitialUpdate() override;
+    virtual void    OnMenuUpdate(UINT id) override;
+    virtual void    SetupMenuIcons() override;
+    virtual void    SetStatusIndicators() override;
+    virtual void    SetStatusParts() override;
+    virtual void    SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Command Handlers
     BOOL    OnFileExit();
@@ -62,7 +62,7 @@ private:
     LRESULT OnPreviewSetup();
 
     int  AdjustForDPI(int value) const;
-    int  GetTextPartWidth(LPCTSTR text) const;
+    int  GetTextPartWidth(LPCWSTR text) const;
     void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }
 

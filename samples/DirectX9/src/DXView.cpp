@@ -15,20 +15,20 @@
 /////////////////////////////
 // CDXView function definitions
 //
-CDXView::CDXView() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL)
+CDXView::CDXView() : m_pD3D(nullptr), m_pd3dDevice(nullptr), m_pVB(nullptr)
 {
-    ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
+    m_d3dpp = {};
 }
 
 CDXView::~CDXView()
 {
-    if(m_pVB != NULL)
+    if(m_pVB != nullptr)
         m_pVB->Release();
 
-    if( m_pd3dDevice != NULL)
+    if( m_pd3dDevice != nullptr)
         m_pd3dDevice->Release();
 
-    if( m_pD3D != NULL)
+    if( m_pD3D != nullptr)
         m_pD3D->Release();
 }
 
@@ -57,13 +57,13 @@ HRESULT CDXView::InitD3D( HWND wnd )
 {
     // Create the D3D object.
     m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
-    if (m_pD3D == NULL)
+    if (m_pD3D == nullptr)
         return E_FAIL;
 
     CRect rc = GetClientRect();
 
     // Set up the structure used to create the D3DDevice
-    ZeroMemory( &m_d3dpp, sizeof(m_d3dpp) );
+    m_d3dpp = {};
     m_d3dpp.Windowed = TRUE;
     m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
     m_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
@@ -102,7 +102,7 @@ HRESULT CDXView::InitGeometry()
     // Create the vertex buffer.
     if (FAILED(m_pd3dDevice->CreateVertexBuffer(3 * sizeof(CUSTOMVERTEX),
                                                 0, D3DFVF_XYZ | D3DFVF_DIFFUSE,
-                                                D3DPOOL_MANAGED, &m_pVB, NULL)))
+                                                D3DPOOL_MANAGED, &m_pVB, nullptr)))
     {
         return E_FAIL;
     }
@@ -204,7 +204,7 @@ void CDXView::Render()
                 }
 
                 // Clear the backbuffer to a black color
-                if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
+                if (D3D_OK !=m_pd3dDevice->Clear( 0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
                     TRACE("Failed to clear back buffer\n");
 
                 // Begin the scene
@@ -227,7 +227,7 @@ void CDXView::Render()
                     TRACE("Failed to render the scene\n");
 
                 // Present the backbuffer contents to the display
-                m_pd3dDevice->Present( NULL, NULL, 0, NULL );
+                m_pd3dDevice->Present( nullptr, nullptr, 0, nullptr );
             }
             break;
         case D3DERR_DEVICELOST:
@@ -267,10 +267,10 @@ LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -278,7 +278,7 @@ LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

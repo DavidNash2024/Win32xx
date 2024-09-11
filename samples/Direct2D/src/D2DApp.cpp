@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CD2DApp::CD2DApp() : m_pDirect2dFactory(NULL)
+CD2DApp::CD2DApp() : m_pDirect2dFactory(nullptr)
 {
 }
 
@@ -31,7 +31,7 @@ HRESULT CD2DApp::CreateDeviceIndependentResources()
 // Called when the application starts.
 BOOL CD2DApp::InitInstance()
 {
-    HRESULT hr = CoInitialize(NULL);
+    HRESULT hr = CoInitialize(nullptr);
     if (SUCCEEDED(hr))
     {
         // Initialize device-independent resources, such as the Direct2D factory.
@@ -44,10 +44,10 @@ BOOL CD2DApp::InitInstance()
             return TRUE;
         }
         else
-            ::MessageBox(NULL, L"Failed to start DirectX", L"Error", MB_OK);
+            ::MessageBox(nullptr, L"Failed to start DirectX", L"Error", MB_OK);
     }
     else
-        ::MessageBox(NULL, L"Failed to initialize COM", L"Error", MB_OK);
+        ::MessageBox(nullptr, L"Failed to initialize COM", L"Error", MB_OK);
 
     return FALSE;
 }

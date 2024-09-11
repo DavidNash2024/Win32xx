@@ -5,7 +5,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "targetver.h"
 #include "wxx_wincore.h"
 
 
@@ -15,20 +14,20 @@ class CView : public CWnd
 {
 public:
     CView() {}
-    virtual ~CView() {}
+    virtual ~CView() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual void OnDraw(CDC& dc);
-    virtual void OnInitialUpdate();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnDestroy() override;
+    virtual void OnDraw(CDC& dc) override;
+    virtual void OnInitialUpdate() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     // Message handlers
     void OnSize();

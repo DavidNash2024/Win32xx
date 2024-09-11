@@ -7,80 +7,6 @@
 		<Option default_target="Release MinGW GNU compiler" />
 		<Option compiler="bcc" />
 		<Build>
-			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft/Debug/MyDLL.dll" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Microsoft/Debug" />
-				<Option object_output="Microsoft/Debug" />
-				<Option type="3" />
-				<Option compiler="msvctk" />
-				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
-				<Compiler>
-					<Add option="/MTd" />
-					<Add option="/GA" />
-					<Add option="/GX" />
-					<Add option="/GR" />
-					<Add option="/W3" />
-					<Add option="/DWIN32" />
-					<Add option="/D_DEBUG" />
-					<Add option="/D_WINDOWS" />
-					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add option='/DEF:&quot;.\Export.def&quot;' />
-					<Add library="ComCtl32" />
-					<Add library="Gdi32" />
-					<Add library="User32" />
-					<Add library="Kernel32" />
-					<Add library="Advapi32" />
-					<Add library="Comdlg32" />
-					<Add library="Ole32" />
-					<Add library="Oleaut32" />
-					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
-				</Linker>
-			</Target>
-			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft/Release/MyDLL.dll" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Microsoft/Release" />
-				<Option object_output="Microsoft/Release" />
-				<Option type="3" />
-				<Option compiler="msvctk" />
-				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
-				<Compiler>
-					<Add option="/MT" />
-					<Add option="/GX" />
-					<Add option="/GR" />
-					<Add option="/Ox" />
-					<Add option="/W3" />
-					<Add option="/DWIN32" />
-					<Add option="/DNDEBUG" />
-					<Add option="/D_WINDOWS" />
-					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add option='/DEF:&quot;.\Export.def&quot;' />
-					<Add library="ComCtl32" />
-					<Add library="Gdi32" />
-					<Add library="Kernel32" />
-					<Add library="User32" />
-					<Add library="Advapi32" />
-					<Add library="Comdlg32" />
-					<Add library="Ole32" />
-					<Add library="Oleaut32" />
-					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
-				</Linker>
-			</Target>
 			<Target title="Debug MinGW GNU compiler">
 				<Option output="GNU/Debug/MyDLL.dll" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU/Debug" />
@@ -101,6 +27,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-static" />
+					<Add option="-municode" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
 					<Add library="Oleaut32" />
@@ -130,7 +57,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-static" />
-					<Add option="-Wl,--enable-auto-import" />
+					<Add option="-municode" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
 					<Add library="Oleaut32" />
@@ -142,7 +69,7 @@
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+			<Add alias="All" targets="Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
 		<Unit filename="../src/MakeDLL.cpp" />
 		<Unit filename="../src/MakeDLL.h" />
@@ -157,7 +84,6 @@
 			<Option weight="0" />
 		</Unit>
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/targetver.h" />
 		<Unit filename="Export.def" />
 		<Extensions />
 	</Project>

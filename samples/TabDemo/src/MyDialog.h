@@ -13,22 +13,22 @@ class CViewDialog : public CDialog
 {
 public:
     CViewDialog(UINT resID);
-    virtual ~CViewDialog();
+    virtual ~CViewDialog() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnCancel();
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnInitDialog();
-    virtual void OnOK();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void OnCancel() override;
+    virtual void OnClose() override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnInitDialog() override;
+    virtual void OnOK() override;
 
 private:
-    CViewDialog(const CViewDialog&);               // Disable copy construction
-    CViewDialog& operator=(const CViewDialog&);    // Disable assignment operator
+    CViewDialog(const CViewDialog&) = delete;
+    CViewDialog& operator=(const CViewDialog&) = delete;
 
-    void AppendText(int id, LPCTSTR text);
+    void AppendText(int id, LPCWSTR text);
 
     // Command handlers
     BOOL OnButton();

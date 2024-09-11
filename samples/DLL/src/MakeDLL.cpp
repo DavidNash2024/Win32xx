@@ -45,9 +45,9 @@ void __declspec(dllexport) ShowDialog()
     //      a separate thread if you wish the function to return immediately.
 
     // Create the dialog
-    TRACE(_T("Creating a dialog inside the DLL:\n"));
+    TRACE("Creating a dialog inside the DLL:\n");
     MyDialog.Create();
-    TRACE(_T("Dialog inside DLL created\n"));
+    TRACE("Dialog inside DLL created\n");
 
     // Run the message loop
     App.Run();

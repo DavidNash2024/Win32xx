@@ -18,17 +18,17 @@ class CDarkAbout : public CDialog
 {
 public:
     CDarkAbout();
-    virtual ~CDarkAbout();
+    virtual ~CDarkAbout() override;
     void SetDarkMode(bool isDarkMode);
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnInitDialog();
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnInitDialog() override;
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDarkAbout(const CDarkAbout&);               // Disable copy construction
-    CDarkAbout& operator=(const CDarkAbout&);    // Disable assignment operator
+    CDarkAbout(const CDarkAbout&) = delete;
+    CDarkAbout& operator=(const CDarkAbout&) = delete;
 
     LRESULT OnDrawItem(WPARAM, LPARAM);
     LRESULT OnCtlColors(UINT, WPARAM, LPARAM);

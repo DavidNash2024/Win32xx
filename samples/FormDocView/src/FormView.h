@@ -15,7 +15,7 @@ class CFormView : public CDialog
 {
 public:
     CFormView(UINT resID);
-    virtual ~CFormView();
+    virtual ~CFormView() override;
     CFormDoc& GetDoc();
 
     // Command handlers
@@ -27,16 +27,16 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnCancel();
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnInitDialog();
-    virtual void OnOK();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void OnCancel() override;
+    virtual void OnClose() override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnInitDialog() override;
+    virtual void OnOK() override;
 
 private:
-    CFormView(const CFormView&);               // Disable copy construction
-    CFormView& operator=(const CFormView&);    // Disable assignment operator
+    CFormView(const CFormView&) = delete;
+    CFormView& operator=(const CFormView&) = delete;
 
     // Member variables for dialog controls.
     CButton      m_radioA;

@@ -6,6 +6,8 @@
 #include "LeftPane.h"
 #include "RightPane.h"
 
+using namespace std;
+
 //////////////////////////////////
 // CRightPane function definitions
 //
@@ -19,20 +21,20 @@ CRightPane::CRightPane()
 // Adds a new docker. The id specifies the dock type.
 // The id is used by LoadDockRegistrySettings to restore the
 // previous splitter window arrangement.
-CDocker* CRightPane::NewDockerFromID(int id)
+DockPtr CRightPane::NewDockerFromID(int id)
 {
-    CDocker* pDock = NULL;
+    DockPtr docker;
     switch (id)
     {
     case ID_DOCK_LEFTPANE:
-        pDock = new CLeftPane;
+        docker = make_unique<CLeftPane>();
         break;
     default:
         TRACE("Unknown Dock ID\n");
         break;
     }
 
-    return pDock;
+    return docker;
 }
 
 // Handle the window's messages.
@@ -49,10 +51,10 @@ LRESULT CRightPane::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -60,7 +62,7 @@ LRESULT CRightPane::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

@@ -17,8 +17,8 @@ class CMovieShowApp : public CWinApp
 public:
     CMovieShowApp();
     virtual ~CMovieShowApp() override;
-    CMovieShowApp(const CMovieShowApp&) = delete;               // Disable copy construction
-    CMovieShowApp& operator=(const CMovieShowApp&) = delete;    // Disable assignment operator
+    CMovieShowApp(const CMovieShowApp&) = delete;
+    CMovieShowApp& operator=(const CMovieShowApp&) = delete;
 
 protected:
     virtual BOOL InitInstance() override;

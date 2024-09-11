@@ -32,7 +32,7 @@ class CGDIPlusView : public CWnd
 {
 public:
     CGDIPlusView();
-    virtual ~CGDIPlusView();
+    virtual ~CGDIPlusView() override;
 
     void DrawCappedLine(CDC& dc);
     void DrawGamaShapes(CDC& dc);
@@ -40,17 +40,17 @@ public:
     void DrawSolidElipse(CDC& dc);
     void DrawSolidLine(CDC& dc);
     void DrawText(CDC& dc);
+    void RegisterClass(WNDCLASS& wc);
 
 protected:
-    virtual void OnDraw(CDC& dc);
-    virtual void OnInitialUpdate();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void RegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual void OnInitialUpdate() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CGDIPlusView(const CGDIPlusView&);               // Disable copy construction
-    CGDIPlusView& operator=(const CGDIPlusView&);    // Disable assignment operator
+    CGDIPlusView(const CGDIPlusView&) = delete;
+    CGDIPlusView& operator=(const CGDIPlusView&) = delete;
 
     ULONG_PTR   m_gdiplusToken;
 };

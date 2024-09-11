@@ -16,15 +16,15 @@ class CThemesApp : public CWinApp
 {
 public:
     CThemesApp();
-    virtual ~CThemesApp();
+    virtual ~CThemesApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CThemesApp(const CThemesApp&);               // Disable copy construction
-    CThemesApp& operator=(const CThemesApp&);    // Disable assignment operator
+    CThemesApp(const CThemesApp&) = delete;
+    CThemesApp& operator=(const CThemesApp&) = delete;
 
     CMainFrame m_frame;
 };

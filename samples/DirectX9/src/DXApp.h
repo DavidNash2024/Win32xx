@@ -16,16 +16,16 @@ class CDXApp : public CWinApp
 {
 public:
     CDXApp();
-    virtual ~CDXApp() {}
+    virtual ~CDXApp() override {}
     CMainFrame& GetMainFrame() { return m_frame; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CDXApp(const CDXApp&);               // Disable copy construction
-    CDXApp& operator=(const CDXApp&);    // Disable assignment operator
+    CDXApp(const CDXApp&) = delete;
+    CDXApp& operator=(const CDXApp&) = delete;
 
     CMainFrame m_frame;
 };

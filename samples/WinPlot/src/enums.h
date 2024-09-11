@@ -7,8 +7,8 @@
 
 namespace Calc
 {
-
-    typedef double(*PFun) (double);
+    // Declare a function pointer for the math functions.
+    using PFun = double (*)(double);
 
     enum eToken
     {

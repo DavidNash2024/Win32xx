@@ -24,8 +24,8 @@ protected:
     virtual BOOL OnIdle(LONG);
 
 private:
-    ScintillaApp(const ScintillaApp&);               // Disable copy construction
-    ScintillaApp& operator=(const ScintillaApp&);    // Disable assignment operator
+    ScintillaApp(const ScintillaApp&) = delete;
+    ScintillaApp& operator=(const ScintillaApp&) = delete;
 
     CMainFrame m_frame;
 };

@@ -29,17 +29,19 @@ CApp : public CWinApp                                                   /*
 {
     public:
         CApp();
-        virtual ~CApp(){}
+        virtual ~CApp() override {}
 
-        virtual BOOL    InitInstance();
         const CString&  GetAppName() const { return m_appName; }
         const CString&  GetArcFileName() const { return m_arcvFile; }
         const CString&  GetAboutStatement() const { return m_aboutStatement; }
         CString         MakeAppDataPath(const CString& subpath);
 
+    protected:
+        virtual BOOL    InitInstance() override;
+
     private:
-        CApp(const CApp&);               // Disable copy construction
-        CApp& operator=(const CApp&);    // Disable assignment operator
+        CApp(const CApp&) = delete;
+        CApp& operator=(const CApp&) = delete;
 
           // private functions
         ULONG       DatInt(const CString &);

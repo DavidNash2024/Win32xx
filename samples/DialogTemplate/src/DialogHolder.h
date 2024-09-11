@@ -14,17 +14,17 @@ class CDialogHolder : public CWnd
 {
 public:
     CDialogHolder() {}
-    virtual ~CDialogHolder() {}
+    virtual ~CDialogHolder() override {}
     void ShowDialog(CWnd* pFrame, unsigned char* dlg);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void PreCreate(CREATESTRUCT& cs);
-    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDialogHolder(const CDialogHolder&);               // Disable copy construction
-    CDialogHolder& operator=(const CDialogHolder&);    // Disable assignment operator
+    CDialogHolder(const CDialogHolder&) = delete;
+    CDialogHolder& operator=(const CDialogHolder&) = delete;
 
     CDialog m_dialog;
 };

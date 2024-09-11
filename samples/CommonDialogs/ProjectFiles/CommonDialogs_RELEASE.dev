@@ -1,7 +1,7 @@
 [Project]
 FileName=CommonDialogs_RELEASE.dev
 Name=CommonDialogs
-UnitCount=30
+UnitCount=29
 Type=0
 Ver=2
 ObjFiles=
@@ -12,7 +12,7 @@ ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=_@@_
 CppCompiler=-D NDEBUG_@@_-g_@@_-O0_@@_-D _UNICODE_@@_-D UNICODE_@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lUuid_@@_-lOleaut32_@@_-lWs2_32_@@_-s_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lUuid_@@_-lOleaut32_@@_-lWs2_32_@@_-s_@@_-municode_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release
@@ -27,7 +27,7 @@ CustomMakefile=stdafx.mak
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=3
-CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -71,9 +71,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=..\src\View.cpp
+FileName=..\src\View.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -171,9 +171,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=..\src\targetver.h
+FileName=..\src\View.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -271,9 +271,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=..\src\View.h
+FileName=..\src\main.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -283,16 +283,6 @@ BuildCmd=
 [Unit39]
 FileName=..\src\PrintInfo.cpp
 Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-CompileCpp=1
-
-[Unit32]
-FileName=..\src\targetver.h
-Folder=Header
 Compile=1
 Link=1
 Priority=1000

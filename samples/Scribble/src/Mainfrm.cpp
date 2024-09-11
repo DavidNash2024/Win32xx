@@ -1,5 +1,5 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+///////////////////////////////////////////////////////
+// Mainfrm.cpp  - definitions for the CMainFrame class.
 
 #include "stdafx.h"
 #include "Mainfrm.h"
@@ -23,7 +23,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\Scribble Sample"));
+    LoadRegistrySettings(L"Win32++\\Scribble Sample");
 
     // Load the settings from the registry with 4 MRU entries.
     LoadRegistryMRUSettings(4);
@@ -32,7 +32,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message.
-void CMainFrame::LoadFile(LPCTSTR fileName)
+void CMainFrame::LoadFile(LPCWSTR fileName)
 {
     try
     {
@@ -49,7 +49,7 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
-        m_pathName = _T("");
+        m_pathName = L"";
         m_view.GetAllPoints().clear();
     }
 
@@ -112,7 +112,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
-    // call the base class function
+    // Call the base class function.
     return CFrame::OnCreate(cs);
 }
 
@@ -121,8 +121,8 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     try
     {
-        // wParam is a pointer (LPCTSTR) to the file name.
-        LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+        // wParam is a pointer (LPCWSTR) to the file name.
+        LPCWSTR fileName = reinterpret_cast<LPCWSTR>(wparam);
         assert(fileName);
 
         // Load the file
@@ -175,7 +175,7 @@ BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 BOOL CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
-    m_pathName = _T("");
+    m_pathName = L"";
     GetView().Invalidate();
     return TRUE;
 }
@@ -183,15 +183,16 @@ BOOL CMainFrame::OnFileNew()
 // Load the PlotPoint data from the file.
 BOOL CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE, _T("dat"), NULL, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    fileDlg.SetTitle(_T("Open File"));
+    CFileDialog fileDlg(TRUE, L"dat", nullptr, OFN_FILEMUSTEXIST,
+        L"Scribble Files (*.dat)\0*.dat\0\0");
+    fileDlg.SetTitle(L"Open File");
 
     try
     {
         // Bring up the file open dialog retrieve the selected file name.
         if (fileDlg.DoModal(*this) == IDOK)
         {
-            // Load the file
+            // Load the file.
             LoadFile(fileDlg.GetPathName());
         }
     }
@@ -212,7 +213,7 @@ BOOL CMainFrame::OnFileSave()
 {
     try
     {
-        if (m_pathName == _T(""))
+        if (m_pathName == L"")
             OnFileSaveAs();
         else
             GetDoc().FileSave(m_pathName);
@@ -232,8 +233,9 @@ BOOL CMainFrame::OnFileSave()
 // Save the PlotPoint data to a specified file.
 BOOL CMainFrame::OnFileSaveAs()
 {
-    CFileDialog fileDlg(FALSE, _T("dat"), NULL, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    fileDlg.SetTitle(_T("Save File"));
+    CFileDialog fileDlg(FALSE, L"dat", nullptr, OFN_OVERWRITEPROMPT,
+        L"Scribble Files (*.dat)\0*.dat\0\0");
+    fileDlg.SetTitle(L"Save File");
 
     try
     {
@@ -267,7 +269,7 @@ BOOL CMainFrame::OnFilePreview()
     {
         m_isToolbarShown = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
 
-        // Get the device contect of the default or currently chosen printer.
+        // Get the device context of the default or currently chosen printer.
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
@@ -286,29 +288,29 @@ BOOL CMainFrame::OnFilePreview()
         ShowToolBar(FALSE);
 
         // Update status.
-        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        CString status = L"Printer: " + printDlg.GetDeviceName();
         SetStatusText(status);
     }
 
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(GetFrameMenu() != NULL);
+        ShowMenu(GetFrameMenu() != nullptr);
         ShowToolBar(m_isToolbarShown);
     }
 
     return TRUE;
 }
 
-// Sends the bitmap extracted from the View window to a printer of your choice
+// Sends the bitmap extracted from the View window to a printer of your choice.
 BOOL CMainFrame::OnFilePrint()
 {
     try
     {
-        // print the view window
-        m_view.Print(_T("Scribble Output"));
+        // Print the view window.
+        m_view.Print(L"Scribble Output");
     }
 
     catch (const CException& e)
@@ -338,22 +340,23 @@ void CMainFrame::OnInitialUpdate()
 // Initiates the Choose Color dialog.
 BOOL CMainFrame::OnPenColor()
 {
-    // array of custom colors, initialized to white
-    static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
+    // An array of custom colors, initialized to white.
+    constexpr COLORREF white = RGB(255, 255, 255);
+    static COLORREF custColors[16] = { white, white, white, white,
+                                        white, white, white, white,
+                                        white, white, white, white,
+                                        white, white, white, white };
 
     CColorDialog colorDlg;
     colorDlg.SetCustomColors(custColors);
 
-    // Initialize the Choose Color dialog
+    // Initialize the Choose Color dialog.
     if (colorDlg.DoModal(*this) == IDOK)
     {
-        // Store the custom colors in the static array
+        // Store the custom colors in the static array.
         memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
 
-        // Retrieve the chosen color
+        // Retrieve the chosen color.
         m_view.SetPenColor(colorDlg.GetColor());
     }
 
@@ -363,11 +366,11 @@ BOOL CMainFrame::OnPenColor()
 // Called when the Print Preview's "Close" button is pressed.
 LRESULT CMainFrame::OnPreviewClose()
 {
-    // Swap the view
+    // Swap the view.
     SetView(m_view);
 
-    // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != NULL);
+    // Show the menu and toolbar.
+    ShowMenu(GetFrameMenu() != nullptr);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -381,7 +384,7 @@ LRESULT CMainFrame::OnPreviewPrint()
 {
     try
     {
-        m_view.QuickPrint(_T("Scribble Output"));
+        m_view.QuickPrint(L"Scribble Output");
     }
 
     catch (const CException& e)
@@ -399,10 +402,10 @@ LRESULT CMainFrame::OnPreviewSetup()
     CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
-        // Display the print dialog
+        // Display the print dialog.
         if (printDlg.DoModal(*this) == IDOK)
         {
-            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            CString status = L"Printer: " + printDlg.GetDeviceName();
             SetStatusText(status);
         }
     }
@@ -422,9 +425,9 @@ LRESULT CMainFrame::OnPreviewSetup()
 // Specifies the images used on menu items.
 void CMainFrame::SetupMenuIcons()
 {
-    // Use the MenuIcons bitmap for images in menu items.
+    // Use the appropriately sized bitmap for images in menu items.
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -433,7 +436,7 @@ void CMainFrame::SetupMenuIcons()
 // Configures the ToolBar.
 void CMainFrame::SetupToolBar()
 {
-    // Define our toolbar buttons
+    // Define our toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -473,10 +476,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -484,7 +487,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

@@ -1,7 +1,7 @@
 [Project]
 FileName=Explorer_RELEASE.dev
 Name=Explorer
-UnitCount=19
+UnitCount=18
 Type=0
 Ver=2
 ObjFiles=
@@ -11,8 +11,8 @@ PrivateResource=Explorer_RELEASE_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D NDEBUG_@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lShlwapi_@@_-lUuid_@@_-lWs2_32_@@_-s_@@_
+CppCompiler=-D NDEBUG_@@_-DUNICODE_@@_-D_UNICODE_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lShlwapi_@@_-lUuid_@@_-lWs2_32_@@_-s_@@_-municode_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=3
-CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -241,16 +241,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=..\src\targetver.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
 FileName=..\src\LeftPane.cpp
 CompileCpp=1
 Folder=Source
@@ -260,10 +250,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit17]
 FileName=..\src\LeftPane.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=..\src\RightPane.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

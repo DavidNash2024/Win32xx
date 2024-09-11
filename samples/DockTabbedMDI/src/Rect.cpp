@@ -14,7 +14,7 @@
 // Called when the window is created.
 int CViewRect::OnCreate(CREATESTRUCT&)
 {
-    SetTimer (1, 250, NULL) ;
+    SetTimer(1, 250, nullptr) ;
     return 0;
 }
 
@@ -26,11 +26,10 @@ void CViewRect::OnDestroy()
 
 void CViewRect::OnDraw(CDC& dc)
 {
-    std::vector<RectData>::const_iterator it;
-    for (it = m_rects.begin(); it != m_rects.end(); ++it)
+    for (const RectData& rd : m_rects)
     {
-        dc.CreateSolidBrush((*it).color);
-        CRect rc = (*it).rect;
+        dc.CreateSolidBrush(rd.color);
+        CRect rc = rd.rect;
         dc.Rectangle(rc.left, rc.top, rc.right, rc.bottom);
     }
 }
@@ -67,27 +66,29 @@ LRESULT CViewRect::OnTimer(UINT, WPARAM, LPARAM)
     {
         int red, green, blue;
         int left, right, top, bottom;
-        left   = rand () % m_cxClientMax;
-        right  = rand () % m_cxClientMax;
-        top    = rand () % m_cyClientMax;
-        bottom = rand () % m_cyClientMax;
-        red    = rand () & 255;
-        green  = rand () & 255;
-        blue   = rand () & 255;
+        left = rand() % m_cxClientMax;
+        right = rand() % m_cxClientMax;
+        top = rand() % m_cyClientMax;
+        bottom = rand() % m_cyClientMax;
+        red = rand() & 255;
+        green = rand() & 255;
+        blue = rand() & 255;
 
         CClientDC RectDC(*this);
         COLORREF color(RGB(red, green, blue));
-        RectDC.CreateSolidBrush (color);
+        RectDC.CreateSolidBrush(color);
 
-        int rcLeft   = (left < right) ? left : right;
-        int rcTop    = (top < bottom) ? top  : bottom;
-        int rcRight  = (left > right) ? left : right;
-        int rcBottom = (top > bottom) ? top  : bottom;
+        int rcLeft = (left < right) ? left : right;
+        int rcTop = (top < bottom) ? top : bottom;
+        int rcRight = (left > right) ? left : right;
+        int rcBottom = (top > bottom) ? top : bottom;
         RectDC.Rectangle(rcLeft, rcTop, rcRight, rcBottom);
 
         RectData rectData(color, CRect(rcLeft, rcTop, rcRight, rcBottom));
         m_rects.push_back(rectData);
     }
+    else
+        KillTimer(1);
 
     return 0;
 }
@@ -124,10 +125,10 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -135,7 +136,7 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

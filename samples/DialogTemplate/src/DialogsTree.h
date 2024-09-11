@@ -17,20 +17,20 @@ class CDialogsTree : public CTreeView
 {
 public:
     CDialogsTree();
-    virtual ~CDialogsTree();
+    virtual ~CDialogsTree() override;
 
-    void FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fileName);
+    void FillTree(const std::vector<ResourceInfo>& allInfo, LPCWSTR fileName);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnAttach();
-    virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnAttach() override;
+    virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam) override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDialogsTree(const CDialogsTree&);               // Disable copy construction
-    CDialogsTree& operator=(const CDialogsTree&);    // Disable assignment operator
+    CDialogsTree(const CDialogsTree&) = delete;
+    CDialogsTree& operator=(const CDialogsTree&) = delete;
 
     // Private member functions
     BOOL OnSelChanged();
@@ -46,15 +46,15 @@ class CDockDialogsTree : public CDocker
 {
 public:
     CDockDialogsTree();
-    virtual ~CDockDialogsTree() {}
+    virtual ~CDockDialogsTree() override {}
     CDialogsTree* GetTree() { return &m_tree; }
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockDialogsTree(const CDockDialogsTree&);                // Disable copy construction
-    CDockDialogsTree& operator=(const CDockDialogsTree&);   // Disable assignment operator
+    CDockDialogsTree(const CDockDialogsTree&) = delete;
+    CDockDialogsTree& operator=(const CDockDialogsTree&) = delete;
 
     CDialogsTree m_tree;
 };

@@ -2,15 +2,9 @@
 // MetaView.cpp
 //
 
-
-// VS6 requires these macros to be defined.
-#define WINVER          0x0410
-#define _WIN32_WINDOWS  0x0410
-#define _WIN32_IE       0x0401
-
-
 #include "MetaView.h"
 #include "resource.h"
+
 
 /////////////////////////////////
 // CMetaView function definitions
@@ -28,7 +22,7 @@ int CMetaView::OnCreate(CREATESTRUCT&)
 
     CEnhMetaFileDC metaDC;
     // Creates an enhanced MetaFile called "Pattern.emf", and also the EnhMetaFile device context
-    metaDC.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
+    metaDC.CreateEnhanced(nullptr, L"Pattern.emf", nullptr, nullptr);
 
     // Draw to the Metafile device context
     metaDC.Rectangle(0, 0, 100, 100);
@@ -51,9 +45,9 @@ void CMetaView::OnDraw(CDC& dc)
     CRect rcClient = GetClientRect();
     int cxClient = rcClient.Width();
     int cyClient = rcClient.Height();
-    SetMapMode(dc, MM_ANISOTROPIC);
-    SetWindowExtEx(dc, 1000, 1000, NULL);
-    SetViewportExtEx(dc, cxClient, cyClient, NULL);
+    dc.SetMapMode(MM_ANISOTROPIC);
+    dc.SetWindowExtEx(1000, 1000, nullptr);
+    dc.SetViewportExtEx(cxClient, cyClient, nullptr);
 
     CRect rc(0, 0, 100, 100);
 
@@ -62,7 +56,7 @@ void CMetaView::OnDraw(CDC& dc)
     {
         for (int y = 0; y < 10; y++)
         {
-            dc.SetWindowOrgEx(-100 * x, -100 * y, NULL);
+            dc.SetWindowOrgEx(-100 * x, -100 * y, nullptr);
             dc.PlayMetaFile(m_enhMetaFile, rc);
         }
     }
@@ -94,10 +88,10 @@ LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -105,7 +99,7 @@ LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

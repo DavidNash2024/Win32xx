@@ -43,32 +43,34 @@ CView : public CDialog                                                      /*
 {
     public:
         CView(UINT id);
-        virtual ~CView(){}
+        virtual ~CView() override {}
 
-        HWND        Create(HWND);
+        virtual HWND   Create(HWND) override;
         CRichEditView& GetRichView() { return m_richView;}
-        CFont       GetEditFont()    { return m_editFont;}
-        void        NoDocOpen();
-        void        OnPageSetup();
-        void        OnPrintDocument(LPCTSTR);
-        void        SetEditFont(const CFont f);
-        void        SetBgColor(CBrush br) { m_bgBrush = br;}
-        void        SetRichEditColors(COLORREF, COLORREF, COLORREF);
+        CFont          GetEditFont()    { return m_editFont;}
+        void           NoDocOpen();
+        void           OnPageSetup();
+        void           OnPrintDocument(LPCWSTR);
+        void           SetEditFont(const CFont f);
+        void           SetBgColor(CBrush br) { m_bgBrush = br;}
+        void           SetRichEditColors(COLORREF, COLORREF, COLORREF);
+
+    protected:
+        virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM) override;
+        virtual void    OnCancel() override {}  // Suppress esc key closing the dialog
+        virtual void    OnClose() override {}   // Suppress esc key closing the dialog
+        virtual BOOL    OnInitDialog() override;
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+        virtual void    Serialize(CArchive& ar) override;
 
     private:
-        CView(const CView&);               // Disable copy construction
-        CView& operator=(const CView&);    // Disable assignment operator
+        CView(const CView&) = delete;
+        CView& operator=(const CView&) = delete;
 
         BOOL        AddToolTip(HWND, UINT id);
-        BOOL        AddToolTip(HWND, UINT id, LPCTSTR s);
+        BOOL        AddToolTip(HWND, UINT id, LPCWSTR s);
         void        AssignToolTips();
-        INT_PTR     DialogProc(UINT, WPARAM, LPARAM);
-        void        OnCancel() {}  // Suppress esc key closing the dialog
-        void        OnClose() {}   // Suppress esc key closing the dialog
         INT_PTR     OnCtlColor(UINT, WPARAM, LPARAM);
-        BOOL        OnInitDialog();
-        LRESULT     OnNotify(WPARAM wparam, LPARAM lparam);
-        void        Serialize(CArchive &ar);
 
         HWND            m_parent;       // handle of parent frame
         CToolTip        m_toolTip;      // form tool tips

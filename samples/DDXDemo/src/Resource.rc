@@ -151,7 +151,7 @@ BEGIN
     EDITTEXT    IDC_EDIT_DOUBLE, 15, 160, 90, 10, NOT WS_BORDER | ES_RIGHT,
                     WS_EX_STATICEDGE
     LTEXT       " double ", IDC_STATIC, 110, 160, 40, 10, SS_LEFT
-    EDITTEXT        IDC_EDIT_LPTSTR, 15, 180, 135, 10, NOT WS_BORDER,
+    EDITTEXT        IDC_EDIT_LPWSTR, 15, 180, 135, 10, NOT WS_BORDER,
                     WS_EX_STATICEDGE
     EDITTEXT    IDC_EDIT_CSTRING, 15, 200, 135, 35, WS_GROUP | NOT WS_BORDER |
                     ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |
@@ -336,7 +336,7 @@ BEGIN
     IDC_EDIT_DWORD          "Hint for DWORD: Enter double word integer."
     IDC_EDIT_FLOAT          "Hint for float: Enter floating point number."
     IDC_EDIT_DOUBLE         "Hint for double: Enter double precision floating point number."
-    IDC_EDIT_LPTSTR         "Hint for LPTSTR: Enter string characters."
+    IDC_EDIT_LPWSTR         "Hint for LPWSTR: Enter string characters."
     IDC_EDIT_CSTRING        "Hint for Edit Box: Enter text here."
     IDC_EDIT_RICHEDIT       "Hint for Rich Edit: Enter text here."
     IDC_EDIT_STATUS         "Hint for Status area: Display status of controls."

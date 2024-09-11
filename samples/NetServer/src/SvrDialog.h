@@ -10,12 +10,8 @@
 class CWorkerSocket;
 class CTCPClientDlg;
 
-
-// Note: Modern C++ compilers can use these typedefs instead.
-// typedef std::shared_ptr<CWorkerSocket> ServerSocketPtr;
-// typedef std::shared_ptr<CTCPClientDlg> TCPClientDlgPtr;
-typedef Shared_Ptr<CWorkerSocket> ServerSocketPtr;
-typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
+using ServerSocketPtr = std::shared_ptr<CWorkerSocket>;
+using TCPClientDlgPtr = std::shared_ptr<CTCPClientDlg>;
 
 
 //////////////////////////////////////////////////////////////
@@ -25,22 +21,22 @@ class CTCPClientDlg : public CDialog
 {
 public:
     CTCPClientDlg(UINT resID);
-    virtual ~CTCPClientDlg() {}
+    virtual ~CTCPClientDlg() override {}
     ServerSocketPtr& ServerSocket() { return m_pSocket; }
     void Receive();
     void Send();
 
 protected:
     // Virtual functions that override base class functions.
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnClose();
-    virtual void OnDestroy();
-    virtual BOOL OnInitDialog();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual void OnClose() override;
+    virtual void OnDestroy() override;
+    virtual BOOL OnInitDialog() override;
 
 private:
-    CTCPClientDlg(const CTCPClientDlg&);               // Disable copy construction
-    CTCPClientDlg& operator=(const CTCPClientDlg&);    // Disable assignment operator
+    CTCPClientDlg(const CTCPClientDlg&) = delete;
+    CTCPClientDlg& operator=(const CTCPClientDlg&) = delete;
 
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
@@ -48,7 +44,7 @@ private:
     class CEditReceive : public CEdit {};
     class CButtonSend : public CButton {};
 
-    void AppendText(int id, LPCTSTR text);
+    void AppendText(int id, LPCWSTR text);
 
     ServerSocketPtr m_pSocket;
     CEditSend   m_editSend;
@@ -65,18 +61,18 @@ class CSvrDialog : public CDialog
 {
 public:
     CSvrDialog(int resID);
-    virtual ~CSvrDialog();
+    virtual ~CSvrDialog() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnInitDialog();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void OnClose() override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnInitDialog() override;
 
 private:
-    CSvrDialog(const CSvrDialog&);                // Disable copy construction
-    CSvrDialog& operator=(const CSvrDialog&);   // Disable assignment operator
+    CSvrDialog(const CSvrDialog&) = delete;
+    CSvrDialog& operator=(const CSvrDialog&) = delete;
 
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
@@ -103,8 +99,7 @@ private:
     BOOL OnSocketDisconnect(WPARAM wparam);
     BOOL OnSocketReceive(WPARAM wparam);
 
-    void AppendText(const CEdit& edit, LPCTSTR text);
-    void LoadCommonControlsEx();
+    void AppendText(const CEdit& edit, LPCWSTR text);
     BOOL StartServer();
     void StopServer();
 

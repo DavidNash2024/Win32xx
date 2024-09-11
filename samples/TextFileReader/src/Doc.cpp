@@ -53,8 +53,7 @@ AddRecord(const CStringW& entry)                                            /*
     {
         final.Delete(tab, 1);
         int nspaces = tabwidth - (tab % tabwidth);
-        tabbing = (nspaces == 0 ?
-            spaces.Left(tabwidth) : spaces.Left(nspaces));
+        tabbing = (nspaces == 0 ? spaces.Left(tabwidth) : spaces.Left(nspaces));
         final.Insert(tab, tabbing);
     }
     m_docLines.push_back(final);
@@ -99,7 +98,7 @@ DetermineEncoding(UINT testlen, UINT& offset)                               /*
     else if (b0 == 0xef && b1 == 0xbb && b2 == 0xbf)
         encoding = UTF8wBOM;
         // check for Unicode w/o BOM
-    else if (::IsTextUnicode(buffer, testlen, NULL) == 1)
+    else if (::IsTextUnicode(buffer, testlen, nullptr) == 1)
         encoding = UnicodeNoBOM;
     else
     {     // check for non ANSI characters
@@ -177,7 +176,7 @@ IsOpen() const                                                              /*
 
 /*============================================================================*/
     BOOL CDoc::
-OpenDoc(LPCTSTR filename)                                                   /*
+OpenDoc(LPCWSTR filename)                                                   /*
 
     Open the document from the given filename and populate the record array.
     State parameters that were serialized in the prior execution will have
@@ -188,11 +187,11 @@ OpenDoc(LPCTSTR filename)                                                   /*
     try
     {
         if (!filename)
-            throw CUserException(_T("No file name was given."));
+            throw CUserException(L"No file name was given.");
 
         CString file = filename;
         if (file.IsEmpty())
-           throw CUserException(_T("No file name was given."));
+           throw CUserException(L"No file name was given.");
 
           // if there is currently a document open, close it if different
         if (IsOpen())
@@ -200,9 +199,9 @@ OpenDoc(LPCTSTR filename)                                                   /*
             CString msg;
             if (file.CompareNoCase(m_openPath) == 0)
             {
-                msg.Format(_T("Document file\n'%s'\nis already open."),
+                msg.Format(L"Document file\n'%s'\nis already open.",
                     m_openPath.c_str());
-                ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+                ::MessageBox(nullptr, msg, L"Information", MB_OK |
                     MB_ICONINFORMATION | MB_TASKMODAL);
                   // not deemed a failure, as the file is open, as specified
                 return TRUE;
@@ -225,7 +224,7 @@ OpenDoc(LPCTSTR filename)                                                   /*
           // read the entire file contents into the buffer
         UINT n = m_file.Read((void*)&m_buffer[0], doclen);
         if (n != doclen)
-            throw CFileException(_T("Reading the file failed."));
+            throw CFileException(L"Reading the file failed.");
 
         UINT offset = 0;
         Encoding encoding = DetermineEncoding(testlen, offset);
@@ -251,10 +250,8 @@ OpenDoc(LPCTSTR filename)                                                   /*
     catch (const CException &e)
     {
         CString msg;
-        msg.Format(_T("File could not be opened and read:\n\n%s"),
-            e.GetText());
-        ::MessageBox(NULL, msg, _T("Error"), MB_OK | MB_ICONEXCLAMATION |
-            MB_TASKMODAL);
+        msg.Format(L"File could not be opened and read:\n\n%s", e.GetText());
+        ::MessageBox(nullptr, msg, L"Error", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
         ok = m_isOpen = FALSE;
         m_openPath.Empty();
     }
@@ -344,7 +341,7 @@ RecordEntry(wchar_t w, CStringW& entry)                                     /*
           // enter the record
         AddRecord(entry);
           // record the longest length
-        m_width = MAX(m_width, entry.GetLength());
+        m_width = std::max(m_width, entry.GetLength());
         entry.Empty();
     }
     else

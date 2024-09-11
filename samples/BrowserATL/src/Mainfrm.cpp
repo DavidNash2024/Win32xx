@@ -33,8 +33,7 @@ void CMainFrame::AddComboBoxBand()
     int height = m_combo.GetWindowRect().Height() + DpiScaleInt(padding);
 
     // Put the window in a new rebar band.
-    REBARBANDINFO rbbi;
-    ZeroMemory(&rbbi, sizeof(rbbi));
+    REBARBANDINFO rbbi{};
     rbbi.cbSize     = sizeof(REBARBANDINFO);
     rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
     rbbi.cyMinChild = height;
@@ -187,7 +186,7 @@ BOOL CMainFrame::OnEditCut()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Cut();
     else
-        GetBrowser()->ExecWB(OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+        GetBrowser()->ExecWB(OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, nullptr, nullptr);
 
     return TRUE;
 }
@@ -199,7 +198,7 @@ BOOL CMainFrame::OnEditCopy()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Copy();
     else
-        GetBrowser()->ExecWB(OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+        GetBrowser()->ExecWB(OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, nullptr, nullptr);
 
     return TRUE;
 }
@@ -211,7 +210,7 @@ BOOL CMainFrame::OnEditPaste()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Paste();
     else
-        GetBrowser()->ExecWB(OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+        GetBrowser()->ExecWB(OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, nullptr, nullptr);
 
     return TRUE;
 }
@@ -223,7 +222,7 @@ BOOL CMainFrame::OnEditDelete()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Clear();
     else
-        GetBrowser()->ExecWB(OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+        GetBrowser()->ExecWB(OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, nullptr, nullptr);
 
     return TRUE;
 }
@@ -276,7 +275,7 @@ void CMainFrame::OnInitialUpdate()
     GetBrowser()->put_Silent(VARIANT_TRUE);
 
     // Load the web page.
-    m_view.Navigate(_T("www.google.com"));
+    m_view.Navigate(L"www.google.com");
 }
 
 // Called when navigation completes on either a window or frameset element.
@@ -329,10 +328,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
                 CString str = m_combo.GetWindowText();
 
                 // Insert text into the combo list box.
-                COMBOBOXEXITEM item;
-                ZeroMemory(&item, sizeof(item));
+                COMBOBOXEXITEM item = {};
                 item.mask = CBEIF_TEXT;
-                item.pszText = (LPTSTR)str.c_str();
+                item.pszText = (LPWSTR)str.c_str();
                 m_combo.InsertItem(item);
 
                 // Navigate to the web page
@@ -351,7 +349,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Displays the web page as it would look when printed.
 BOOL CMainFrame::OnPrintPreview()
 {
-    GetBrowser()->ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+    GetBrowser()->ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, nullptr, nullptr);
 
     return TRUE;
 }
@@ -363,12 +361,9 @@ BOOL CMainFrame::OnPrint()
     SAFEARRAY* psaHeadFoot;
     long rgIndices;
 
-    VARIANT vHeadStr;
-    VARIANT vFootStr;
-    VARIANT vArg;
-    ZeroMemory(&vHeadStr, sizeof(vHeadStr));
-    ZeroMemory(&vFootStr, sizeof(vFootStr));
-    ZeroMemory(&vArg, sizeof(vArg));
+    VARIANT vHeadStr = {};
+    VARIANT vFootStr = {};
+    VARIANT vArg = {};
 
     try
     {
@@ -376,7 +371,7 @@ BOOL CMainFrame::OnPrint()
         psabBounds[0].lLbound = 0;
         psabBounds[0].cElements = 3;
         psaHeadFoot = SafeArrayCreate(VT_VARIANT, 1, psabBounds);
-        if (NULL == psaHeadFoot)
+        if (nullptr == psaHeadFoot)
             throw std::bad_alloc();
 
         VariantInit(&vHeadStr);
@@ -385,7 +380,7 @@ BOOL CMainFrame::OnPrint()
         // Argument 1: Header
         vHeadStr.vt = VT_BSTR;
         vHeadStr.bstrVal = SysAllocString(L"This is my header string.");
-        if (vHeadStr.bstrVal == NULL)
+        if (vHeadStr.bstrVal == nullptr)
             throw std::bad_alloc();
 
         rgIndices = 0;
@@ -394,7 +389,7 @@ BOOL CMainFrame::OnPrint()
             // Argument 2: Footer
             vFootStr.vt = VT_BSTR;
             vFootStr.bstrVal = SysAllocString(L"This is my footer string.");
-            if (vFootStr.bstrVal == NULL)
+            if (vFootStr.bstrVal == nullptr)
                 throw std::bad_alloc();
 
             rgIndices = 1;
@@ -404,7 +399,7 @@ BOOL CMainFrame::OnPrint()
                 VariantInit(&vArg);
                 vArg.vt = VT_ARRAY | VT_BYREF;
                 vArg.parray = psaHeadFoot;
-                if (FAILED(GetBrowser()->ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, &vArg, NULL)))
+                if (FAILED(GetBrowser()->ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, &vArg, nullptr)))
                     throw CUserException(L"Print Failed");
             }
         }
@@ -571,10 +566,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << '\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -582,7 +577,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

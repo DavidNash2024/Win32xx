@@ -13,7 +13,7 @@
 // Constructor.
 CMyScrollBar::CMyScrollBar()
 {
-    ZeroMemory(&m_si, sizeof(m_si));
+    m_si = {};
 }
 
 // Returns the current scroll bar position.

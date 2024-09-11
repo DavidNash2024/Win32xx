@@ -16,18 +16,20 @@ class CDarkPreview : public CPrintPreview<T>
 public:
     CDarkPreview() : m_isDarkMode(false) {}
     CDarkPreview(T& source) : CPrintPreview<T>(source), m_isDarkMode(false) {}
-    virtual ~CDarkPreview() {}
+    virtual ~CDarkPreview() override {}
 
-    INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnCtlColors(UINT, WPARAM wparam, LPARAM);
     LRESULT OnDrawItem(WPARAM, LPARAM lparam);
-    BOOL OnInitDialog();
     void SetButtonOwnerDraw(bool isOwnerDraw);
     void SetDarkMode(bool isDarkMode);
 
+protected:
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnInitDialog() override;
+
 private:
-    CDarkPreview(const CDarkPreview&);               // Disable copy construction
-    CDarkPreview& operator=(const CDarkPreview&);    // Disable assignment operator
+    CDarkPreview(const CDarkPreview&) = delete;
+    CDarkPreview& operator=(const CDarkPreview&) = delete;
 
     bool m_isDarkMode;
 };
@@ -61,8 +63,8 @@ inline INT_PTR CDarkPreview<T>::DialogProc(UINT msg, WPARAM wparam, LPARAM lpara
     {
         // Display the exception and continue.
         CString str;
-        str << e.GetText() << _T("\n") << e.GetErrorString();
-        ::MessageBox(NULL, str, _T("An exception occurred"), MB_ICONERROR);
+        str << e.GetText() << L'\n' << e.GetErrorString();
+        ::MessageBox(nullptr, str, L"An exception occurred", MB_ICONERROR);
 
         return 0;
     }

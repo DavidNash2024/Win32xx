@@ -40,8 +40,7 @@ GetNewFont() const                                                          /*
     Bring up the font choice dialog and choose a new font.
 *-----------------------------------------------------------------------------*/
 {     // Retrieve the current character format
-    CHARFORMAT cf;
-    ZeroMemory(&cf, sizeof(cf));
+    CHARFORMAT cf{};
     cf.cbSize = sizeof(cf);
     cf.dwMask = CFM_COLOR | CFM_FACE | CFM_EFFECTS;
     GetDefaultCharFormat(cf);
@@ -118,8 +117,7 @@ PrintDC(UINT page, CDC& dcPrinter, CDC& dcDevice)                          /*
     given dcDevice.
 *-----------------------------------------------------------------------------*/
 {
-    FORMATRANGE fr;
-    ZeroMemory(&fr, sizeof(fr));
+    FORMATRANGE fr{};
     fr.hdcTarget  = dcPrinter;  // format for this
     fr.hdc        = dcDevice;   // render to this
     fr.rcPage     = GetPageRect(dcPrinter);
@@ -143,8 +141,7 @@ PrintPages(CPrintDialog& printDlg)                                          /*
       // get the printer's device context
     CDC dcPrinter = printDlg.GetPrinterDC();
       // assign values to the rich edit control FORMATRANGE struct
-    FORMATRANGE fr;
-    ZeroMemory(&fr, sizeof(fr));
+    FORMATRANGE fr{};
     fr.hdc       = dcPrinter;               // render to this device
     fr.hdcTarget = dcPrinter;               // device to format for
     fr.rcPage    = GetPageRect(dcPrinter);  // entire area of device, twips
@@ -153,11 +150,10 @@ PrintPages(CPrintDialog& printDlg)                                          /*
     fr.chrg.cpMin = 0;
     fr.chrg.cpMax = -1;
       // start the print job
-    DOCINFO di;
-    ZeroMemory(&di, sizeof(di));
+    DOCINFO di{};
     di.cbSize      = sizeof(DOCINFO);
     di.lpszDocName = m_docPath;    // name of document to print
-    di.lpszOutput  = NULL;      // NULL here means output to fr.hdc
+    di.lpszOutput  = nullptr;      // nullptr here means output to fr.hdc
     dcPrinter.StartDoc(&di);    // start the printing
       // get the length of document to print
     LONG textLength = GetTextLengthEx(GTL_NUMCHARS);
@@ -192,7 +188,7 @@ PrintPages(CPrintDialog& printDlg)                                          /*
 
 /*============================================================================*/
     BOOL CRichView::
-ReadFile(LPCTSTR filePath)                                                  /*
+ReadFile(LPCWSTR filePath)                                                  /*
 
     Open the filePath file as a rich edit view stream for display in
     the main window.
@@ -213,9 +209,9 @@ ReadFile(LPCTSTR filePath)                                                  /*
     }
     catch (const CFileException& e)
     {
-        CString msg = _T("Failed to load:  ");
+        CString msg = "Failed to load:  ";
         msg += e.GetFilePath();
-        ::MessageBox(NULL, msg, AtoT(e.what()), MB_ICONWARNING);
+        ::MessageBox(nullptr, msg, AtoW(e.what()), MB_ICONWARNING);
         return FALSE;
     }
     return TRUE;
@@ -230,10 +226,10 @@ SetFontDefaults()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
       //Set font
-    if (m_font.GetHandle() == NULL)
+    if (m_font.GetHandle() == nullptr)
         m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET,
             OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-            FF_MODERN, _T("Courier New"));
+            FF_MODERN, L"Courier New");
     SetFont(m_font, FALSE);
 
 // Required for Dev-C++
@@ -286,7 +282,7 @@ WordWrap(WordWrapType setting)                                              /*
 
 /*============================================================================*/
     BOOL CRichView::
-WriteFile(LPCTSTR filePath)                                                 /*
+WriteFile(LPCWSTR filePath)                                                 /*
 
     Write the contents of the rich edit control to the given filePath.
 *-----------------------------------------------------------------------------*/
@@ -307,9 +303,9 @@ WriteFile(LPCTSTR filePath)                                                 /*
     }
     catch (const CFileException&)
     {
-        CString str = _T("Failed to write:  ");
+        CString str = L"Failed to write:  ";
         str += filePath;
-        ::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
+        ::MessageBox(nullptr, str, L"Warning", MB_ICONWARNING);
         return FALSE;
     }
     return TRUE;
@@ -332,8 +328,8 @@ RVStreamInCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *read)      /*
         return (1);
 
     *read = 0;
-    if (!::ReadFile((HANDLE)(DWORD_PTR) handle, buffer, size, (LPDWORD)read, NULL))
-        ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
+    if (!::ReadFile((HANDLE)(DWORD_PTR) handle, buffer, size, (LPDWORD)read, nullptr))
+        ::MessageBox(0, L"ReadFile Failed", L"", MB_OK);
     return 0;
 }
 
@@ -350,8 +346,8 @@ RVStreamOutCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *out)      /*
         return (1);
 
     *out = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)handle, buffer, size, (LPDWORD)out, NULL))
-        ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
+    if (!::WriteFile((HANDLE)(DWORD_PTR)handle, buffer, size, (LPDWORD)out, nullptr))
+        ::MessageBox(nullptr, L"WriteFile Failed", L"", MB_OK);
     return 0;
 }
 /*----------------------------------------------------------------------------*/

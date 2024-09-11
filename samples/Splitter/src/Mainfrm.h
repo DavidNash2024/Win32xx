@@ -21,23 +21,23 @@ class CMainFrame : public CDockFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual CDocker* NewDockerFromID(int id);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnInitialUpdate();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual BOOL SaveRegistrySettings();
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual DockPtr NewDockerFromID(int id) override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual void OnInitialUpdate() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual BOOL SaveRegistrySettings() override;
+    virtual void SetupMenuIcons() override;
+    virtual void SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Command handlers
     BOOL OnFileExit();

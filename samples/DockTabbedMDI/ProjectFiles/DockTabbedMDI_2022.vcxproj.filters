@@ -86,9 +86,6 @@
     <ClInclude Include="..\src\TabbedMDIApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>

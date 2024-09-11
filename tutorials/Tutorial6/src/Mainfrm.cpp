@@ -1,5 +1,5 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+///////////////////////////////////////////////////////
+// Mainfrm.cpp  - definitions for the CMainFrame class.
 
 
 #include "Mainfrm.h"
@@ -18,7 +18,7 @@ CMainFrame::~CMainFrame()
 {
 }
 
-// Process the messages from the Menu and Toolbar.
+// Process the messages from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     switch (LOWORD(wparam))
@@ -69,36 +69,36 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnFileNew()
 {
-    ::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File New  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileOpen()
 {
-    ::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Open  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFilePrint()
 {
-    ::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Print  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileSave()
 {
-    ::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File Save  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileSaveAs()
 {
-    ::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(nullptr, L"File SaveAs  ... Implemented later", L"Menu", MB_OK);
     return TRUE;
 }
 
 
-// Handle the frame's mmessages.
+// Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 

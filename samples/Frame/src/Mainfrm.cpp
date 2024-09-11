@@ -28,7 +28,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\Frame"));
+    LoadRegistrySettings(L"Win32++\\Frame");
 
     return CFrame::Create(parent);
 }
@@ -97,7 +97,7 @@ BOOL CMainFrame::OnFileOpen()
     CString filter = "Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*|";
     CFileDialog fileDlg(TRUE);    // TRUE for file open
     fileDlg.SetFilter(filter);
-    fileDlg.SetDefExt(_T(".cpp"));
+    fileDlg.SetDefExt(L".cpp");
 
     // Bring up the file open dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
@@ -114,7 +114,7 @@ BOOL CMainFrame::OnFileSave()
     CString filter = "Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*|";
     CFileDialog fileDlg(FALSE);    // FALSE for file save
     fileDlg.SetFilter(filter);
-    fileDlg.SetDefExt(_T(".cpp"));
+    fileDlg.SetDefExt(L".cpp");
 
     // Bring up the file save dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
@@ -151,16 +151,16 @@ BOOL CMainFrame::OnFilePreview()
         ShowToolBar(FALSE);
 
         // Update status
-        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        CString status = L"Printer: " + printDlg.GetDeviceName();
         SetStatusText(status);
     }
 
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(GetFrameMenu() != NULL);
+        ShowMenu(GetFrameMenu() != nullptr);
         ShowToolBar(m_isToolbarShown);
     }
 
@@ -176,7 +176,7 @@ BOOL CMainFrame::OnFilePrint()
     {
         if (IDOK == printdlg.DoModal(*this))
         {
-            m_view.QuickPrint(_T("Frame Sample"));
+            m_view.QuickPrint(L"Frame Sample");
         }
 
     }
@@ -184,7 +184,7 @@ BOOL CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 
     return TRUE;
@@ -229,7 +229,7 @@ LRESULT CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != NULL);
+    ShowMenu(GetFrameMenu() != nullptr);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -241,7 +241,7 @@ LRESULT CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Print Now" button is pressed.
 LRESULT CMainFrame::OnPreviewPrint()
 {
-    m_view.QuickPrint(_T("Frame Sample"));
+    m_view.QuickPrint(L"Frame Sample");
     return 0;
 }
 
@@ -255,7 +255,7 @@ LRESULT CMainFrame::OnPreviewSetup()
         // Display the print dialog
         if (printDlg.DoModal(*this) == IDOK)
         {
-            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            CString status = L"Printer: " + printDlg.GetDeviceName();
             SetStatusText(status);
         }
     }
@@ -280,7 +280,6 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // Call base class to set defaults
     CFrame::PreCreate(cs);
 
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
     // cs.dwExStyle = WS_EX_LAYOUTRTL;  // Set Right-To-Left Window Layout
     // cs.style &= ~WS_VISIBLE;         // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
@@ -289,7 +288,8 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_DIS);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
@@ -339,10 +339,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -350,7 +350,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

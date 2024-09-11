@@ -41,18 +41,18 @@ class CDXView : public CWnd
 {
 public:
     CDXView();
-    virtual ~CDXView();
+    virtual ~CDXView() override;
     void Render();
 
 protected:
     // Virtual functions that override base class functions
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDXView(const CDXView&);               // Disable copy construction
-    CDXView& operator=(const CDXView&);    // Disable assignment operator
+    CDXView(const CDXView&) = delete;
+    CDXView& operator=(const CDXView&) = delete;
 
     void CleanupDevice();
     HRESULT InitDevice();

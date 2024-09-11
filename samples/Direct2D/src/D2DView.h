@@ -13,10 +13,10 @@
 template<class Interface>
 inline void SafeRelease( Interface **ppInterfaceToRelease )
 {
-    if (*ppInterfaceToRelease != NULL)
+    if (*ppInterfaceToRelease != nullptr)
     {
         (*ppInterfaceToRelease)->Release();
-        (*ppInterfaceToRelease) = NULL;
+        (*ppInterfaceToRelease) = nullptr;
     }
 }
 
@@ -28,21 +28,21 @@ class CD2DView : public CWnd
 {
 public:
     CD2DView();
-    virtual ~CD2DView();
+    virtual ~CD2DView() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnDestroy();
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnDestroy() override;
     virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
-    virtual LRESULT OnPaint(UINT, WPARAM, LPARAM);
-    virtual void    PreCreate(CREATESTRUCT&cs);
-    virtual void    PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnPaint(UINT, WPARAM, LPARAM) override;
+    virtual void    PreCreate(CREATESTRUCT&cs) override;
+    virtual void    PreRegisterClass(WNDCLASS& wc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CD2DView(const CD2DView&);               // Disable copy construction
-    CD2DView& operator=(const CD2DView&);    // Disable assignment operator
+    CD2DView(const CD2DView&) = delete;
+    CD2DView& operator=(const CD2DView&) = delete;
 
     // Message handlers
     LRESULT OnDisplayChange(UINT, WPARAM, LPARAM);

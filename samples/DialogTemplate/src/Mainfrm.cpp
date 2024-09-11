@@ -14,7 +14,7 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_preview(m_richView), m_pDockDialogsTree(NULL),
+CMainFrame::CMainFrame() : m_preview(m_richView), m_pDockDialogsTree(nullptr),
                            m_isTemplateShown(false)
 {
     // Set m_view as the view window of the frame.
@@ -33,7 +33,7 @@ HWND CMainFrame::Create(HWND parent)
 
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\DialogTemplate"));
+    LoadRegistrySettings(L"Win32++\\DialogTemplate");
 
     return CDockFrame::Create(parent);
 }
@@ -46,29 +46,29 @@ void CMainFrame::DialogFromTemplateText()
     CString templateText = m_richView.GetWindowText();
 
     // Fill arrayText with the hex numbers from templateText.
-    int start = templateText.FindOneOf(_T("{"));
-    int end = templateText.FindOneOf(_T("}"));
+    int start = templateText.FindOneOf(L"{");
+    int end = templateText.FindOneOf(L"}");
     if (start > 0 && end > start)
     {
         CString arrayText = templateText.Mid(start + 1, end - start - 1);
-        arrayText.Remove(_T(" "));
-        arrayText.Remove(_T("\n"));
-        arrayText.Remove(_T("\t"));
-        arrayText.Remove(_T("\r"));
+        arrayText.Remove(L' ');
+        arrayText.Remove(L'\n');
+        arrayText.Remove(L'\t');
+        arrayText.Remove(L'\r');
 
         // Fill array vector with values from arrayText.
         CString resToken;
         int curPos = 0;
         std::vector<unsigned char> array;
-        resToken = arrayText.Tokenize(_T(","), curPos);
-        while (resToken != _T(""))
+        resToken = arrayText.Tokenize(L",", curPos);
+        while (resToken != L"")
         {
-            long value = strtol(TtoA(resToken), NULL, 0);
-            array.push_back(static_cast<unsigned char>(value));
-            resToken = arrayText.Tokenize(_T(","), curPos);
+            long value = strtol(WtoA(resToken), nullptr, 0);
+            array.push_back(static_cast<byte>(value));
+            resToken = arrayText.Tokenize(L",", curPos);
         };
 
-        m_holder.ShowDialog(this, &array.front());
+        m_holder.ShowDialog(this, array.data());
     }
 }
 
@@ -76,7 +76,7 @@ void CMainFrame::DialogFromTemplateText()
 inline CString CMainFrame::GetFileName() const
 {
     CString fileName = m_pathName;
-    int pos = fileName.ReverseFind(_T('\\'));
+    int pos = fileName.ReverseFind(L'\\');
     if (pos >= 0)
         fileName = fileName.Mid(pos + 1);
 
@@ -100,8 +100,8 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
     *bytesWritten = 0;
-    if (!::WriteFile(file, pBuffer, cb, bytesWritten, NULL))
-        ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
+    if (!::WriteFile(file, pBuffer, cb, bytesWritten, nullptr))
+        ::MessageBox(nullptr, L"WriteFile Failed", L"", MB_OK);
     return 0;
 }
 
@@ -151,8 +151,8 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     Reset();
 
-    // wParam is a pointer (LPCTSTR) to the file name.
-    LPCTSTR pathName = reinterpret_cast<LPCTSTR>(wparam);
+    // wParam is a pointer (LPCWSTR) to the file name.
+    LPCWSTR pathName = reinterpret_cast<LPCWSTR>(wparam);
     assert(pathName);
     m_pathName = pathName;
 
@@ -190,7 +190,7 @@ void CMainFrame::OnInitialUpdate()
     DWORD style = DS_DOCKED_LEFT | DS_CLIENTEDGE | DS_NO_CLOSE | DS_NO_UNDOCK | DS_NO_CAPTION;
     const int width = DpiScaleInt(250);
     m_pDockDialogsTree = static_cast<CDockDialogsTree*>
-                         (AddDockedChild(new CDockDialogsTree, style, width));
+                         (AddDockedChild(std::make_unique<CDockDialogsTree>(), style, width));
 
     Reset();
 }
@@ -198,12 +198,12 @@ void CMainFrame::OnInitialUpdate()
 // Create the File Open dialog to choose the file to load.
 BOOL CMainFrame::OnFileOpen()
 {
-    m_richView.SetWindowText(NULL);
+    m_richView.SetWindowText(nullptr);
 
     CString filter = "Program Files (*.exe; *.dll)|*.exe; *.dll|All Files (*.*)|*.*|";
     CFileDialog fileDlg(TRUE);    // TRUE for file open
     fileDlg.SetFilter(filter);
-    fileDlg.SetDefExt(_T(".exe"));
+    fileDlg.SetDefExt(L".exe");
 
     // Bring up the file open dialog retrieve the selected filename.
     if (fileDlg.DoModal(*this) == IDOK)
@@ -244,7 +244,7 @@ BOOL CMainFrame::OnFilePreview()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
         SetView(m_richView);
     }
 
@@ -262,7 +262,7 @@ BOOL CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 
     return TRUE;
@@ -274,7 +274,7 @@ BOOL CMainFrame::OnFileSave()
     CString filter = "Program Files (*.h; *.cpp)|*.h; *.cpp|All Files (*.*)|*.*|";
     CFileDialog fileDlg(FALSE);    // FALSE for file save
     fileDlg.SetFilter(filter);
-    fileDlg.SetDefExt(_T(".h"));
+    fileDlg.SetDefExt(L".h");
 
     // Bring up the file save dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
@@ -326,7 +326,7 @@ BOOL CMainFrame::OnPreviewPrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
     return TRUE;
 }
@@ -341,7 +341,7 @@ BOOL CMainFrame::OnPreviewSetup()
         // Display the print dialog
         if (printDlg.DoModal(*this) == IDOK)
         {
-            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            CString status = L"Printer: " + printDlg.GetDeviceName();
             SetStatusText(status);
         }
 
@@ -362,19 +362,19 @@ BOOL CMainFrame::OnPreviewSetup()
 // Called when a selection is made on the tree view.
 LRESULT CMainFrame::OnSelectTreeItem()
 {
-    m_richView.SetWindowText(NULL);
+    m_richView.SetWindowText(nullptr);
     m_holder.Destroy();
     SetView(m_richView);
     m_isTemplateShown = false;
 
     HTREEITEM item = GetTree()->GetSelection();
-    HMODULE module = LoadLibraryEx(m_pathName, NULL, LOAD_LIBRARY_AS_DATAFILE);
+    HMODULE module = LoadLibraryEx(m_pathName, nullptr, LOAD_LIBRARY_AS_DATAFILE);
     ResourceInfo* info = reinterpret_cast<ResourceInfo*>
                          (GetTree()->GetItemData(item));
 
     if (module != 0)
     {
-        if (info != NULL)
+        if (info != nullptr)
         {
             // Display the dialog template in the rich edit view.
             if (info->resourceID != 0)
@@ -441,14 +441,14 @@ void CMainFrame::SetupToolBar()
 
 // Displays the dialog template in the rich edit view in a form
 // that can be copied to a C++ header file.
-void CMainFrame::ShowTemplateText(HMODULE module, LPCTSTR dialogRes)
+void CMainFrame::ShowTemplateText(HMODULE module, LPCWSTR dialogRes)
 {
     HRSRC dialog = ::FindResource(module, dialogRes, RT_DIALOG);
 
-    if (dialog != NULL)
+    if (dialog != nullptr)
     {
         HGLOBAL dialogResource = ::LoadResource(module, dialog);
-        if (dialogResource != NULL)
+        if (dialogResource != nullptr)
         {
             CString dialogName;
             if (IS_INTRESOURCE(dialogRes))
@@ -457,7 +457,7 @@ void CMainFrame::ShowTemplateText(HMODULE module, LPCTSTR dialogRes)
                 dialogName = dialogRes;
 
             unsigned char* buf = static_cast<unsigned char*>(::LockResource(dialogResource));
-            if (buf != NULL)
+            if (buf != nullptr)
             {
                 CString output;
                 output << "// Template array for dialog: " << dialogName << "\n";
@@ -468,7 +468,7 @@ void CMainFrame::ShowTemplateText(HMODULE module, LPCTSTR dialogRes)
                 for (DWORD i = 0; i < sz; i++)
                 {
                     output.Empty();
-                    output.Format(_T("0x%02x"), buf[i]);
+                    output.Format(L"0x%02x", buf[i]);
 
                     // Append a comma except for the last byte,
                     if (i != sz - 1)
@@ -480,7 +480,7 @@ void CMainFrame::ShowTemplateText(HMODULE module, LPCTSTR dialogRes)
 
                     m_richView.AppendText(output);
                 }
-                m_richView.AppendText(_T("\n};\n"));
+                m_richView.AppendText(L"\n};\n");
                 m_isTemplateShown = true;
             }
             ::FreeResource(dialogResource);
@@ -509,10 +509,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -520,14 +520,14 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
 }
 
 // Streams from the rich edit control to the specified file.
-BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
+BOOL CMainFrame::WriteFile(LPCWSTR szFileName)
 {
     try
     {
@@ -547,9 +547,9 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 
     catch (const CFileException&)
     {
-        CString str = _T("Failed to write:  ");
+        CString str = L"Failed to write:  ";
         str += szFileName;
-        ::MessageBox(0, str, _T("Warning"), MB_ICONWARNING);
+        ::MessageBox(0, str, L"Warning", MB_ICONWARNING);
         return FALSE;
     }
 

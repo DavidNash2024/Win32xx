@@ -16,15 +16,15 @@ class CReBarApp : public CWinApp
 {
 public:
     CReBarApp();
-    virtual ~CReBarApp();
+    virtual ~CReBarApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CReBarApp(const CReBarApp&);               // Disable copy construction
-    CReBarApp& operator=(const CReBarApp&);    // Disable assignment operator
+    CReBarApp(const CReBarApp&) = delete;
+    CReBarApp& operator=(const CReBarApp&) = delete;
 
     CMainFrame m_frame;
 };

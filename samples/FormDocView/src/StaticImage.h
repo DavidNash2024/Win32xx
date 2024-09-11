@@ -14,11 +14,11 @@ class CStaticImage : public CStatic
 {
 public:
     CStaticImage() {}
-    virtual ~CStaticImage() {}
+    virtual ~CStaticImage() override {}
 
 protected:
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     void DpiScaleImage();

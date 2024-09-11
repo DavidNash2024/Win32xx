@@ -26,19 +26,19 @@ CApp : public CWinApp                                                       /*
 {
     public:
         CApp();
-        virtual ~CApp(){}
+        virtual ~CApp() override {}
 
         CMainFrame&  GetFrame() { return m_frame;}
 
     protected:
-        virtual BOOL InitInstance();
+        virtual BOOL InitInstance() override;
 
     private:
-        CApp(const CApp&);               // Disable copy construction
-        CApp& operator=(const CApp&);    // Disable assignment operator
+        CApp(const CApp&) = delete;
+        CApp& operator=(const CApp&) = delete;
 
         CString     MakeAppDataPath(const CString& subpath) const;
-        ULONG       DatInt(LPCTSTR) const;
+        ULONG       DatInt(LPCWSTR) const;
         CString     IntDat(ULONG) const;
 
         CMainFrame  m_frame;

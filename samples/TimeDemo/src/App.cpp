@@ -32,26 +32,26 @@ CApp()                                                                      /*
     Default constructor.
 *-----------------------------------------------------------------------------*/
 {
-    m_credits = _T("CTime, MRU, CArchive, and Scrolling Demo");
-    m_version = _T("Version 2.0 (2020)");
+    m_credits = L"CTime, MRU, CArchive, and Scrolling Demo";
+    m_version = L"Version 3.0 (2024)";
 
       // generate compiler information for the About box
 #ifdef __GNUC__
-    m_compiledWith << _T("GNU C++ ") << __GNUC__ << _T(".")
-        << __GNUC_MINOR__ << _T(".") << __GNUC_PATCHLEVEL__;
+    m_compiledWith << L"GNU C++ " << __GNUC__ << L"."
+        << __GNUC_MINOR__ << L"." << __GNUC_PATCHLEVEL__;
 #elif defined(_MSC_VER)
-    m_compiledWith << _T("MS C++ ") << _MSC_VER / 100
-        << _T(".") << _MSC_VER % 100;
+    m_compiledWith << L"MS C++ " << _MSC_VER / 100
+        << L"." << _MSC_VER % 100;
 #elif defined(__BORLANDC__)
-    m_compiledWith << _T("Borland C++ ") << __BORLANDC__ / 0x100
-        << _T(".") << (__BORLANDC__ & 0x0F0) / 0x10;
+    m_compiledWith << L"Borland C++ " << __BORLANDC__ / 0x100
+        << L"." << (__BORLANDC__ & 0x0F0) / 0x10;
 #else
-    m_sCompiled_with = _T("(unknown compiler)");
+    m_sCompiled_with = L"(unknown compiler)";
 #endif
 
-    m_months =_T("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
+    m_months = L"Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec";
       // serialized data file type (here: "time-demo info")
-    m_archiveFileType = _T(".arc");
+    m_archiveFileType = L".arc";
 }
 
 /*============================================================================*/
@@ -68,7 +68,7 @@ InitInstance()                                                              /*
 *-----------------------------------------------------------------------------*/
 {
          // extract the app name, directory, and  path names
-    ::GetModuleFileName(NULL, m_appPath.GetBuffer(FILENAME_MAX),
+    ::GetModuleFileName(nullptr, m_appPath.GetBuffer(FILENAME_MAX),
         FILENAME_MAX);
     m_appPath.ReleaseBuffer();
     CFile f;
@@ -76,9 +76,9 @@ InitInstance()                                                              /*
     m_appDir = f.GetFileDirectory();
     m_appName = f.GetFileNameWOExt();
       // locate the archive file
-    m_arcvDir = MakeAppDataPath(_T("win32++\\") + m_appName);
+    m_arcvDir = MakeAppDataPath(L"Win32++\\" + m_appName);
       // form the archive file path name
-    m_arcvFile  = m_arcvDir + _T("\\") + m_appName + m_archiveFileType;
+    m_arcvFile  = m_arcvDir + L"\\" + m_appName + m_archiveFileType;
 
       // generate the About box static information: first the latest
       // date one of the main stream files was compiled
@@ -86,8 +86,8 @@ InitInstance()                                                              /*
     compiled_on = std::max(compiled_on, DatInt(CDoc::m_compiledOn));
     compiled_on = std::max(compiled_on, DatInt(CMainFrame::m_compiledOn));
     compiled_on = std::max(compiled_on, DatInt(CView::m_compiledOn));
-    m_aboutStatement.Format(_T("%s\n\n(%s.exe)\n%s\ncompiled with ")
-        _T("%s\non %s"), m_credits.c_str(), m_appName.c_str(),
+    m_aboutStatement.Format(L"%s\n\n(%s.exe)\n%s\ncompiled with %s\non %s",
+        m_credits.c_str(), m_appName.c_str(),
         m_version.c_str(), m_compiledWith.c_str(),
         IntDat(compiled_on).c_str());
 
@@ -129,7 +129,7 @@ IntDat(ULONG hexdate)                                                       /*
     UINT mo = (hexdate / 100) % 100;
     UINT yyyy = (hexdate / 10000);
     CString ans;
-    ans.Format(_T("%s %02d, %u"), CApp::m_months.Mid(4 * mo, 3).c_str(),
+    ans.Format(L"%s %02d, %u", CApp::m_months.Mid(4 * mo, 3).c_str(),
         dd, yyyy);
     return ans;
 }

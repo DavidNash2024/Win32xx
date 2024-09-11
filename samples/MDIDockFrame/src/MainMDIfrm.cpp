@@ -8,6 +8,8 @@
 #include "Files.h"
 #include "resource.h"
 
+using namespace std;
+
 /////////////////////////////////////
 // CMainMDIFrame function definitions
 //
@@ -27,7 +29,7 @@ HWND CMainMDIFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\DockMDI Frame"));
+    LoadRegistrySettings(L"Win32++\\DockMDI Frame");
 
     return CMDIDockFrame::Create(parent);
 }
@@ -66,8 +68,7 @@ BOOL CMainMDIFrame::OnFileSave()
 BOOL CMainMDIFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
-    PRINTDLG pd;
-    ZeroMemory(&pd, sizeof(pd));
+    PRINTDLG pd{};
     pd.lStructSize = sizeof( pd );
     pd.Flags = PD_RETURNDC;
     pd.hwndOwner = GetHwnd();
@@ -92,8 +93,8 @@ void CMainMDIFrame::OnInitialUpdate()
     // Add some Dockers to the MDI Frame
     DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
     int dockWidth = DpiScaleInt(150);
-    CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, dockWidth);
-    CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | dwStyle, dockWidth);
+    CDocker* pDock1 = AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_LEFT | dwStyle, dockWidth);
+    CDocker* pDock2 = AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_RIGHT | dwStyle, dockWidth);
 
     assert (pDock1->GetContainer());
     assert (pDock2->GetContainer());
@@ -101,8 +102,8 @@ void CMainMDIFrame::OnInitialUpdate()
     pDock2->GetContainer()->SetHideSingleTab(TRUE);
 
     // Add some  MDI children
-    AddMDIChild(new CSimpleMDIChild);
-    AddMDIChild(new CSimpleMDIChild);
+    AddMDIChild(make_unique<CSimpleMDIChild>());
+    AddMDIChild(make_unique<CSimpleMDIChild>());
 }
 
 // Process input from the menu and toolbar.
@@ -177,7 +178,7 @@ BOOL CMainMDIFrame::OnFileExit()
 // Create a new MDI child
 BOOL CMainMDIFrame::OnFileNewMDI()
 {
-    AddMDIChild(new CSimpleMDIChild);
+    AddMDIChild(make_unique<CSimpleMDIChild>());
     return TRUE;
 }
 
@@ -198,7 +199,8 @@ BOOL CMainMDIFrame::OnFileNew()
     CMenu popupMenu = topMenu.GetSubMenu(0);
 
     // Start the popup menu
-    popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+    popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+        rc.left, rc.bottom, *this, &tpm);
 
     return TRUE;
 }
@@ -207,7 +209,8 @@ BOOL CMainMDIFrame::OnFileNew()
 BOOL CMainMDIFrame::OnFileNewDocker()
 {
     int dockWidth = DpiScaleInt(150);
-    CDocker* pDock = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | DS_CLIENTEDGE, dockWidth);
+    CDocker* pDock = AddDockedChild(make_unique<CDockFiles>(),
+        DS_DOCKED_LEFT | DS_CLIENTEDGE, dockWidth);
     pDock->GetContainer()->SetHideSingleTab(TRUE);
     return TRUE;
 }
@@ -266,7 +269,7 @@ void CMainMDIFrame::SetupMenuIcons()
 {
     // Set the bitmap used for menu icons
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -317,10 +320,10 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -328,7 +331,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

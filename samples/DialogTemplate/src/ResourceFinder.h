@@ -33,14 +33,14 @@ public:
     CResourceFinder() {}
     ~CResourceFinder() {}
 
-    void FindResources(LPCTSTR fileName);
+    void FindResources(LPCWSTR fileName);
     const std::vector<ResourceInfo>& GetAllInfo() const { return m_allInfo; }
 
 private:
     // Callback procedures
-    static BOOL EnumTypesProc(HANDLE, LPTSTR, LONG_PTR);
-    static BOOL EnumNamesProc(HANDLE, LPCTSTR, LPCTSTR, LONG_PTR);
-    static BOOL EnumLangsProc(HANDLE, LPCTSTR, LPCTSTR, WORD, LONG_PTR);
+    static BOOL EnumTypesProc(HANDLE, LPWSTR, LONG_PTR);
+    static BOOL EnumNamesProc(HANDLE, LPCWSTR, LPCWSTR, LONG_PTR);
+    static BOOL EnumLangsProc(HANDLE, LPCWSTR, LPCWSTR, WORD, LONG_PTR);
 
     // private member variables
     ResourceInfo m_info;

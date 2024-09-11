@@ -38,7 +38,7 @@ CDoc    : public CObject                                                    /*
         CString GetDocPath() const { return m_docPath;}
         BOOL    IsDirty();
         BOOL    IsOpen() const {return m_isOpen;}
-        BOOL    MakeNewDoc(LPCTSTR);
+        BOOL    MakeNewDoc(LPCWSTR);
         void    OnCloseDoc();
         void    OnFindReplace(UINT, WPARAM, LPARAM);
         void    OnFRFindNext(MyFindReplaceDialog*);
@@ -46,7 +46,7 @@ CDoc    : public CObject                                                    /*
         void    OnFRReplaceCurrent(MyFindReplaceDialog*);
         void    OnFRTerminating(MyFindReplaceDialog*);
         BOOL    OnSaveDoc();
-        BOOL    OpenDoc(LPCTSTR);
+        BOOL    OpenDoc(LPCWSTR);
         void    SetDirty(BOOL b);
         void    SetDataPath(CView*);
 

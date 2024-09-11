@@ -43,7 +43,7 @@ namespace Calc
     PFun FunctionTable::GetFun(const CString& funName)
     {
         PFun pFunpointer = 0;
-        std::map<CString, PFun>::iterator it = m_functions.find(funName);
+        auto it = m_functions.find(funName);
         if (it != m_functions.end())
             pFunpointer = (*it).second;
 
@@ -85,7 +85,7 @@ namespace Calc
     double SymbolTable::GetValue(const CString& symbol) const
     {
         double value = 0;
-        std::map<CString, double>::const_iterator it = m_symbolMap.find(symbol);
+        auto it = m_symbolMap.find(symbol);
         if (it != m_symbolMap.end())
             value = (*it).second;
 
@@ -97,7 +97,7 @@ namespace Calc
     // Adds or modifies a symbol table entry
     void SymbolTable::SetValue(const CString& symbol, double value)
     {
-        std::map<CString, double>::iterator it = m_symbolMap.find(symbol);
+        auto it = m_symbolMap.find(symbol);
         if (it != m_symbolMap.end())
             (*it).second = value;
         else

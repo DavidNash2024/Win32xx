@@ -365,9 +365,6 @@
             <BuildOrder>12</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
-        <None Include="..\src\targetver.h">
-            <BuildOrder>13</BuildOrder>
-        </None>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -35,12 +35,12 @@ CMainFrame : public CFrame                      /*
 {
     public:
                     CMainFrame();
-        virtual     ~CMainFrame(){}
+        virtual     ~CMainFrame() override {}
         void        SetAppName(const CString& appName)
                                     { m_appName = appName; }
         void        SetArcFileName(const CString& arcName)
                                     { m_arcName = arcName; }
-        void        SetWindowTitle(const CString &title = _T(""));
+        void        SetWindowTitle(const CString &title = L"");
         CView&      TheView()       {return m_view;}
         CDoc&       ThisDoc()       {return m_view.TheDoc();}
         CMRU&       TheMRU()        {return m_MRU;};
@@ -49,29 +49,31 @@ CMainFrame : public CFrame                      /*
         static const CString m_compiledOn; // compilation date
 
     protected:
-        virtual void    OnColorChoice();
-        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-        virtual int     OnCreate(CREATESTRUCT& cs);
-        virtual void    OnDestroy();
-        virtual void    OnFileExit();
-        virtual void    OnFileNew();
-        virtual void    OnFileOpen();
-        virtual bool    OnFileOpenMRU(UINT);
-        virtual void    OnFileSave();
-        virtual void    OnFileSaveAs();
-        virtual void    OnFontChoice();
-        virtual BOOL    OnHelpAbout();
-        virtual void    OnInitialUpdate();
-        virtual BOOL    OnProcessMRU(WPARAM wparam, LPARAM lparam);
-        virtual void    PreCreate(CREATESTRUCT& cs);
-        virtual void    Serialize(CArchive &ar);
-        virtual void    SetupMenuIcons();
-        virtual void    SetupToolBar();
-        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+        virtual int     OnCreate(CREATESTRUCT& cs) override;
+        virtual void    OnDestroy() override;
+        virtual void    OnInitialUpdate() override;
+        virtual void    PreCreate(CREATESTRUCT& cs) override;
+        virtual void    Serialize(CArchive &ar) override;
+        virtual void    SetupMenuIcons() override;
+        virtual void    SetupToolBar() override;
+        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
     private:
-        CMainFrame(const CMainFrame&);               // Disable copy construction
-        CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+        CMainFrame(const CMainFrame&) = delete;
+        CMainFrame& operator=(const CMainFrame&) = delete;
+
+        void    OnColorChoice();
+        void    OnFileExit();
+        void    OnFileNew();
+        void    OnFileOpen();
+        bool    OnFileOpenMRU(UINT);
+        void    OnFileSave();
+        void    OnFileSaveAs();
+        void    OnFontChoice();
+        BOOL    OnHelpAbout();
+        BOOL    OnProcessMRU(WPARAM wparam, LPARAM lparam);
 
           // private data members
         AboutBox   m_aboutDialog;  // about dialog object

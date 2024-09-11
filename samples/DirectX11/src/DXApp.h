@@ -16,16 +16,16 @@ class CDXApp : public CWinApp
 {
 public:
     CDXApp() {}
-    virtual ~CDXApp() {}
+    virtual ~CDXApp() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
-    virtual int MessageLoop();
+    virtual BOOL InitInstance() override;
+    virtual int MessageLoop() override;
 
 private:
-    CDXApp(const CDXApp&);               // Disable copy construction
-    CDXApp& operator=(const CDXApp&);    // Disable assignment operator
+    CDXApp(const CDXApp&) = delete;
+    CDXApp& operator=(const CDXApp&) = delete;
 
     CDXView m_dxView;
 };

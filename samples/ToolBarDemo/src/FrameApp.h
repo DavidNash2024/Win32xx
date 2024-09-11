@@ -16,15 +16,15 @@ class CToolBarDemoApp : public CWinApp
 {
 public:
     CToolBarDemoApp();
-    virtual ~CToolBarDemoApp();
+    virtual ~CToolBarDemoApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CToolBarDemoApp(const CToolBarDemoApp&);               // Disable copy construction
-    CToolBarDemoApp& operator=(const CToolBarDemoApp&);    // Disable assignment operator
+    CToolBarDemoApp(const CToolBarDemoApp&) = delete;
+    CToolBarDemoApp& operator=(const CToolBarDemoApp&) = delete;
 
     CMainFrame m_frame;
 };

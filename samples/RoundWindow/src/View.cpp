@@ -2,13 +2,9 @@
 // View.cpp
 //
 
-// VS6 requires these macros to be defined.
-#define WINVER          0x0410
-#define _WIN32_WINDOWS  0x0410
-#define _WIN32_IE       0x0401
-
 #include "View.h"
 #include "resource.h"
+
 
 //////////////////////////////
 // CView function definitions.
@@ -24,9 +20,7 @@ CView::CView()
 BOOL CView::OnColor()
 {
     static COLORREF custColors[16] = {0};   // Array of custom colors.
-    CHOOSECOLOR cc;                         // Structure used by ChooseColor.
-    ZeroMemory(&cc, sizeof(cc));
-
+    CHOOSECOLOR cc{};                       // Structure used by ChooseColor.
     cc.lStructSize = sizeof(CHOOSECOLOR);
     cc.Flags = CC_FULLOPEN | CC_RGBINIT;
     cc.rgbResult = m_brush.GetLogBrush().lbColor;
@@ -180,8 +174,8 @@ LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     // Create the menu.
     CMenu popup;
     popup.CreatePopupMenu();
-    popup.AppendMenu(MF_STRING, IDM_COLOR, _T("Color"));
-    popup.AppendMenu(MF_STRING, IDM_EXIT, _T("Exit"));
+    popup.AppendMenu(MF_STRING, IDM_COLOR, L"Color");
+    popup.AppendMenu(MF_STRING, IDM_EXIT, L"Exit");
 
     // Initiate the popup menu.
     CPoint pt = GetCursorPos();
@@ -221,13 +215,13 @@ void CView::PreCreate(CREATESTRUCT& cs)
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     wc.hbrBackground = m_brush;                 // Background color
-    wc.lpszClassName = _T("Round Window");      // Class name
-    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);     // Arrow cursor
+    wc.lpszClassName = L"Round Window";      // Class name
+    wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);     // Arrow cursor
 }
 
 void CView::SetRoundRegion()
 {
-    SetWindowRgn(NULL, TRUE);
+    SetWindowRgn(nullptr, TRUE);
 
     // Create a circular region.
     CRgn rgn;
@@ -267,10 +261,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -278,7 +272,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

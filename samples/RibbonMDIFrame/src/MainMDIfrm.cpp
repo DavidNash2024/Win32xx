@@ -15,7 +15,7 @@
 //
 
 // Constructor for CMainMDIFrame.
-CMainMDIFrame::CMainMDIFrame() : m_pIUIRibbon(NULL)
+CMainMDIFrame::CMainMDIFrame() : m_pIUIRibbon(nullptr)
 {
 }
 
@@ -175,7 +175,7 @@ void CMainMDIFrame::OnFileExit()
 
 void CMainMDIFrame::OnFileNew()
 {
-    AddMDIChild(new CSimpleMDIChild);
+    AddMDIChild(std::make_unique<CSimpleMDIChild>());
 }
 
 void CMainMDIFrame::OnMDIClose()
@@ -221,13 +221,13 @@ void CMainMDIFrame::OnMDIRestore()
 // Called when the DropdownColorPicker button is pressed.
 void CMainMDIFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    if (ppropvarValue != NULL)
+    if (ppropvarValue != nullptr)
     {
         // Retrieve color type.
         UINT type = ppropvarValue->uintVal;
 
         // The Ribbon framework passes color as additional property if the color type is RGB.
-        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
+        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != nullptr)
         {
             // Retrieve color.
             PROPVARIANT var;
@@ -371,10 +371,10 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -382,7 +382,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

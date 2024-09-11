@@ -46,13 +46,13 @@ CColorChoice()                                                              /*
 {
     ClearColorTable();
     InitCustomColors();
-    SetBoxTitle(_T("Color"));
-    m_LBDlg.SetBoxTitle(_T("Choose color to change."));
+    SetBoxTitle(L"Color");
+    m_LBDlg.SetBoxTitle(L"Choose color to change.");
 }
 
 /*============================================================================*/
     void CColorChoice::
-AddColorChoice(UINT id, LPCTSTR usage, COLORREF color)                      /*
+AddColorChoice(UINT id, LPCWSTR usage, COLORREF color)                      /*
 
     Add the (id, name, color) tuple to the color table, return TRUE on
     success, FALSE otherwise.
@@ -67,7 +67,7 @@ AddColorChoice(UINT id, LPCTSTR usage, COLORREF color)                      /*
 
 /*============================================================================*/
     INT_PTR CColorChoice::
-DoModal(HWND owner /* = NULL */)                                               /*
+DoModal(HWND owner /* = nullptr */)                                               /*
 
     Show the CListBoxDlg dialog box with the list of candidate control
     categories and, if a one is selected, show the CColorDialog box to
@@ -77,9 +77,9 @@ DoModal(HWND owner /* = NULL */)                                               /
 *-----------------------------------------------------------------------------*/
 {
       // determine a common owner for the two dialog boxes
-    if (owner == NULL)
+    if (owner == nullptr)
         owner = GetParameters().hwndOwner;
-    if (owner == NULL)
+    if (owner == nullptr)
         owner = GetApp()->GetMainWnd();
       // prepare the list box dialog: load the color table choice items
     m_LBDlg.ClearList();
@@ -162,7 +162,7 @@ GetTableUsage(UINT id) const                                               /*
 *-----------------------------------------------------------------------------*/
 {
     UINT idx = GetTableIndex(id);
-    CString usage = (idx == static_cast<UINT>(-1) ? _T("") :
+    CString usage = (idx == static_cast<UINT>(-1) ? L"" :
         m_colorTable[idx].usage.c_str());
     return  usage;
 }
@@ -225,13 +225,13 @@ Serialize(CArchive &ar)                                                     /*
         ArchiveObject ao(GetCustomColors(), 16 * sizeof(COLORREF) );
         ar << ao;
           // save the color table entries
-        ar << static_cast<UINT>(m_colorTable.size());
-        std::vector<ctl_color>::iterator it;
-        for (it = m_colorTable.begin(); it != m_colorTable.end(); ++it)
+        UINT entries = static_cast<UINT>(m_colorTable.size());
+        ar << entries;
+        for (UINT i = 0; i < entries ; i++)
         {
-            ar << (*it).id;
-            ar << (*it).usage;
-            ar << (*it).color;
+            ar << m_colorTable[i].id;
+            ar << m_colorTable[i].usage;
+            ar << m_colorTable[i].color;
         }
     }
     else    // recovering
@@ -246,16 +246,16 @@ Serialize(CArchive &ar)                                                     /*
         ar >> ao;
         SetCustomColors(cr);
           // recover the color table entries
-        UINT n;
-        ar >> n;
-        m_colorTable.resize(n);
-        std::vector<ctl_color>::iterator it;
-        for (it = m_colorTable.begin(); it < m_colorTable.begin() + n;
-            ++it)
+        UINT entries;
+        ar >> entries;
+        m_colorTable.clear();
+        for (UINT i = 0; i < entries ; i++)
         {
-            ar >> (*it).id;
-            ar >> (*it).usage;
-            ar >> (*it).color;
+            ctl_color cc;
+            ar >> cc.id;
+            ar >> cc.usage;
+            ar >> cc.color;
+            m_colorTable.push_back(cc);
         }
     }
 
@@ -279,7 +279,7 @@ SetTableColor(UINT id, COLORREF rgb)                                       /*
 
 /*============================================================================*/
     void CColorChoice::
-SetTableUsage(UINT id, LPCTSTR s)                                          /*
+SetTableUsage(UINT id, LPCWSTR s)                                          /*
 
     Set the usage entry of the color table entry with the given id to
     the specified s string.

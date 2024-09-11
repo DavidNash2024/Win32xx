@@ -13,16 +13,16 @@ class CMyCombo : public CComboBoxEx
 {
 public:
     CMyCombo() {}
-    virtual ~CMyCombo() {}
+    virtual ~CMyCombo() override {}
     const CEdit* GetCBEdit() const { return &m_edit; }
 
 protected:
-    virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void OnAttach() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
 
 private:
-    CMyCombo(const CMyCombo&);               // Disable copy construction
-    CMyCombo& operator=(const CMyCombo&);    // Disable assignment operator
+    CMyCombo(const CMyCombo&) = delete;
+    CMyCombo& operator=(const CMyCombo&) = delete;
 
     CEdit m_edit;
 };

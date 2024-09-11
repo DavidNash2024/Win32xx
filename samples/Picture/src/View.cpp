@@ -16,11 +16,11 @@
 
 
 // Constructor.
-CView::CView() : m_pPicture(NULL)
+CView::CView() : m_pPicture(nullptr)
 {
     // Initializes the COM library on the current thread.
-    if FAILED(::CoInitialize(NULL))
-        throw CWinException(_T("Failed to initialize COM"));
+    if FAILED(::CoInitialize(nullptr))
+        throw CWinException(L"Failed to initialize COM");
 }
 
 // Destructor.
@@ -61,7 +61,7 @@ void CView::NewPictureFile()
     if (m_pPicture)
     {
         m_pPicture->Release();
-        m_pPicture = NULL;
+        m_pPicture = nullptr;
 
         // Turn scrolling off
         SetScrollSizes();
@@ -72,18 +72,18 @@ void CView::NewPictureFile()
 }
 
 // Loads an image from the specified file.
-BOOL CView::LoadPictureFile(LPCTSTR fileName)
+BOOL CView::LoadPictureFile(LPCWSTR fileName)
 {
     if (m_pPicture)
     {
         m_pPicture->Release();
-        m_pPicture = NULL;
+        m_pPicture = nullptr;
     }
 
     BOOL IsPictureLoaded;
 
     // Create IPicture from image file
-    if (S_OK == ::OleLoadPicturePath(TtoOLE(fileName), NULL, 0, 0, IID_IPicture, (LPVOID*)&m_pPicture))
+    if (S_OK == ::OleLoadPicturePath(WtoOLE(fileName), nullptr, 0, 0, IID_IPicture, (LPVOID*)&m_pPicture))
     {
         GetAncestor().SendMessage(UWM_FILELOADED, 0, (LPARAM)fileName);
         Invalidate();
@@ -97,7 +97,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
     {
         CString str("Failed to load: ");
         str += fileName;
-        MessageBox(str, _T("Load Picture Failed"), MB_ICONWARNING);
+        MessageBox(str, L"Load Picture Failed", MB_ICONWARNING);
         TRACE(str); TRACE("\n");
 
         // Set Frame title back to default
@@ -150,7 +150,7 @@ void CView::OnDraw(CDC& dc)
 LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
 {
     HDROP hDrop = (HDROP)wparam;
-    UINT length = DragQueryFile(hDrop, 0, NULL, 0);
+    UINT length = DragQueryFile(hDrop, 0, nullptr, 0);
 
     if (length > 0)
     {
@@ -170,7 +170,7 @@ LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the Window Class name
-    cs.lpszClass = _T("PictureView");
+    cs.lpszClass = L"PictureView";
 
     cs.style = WS_CHILD | WS_HSCROLL | WS_VSCROLL ;
 
@@ -179,15 +179,15 @@ void CView::PreCreate(CREATESTRUCT& cs)
 }
 
 // Saves the image to the specified file.
-void CView::SavePicture(LPCTSTR fileName)
+void CView::SavePicture(LPCWSTR fileName)
 {
     // get a IPictureDisp interface from your IPicture pointer
-    IPictureDisp *pDisp = NULL;
+    IPictureDisp *pDisp = nullptr;
 
     if (SUCCEEDED(m_pPicture->QueryInterface(IID_IPictureDisp,  (void**) &pDisp)))
     {
         // Save the IPicture image as a bitmap
-        OleSavePictureFile(pDisp,  TtoBSTR(fileName));
+        OleSavePictureFile(pDisp,  WtoBSTR(fileName));
         pDisp->Release();
     }
 }
@@ -211,10 +211,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -222,7 +222,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

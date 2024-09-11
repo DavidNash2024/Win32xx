@@ -6,7 +6,6 @@
 #define VIEW_H
 
 
-#include "targetver.h"
 #include "wxx_wincore.h"
 #include <vector>
 
@@ -27,25 +26,27 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView();
-
-protected:
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    virtual ~CView() override;
 
     void DrawLine(int x, int y);
     void StorePoint(int x, int y, bool isPenDown);
+
+protected:
+    virtual void OnDraw(CDC& dc) override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual void PreRegisterClass(WNDCLASS& wc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+
+private:
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
+
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+
     CBrush m_brush;
-    std::vector<PlotPoint> m_points;    // Points of lines to draw  COLORREF m_PenColor;
+    std::vector<PlotPoint> m_points;    // Points of lines to draw  COLORREF m_PenColor.
 };
 
 

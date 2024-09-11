@@ -17,8 +17,8 @@ class CViewDialog : public CDialog
 public:
     CViewDialog(UINT resID);
     virtual ~CViewDialog() override;
-    CViewDialog(const CViewDialog&) = delete;               // Disable copy construction
-    CViewDialog& operator=(const CViewDialog&) = delete;    // Disable assignment operator
+    CViewDialog(const CViewDialog&) = delete;
+    CViewDialog& operator=(const CViewDialog&) = delete;
 
     const CRichEdit& GetActors() const { return m_actors; }
     const CRichEdit& GetInfo()   const { return m_info; }
@@ -29,7 +29,7 @@ public:
     CCoverImage& SetPicture() { return m_picture; }
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void    OnCancel() override {} // Suppress closing the dialog with esc key.
     virtual void    OnClose() override {}  // Suppress closing the dialog with return key on rich edit.
@@ -37,11 +37,11 @@ protected:
     virtual void    OnOK() override {}     // Suppress closing the dialog with return key.
 
 private:
-    // Message handlers
+    // Message handlers.
     virtual LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
-    void AppendText(int nID, LPCTSTR text);
+    void AppendText(int nID, LPCWSTR text);
 
     CResizer    m_Resizer;
     CRichEdit   m_actors;
@@ -64,8 +64,8 @@ class CDockDialog : public CDocker
 public:
     CDockDialog();
     virtual ~CDockDialog() override {}
-    CDockDialog(const CDockDialog&) = delete;              // Disable copy construction
-    CDockDialog& operator=(const CDockDialog&) = delete;   // Disable assignment operator
+    CDockDialog(const CDockDialog&) = delete;
+    CDockDialog& operator=(const CDockDialog&) = delete;
 
     CViewDialog& GetViewDialog() { return m_view; }
 
@@ -76,4 +76,4 @@ private:
     CViewDialog m_view;
 };
 
-#endif //MYDIALOG_H
+#endif // MYDIALOG_H

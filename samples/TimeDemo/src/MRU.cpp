@@ -31,7 +31,7 @@ CMRU()                                                                      /*
 
     Construct an empty MRU object.
 *-----------------------------------------------------------------------------*/
-    :   m_emptyMRUListLabel(_T("Recent Files"))
+    :   m_emptyMRUListLabel(L"Recent Files")
 {
     m_MRUEntries.clear();
     m_maxMRU = 16;
@@ -39,7 +39,7 @@ CMRU()                                                                      /*
 
 /*============================================================================*/
     void CMRU::
-AddEntry(LPCTSTR entryName)                                                 /*
+AddEntry(LPCWSTR entryName)                                                 /*
 
     Add the entryName string to the Most Recently Used (MRU) menu at the
     top of the menu.  Eliminate list members if they exceed the specified
@@ -97,7 +97,7 @@ GetEntry(size_t index)                                                      /*
     MRU list bounds, return an empty string.
 *-----------------------------------------------------------------------------*/
 {
-    CString s = _T("");
+    CString s = L"";
     if (index < m_MRUEntries.size())
         s = m_MRUEntries[index];
     return s;
@@ -105,13 +105,12 @@ GetEntry(size_t index)                                                      /*
 
 /*============================================================================*/
     void CMRU::
-RemoveEntry(LPCTSTR entryName)                                              /*
+RemoveEntry(LPCWSTR entryName)                                              /*
 
     Remove the entryName entry from the MRU list if it is in the list.
 *-----------------------------------------------------------------------------*/
 {
-    std::vector<CString>::iterator it;
-    for (it = m_MRUEntries.begin(); it != m_MRUEntries.end(); ++it)
+    for (auto it = m_MRUEntries.begin(); it != m_MRUEntries.end(); ++it)
     {
         if ((*it) == entryName)
         {
@@ -207,11 +206,11 @@ UpdateMenu()                                                                /*
             {
                   // eliminate middle if too long
                 s.Delete(mid, s.GetLength() - maxLength);
-                s.Insert(mid, _T("..."));
+                s.Insert(mid, L"...");
             }
             // Prefix with its number
             CString v;
-            v.Format(_T("%d "), i + 1);
+            v.Format(L"%d ", i + 1);
             Names[i] = v + s;
         }
           // display the MRU items: start by replacing the first item
@@ -236,17 +235,16 @@ ValidateMRU()                                                               /*
 *-----------------------------------------------------------------------------*/
 {
       // search the MRU list in reverse so as not to cause reshuffling
-    std::vector<CString>::iterator it;
     for (int i = static_cast<int>(m_MRUEntries.size()) - 1; i >= 0; --i)
     {
           // check whether the current entry exists, or is gone
         CString s = m_MRUEntries[i];
         if (_taccess(s.c_str(), 4) != 0)
         {
-            ::MessageBox(0, s, _T("Removing invalid MRU entry."),
+            ::MessageBox(0, s, L"Removing invalid MRU entry.",
                 MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
               // convert index to the proper forward iterator for erase
-            it = m_MRUEntries.begin() + i;
+            auto it = m_MRUEntries.begin() + i;
             m_MRUEntries.erase(it);
         }
     }

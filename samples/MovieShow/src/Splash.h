@@ -15,14 +15,14 @@ class CSplash : public CWnd
 public:
     CSplash();
     virtual ~CSplash() override;
-    CSplash(const CSplash&) = delete;               // Disable copy construction
-    CSplash& operator=(const CSplash&) = delete;    // Disable assignment operator
+    CSplash(const CSplash&) = delete;
+    CSplash& operator=(const CSplash&) = delete;
 
     const CProgressBar& GetBar() const { return m_progress; }
 
     void AddBar();
     void Hide();
-    void ShowText(LPCTSTR text, CWnd* parent);
+    void ShowText(LPCWSTR text, CWnd* parent);
 
 protected:
     // Virtual functions that override base class functions

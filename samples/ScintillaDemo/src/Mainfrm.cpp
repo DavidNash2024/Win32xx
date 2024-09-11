@@ -13,7 +13,7 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(true), m_oldFocus(NULL)
+CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(true), m_oldFocus(nullptr)
 {
     // Set m_view as the view window of the frame.
     SetView(m_view);
@@ -55,7 +55,7 @@ HWND CMainFrame::Create(HWND parent)
 CString CMainFrame::GetFileName()
 {
     CString fileName;
-    int delimiter = m_pathName.ReverseFind(_T('\\'));
+    int delimiter = m_pathName.ReverseFind(L'\\');
     if (delimiter >= 0)
         fileName = m_pathName.Mid(delimiter + 1);
 
@@ -63,7 +63,7 @@ CString CMainFrame::GetFileName()
 }
 
 // Retrieves the width of the part required to contain the specified text.
-int CMainFrame::GetTextPartWidth(LPCTSTR text) const
+int CMainFrame::GetTextPartWidth(LPCWSTR text) const
 {
     CClientDC statusDC(GetStatusBar());
     statusDC.SelectObject(GetStatusBar().GetFont());
@@ -332,7 +332,7 @@ BOOL CMainFrame::OnFilePreview()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(GetFrameMenu() != NULL);
+        ShowMenu(GetFrameMenu() != nullptr);
         ShowToolBar(m_isToolbarShown);
     }
 
@@ -509,12 +509,12 @@ BOOL CMainFrame::OnOptionsFont()
     {
         // Assign the new font to the rich text document.
         cf = dlg.GetCharFormat();
-        m_view.StyleSetFont(STYLE_DEFAULT, TtoA(cf.szFaceName));     // Put this first.
+        m_view.StyleSetFont(STYLE_DEFAULT, WtoA(cf.szFaceName));     // Put this first.
         m_view.StyleSetSize(STYLE_DEFAULT, (cf.yHeight + 10) / 20);  // Put this next.
         m_view.StyleSetFore(STYLE_DEFAULT, cf.crTextColor);
-        m_view.StyleSetBold(STYLE_DEFAULT, cf.dwEffects & CFE_BOLD);
-        m_view.StyleSetItalic(STYLE_DEFAULT, cf.dwEffects & CFE_ITALIC);
-        m_view.StyleSetUnderLine(STYLE_DEFAULT, cf.dwEffects & CFE_UNDERLINE);
+        m_view.StyleSetBold(STYLE_DEFAULT, (cf.dwEffects & CFE_BOLD) != 0);
+        m_view.StyleSetItalic(STYLE_DEFAULT, (cf.dwEffects & CFE_ITALIC) != 0);
+        m_view.StyleSetUnderLine(STYLE_DEFAULT, (cf.dwEffects & CFE_UNDERLINE) != 0);
         m_view.StyleClearAll();                                      // Put this last.
     }
 
@@ -537,7 +537,7 @@ LRESULT CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != NULL);
+    ShowMenu(GetFrameMenu() != nullptr);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -625,10 +625,9 @@ void CMainFrame::SetStatusParts()
     partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_OVR)));
 
     int sumWidths = 0;
-    std::vector<int>::iterator iter;
-    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    for (int i : partWidths)
     {
-        sumWidths += *iter;
+        sumWidths += i;
     }
 
     const int gripWidth = 20;
@@ -638,14 +637,14 @@ void CMainFrame::SetStatusParts()
     CRect clientRect = GetClientRect();
     const LONG minWidth = 300;
     int width = std::max(minWidth, clientRect.right);
-    std::vector<int>::iterator begin = partWidths.begin();
+    auto begin = partWidths.begin();
     partWidths.insert(begin, width - sumWidths);
 
     // Create or resize the status bar parts.
-    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    int part = 0;
+    for (int i : partWidths)
     {
-        int part = static_cast<int>(iter - partWidths.begin());
-        GetStatusBar().SetPartWidth(part, *iter);
+        GetStatusBar().SetPartWidth(part++, i);
     }
 }
 
@@ -653,7 +652,7 @@ void CMainFrame::SetStatusParts()
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
@@ -727,10 +726,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -738,7 +737,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

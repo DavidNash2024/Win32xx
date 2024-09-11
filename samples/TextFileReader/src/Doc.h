@@ -41,7 +41,7 @@ CDoc                                                                        /*
     public:
 
         CDoc();
-        virtual ~CDoc(){}
+        virtual ~CDoc() {}
 
         void        AddRecord(const CStringW& entry);
         UINT        GetLength();
@@ -49,7 +49,7 @@ CDoc                                                                        /*
         UINT        GetWidth();
         BOOL        IsOpen() const;
         BOOL        CloseDoc();
-        BOOL        OpenDoc(LPCTSTR);
+        BOOL        OpenDoc(LPCWSTR);
 
     private:
         WCHAR       ByteReverse(WCHAR w) // byte reversal function for UTF-16 BE

@@ -21,17 +21,17 @@ class CMyTabbedMDI : public CTabbedMDI
 {
 public:
     CMyTabbedMDI();
-    virtual ~CMyTabbedMDI() {}
+    virtual ~CMyTabbedMDI() override {}
 
 protected:
     // Virtual functions that override base class functions.
-    virtual CWnd* NewMDIChildFromID(int mdiChild);
-    virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual WndPtr NewMDIChildFromID(int mdiChild) override;
+    virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMyTabbedMDI(const CMyTabbedMDI&);               // Disable copy construction
-    CMyTabbedMDI& operator=(const CMyTabbedMDI&);    // Disable assignment operator
+    CMyTabbedMDI(const CMyTabbedMDI&) = delete;
+    CMyTabbedMDI& operator=(const CMyTabbedMDI&) = delete;
 };
 
 #endif

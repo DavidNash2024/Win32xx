@@ -42,19 +42,19 @@ void CViewTree::OnAttach()
     DeleteAllItems();
 
     // Add some tree-view items.
-    HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
-    HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
-    InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("GetMainFrame()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("InitInstance()"), 3, 3, htiCTreeViewApp);
-    HTREEITEM htiMainFrame = InsertItem(_T("CMainFrame"), 1, 1, htiRoot);
-    InsertItem(_T("CMainFrame()"), 3, 3, htiMainFrame);
-    InsertItem(_T("OnCommand()"), 4, 4, htiMainFrame);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiMainFrame);
-    HTREEITEM htiView = InsertItem(_T("CView"), 1, 1, htiRoot);
-    InsertItem(_T("CView()"), 3, 3, htiView);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
-    InsertItem(_T("WndProc()"), 4, 4, htiView);
+    HTREEITEM htiRoot = InsertItem(L"TreeView", 0, 0);
+    HTREEITEM htiCTreeViewApp = InsertItem(L"CTreeViewApp", 1, 1, htiRoot);
+    InsertItem(L"CTreeViewApp()", 3, 3, htiCTreeViewApp);
+    InsertItem(L"GetMainFrame()", 3, 3, htiCTreeViewApp);
+    InsertItem(L"InitInstance()", 3, 3, htiCTreeViewApp);
+    HTREEITEM htiMainFrame = InsertItem(L"CMainFrame", 1, 1, htiRoot);
+    InsertItem(L"CMainFrame()", 3, 3, htiMainFrame);
+    InsertItem(L"OnCommand()", 4, 4, htiMainFrame);
+    InsertItem(L"OnInitialUpdate()", 4, 4, htiMainFrame);
+    HTREEITEM htiView = InsertItem(L"CView", 1, 1, htiRoot);
+    InsertItem(L"CView()", 3, 3, htiView);
+    InsertItem(L"OnInitialUpdate()", 4, 4, htiView);
+    InsertItem(L"WndProc()", 4, 4, htiView);
 
     // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
@@ -75,10 +75,10 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -86,7 +86,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -100,8 +100,8 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Constructor.
 CMDIChildTree::CMDIChildTree()
 {
-    m_menu.LoadMenu(_T("MdiMenuTree"));
-    SetHandles(m_menu, NULL);
+    m_menu.LoadMenu(L"MdiMenuTree");
+    SetHandles(m_menu, nullptr);
     SetView(m_treeView);
 }
 
@@ -113,7 +113,7 @@ CMDIChildTree::~CMDIChildTree()
 // Called when the window is created.
 int CMDIChildTree::OnCreate(CREATESTRUCT& cs)
 {
-    SetWindowText(_T("Tree-View Window"));
+    SetWindowText(L"Tree-View Window");
     SetIconLarge(IDI_CLASSES);
     SetIconSmall(IDI_CLASSES);
 
@@ -134,10 +134,10 @@ LRESULT CMDIChildTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -145,7 +145,7 @@ LRESULT CMDIChildTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

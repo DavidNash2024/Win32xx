@@ -13,7 +13,6 @@
 
 // Predefinitions for windows.h go here
 //#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#include "targetver.h"          // Set the supported window features
 
 // Specify Win32xx specific predefinitions here
 //#define NO_USING_NAMESPACE        // Don't use Win32xx namespace
@@ -58,7 +57,6 @@
 #include <wxx_regkey.h>         // Add CRegKey
 #include <wxx_richedit.h>       // Add CRichEdit
 #include <wxx_scrollview.h>     // Add CScrollView
-#include <wxx_shared_ptr.h>     // Add Shared_Ptr
 #include <wxx_setup.h>          // Adds macros, windows header files, and CObject
 #include <wxx_socket.h>         // Add CSocket
 #include <wxx_statusbar.h>      // Add CStatusBar
@@ -78,27 +76,15 @@
   #include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
   #include <wxx_preview.h>        // Add CPrintPreview
   #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
+  #include <wxx_printdialogex.h>  // Add CPrintDialogEx
 
-  // Windows Vista or higher and Visual Studio VS2013 or higher,
-  // or with Visual Studio using Clang compiler
-  #if (WINVER >= 0x0600) && defined (_MSC_VER) && \
-      ((_MSC_VER >= 1800) || defined(__clang_major__))
+  // Visual Studio or Clang compiler
+  #if defined (_MSC_VER) || defined(__clang_major__)
     #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
   #endif
 
-  // Windows Vista or higher with Microsoft VS2013 or higher,
-  // MinGW version 8 or higher or Clang compiler
-  #if (WINVER >= 0x0600) && defined (_MSC_VER) && \
-      ((_MSC_VER >= 1800) || defined(__clang_major__))
-    #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
-  #endif
+  #include <wxx_taskdialog.h>     // Add CTaskDialog
 
-  // Windows Vista or higher with Microsoft VS2008 or higher,
-  // MinGW version 8 or higher or Clang compiler. Requires Unicode.
-  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || \
-      (defined(__GNUC__) && (__GNUC__ >= 8)) || defined(__clang_major__))
-    #include <wxx_taskdialog.h>     // Add CTaskDialog
-  #endif
 
 #endif  // define WIN32_LEAN_AND_MEAN
 

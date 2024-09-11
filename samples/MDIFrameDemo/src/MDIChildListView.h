@@ -13,16 +13,16 @@ class CViewList : public CListView
 {
 public:
     CViewList();
-    virtual ~CViewList();
+    virtual ~CViewList() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewList(const CViewList&);               // Disable copy construction
-    CViewList& operator=(const CViewList&);    // Disable assignment operator
+    CViewList(const CViewList&) = delete;
+    CViewList& operator=(const CViewList&) = delete;
 
     void InsertItems();
     void SetColumns();
@@ -36,16 +36,16 @@ class CMDIChildList : public CMDIChild
 {
 public:
     CMDIChildList();
-    virtual ~CMDIChildList();
+    virtual ~CMDIChildList() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMDIChildList(const CMDIChildList&);                // Disable copy construction
-    CMDIChildList& operator=(const CMDIChildList&);   // Disable assignment operator
+    CMDIChildList(const CMDIChildList&) = delete;
+    CMDIChildList& operator=(const CMDIChildList&) = delete;
 
     CViewList m_listView;
     CMenu m_menu;

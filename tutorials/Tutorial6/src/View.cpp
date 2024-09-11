@@ -30,7 +30,7 @@ void CView::OnDraw(CDC& dc)
 {
     if (m_points.size() > 0)
     {
-        bool isPenDown = false;  //Start with the pen up
+        bool isPenDown = false;  // Start with the pen up.
         for (size_t i = 0 ; i < m_points.size(); i++)
         {
             if (isPenDown)
@@ -51,7 +51,7 @@ void CView::StorePoint(int x, int y, bool isPenDown)
     pp.y = y;
     pp.isPenDown = isPenDown;
 
-    m_points.push_back(pp); //Add the point to the vector
+    m_points.push_back(pp); // Add the point to the vector.
 }
 
 // Called when the left mouse button is pressed while the cursor is over
@@ -68,7 +68,7 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    //Release the capture on the mouse
+    // Release the capture on the mouse.
     ReleaseCapture();
     StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), false);
 
@@ -78,7 +78,7 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when the mouse is moved while captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // hold down the left mouse button and move mouse to draw lines.
+    // Hold down the left mouse button and move mouse to draw lines.
     if ( (wparam & MK_LBUTTON) && (GetCapture() == *this) )
     {
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
@@ -91,16 +91,16 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called before window creation to update the window's CREATESTRUCT.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-    // Set the extra style to provide a sunken effect
+    // Set the extra style to provide a sunken effect.
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
 // Called before the window is registered to update the window's WNDCLASS.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
-    // Set the background brush, class name and cursor
+    // Set the background brush, class name and cursor.
     wc.hbrBackground = m_brush;
-    wc.lpszClassName = _T("Scribble Window");
+    wc.lpszClassName = L"Scribble Window";
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 

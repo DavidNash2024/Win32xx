@@ -13,22 +13,22 @@ class CMainMDIFrame : public CMDIFrame
 {
 public:
     CMainMDIFrame();
-    virtual ~CMainMDIFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainMDIFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
 
 
 protected:
     // Virtual functions that override base class functions.
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnInitialUpdate() override;
+    virtual void SetupMenuIcons() override;
+    virtual void SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainMDIFrame(const CMainMDIFrame&);               // Disable copy construction
-    CMainMDIFrame& operator=(const CMainMDIFrame&);    // Disable assignment operator
+    CMainMDIFrame(const CMainMDIFrame&) = delete;
+    CMainMDIFrame& operator=(const CMainMDIFrame&) = delete;
 
     // Command handlers
     BOOL OnFileClose();

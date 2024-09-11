@@ -16,15 +16,17 @@ class CScribbleApp : public CWinApp
 {
 public:
     CScribbleApp();
-    virtual ~CScribbleApp() {}
-    virtual BOOL InitInstance();
+    virtual ~CScribbleApp() override {}
+
+protected:
+    virtual BOOL InitInstance() override;
 
 private:
-    CScribbleApp(const CScribbleApp&);               // Disable copy construction
-    CScribbleApp& operator=(const CScribbleApp&);    // Disable assignment operator
+    CScribbleApp(const CScribbleApp&) = delete;
+    CScribbleApp& operator=(const CScribbleApp&) = delete;
 
     CMainFrame m_frame;
 };
 
 
-#endif //SCRIBBLEAPP_H
+#endif // SCRIBBLEAPP_H

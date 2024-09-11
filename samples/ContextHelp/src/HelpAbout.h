@@ -12,18 +12,18 @@ class CAboutHelp : public CDialog
 {
 public:
     CAboutHelp();
-    virtual ~CAboutHelp() {}
+    virtual ~CAboutHelp() override {}
 
     const CString& GetCredits() const { return m_credits; }
-    void SetCredits(LPCTSTR credits) { m_credits = credits; }
+    void SetCredits(LPCWSTR credits) { m_credits = credits; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnInitDialog();
+    virtual BOOL    OnInitDialog() override;
 
 private:
-    CAboutHelp(const CAboutHelp&);               // Disable copy construction
-    CAboutHelp& operator=(const CAboutHelp&);    // Disable assignment operator
+    CAboutHelp(const CAboutHelp&) = delete;
+    CAboutHelp& operator=(const CAboutHelp&) = delete;
 
     CString     m_credits;          // AboutBox contents
 };

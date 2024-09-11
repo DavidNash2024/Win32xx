@@ -12,28 +12,28 @@
 class CView : public CWnd, public CRibbon
 {
 public:
-    CView() : m_pIUIRibbon(NULL) {}
-    virtual ~CView() {}
+    CView() : m_pIUIRibbon(nullptr) {}
+    virtual ~CView() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
-    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUIApplication::IUnknown*, UI_VIEWVERB, INT32);
+    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*) override;
+    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUIApplication::IUnknown*, UI_VIEWVERB, INT32) override;
 
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnDraw(CDC& dc);
-    virtual void OnInitialUpdate();
-    virtual LRESULT OnSize();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnDestroy() override;
+    virtual void OnDraw(CDC& dc) override;
+    virtual void OnInitialUpdate() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     IUIRibbon* GetIUIRibbon() const;
+    LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSize();
     void RecalcLayout();
 
     // Member variables

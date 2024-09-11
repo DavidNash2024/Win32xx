@@ -12,6 +12,8 @@
 #include "MDIChildListView.h"
 #include "resource.h"
 
+using namespace std;
+
 /////////////////////////////////////
 // CMainMDIFrame function definitions
 //
@@ -31,7 +33,7 @@ HWND CMainMDIFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\MDIFrameDemo"));
+    LoadRegistrySettings(L"Win32++\\MDIFrameDemo");
 
     return CMDIFrame::Create(parent);
 }
@@ -140,42 +142,42 @@ BOOL CMainMDIFrame::OnFileExit()
 // Adds a MDI child with a list view.
 BOOL CMainMDIFrame::OnFileNewList()
 {
-    AddMDIChild(new CMDIChildList); // This pointer is stored in a Shared_Ptr
+    AddMDIChild(make_unique<CMDIChildList>());
     return TRUE;
 }
 
 // Adds a maximised MDI child.
 BOOL CMainMDIFrame::OnFileNewMax()
 {
-    AddMDIChild(new CMDIChildMax);  // This pointer is stored in a Shared_Ptr
+    AddMDIChild(make_unique<CMDIChildMax>());
     return TRUE;
 }
 
 // Adds a MDI child displaying random rectangles.
 BOOL CMainMDIFrame::OnFileNewRect()
 {
-    AddMDIChild(new CMDIChildRect); // This pointer is stored in a Shared_Ptr
+    AddMDIChild(make_unique<CMDIChildRect>());
     return TRUE;
 }
 
 // Adds a MDI child with a text view.
 BOOL CMainMDIFrame::OnFileNewText()
 {
-    AddMDIChild(new CMDIChildText); // This pointer is stored in a Shared_Ptr
+    AddMDIChild(make_unique<CMDIChildText>());
     return TRUE;
 }
 
 // Adds a MDI child with a tree view.
 BOOL CMainMDIFrame::OnFileNewTree()
 {
-    AddMDIChild(new CMDIChildTree); // This pointer is stored in a Shared_Ptr
+    AddMDIChild(make_unique<CMDIChildTree>());
     return TRUE;
 }
 
 // Adds a MDI child with a simple view.
 BOOL CMainMDIFrame::OnFileNewView()
 {
-    AddMDIChild(new CMDIChildSimple);   // This pointer is stored in a Shared_Ptr
+    AddMDIChild(make_unique<CMDIChildSimple>());
     return TRUE;
 }
 
@@ -232,7 +234,7 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 void CMainMDIFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_DIS);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -292,10 +294,10 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -303,7 +305,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

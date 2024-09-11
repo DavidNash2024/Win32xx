@@ -28,7 +28,7 @@ void CView::OnDraw(CDC& dc)
 {
     if (m_points.size() > 0)
     {
-        bool isPenDown = false;  //Start with the pen up
+        bool isPenDown = false;  // Start with the pen up.
 
         for (unsigned int i = 0 ; i < m_points.size(); i++)
         {
@@ -50,7 +50,7 @@ void CView::StorePoint(int x, int y, bool isPenDown)
     pp.y = y;
     pp.isPenDown = isPenDown;
 
-    m_points.push_back(pp); //Add the point to the vector
+    m_points.push_back(pp); // Add the point to the vector.
 }
 
 // Called when the left mouse button is pressed while the cursor is over

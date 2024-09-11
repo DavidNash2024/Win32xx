@@ -12,19 +12,19 @@
 class CMyPropertySheet : public CPropertySheet
 {
 public:
-    CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = NULL);
-    virtual ~CMyPropertySheet() {}
+    CMyPropertySheet(LPCWSTR caption = nullptr, HWND hParent = nullptr);
+    virtual ~CMyPropertySheet() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual void OnInitialUpdate();
-    virtual LRESULT OnSetDefID(WPARAM wparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual void OnInitialUpdate() override;
+    virtual LRESULT OnSetDefID(WPARAM wparam) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMyPropertySheet(const CMyPropertySheet&);               // Disable copy construction
-    CMyPropertySheet& operator=(const CMyPropertySheet&);    // Disable assignment operator
+    CMyPropertySheet(const CMyPropertySheet&) = delete;
+    CMyPropertySheet& operator=(const CMyPropertySheet&) = delete;
 };
 
 
@@ -35,23 +35,24 @@ private:
 class CButtonPage : public CPropertyPage
 {
 public:
-    CButtonPage(UINT templateID, LPCTSTR title = NULL);
-    virtual ~CButtonPage() {}
+    CButtonPage(UINT templateID, LPCWSTR title = nullptr);
+    virtual ~CButtonPage() override {}
+
+    BOOL Validate();
 
 protected:
     // Virtual functions that override base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnApply();
-    virtual void OnCancel();
-    virtual BOOL OnInitDialog();
-    virtual void OnOK();
-    virtual BOOL OnQueryCancel();
-    virtual BOOL OnSetActive();
-    virtual BOOL Validate();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnApply() override;
+    virtual void OnCancel() override;
+    virtual BOOL OnInitDialog() override;
+    virtual void OnOK() override;
+    virtual BOOL OnQueryCancel() override;
+    virtual BOOL OnSetActive() override;
 
 private:
-    CButtonPage(const CButtonPage&);                // Disable copy construction
-    CButtonPage& operator=(const CButtonPage&);   // Disable assignment operator
+    CButtonPage(const CButtonPage&) = delete;
+    CButtonPage& operator=(const CButtonPage&) = delete;
 };
 
 
@@ -62,19 +63,19 @@ private:
 class CComboPage : public CPropertyPage
 {
 public:
-    CComboPage(UINT templateID, LPCTSTR title  = NULL);
-    virtual ~CComboPage() {}
+    CComboPage(UINT templateID, LPCWSTR title  = nullptr);
+    virtual ~CComboPage() override {}
 
 protected:
     // Virtual functions that override base class functions.
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnApply();
-    virtual BOOL OnInitDialog();
-    virtual BOOL OnSetActive();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnApply() override;
+    virtual BOOL OnInitDialog() override;
+    virtual BOOL OnSetActive() override;
 
 private:
-    CComboPage(const CComboPage&);                // Disable copy construction
-    CComboPage& operator=(const CComboPage&);   // Disable assignment operator
+    CComboPage(const CComboPage&) = delete;
+    CComboPage& operator=(const CComboPage&) = delete;
 };
 
 

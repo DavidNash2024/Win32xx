@@ -23,7 +23,7 @@ CView::~CView()
 
 // Loads a bitmap image from a file.
 // Only bitmap images (bmp files) can be loaded.
-BOOL CView::LoadFileImage(LPCTSTR filename)
+BOOL CView::LoadFileImage(LPCWSTR filename)
 {
     m_image.DeleteObject();
     CSize totalSize;
@@ -34,7 +34,7 @@ BOOL CView::LoadFileImage(LPCTSTR filename)
         {
             CString str("Failed to load file:  ");
             str += filename;
-            MessageBox(str, _T("File Load Error"), MB_ICONWARNING);
+            MessageBox(str, L"File Load Error", MB_ICONWARNING);
         }
     }
 
@@ -52,11 +52,11 @@ BOOL CView::LoadFileImage(LPCTSTR filename)
     }
 
     SetScrollSizes(totalSize);
-    return (m_image.GetHandle()!= NULL);
+    return (m_image.GetHandle()!= nullptr);
 }
 
 // Select the printer, and call QuickPrint.
-void CView::Print(LPCTSTR docName)
+void CView::Print(LPCWSTR docName)
 {
     CPrintDialog printDlg;
 
@@ -73,7 +73,7 @@ void CView::PrintPage(CDC& dc, int)
 {
     try
     {
-        if (m_image.GetHandle() != NULL)
+        if (m_image.GetHandle() != nullptr)
         {
             BITMAP bitmap = m_image.GetBitmapData();
             int bmWidth = bitmap.bmWidth;
@@ -98,9 +98,9 @@ void CView::PrintPage(CDC& dc, int)
 
             // Extract the device independent image data.
             CMemDC memDC(viewDC);
-            memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS);
+            memDC.GetDIBits(m_image, 0, bmHeight, nullptr, pbmi, DIB_RGB_COLORS);
             std::vector<byte> byteArray(pBIH->biSizeImage, 0);
-            byte* pByteArray = &byteArray.front();
+            byte* pByteArray = byteArray.data();
             memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 
             // Copy (stretch) the DI bits to the specified dc.
@@ -112,12 +112,12 @@ void CView::PrintPage(CDC& dc, int)
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 }
 
 // Prints the image on the current default printer.
-void CView::QuickPrint(LPCTSTR docName)
+void CView::QuickPrint(LPCWSTR docName)
 {
     try
     {
@@ -142,12 +142,12 @@ void CView::QuickPrint(LPCTSTR docName)
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 }
 
 // Saves the bitmap to a file.
-BOOL CView::SaveFileImage(LPCTSTR fileName)
+BOOL CView::SaveFileImage(LPCWSTR fileName)
 {
     CFile file;
     BOOL result = FALSE;
@@ -159,18 +159,17 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
        CBitmapInfoPtr pbmi(m_image);
 
        // Create the reference DC for GetDIBits to use
-       CMemDC memDC(NULL);
+       CMemDC memDC(nullptr);
 
        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-       VERIFY(memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS));
+       VERIFY(memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, nullptr, pbmi, DIB_RGB_COLORS));
        std::vector<byte> byteArray(pbmi->bmiHeader.biSizeImage, 0);
-       byte* pByteArray = &byteArray.front();
+       byte* pByteArray = byteArray.data();
 
        VERIFY(memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
 
        LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
-       BITMAPFILEHEADER hdr;
-       ZeroMemory(&hdr, sizeof(BITMAPFILEHEADER));
+       BITMAPFILEHEADER hdr{};
        hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M"
        hdr.bfSize = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
        hdr.bfOffBits = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD));
@@ -185,7 +184,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
     catch (const CFileException& e)
     {
         CString str = CString("Failed to save file: ") + e.GetFilePath();
-        MessageBox(str, AtoT(e.what()), MB_OK);
+        MessageBox(str, AtoW(e.what()), MB_OK);
         result = FALSE;
     }
 
@@ -228,7 +227,8 @@ void CView::OnDraw(CDC& dc)
         }
 
         CRect rc = GetClientRect();
-        dc.DrawText(_T("Use the Menu or ToolBar to open a Bitmap File"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        dc.DrawText(L"Use the Menu or ToolBar to open a Bitmap File",
+            -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     }
 }
 
@@ -272,7 +272,7 @@ void CView::OnInitialUpdate()
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the Window Class name
-    cs.lpszClass = _T("View");
+    cs.lpszClass = L"View";
 
     cs.style = WS_CHILD | WS_HSCROLL | WS_VSCROLL ;
 
@@ -299,10 +299,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -310,7 +310,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

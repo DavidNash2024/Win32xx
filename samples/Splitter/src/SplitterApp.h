@@ -16,15 +16,15 @@ class CSplitterApp : public CWinApp
 {
 public:
     CSplitterApp();
-    virtual ~CSplitterApp()  {}
+    virtual ~CSplitterApp() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CSplitterApp(const CSplitterApp&);               // Disable copy construction
-    CSplitterApp& operator=(const CSplitterApp&);    // Disable assignment operator
+    CSplitterApp(const CSplitterApp&) = delete;
+    CSplitterApp& operator=(const CSplitterApp&) = delete;
 
     CMainFrame m_frame;
 };

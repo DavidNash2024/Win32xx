@@ -16,15 +16,15 @@ class CTrayApp : public CWinApp
 {
 public:
     CTrayApp();
-    virtual ~CTrayApp() {}
+    virtual ~CTrayApp() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CTrayApp(const CTrayApp&);               // Disable copy construction
-    CTrayApp& operator=(const CTrayApp&);    // Disable assignment operator
+    CTrayApp(const CTrayApp&) = delete;
+    CTrayApp& operator=(const CTrayApp&) = delete;
 
     CView m_view;
 };

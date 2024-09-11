@@ -45,10 +45,10 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -56,7 +56,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -94,12 +94,12 @@ BOOL CMyDialog::OnInitDialog()
     AttachItem(IDC_RICHEDIT1, m_richEdit);
 
     // Put some text in the edit boxes
-    SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
-    SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
+    SetDlgItemText(IDC_EDIT1, L"Edit Control");
+    SetDlgItemText(IDC_RICHEDIT1, L"Rich Edit Window");
 
     // Put some text in the list box
     for (int i = 0; i < 8; i++)
-        m_listBox.AddString(_T("ListBox"));
+        m_listBox.AddString(L"ListBox");
 
     // Select the first radio button
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
@@ -116,14 +116,14 @@ BOOL CMyDialog::OnInitDialog()
 // Called when the OK button or Enter key is pressed.
 void CMyDialog::OnOK()
 {
-    MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
+    MessageBox(L"OK Button Pressed.  Program will exit now.", L"Button", MB_OK);
     CDialog::OnOK();
 }
 
 // Called when the button is pressed.
 BOOL CMyDialog::OnButton()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Button Pressed"));
+    SetDlgItemText(IDC_STATIC3, L"Button Pressed");
     TRACE("Button Pressed\n");
     return TRUE;
 }
@@ -131,7 +131,7 @@ BOOL CMyDialog::OnButton()
 // Called when Check Box 1 is clicked.
 BOOL CMyDialog::OnCheck1()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Check Box 1"));
+    SetDlgItemText(IDC_STATIC3, L"Check Box 1");
     TRACE("Check Box 1\n");
     return TRUE;
 }
@@ -139,7 +139,7 @@ BOOL CMyDialog::OnCheck1()
 // Called when Check Box 2 is clicked.
 BOOL CMyDialog::OnCheck2()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Check Box 2"));
+    SetDlgItemText(IDC_STATIC3, L"Check Box 2");
     TRACE("Check Box 2\n");
     return TRUE;
 }
@@ -147,7 +147,7 @@ BOOL CMyDialog::OnCheck2()
 // Called when Check Box 3 is clicked.
 BOOL CMyDialog::OnCheck3()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Check Box 3"));
+    SetDlgItemText(IDC_STATIC3, L"Check Box 3");
     TRACE("Check Box 3\n");
     return TRUE;
 }
@@ -159,7 +159,7 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 
     CString str;
     UINT button = idClicked - idFirst + 1U;
-    str << _T("Radio") << button;
+    str << "Radio" << button;
     TRACE(str); TRACE("\n");
     SetDlgItemText(IDC_STATIC3, str);
 

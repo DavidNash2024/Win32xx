@@ -12,15 +12,15 @@ class CMyButton : public CButton
 {
 public:
     CMyButton() {}
-    virtual ~CMyButton() {}
+    virtual ~CMyButton() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMyButton(const CMyButton&);               // Disable copy construction
-    CMyButton& operator=(const CMyButton&);    // Disable assignment operator
+    CMyButton(const CMyButton&) = delete;
+    CMyButton& operator=(const CMyButton&) = delete;
 
     // Message handlers
     LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);

@@ -26,18 +26,18 @@ MyFindReplaceDialog : public CFindReplaceDialog
 {
     public:
         MyFindReplaceDialog() {}
-        virtual ~MyFindReplaceDialog() {}
+        virtual ~MyFindReplaceDialog() override {}
 
           // Record the title of the find/replace dialog box after an object
           // of this class is constructed, but before DoModal() is invoked.
-        virtual void SetBoxTitle(LPCTSTR title) {m_boxTitle = title; }
+        void SetBoxTitle(LPCWSTR title) {m_boxTitle = title; }
 
     protected:
-        virtual BOOL OnInitDialog(){ SetWindowText(m_boxTitle); return TRUE; }
+        virtual BOOL OnInitDialog() override { SetWindowText(m_boxTitle); return TRUE; }
 
     private:
-        MyFindReplaceDialog(const MyFindReplaceDialog&);              // Disable copy construction
-        MyFindReplaceDialog& operator=(const MyFindReplaceDialog&);   // Disable assignment operator
+        MyFindReplaceDialog(const MyFindReplaceDialog&) = delete;
+        MyFindReplaceDialog& operator=(const MyFindReplaceDialog&) = delete;
 
         CString m_boxTitle;
 };

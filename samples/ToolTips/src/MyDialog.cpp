@@ -33,10 +33,10 @@ LRESULT CBalloonToolTip::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -44,7 +44,7 @@ LRESULT CBalloonToolTip::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -86,10 +86,10 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -97,7 +97,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -135,12 +135,12 @@ BOOL CMyDialog::OnInitDialog()
     AttachItem(IDC_RICHEDIT1, m_richEdit);
 
     // Put some text in the edit boxes.
-    SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
-    SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
+    SetDlgItemText(IDC_EDIT1, L"Edit Control");
+    SetDlgItemText(IDC_RICHEDIT1, L"Rich Edit Window");
 
     // Put some text in the list box.
     for (int i = 0 ; i < 8 ; i++)
-        SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
+        SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM)L"List Box");
 
     // Select the first radio button.
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
@@ -153,22 +153,22 @@ BOOL CMyDialog::OnInitDialog()
     m_bubbleTT.SetTipBkColor(RGB(150, 255, 255));
 
     // Add controls to the bubble tooltip.
-    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO1), _T("Radio Button 1"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO2), _T("Radio Button 2"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO3), _T("Radio Button 3"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_BUTTON1), _T("Button 1"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK1), _T("Check Box 1"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK2), _T("Check Box 2"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK3), _T("Check Box 3"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_LIST1), _T("List Box"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC1), _T("Picture in a static control"));
-    m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC3), _T("Status display"));
-    m_bubbleTT.AddTool(GetDlgItem(IDOK), _T("OK Button"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO1), L"Radio Button 1");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO2), L"Radio Button 2");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO3), L"Radio Button 3");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_BUTTON1), L"Button 1");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK1), L"Check Box 1");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK2), L"Check Box 2");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK3), L"Check Box 3");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_LIST1), L"List Box");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC1), L"Picture in a static control");
+    m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC3), L"Status display");
+    m_bubbleTT.AddTool(GetDlgItem(IDOK), L"OK Button");
 
     // Modify tooltip for IDC_RADIO3.
     TOOLINFO ti1 = m_bubbleTT.GetToolInfo(GetDlgItem(IDC_RADIO3));
     ti1.uFlags |= TTF_CENTERTIP;
-    ti1.lpszText = const_cast<LPTSTR>(_T("Modified tooltip for Radio Button 3"));
+    ti1.lpszText = const_cast<LPWSTR>(L"Modified tooltip for Radio Button 3");
     m_bubbleTT.SetToolInfo(ti1);
 
     // Create a standard tooltip for the Edit and RichEdit controls.
@@ -188,9 +188,9 @@ BOOL CMyDialog::OnInitDialog()
 #ifdef  TTM_SETTITLE    // not supported by some GNU compilers
     // Add Title and Icon to the tooltip (a pretty icon for Vista and above).
     if (GetWinVersion() >= 2600)
-        m_toolTip.SetTitle((UINT)(UINT_PTR)(m_info), _T("Displaying the contents of the control ..."));
+        m_toolTip.SetTitle((UINT)(UINT_PTR)(m_info), L"Displaying the contents of the control ...");
     else
-        m_toolTip.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
+        m_toolTip.SetTitle(TTI_INFO, L"Displaying the contents of the control ...");
 #endif
 
     // Calculate left half and right have rectangles.
@@ -200,8 +200,8 @@ BOOL CMyDialog::OnInitDialog()
     rightRect.left = rightRect.right / 2;
 
     // Specify a tooltip using a RECT and a user ID.
-    m_bubbleTT.AddTool(*this, leftRect,  1, _T("Client area, left side"));
-    m_bubbleTT.AddTool(*this, rightRect, 2, _T("Client area, right side"));
+    m_bubbleTT.AddTool(*this, leftRect,  1, L"Client area, left side");
+    m_bubbleTT.AddTool(*this, rightRect, 2, L"Client area, right side");
 
     // Ajust the pattern image size.
     m_patternImage.LoadBitmap(IDB_BITMAP1);
@@ -226,13 +226,13 @@ LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lparam)
             {
                 m_str = m_edit.GetWindowText();
                 if (m_str.IsEmpty()) m_str = "No text to display";
-                lpnmtdi->lpszText = const_cast<LPTSTR>(m_str.c_str());
+                lpnmtdi->lpszText = const_cast<LPWSTR>(m_str.c_str());
             }
             else if (lpnmtdi->hdr.idFrom == (UINT_PTR)m_richEdit.GetHwnd())
             {
                 m_str = m_richEdit.GetWindowText();
                 if (m_str.IsEmpty()) m_str = "No text to display";
-                lpnmtdi->lpszText = const_cast<LPTSTR>(m_str.c_str());
+                lpnmtdi->lpszText = const_cast<LPWSTR>(m_str.c_str());
             }
         }
     }
@@ -242,34 +242,34 @@ LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lparam)
 
 void CMyDialog::OnOK()
 {
-    MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
+    MessageBox(L"OK Button Pressed.  Program will exit now.", L"Button", MB_OK);
     CDialog::OnOK();
 }
 
 BOOL CMyDialog::OnButton()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Button Pressed"));
+    SetDlgItemText(IDC_STATIC3, L"Button Pressed");
     TRACE("Button Pressed\n");
     return TRUE;
 }
 
 BOOL CMyDialog::OnCheck1()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Check Box 1"));
+    SetDlgItemText(IDC_STATIC3, L"Check Box 1");
     TRACE("Check Box 1\n");
     return TRUE;
 }
 
 BOOL CMyDialog::OnCheck2()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Check Box 2"));
+    SetDlgItemText(IDC_STATIC3, L"Check Box 2");
     TRACE("Check Box 2\n");
     return TRUE;
 }
 
 BOOL CMyDialog::OnCheck3()
 {
-    SetDlgItemText(IDC_STATIC3, _T("Check Box 3"));
+    SetDlgItemText(IDC_STATIC3, L"Check Box 3");
     TRACE("Check Box 3\n");
     return TRUE;
 }
@@ -280,7 +280,7 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 
     CString str;
     int button = clickedID - firstID + 1;
-    str.Format(_T("Radio%d"), button);
+    str.Format(L"Radio%d", button);
     SetDlgItemText(IDC_STATIC3, str);
     TRACE(str); TRACE("\n");
 

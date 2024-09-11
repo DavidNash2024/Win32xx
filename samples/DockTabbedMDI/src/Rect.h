@@ -19,19 +19,19 @@ class CViewRect : public CWnd
 {
 public:
     CViewRect() : m_cxClientMax(0), m_cyClientMax(0) {}
-    virtual ~CViewRect() {}
+    virtual ~CViewRect() override {}
 
 protected:
     // Virtual functions that override base class functions
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnDestroy();
-    virtual void    OnDraw(CDC& dc);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnDestroy() override;
+    virtual void    OnDraw(CDC& dc) override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewRect(const CViewRect&);               // Disable copy construction
-    CViewRect& operator=(const CViewRect&);    // Disable assignment operator
+    CViewRect(const CViewRect&) = delete;
+    CViewRect& operator=(const CViewRect&) = delete;
 
     // Command handlers
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);

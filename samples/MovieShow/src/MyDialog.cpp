@@ -6,8 +6,8 @@
 #include "MyDialog.h"
 #include "resource.h"
 
-///////////////////////////////////
-// CViewDialog function definitions
+////////////////////////////////////
+// CViewDialog function definitions.
 //
 
 // Constructor.
@@ -21,7 +21,7 @@ CViewDialog::~CViewDialog()
 }
 
 // This function appends text to an edit control.
-void CViewDialog::AppendText(int nID, LPCTSTR text)
+void CViewDialog::AppendText(int nID, LPCWSTR text)
 {
     // Append Line Feed.
     LRESULT ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
@@ -60,7 +60,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -71,7 +71,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -154,17 +154,17 @@ void CViewDialog::SetDialogFonts()
 }
 
 
-///////////////////////////////////
-// CDockDialog function definitions
+////////////////////////////////////
+// CDockDialog function definitions.
 //
 
 // Constructor.
 CDockDialog::CDockDialog() : m_view(IDD_MYDIALOG)
 {
-    // Set the view window to our edit control
+    // Set the view window to our edit control.
     SetView(m_view);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 }
 
@@ -181,7 +181,7 @@ LRESULT CDockDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -192,7 +192,7 @@ LRESULT CDockDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

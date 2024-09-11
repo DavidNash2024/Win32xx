@@ -12,19 +12,19 @@ class CMyDialog : public CDialog
 {
 public:
     CMyDialog(UINT resID);
-    virtual ~CMyDialog();
+    virtual ~CMyDialog() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDestroy();
-    virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnOK();
+    virtual void OnDestroy() override;
+    virtual BOOL OnInitDialog() override;
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual void OnOK() override;
 
 private:
-    CMyDialog(const CMyDialog&);               // Disable copy construction
-    CMyDialog& operator=(const CMyDialog&);    // Disable assignment operator
+    CMyDialog(const CMyDialog&) = delete;
+    CMyDialog& operator=(const CMyDialog&) = delete;
 
     // Command handlers
     BOOL OnButton();

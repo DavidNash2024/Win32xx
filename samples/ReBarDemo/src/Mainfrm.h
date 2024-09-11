@@ -16,25 +16,25 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
     void DpiScaleReBar();
 
 protected:
     // Virtual functions that override base class functions
-    virtual CRect   GetViewRect() const;
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void    OnInitialUpdate();
-    virtual void    SetupMenuIcons();
-    virtual void    SetupToolBar();
-    virtual void    RecalcLayout();
-    virtual LRESULT WndProc(UINT msg, WPARAM wmaram, LPARAM lmaram);
+    virtual CRect   GetViewRect() const override;
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void    OnInitialUpdate() override;
+    virtual void    SetupMenuIcons() override;
+    virtual void    SetupToolBar() override;
+    virtual void    RecalcLayout() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wmaram, LPARAM lmaram) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Command handlers
     BOOL OnFileExit();

@@ -21,7 +21,7 @@ CMyWinThread::~CMyWinThread()
 {
     CloseThread();
     CString str;
-    str.Format(_T("Thread %d has ended\n"), m_threadNumber);
+    str.Format(L"Thread %d has ended\n", m_threadNumber);
     Trace(str);
 }
 
@@ -32,7 +32,7 @@ void CMyWinThread::CloseThread()
         m_testWnd.Close();
 
     CString str;
-    str.Format(_T("Test Window %d destroyed"), m_threadNumber);
+    str.Format(L"Test Window %d destroyed", m_threadNumber);
 
     // We use SendMessage here to keep the str pointer in scope.
     ::SendMessage(m_mainWindow, UWM_APPENDTEXT, (WPARAM)&str, 0);
@@ -62,8 +62,8 @@ BOOL CMyWinThread::InitInstance()
     {
         // Display the exception and quit.
         CString str;
-        str << e.GetText() << _T("\n") << e.GetErrorString();
-        ::MessageBox(NULL, str, _T("An exception occurred"), MB_ICONERROR);
+        str << e.GetText() << L'\n' << e.GetErrorString();
+        ::MessageBox(nullptr, str, L"An exception occurred", MB_ICONERROR);
 
         return FALSE;
     }

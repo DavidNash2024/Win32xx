@@ -13,18 +13,17 @@ class CMyCombo : public CComboBoxEx
 {
 public:
     CMyCombo();
-    virtual ~CMyCombo();
+    virtual ~CMyCombo() override;
     BOOL AddItems();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMyCombo(const CMyCombo&);               // Disable copy construction
-    CMyCombo& operator=(const CMyCombo&);    // Disable assignment operator
-
+    CMyCombo(const CMyCombo&) = delete;
+    CMyCombo& operator=(const CMyCombo&) = delete;
     void SetImages(UINT bitmapID, int imageCount);
 
     // Member variables

@@ -16,14 +16,14 @@ class CMDIDemoApp : public CWinApp
 {
 public:
     CMDIDemoApp();
-    virtual ~CMDIDemoApp() {}
+    virtual ~CMDIDemoApp() override {}
 
 protected:
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CMDIDemoApp(const CMDIDemoApp&);               // Disable copy construction
-    CMDIDemoApp& operator=(const CMDIDemoApp&);    // Disable assignment operator
+    CMDIDemoApp(const CMDIDemoApp&) = delete;
+    CMDIDemoApp& operator=(const CMDIDemoApp&) = delete;
 
     CMainMDIFrame m_mainMDIFrame;
 };

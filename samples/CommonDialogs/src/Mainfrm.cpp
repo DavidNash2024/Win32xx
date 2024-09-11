@@ -51,7 +51,7 @@ DropFiles(LPARAM lparam)                                                    /*
 {
     ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
     HDROP hDropinfo = (HDROP) ENDrop->hDrop;
-    TCHAR szFileName[_MAX_PATH];
+    wchar_t szFileName[_MAX_PATH];
     ::DragQueryFile((HDROP)hDropinfo, 0, szFileName, _MAX_PATH);
     OpenDoc(szFileName);
     ::DragFinish(hDropinfo);
@@ -69,9 +69,8 @@ EmptyMRUList()                                                              /*
       // use a separate list to get the entries
     const std::vector<CString>& MRUEntries = GetMRUEntries();
       // then remove items from the MRU list one by one
-    std::vector<CString>::const_iterator it;
-    for (it = MRUEntries.begin(); it != MRUEntries.end(); ++it)
-        RemoveMRUEntry(*it);
+    for (const CString& str : MRUEntries)
+        RemoveMRUEntry(str);
 }
 
 /*============================================================================*/
@@ -84,16 +83,16 @@ InitCtlColors()                                                             /*
     deserialization in subsequent executions.
 *-----------------------------------------------------------------------------*/
 {
-    m_colorChoice.AddColorChoice(DlgBg,     _T("o  Dialog background"),
+    m_colorChoice.AddColorChoice(DlgBg,     L"o  Dialog background",
         COLOR_LT_BLUE);
-    m_colorChoice.AddColorChoice(SBBg,      _T("o  Status bar background"),
+    m_colorChoice.AddColorChoice(SBBg,      L"o  Status bar background",
         GetStatusBarTheme().clrBkgnd1);
       // richedit controls (these are set differently than the others)
-    m_colorChoice.AddColorChoice(REdTxFg,   _T("o  RichEdit text foreground"),
+    m_colorChoice.AddColorChoice(REdTxFg,   L"o  RichEdit text foreground",
         COLOR_WHITE);
-    m_colorChoice.AddColorChoice(REdTxBg,   _T("o  RichEdit text background"),
+    m_colorChoice.AddColorChoice(REdTxBg,   L"o  RichEdit text background",
         COLOR_RED);
-    m_colorChoice.AddColorChoice(REdBg,     _T("o  RichEdit background"),
+    m_colorChoice.AddColorChoice(REdBg,     L"o  RichEdit background",
         COLOR_LT_RED);
 }
 
@@ -108,10 +107,10 @@ LoadPersistentData()                                                        /*
       // determine the availability of the archive file
     if (_taccess(m_archivePath, 0x04) != 0)
     {
-        CString msg = _T("Default values are being used on this first\n")
-            _T("startup. Your customized settings, colors, and font\n")
-            _T("will be restored in future usages.\n");
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        CString msg = "Default values are being used on this first\n";
+        msg += L"startup. Your customized settings, colors, and font\n";
+        msg += L"will be restored in future usages.\n";
+        ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         return;
     }
@@ -126,9 +125,9 @@ LoadPersistentData()                                                        /*
     }
     catch(...) // catch all exceptions in trying to load the archive
     {
-        CString msg = _T("Previous settings could not be restored.\n")
-            _T("Unable to read archived values.\n");
-        ::MessageBox(NULL, msg, _T("Exception"), MB_OK | MB_ICONSTOP |
+        CString msg = "Previous settings could not be restored.\n";
+        msg += "Unable to read archived values.\n";
+        ::MessageBox(nullptr, msg, L"Exception", MB_OK | MB_ICONSTOP |
             MB_TASKMODAL);
     }
 
@@ -147,7 +146,7 @@ OnCloseDoc()                                                                /*
 {
     m_docDir = m_doc.GetDocDir(); // save for next file open/save
     m_doc.OnCloseDoc();
-    SetWindowTitle(_T(""));
+    SetWindowTitle(L"");
     GetRichView().Clean();
     m_view.NoDocOpen();
 }
@@ -329,9 +328,8 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
 
       // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
-      // set theme colors, if supported
-    if (IsReBarSupported())
-        SetThemeColors();  //Set the theme colors
+      // set theme colors
+    SetThemeColors();  //Set the theme colors
       // establish communications
     m_doc.SetDataPath(&m_view);
       // populate the initial control colors (will be overwritten by
@@ -348,11 +346,11 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
       // set the initial flags to use the font style,
     CHOOSEFONT cf = m_fontChoice.GetParameters();
     cf.Flags |= CF_USESTYLE;
-    cf.lpszStyle = const_cast<LPTSTR>(_T("Regular")); // initial font
+    cf.lpszStyle = const_cast<LPWSTR>(L"Regular"); // initial font
     m_fontChoice.SetParameters(cf);
       // set the default font
     CFont f;
-    f.CreatePointFont(100, _T("Courier New"));
+    f.CreatePointFont(100, L"Courier New");
     m_fontChoice.SetChoiceFont(f);
     m_fontChoice.SetColor(m_colorChoice.GetTableColor(REdTxFg));
     m_view.SetEditFont(f);
@@ -375,8 +373,8 @@ OnEditFind()                                                                /*
     CDoc::OnFindReplace() method by the CMainFrame::WndProc() message loop.
 *-----------------------------------------------------------------------------*/
 {
-    m_findReplaceDlg.SetBoxTitle(_T("Find a string..."));
-    m_findReplaceDlg.Create(TRUE, _T("Initial Text"), _T(""), FR_DOWN |
+    m_findReplaceDlg.SetBoxTitle(L"Find a string...");
+    m_findReplaceDlg.Create(TRUE, L"Initial Text", L"", FR_DOWN |
         FR_ENABLEHOOK, *this);
 }
 
@@ -391,8 +389,8 @@ OnEditReplace()                                                             /*
     This is "by design."
 *-----------------------------------------------------------------------------*/
 {
-    m_findReplaceDlg.SetBoxTitle(_T("Find, then Replace"));
-    m_findReplaceDlg.Create(FALSE, _T("Initial Text"), _T("Replace Text"),
+    m_findReplaceDlg.SetBoxTitle(L"Find, then Replace");
+    m_findReplaceDlg.Create(FALSE, L"Initial Text", L"Replace Text",
         FR_DOWN | FR_ENABLEHOOK, *this);
 }
 
@@ -417,7 +415,7 @@ OnFontChoice()                                                              /*
 {
     HWND hOwnerWnd = GetApp()->GetMainWnd();
       // open the dialog
-    m_fontChoice.SetBoxTitle(_T("Select font for rich edit box"));
+    m_fontChoice.SetBoxTitle(L"Select font for rich edit box");
     LOGFONT lf;
     m_fontChoice.GetChoiceFont().GetObject(sizeof(LOGFONT), &lf);
     CHOOSEFONT cf = m_fontChoice.GetParameters();
@@ -469,13 +467,13 @@ OnInitialUpdate()                                                           /*
       // Resize the rich text window within the client window
     CRect rc = m_view.GetClientRect();
     rc.DeflateRect(10, 10);
-    GetRichView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+    GetRichView().SetWindowPos(nullptr, rc, SWP_SHOWWINDOW);
       // if there is a MRU item at the top of the list, use it
       // as the name of the document to open
     CString openPath = GetMRUEntry(0);
     CString msg;
-    msg.Format(_T("Open previous document?\n    %s"), openPath.c_str());
-    if (!openPath.IsEmpty() &&  (::MessageBox(NULL, msg, _T("Question..."),
+    msg.Format(L"Open previous document?\n    %s", openPath.c_str());
+    if (!openPath.IsEmpty() &&  (::MessageBox(nullptr, msg, L"Question...",
       MB_YESNO | MB_ICONQUESTION) == IDYES))
         OpenDoc(openPath);
 
@@ -504,7 +502,7 @@ OnNewDoc()                                                                  /*
         OFN_ENABLESIZING,
         m_docFilter
     );
-    fd.SetBoxTitle(_T("New document file..."));
+    fd.SetBoxTitle(L"New document file...");
     fd.SetDefExt(m_docFilter);
     CString msg;
       // do not leave without a valid unused file name, unless cancelled
@@ -520,13 +518,13 @@ OnNewDoc()                                                                  /*
             return;
         }
           // prompt the user to try again
-        msg.Format(_T("That document file\n    '%s'\n")
-            _T("already exists."), selected.c_str());
-        ::MessageBox(NULL, msg, _T("Error"), MB_OK |
+        msg.Format(L"That document file\n    '%s'\n"
+            L"already exists.", selected.c_str());
+        ::MessageBox(nullptr, msg, L"Error", MB_OK |
             MB_ICONERROR | MB_TASKMODAL);
     }
-    msg = _T("No name was entered, no action was taken.");
-    ::MessageBox(NULL, msg, _T("Information"),
+    msg = L"No name was entered, no action was taken.";
+    ::MessageBox(nullptr, msg, L"Information",
         MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
     return;
 }
@@ -570,7 +568,7 @@ OnOpenDoc()                                                            /*
         OFN_ENABLESIZING,
         m_docFilter
     );
-    fd.SetBoxTitle(_T("Open document file..."));
+    fd.SetBoxTitle(L"Open document file...");
     fd.SetDefExt(m_docExt);
     CString msg;
     if (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
@@ -580,8 +578,8 @@ OnOpenDoc()                                                            /*
             return;
     }
 
-    msg = _T("No valid name was entered, no action was taken.");
-    ::MessageBox(NULL, msg, _T("Information"),
+    msg = "No valid name was entered, no action was taken.";
+    ::MessageBox(nullptr, msg, L"Information",
         MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
     return;
 }
@@ -639,7 +637,7 @@ OnSaveAs()                                                                  /*
         OFN_NONETWORKBUTTON,
         m_docFilter             // filter defined by app
      );
-    fd.SetBoxTitle(_T("Save document file as"));
+    fd.SetBoxTitle(L"Save document file as");
     CString msg;
       // query user for the save-as file path name
     if (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
@@ -650,9 +648,9 @@ OnSaveAs()                                                                  /*
           // check if the input path is the one already open
         if (selected.CompareNoCase(m_doc.GetDocPath()) == 0)
         {     // the named paths are the same
-            msg.Format(_T("Document file\n    '%s'\n is already ")
-                _T("open. No action taken"), m_doc.GetDocPath().c_str());
-            ::MessageBox(NULL, msg, _T("Information"),
+            msg.Format(L"Document file\n    '%s'\n is already "
+                L"open. No action taken", m_doc.GetDocPath().c_str());
+            ::MessageBox(nullptr, msg, L"Information",
                 MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
             return;
         }
@@ -664,17 +662,17 @@ OnSaveAs()                                                                  /*
           // open it for operations
         if (!OpenDoc(selected))
         {
-            msg.Format(_T("Saved document file\n    '%s'")
-                _T(" could not be reopened."), selected.c_str());
-            ::MessageBox(NULL, msg, _T("Information"),
+            msg.Format(L"Saved document file\n    '%s'"
+                L" could not be reopened.", selected.c_str());
+            ::MessageBox(nullptr, msg, L"Information",
                 MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
               // reopen the current file at entry
             OpenDoc(current_doc);
             return;
         }
     }
-    msg = _T("No name was entered, no action was taken.");
-    ::MessageBox(NULL, msg, _T("Information"),
+    msg = "No name was entered, no action was taken.";
+    ::MessageBox(nullptr, msg, L"Information",
         MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
@@ -691,7 +689,7 @@ OnWrapText()                                                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OpenDoc(LPCTSTR docPath)                                             /*
+OpenDoc(LPCWSTR docPath)                                             /*
 
     Open the document from the given path. Return TRUE if successful, FALSE
     otherwise.
@@ -700,8 +698,8 @@ OpenDoc(LPCTSTR docPath)                                             /*
    if (CString(docPath).CompareNoCase(m_doc.GetDocPath()) == 0)
     {
         CString msg;
-        msg.Format(_T("Document file\n    '%s'\nis already open."), docPath);
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        msg.Format(L"Document file\n    '%s'\nis already open.", docPath);
+        ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
           // not deemed a failure, as the file is open, as specified
         return TRUE;
@@ -766,16 +764,16 @@ SaveRegistrySettings()                                                      /*
     {
           // Process the exception and quit
         CString msg;
-        msg.Format(_T("%s\n%s\n%s"),
-            _T("Program settings could not be saved."),
+        msg.Format(L"%s\n%s\n%s",
+            L"Program settings could not be saved.",
             e.GetErrorString(), e.what());
-        ::MessageBox(NULL, msg, _T("Exception"), MB_OK | MB_ICONSTOP |
+        ::MessageBox(nullptr, msg, L"Exception", MB_OK | MB_ICONSTOP |
             MB_TASKMODAL);
     }
     catch(...)
     {
-        CString msg = _T("\nProgram settings could not be saved.\n    ");
-        ::MessageBox(NULL, msg, _T("Unregistered Exception"), MB_OK |
+        CString msg = "\nProgram settings could not be saved.\n    ";
+        ::MessageBox(nullptr, msg, L"Unregistered Exception", MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
     }
     return TRUE;
@@ -854,8 +852,7 @@ Serialize(CArchive &ar)                                                     /*
         }
           // all successfully read in, so store them LIFO order into
           // the MRU list for proper display
-        std::vector<CString>::reverse_iterator it;
-        for (it = vMRUEntries.rbegin(); it != vMRUEntries.rend(); ++it)
+        for (auto it = vMRUEntries.rbegin(); it != vMRUEntries.rend(); ++it)
         {
             AddMRUEntry(*it);
         }
@@ -923,24 +920,20 @@ SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
     Set the colors to be used in the rebar theme.
 *-----------------------------------------------------------------------------*/
 {
-    if (IsReBarSupported())
-    {
-        ReBarTheme rt;
-        ZeroMemory(&rt, sizeof(rt));
-        rt.UseThemes    = TRUE;
-        rt.clrBkgnd1    = clrBkGnd1;
-        rt.clrBkgnd2    = clrBkGnd2;
-        rt.clrBand1     = clrBand1;
-        rt.clrBand2     = clrBand2;
-        rt.FlatStyle    = FALSE;
-        rt.BandsLeft    = TRUE;
-        rt.LockMenuBand = TRUE;
-        rt.RoundBorders = TRUE;
-        rt.ShortBands   = TRUE;
-        rt.UseLines     = TRUE;
+    ReBarTheme rt{};
+    rt.UseThemes    = TRUE;
+    rt.clrBkgnd1    = clrBkGnd1;
+    rt.clrBkgnd2    = clrBkGnd2;
+    rt.clrBand1     = clrBand1;
+    rt.clrBand2     = clrBand2;
+    rt.FlatStyle    = FALSE;
+    rt.BandsLeft    = TRUE;
+    rt.LockMenuBand = TRUE;
+    rt.RoundBorders = TRUE;
+    rt.ShortBands   = TRUE;
+    rt.UseLines     = TRUE;
 
-        SetReBarTheme(rt);
-    }
+    SetReBarTheme(rt);
 }
 
 /*============================================================================*/
@@ -992,7 +985,7 @@ SetupMenuIcons()                                                             /*
     data.push_back(IDW_ABOUT);
 
     // Specify the bitmap and mask for the menu icons.
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(255, 0, 255), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
@@ -1035,7 +1028,7 @@ SetupToolBar()                                                              /*
 
 /*============================================================================*/
     void CMainFrame::
-SetWindowTitle(LPCTSTR path)                                                /*
+SetWindowTitle(LPCWSTR path)                                                /*
 
     Put the app title and docPath name in the main window text. Limit the
     displayed text length to that of the frame.
@@ -1050,7 +1043,7 @@ SetWindowTitle(LPCTSTR path)                                                /*
       // only count "\\" as one character
     for (int i = 0; i < doclen; )
     {
-        i = docPath.Find(_T("\\"), i);
+        i = docPath.Find(L"\\", i);
         if (i < 0)
             break;
 
@@ -1059,7 +1052,7 @@ SetWindowTitle(LPCTSTR path)                                                /*
     }
       // form the caption title
     if (!docPath.IsEmpty())
-        appTitle  += _T(":    ") + docPath;
+        appTitle  += L":    " + docPath;
       // compute maximum characters in the caption from its height in pixels,
       // assumed to be proportional to the font width
     INT height = ::GetSystemMetrics(SM_CYCAPTION);
@@ -1074,7 +1067,7 @@ SetWindowTitle(LPCTSTR path)                                                /*
           // eliminate characters in the middle
         int mid = applen + (maxlen - applen - 1) / 2;
         appTitle.Delete(mid, appTitle.GetLength() - maxlen);
-        appTitle.Insert(mid, _T("..."));
+        appTitle.Insert(mid, L"...");
     }
     SetWindowText(appTitle);
 }
@@ -1136,7 +1129,7 @@ UpdateMRUMenu()                                                             /*
       // find in the leftmost submenu (i.e., the one with index 0)
     CMenu fileMenu = GetFrameMenu().GetSubMenu(0);
       // compute the index of the last entry in the MRU list
-    int last = static_cast<int>(std::min(static_cast<UINT>(GetMRUSize()), m_maxMRU)) - 1;
+    int last = static_cast<int>(std::min(GetMRUSize(), m_maxMRU)) - 1;
       // if there is no leftmost submenu, or if there are no entries to
       // post, or if we cannot modify the first entry to indicate an empty
       // MRU list, we cannot proceed
@@ -1147,12 +1140,11 @@ UpdateMRUMenu()                                                             /*
     }
       // insert the empty MRU list label in the top slot
     fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
-        IDW_FILE_MRU_FILE1, _T("Recent Files"));
+        IDW_FILE_MRU_FILE1, L"Recent Files");
     fileMenu.EnableMenuItem(IDW_FILE_MRU_FILE1, MF_BYCOMMAND | MF_GRAYED);
 
       // remove all the other MRU Menu entries
-    for (int i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 +
-        static_cast<int>(m_maxMRU); ++i)
+    for (UINT i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 + m_maxMRU; ++i)
         fileMenu.DeleteMenu(i, MF_BYCOMMAND);
       // if the list is not empty, there's more to do
     if (last >= 0)
@@ -1169,11 +1161,11 @@ UpdateMRUMenu()                                                             /*
             {
                   // eliminate middle if too long
                 s.Delete(mid, s.GetLength() - maxlen);
-                s.Insert(mid, _T("..."));
+                s.Insert(mid, L"...");
             }
             // Prefix with its number
             CString v;
-            v.Format(_T("%d "), i + 1);
+            v.Format(L"%d ", i + 1);
             strMRUShow[i] = v + s;
         }
 
@@ -1203,17 +1195,15 @@ ValidateMRU()                                                               /*
       // get a copy of the MRU list entries
     const std::vector<CString> MRUEntries = GetMRUEntries();
       // check them one by one as a valid file path
-    std::vector<CString>::const_iterator it;
-    for (it = MRUEntries.begin(); it != MRUEntries.end(); ++it)
+    for (const CString& str : MRUEntries)
     {
           // check whether the current entry exists
-        CString s = *it;
-        if (_taccess(s, 4) != 0)
+        if (_taccess(str, 4) != 0)
         {
               // for the demo, announce removal
-            ::MessageBox(NULL, s, _T("Removing invalid MRU entry..."),
+            ::MessageBox(nullptr, str, L"Removing invalid MRU entry...",
                 MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-            RemoveMRUEntry(s);
+            RemoveMRUEntry(str);
         }
     }
 }
@@ -1247,8 +1237,21 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
     catch (const CException& e)
     {
           // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-        return 0;
+        CString str1;
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
+
+      // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+          // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+    }
+
+    return 0;
 }
 /*----------------------------------------------------------------------------*/

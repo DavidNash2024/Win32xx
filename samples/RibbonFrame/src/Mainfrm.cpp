@@ -82,7 +82,7 @@ IUIRibbon* CMainFrame::GetIUIRibbon() const
 
 // Loads data from the specified file. It is called by OnFileOpen,
 // and when a file is dragged and dropped on the window.
-void CMainFrame::LoadFile(LPCTSTR fileName)
+void CMainFrame::LoadFile(LPCWSTR fileName)
 {
     try
     {
@@ -97,7 +97,7 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_pathName = L"";
         m_view.GetAllPoints().clear();
@@ -119,7 +119,7 @@ void CMainFrame::MRUFileOpen(UINT mruIndex)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         RemoveMRUEntry(mruText);
         m_view.GetAllPoints().clear();
@@ -170,8 +170,8 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     try
     {
-        // wparam is a pointer (LPCTSTR) to the filename.
-        LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+        // wparam is a pointer (LPCWSTR) to the filename.
+        LPCWSTR fileName = reinterpret_cast<LPCWSTR>(wparam);
         assert(fileName);
 
         // Load the file.
@@ -181,7 +181,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -211,7 +211,7 @@ BOOL CMainFrame::OnFileOpen()
 {
     try
     {
-        CFileDialog fileDlg(TRUE, L"dat", NULL, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
+        CFileDialog fileDlg(TRUE, L"dat", nullptr, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
         fileDlg.SetTitle(L"Open File");
 
         // Bring up the file open dialog retrieve the selected filename.
@@ -225,7 +225,7 @@ BOOL CMainFrame::OnFileOpen()
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -247,7 +247,7 @@ BOOL CMainFrame::OnFilePrint()
         // Display a message box indicating why printing failed.
         CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
         CString type = CString(e.what());
-        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+        ::MessageBox(nullptr, message, type, MB_ICONWARNING);
     }
 
     return TRUE;
@@ -267,7 +267,7 @@ BOOL CMainFrame::OnFileSave()
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -280,7 +280,7 @@ BOOL CMainFrame::OnFileSaveAs()
 {
     try
     {
-        CFileDialog FileDlg(FALSE, L"dat", NULL, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
+        CFileDialog FileDlg(FALSE, L"dat", nullptr, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
         FileDlg.SetTitle(L"Save File");
 
         // Bring up the file open dialog retrieve the selected filename.
@@ -298,7 +298,7 @@ BOOL CMainFrame::OnFileSaveAs()
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -312,7 +312,7 @@ BOOL CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
 {
     try
     {
-        if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
+        if (ppropvarValue != nullptr && key != nullptr && UI_PKEY_SelectedItem == *key)
         {
             UINT mruItem = ppropvarValue->ulVal;
             MRUFileOpen(mruItem);
@@ -322,7 +322,7 @@ BOOL CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -333,13 +333,13 @@ BOOL CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
 // OnPenColor is called when the DropdownColorPicker button is pressed.
 BOOL CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    if (ppropvarValue != NULL)
+    if (ppropvarValue != nullptr)
     {
         // Retrieve color type.
         UINT type = ppropvarValue->uintVal;
 
         // The Ribbon framework passes color as additional property if the color type is RGB.
-        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
+        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != nullptr)
         {
             // Retrieve color.
             PROPVARIANT var;
@@ -466,10 +466,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -477,7 +477,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

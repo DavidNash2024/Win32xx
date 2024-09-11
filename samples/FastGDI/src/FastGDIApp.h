@@ -14,16 +14,16 @@ class CFastGDIApp : public CWinApp
 {
 public:
     CFastGDIApp();
-    virtual ~CFastGDIApp();
+    virtual ~CFastGDIApp() override;
     CMainFrame& GetMainFrame() { return m_frame; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CFastGDIApp(const CFastGDIApp&);               // Disable copy construction
-    CFastGDIApp& operator=(const CFastGDIApp&);    // Disable assignment operator
+    CFastGDIApp(const CFastGDIApp&) = delete;
+    CFastGDIApp& operator=(const CFastGDIApp&) = delete;
 
     CMainFrame m_frame;
 };

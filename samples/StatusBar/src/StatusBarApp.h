@@ -16,15 +16,15 @@ class CStatusBarApp : public CWinApp
 {
 public:
     CStatusBarApp();
-    virtual ~CStatusBarApp();
+    virtual ~CStatusBarApp() override;
 
 protected:
     // Virtual functions that override base class functions.
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CStatusBarApp(const CStatusBarApp&);               // Disable copy construction
-    CStatusBarApp& operator=(const CStatusBarApp&);    // Disable assignment operator
+    CStatusBarApp(const CStatusBarApp&) = delete;
+    CStatusBarApp& operator=(const CStatusBarApp&) = delete;
 
     CMainFrame m_frame;
 };

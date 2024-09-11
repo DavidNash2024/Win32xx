@@ -14,16 +14,16 @@ class CDockSimple : public CDocker
 {
 public:
     CDockSimple();
-    virtual ~CDockSimple() {}
+    virtual ~CDockSimple() override {}
 
 protected:
     // Virtual functions overriding base class functions.
-    virtual void RecalcDockLayout();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void RecalcDockLayout() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockSimple(const CDockSimple&);               // Disable copy construction
-    CDockSimple& operator=(const CDockSimple&);    // Disable assignment operator
+    CDockSimple(const CDockSimple&) = delete;
+    CDockSimple& operator=(const CDockSimple&) = delete;
 
     CViewSimple m_view;
 };
@@ -36,16 +36,16 @@ class CDockClasses : public CDocker
 {
 public:
     CDockClasses();
-    virtual ~CDockClasses() {}
+    virtual ~CDockClasses() override {}
 
 protected:
     // Virtual functions overriding base class functions.
-    virtual void RecalcDockLayout();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void RecalcDockLayout() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockClasses(const CDockClasses&);               // Disable copy construction
-    CDockClasses& operator=(const CDockClasses&);    // Disable assignment operator
+    CDockClasses(const CDockClasses&) = delete;
+    CDockClasses& operator=(const CDockClasses&) = delete;
 
     CViewClasses m_view;
 };
@@ -58,16 +58,16 @@ class CDockFiles : public CDocker
 {
 public:
     CDockFiles();
-    virtual ~CDockFiles() {}
+    virtual ~CDockFiles() override {}
 
 protected:
     // Virtual functions overriding base class functions.
-    virtual void RecalcDockLayout();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void RecalcDockLayout() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockFiles(const CDockFiles&);               // Disable copy construction
-    CDockFiles& operator=(const CDockFiles&);    // Disable assignment operator
+    CDockFiles(const CDockFiles&) = delete;
+    CDockFiles& operator=(const CDockFiles&) = delete;
 
     CViewFiles m_view;
 };
@@ -80,16 +80,16 @@ class CDockText : public CDocker
 {
 public:
     CDockText();
-    virtual ~CDockText() {}
+    virtual ~CDockText() override {}
 
 protected:
     // Virtual functions overriding base class functions.
-    virtual void RecalcDockLayout();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void RecalcDockLayout() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockText(const CDockText&);               // Disable copy construction
-    CDockText& operator=(const CDockText&);    // Disable assignment operator
+    CDockText(const CDockText&) = delete;
+    CDockText& operator=(const CDockText&) = delete;
 
     CViewText m_view;
 };

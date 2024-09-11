@@ -30,8 +30,8 @@ namespace Calc
 
 
     //////////////////////////////////////////////////////
-    // This class provides a table of symbols.  Used for variables eg x,
-    // and constants such as   pi (3.141592654) and e = (2.718281828).
+    // This class provides a table of symbols.  Used for variables
+    // e.g. x, and constants such as pi (3.141592654) and e (2.718281828).
     // Each symbol has a defined value.
     class SymbolTable
     {

@@ -14,11 +14,11 @@ CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false), m_crVisite
                             m_crNotVisited(RGB(0,0,255))
 {
     // Create the cursor
-    m_cursor = ::LoadCursor(NULL, IDC_HAND);
+    m_cursor = ::LoadCursor(nullptr, IDC_HAND);
 
     // IDC_HAND is not available on Win95, so load a reasonable alternative
     if( !m_cursor )
-        m_cursor = ::LoadCursor(NULL, IDC_ARROW);
+        m_cursor = ::LoadCursor(nullptr, IDC_ARROW);
 }
 
 // Destructor.
@@ -56,9 +56,9 @@ LRESULT CHyperlink::OnLButtonUp(LPARAM lparam)
 // Opens the default browser and displays the web page.
 void CHyperlink::OpenUrl()
 {
-    LPCTSTR url = _T("http://sourceforge.net/projects/win32-framework/");
+    LPCWSTR url = L"http://sourceforge.net/projects/win32-framework/";
 
-    HINSTANCE result = ::ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
+    HINSTANCE result = ::ShellExecute(nullptr, L"open", url, nullptr, nullptr, SW_SHOWNORMAL);
     if (reinterpret_cast<INT_PTR>(result) > 32)
     {
         m_isUrlVisited = TRUE;
@@ -115,10 +115,10 @@ LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << '\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -126,7 +126,7 @@ LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

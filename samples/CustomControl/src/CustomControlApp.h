@@ -16,15 +16,15 @@ class CCustomControlApp : public CWinApp
 {
 public:
     CCustomControlApp();
-    virtual ~CCustomControlApp();
+    virtual ~CCustomControlApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CCustomControlApp(const CCustomControlApp&);               // Disable copy construction
-    CCustomControlApp& operator=(const CCustomControlApp&);    // Disable assignment operator
+    CCustomControlApp(const CCustomControlApp&) = delete;
+    CCustomControlApp& operator=(const CCustomControlApp&) = delete;
 
     CMyDialog m_myDialog;
 };

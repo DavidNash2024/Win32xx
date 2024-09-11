@@ -13,8 +13,6 @@
 // Constructor.
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
-    if (GetComCtlVersion() < 471)
-        ::MessageBox(NULL, _T("Date Time control not supported"), _T(""), MB_OK );
 }
 
 // Destructor.
@@ -56,10 +54,10 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -67,7 +65,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -91,14 +89,15 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
 
             if (!SetLocalTime(&all))
             {
-                MessageBox(_T("Failed to set the time\nRun app as Administrator"), _T("Set Time Failed"), MB_OK);
+                MessageBox(L"Failed to set the time\nRun app as Administrator",
+                    L"Set Time Failed", MB_OK);
             }
             return TRUE;
         }
 
     case IDC_BUTTONCANCEL:
         {
-            TRACE(_T("Cancel Button Pressed\n"));
+            TRACE(L"Cancel Button Pressed\n");
             OnCancel();
             return TRUE;
         }

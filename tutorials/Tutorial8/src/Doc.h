@@ -4,7 +4,6 @@
 #ifndef WIN32XX_DOC_H
 #define WIN32XX_DOC_H
 
-#include "targetver.h"
 #include "wxx_wincore.h"
 #include "wxx_archive.h"
 
@@ -25,17 +24,17 @@ class CDoc : public CObject
 {
 public:
     CDoc() {}
-    virtual ~CDoc() {}
+    virtual ~CDoc() override {}
 
-    std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // returns a vector of PlotPoint data
+    std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // Returns a vector of PlotPoint data.
 
-    void FileOpen(LPCTSTR filename);
-    void FileSave(LPCTSTR filename);
+    void FileOpen(LPCWSTR filename);
+    void FileSave(LPCWSTR filename);
     void Serialize(CArchive &ar);
     void StorePoint(int x, int y, bool isPenDown, COLORREF penColor);
 
 private:
-    std::vector<PlotPoint> m_points;    // Points of lines to draw
+    std::vector<PlotPoint> m_points;    // Points of lines to draw.
 };
 
 

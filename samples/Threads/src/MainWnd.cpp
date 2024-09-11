@@ -26,14 +26,14 @@ CMainWindow::CMainWindow() : m_windowsCount(0)
 }
 
 // Appends the specified text to the edit control.
-void CMainWindow::AppendText(LPCTSTR text)
+void CMainWindow::AppendText(LPCWSTR text)
 {
     // Append Line Feed.
     if (m_edit.IsWindow())
     {
         int length = m_edit.GetWindowTextLength();
         if (length)
-            m_edit.AppendText(_T("\r\n"));
+            m_edit.AppendText(L"\r\n");
 
         // Append text.
         m_edit.AppendText(text);
@@ -43,12 +43,12 @@ void CMainWindow::AppendText(LPCTSTR text)
 // Create the main window.
 HWND CMainWindow::Create(HWND parent)
 {
-    CString str = _T("Main Thread Window");
+    CString str = L"Main Thread Window";
 
     // Create the main window.
     CRect rc(20 , 50, 400, 500);
     rc = DpiScaleRect(rc);
-    return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+    return CreateEx(WS_EX_TOPMOST, nullptr, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         rc, parent, 0);
 }
 
@@ -70,21 +70,18 @@ int CMainWindow::OnCreate(CREATESTRUCT&)
     //  goes out of scope.
     for (int i = 1 ; i <= m_maxWindows ; i++)
     {
-        MyThreadPtr threadPtr(new CMyWinThread(i, GetHwnd()));
-        m_threads.push_back(threadPtr);
+        m_threads.push_back(std::make_unique<CMyWinThread>(i, GetHwnd()));
     }
 
     // Create the threads belonging to the MyThread objects.
     // Each thread creates a TestWindow when it runs.
-    std::vector<MyThreadPtr>::iterator iter;
-    for (iter = m_threads.begin(); iter != m_threads.end(); ++iter)
+    for (const MyThreadPtr& ptr : m_threads)
     {
         try
         {
-            (*iter)->CreateThread();
-
+            ptr->CreateThread();
             CString str;
-            str.Format( _T("Thread %d started "), (*iter)->GetThreadNumber() );
+            str.Format(L"Thread %d started ", ptr->GetThreadNumber());
             AppendText(str);
         }
 
@@ -92,7 +89,7 @@ int CMainWindow::OnCreate(CREATESTRUCT&)
         {
             // Display the exception and allow the program to continue.
             CString Error = CString(e.GetText()) + "\n" + CString(e.GetErrorString());
-            ::MessageBox(NULL, Error, AtoT(e.what()), MB_ICONERROR) ;
+            ::MessageBox(nullptr, Error, AtoW(e.what()), MB_ICONERROR) ;
         }
     }
 
@@ -110,7 +107,7 @@ void CMainWindow::OnDestroy()
 void CMainWindow::OnAllWindowsCreated()
 {
     CString str;
-    str.Format( _T("%d Test windows created in separate threads"), m_maxWindows );
+    str.Format(L"%d Test windows created in separate threads", m_maxWindows);
     AppendText(str);
 }
 
@@ -129,8 +126,7 @@ LRESULT CMainWindow::OnCloseThread(WPARAM wparam)
     CThreadLock lock(m_cs);
 
     int threadNumber = static_cast<int>(wparam);
-    std::vector<MyThreadPtr>::iterator iter;
-    for (iter = m_threads.begin(); iter != m_threads.end(); ++iter)
+    for (auto iter = m_threads.begin(); iter != m_threads.end(); ++iter)
     {
         if (threadNumber == (*iter)->GetThreadNumber())
         {
@@ -164,7 +160,7 @@ LRESULT CMainWindow::OnWindowCreated()
 {
     CString str;
     ++m_windowsCount;
-    str.Format( _T("Created Window %d"), m_windowsCount);
+    str.Format(L"Created Window %d", m_windowsCount);
     AppendText(str);
 
     if (m_windowsCount == m_maxWindows)
@@ -195,10 +191,10 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -206,7 +202,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

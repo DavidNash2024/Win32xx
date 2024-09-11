@@ -15,14 +15,14 @@ class CMDIFrameSplitterApp : public CWinApp
 {
 public:
     CMDIFrameSplitterApp();
-    virtual ~CMDIFrameSplitterApp() {}
+    virtual ~CMDIFrameSplitterApp() override {}
 
 protected:
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CMDIFrameSplitterApp(const CMDIFrameSplitterApp&);              // Disable copy construction
-    CMDIFrameSplitterApp& operator=(const CMDIFrameSplitterApp&);   // Disable assignment operator
+    CMDIFrameSplitterApp(const CMDIFrameSplitterApp&) = delete;
+    CMDIFrameSplitterApp& operator=(const CMDIFrameSplitterApp&) = delete;
 
     CMainMDIFrame m_mainMDIFrame;
 };

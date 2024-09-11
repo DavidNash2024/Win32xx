@@ -28,21 +28,21 @@ CFontExDialog : public CFontDialog                                          /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CFontExDialog(DWORD flags = 0, HDC printer = NULL)
+        CFontExDialog(DWORD flags = 0, HDC printer = nullptr)
             : CFontDialog(flags | CF_ENABLEHOOK, printer)
-                { SetBoxTitle(_T("Font...")); }
-        virtual ~CFontExDialog(){}
+                { SetBoxTitle(L"Font..."); }
+        virtual ~CFontExDialog() override {}
 
         void    SetBoxTitle(const CString& title)
                     { m_dlgBoxTitle = title; }
 
     protected:
-        virtual BOOL OnInitDialog()
+        virtual BOOL OnInitDialog() override
                     {  SetWindowText(m_dlgBoxTitle); return TRUE; }
 
     private:
-        CFontExDialog(const CFontExDialog&);               // Disable copy construction
-        CFontExDialog& operator=(const CFontExDialog&);    // Disable assignment operator
+        CFontExDialog(const CFontExDialog&) = delete;
+        CFontExDialog& operator=(const CFontExDialog&) = delete;
 
         CString m_dlgBoxTitle;
 };
@@ -60,9 +60,9 @@ CFontEx : public CObject                                                       /
         CFontEx();
         CFontEx(COLORREF txtcolor, DWORD options)
                     { m_txcolor = txtcolor; m_flags = options; }
-        virtual ~CFontEx(){}
+        virtual ~CFontEx() override {}
 
-        void    Choose(LPCTSTR wintitle = NULL);
+        void    Choose(LPCWSTR wintitle = nullptr);
         void    SetDefault();
 
         DWORD   GetFlags() const        { return m_flags; }
@@ -74,11 +74,11 @@ CFontEx : public CObject                                                       /
         void    SetTxColor(COLORREF c)  { m_txcolor = c; }
 
     protected:
-        virtual void Serialize(CArchive &ar);
+        virtual void Serialize(CArchive &ar) override;
 
     private:
-        CFontEx(const CFontEx&);                // Disable copy construction
-        CFontEx& operator=(const CFontEx&);   // Disable assignment operator
+        CFontEx(const CFontEx&) = delete;
+        CFontEx& operator=(const CFontEx&) = delete;
 
         void    SaveFontSize();
 

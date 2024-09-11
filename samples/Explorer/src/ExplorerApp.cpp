@@ -25,14 +25,14 @@ CExplorerApp::~CExplorerApp()
 BOOL CExplorerApp::InitInstance()
 {
     // Initialize COM
-    if (SUCCEEDED(CoInitialize(NULL)))
+    if (SUCCEEDED(CoInitialize(nullptr)))
     {
         // Create the frame window.
         m_frame.Create();   // throws a CWinException on failure
     }
     else
     {
-        ::MessageBox(NULL, _T("Failed to initialize COM"), _T("ERROR"), MB_ICONERROR);
+        ::MessageBox(nullptr, L"Failed to initialize COM", L"ERROR", MB_ICONERROR);
         return FALSE;
     }
 

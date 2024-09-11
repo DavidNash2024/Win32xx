@@ -41,9 +41,9 @@
 //
 // A unit:
 //   - is a self contained number or value
-//   - can be a number   eg. -3.14
-//   - can be a variable eg. x
-//   - can be a function eg. cos(x)
+//   - can be a number   e.g. -3.14
+//   - can be a variable e.g. x
+//   - can be a function e.g. cos(x)
 //   - can be an expression enclosed within parenthesis
 
 namespace Calc

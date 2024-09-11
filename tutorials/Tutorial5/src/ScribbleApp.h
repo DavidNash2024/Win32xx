@@ -4,7 +4,7 @@
 #ifndef SCRIBBLEAPP_H
 #define SCRIBBLEAPP_H
 
-#include "targetver.h"
+
 #include "wxx_wincore.h"
 #include "Mainfrm.h"
 
@@ -17,12 +17,12 @@ class CScribbleApp : public CWinApp
 {
 public:
     CScribbleApp();
-    virtual ~CScribbleApp() {}
+    virtual ~CScribbleApp() override {}
     virtual BOOL InitInstance();
 
 private:
-    CScribbleApp(const CScribbleApp&);               // Disable copy construction
-    CScribbleApp& operator=(const CScribbleApp&);    // Disable assignment operator
+    CScribbleApp(const CScribbleApp&) = delete;
+    CScribbleApp& operator=(const CScribbleApp&) = delete;
 
     CMainFrame m_frame;
 };

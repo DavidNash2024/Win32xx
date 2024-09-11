@@ -26,30 +26,30 @@ public:
     };
 
     CView();
-    virtual ~CView(){}
+    virtual ~CView() override {}
 
     Calc::Calculator& GetCalc() { return m_calc; }
     CInputDlg& GetInput() { return m_inputDlg; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDraw(CDC& dc);
-    virtual void OnInitialUpdate();
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual void OnInitialUpdate() override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual void PreRegisterClass(WNDCLASS& wc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     void CalcPoints(double xmin, double xmax);
     void DoPlot(CDC& dc);
     void DrawLabel(CDC& dc);
-    double GetXMin() { return m_inputDlg.GetMin(); }
-    double GetXMax() { return m_inputDlg.GetMax(); }
-    void PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
-    void PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
+    double GetXMin() const { return m_inputDlg.GetMin(); }
+    double GetXMax() const { return m_inputDlg.GetMax(); }
+    void DrawXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
+    void DrawYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
     void PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
     void PrepareDC(CDC& dc);
 

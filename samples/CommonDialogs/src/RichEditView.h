@@ -30,25 +30,27 @@ CRichEditView : public CRichEdit                                            /*
 {
     public:
         CRichEditView();
-        virtual ~CRichEditView(){}
+        virtual ~CRichEditView() override {}
 
         void    Clean();
-        void    DoPrintRichView(LPCTSTR);
+        void    DoPrintRichView(LPCWSTR);
         void    DoPrintView();
         BOOL    IsSelected();
         void    SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg);
         void    SetFont(HFONT hFont, BOOL bRedraw) const;
-        void    SetPrintPath(LPCTSTR s) { m_printPath = s;}
+        void    SetPrintPath(LPCWSTR s) { m_printPath = s;}
         void    SetWrapping(int wrap);
         BOOL    StreamInFile(const CFile& file);
         BOOL    StreamOutFile(const CFile& file);
 
+    protected:
+        virtual void OnAttach() override;
+
     private:
-        CRichEditView(const CRichEditView&);               // Disable copy construction
-        CRichEditView& operator=(const CRichEditView&);    // Disable assignment operator
+        CRichEditView(const CRichEditView&) = delete;
+        CRichEditView& operator=(const CRichEditView&) = delete;
 
         BOOL    DoPreparePrinting(CPrintInfo& info);
-        void    OnAttach();
         void    GetPageBreaks(CPrintInfo&);
         void    OnBeginPrinting(CDC& DC, CPrintInfo& info);
         void    OnEndPrinting(CDC& DC, CPrintInfo& info);

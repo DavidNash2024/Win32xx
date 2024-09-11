@@ -27,7 +27,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\WinPlot"));
+    LoadRegistrySettings(L"Win32++\\WinPlot");
 
     return CFrame::Create(parent);
 }
@@ -39,7 +39,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 
     switch(id)
     {
-    case IDM_EDIT_FUNCTION:     return OnEditFunction();
+    case IDM_EDIT_FUNCTION:     return OnInputFunction();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -69,7 +69,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-BOOL CMainFrame::OnEditFunction()
+BOOL CMainFrame::OnInputFunction()
 {
     if (m_view.GetInput().DoModal(*this) == IDOK)
     {
@@ -79,11 +79,11 @@ BOOL CMainFrame::OnEditFunction()
 
         if (m_view.GetCalc().Get_Status() == Calc::st_ERROR)
         {
-            MessageBox(_T("Invalid Function Input"), _T("Error"), MB_ICONEXCLAMATION);
+            MessageBox(L"Invalid Function Input", L"Error", MB_ICONEXCLAMATION);
         }
         else if (m_view.GetCalc().Get_Status() == Calc::st_OVERFLOW)
         {
-            MessageBox(_T("Overflow"), _T("Error"), MB_ICONEXCLAMATION);
+            MessageBox(L"Overflow", L"Error", MB_ICONEXCLAMATION);
         }
     }
 
@@ -112,7 +112,8 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-    OnEditFunction();
+    m_view.GetInput().SetFunction(L"sin(x)/x");
+    OnInputFunction();
     TRACE("Frame created\n");
 }
 
@@ -121,7 +122,7 @@ void CMainFrame::SetupMenuIcons()
 {
     // Set the bitmap used for menu icons
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, 0);
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -165,10 +166,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -176,7 +177,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

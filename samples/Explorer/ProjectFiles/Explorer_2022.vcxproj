@@ -98,7 +98,6 @@
     <ClInclude Include="..\src\RightPane.h" />
     <ClInclude Include="..\src\ShellWrapper.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

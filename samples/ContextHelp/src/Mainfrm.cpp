@@ -26,7 +26,7 @@ CMainFrame::~CMainFrame()
 // Enables choose topic mode
 BOOL CMainFrame::ChooseHelpTopic()
 {
-    ::SetCursor(::LoadCursor(NULL, IDC_HELP));
+    ::SetCursor(::LoadCursor(nullptr, IDC_HELP));
     SetCapture();
     m_isChoosing = TRUE;
     return TRUE;
@@ -46,12 +46,12 @@ HWND CMainFrame::Create(HWND parent)
     // generate the help file directory and path strings
     CString helpFilename = LoadString(IDS_HELP_FILE);
     CString helpDir = CreateAppDataFolder(groupFolder + appName);
-    CString helpPath = helpDir + _T("\\") + helpFilename;
+    CString helpPath = helpDir + "\\" + helpFilename;
 
     if (!::PathFileExists(helpPath))
     {
         // The Help file is not in AppDataPath yet so copy it there
-        CString OrigHelpPath = _T("..\\help\\") + helpFilename;
+        CString OrigHelpPath = "..\\help\\" + helpFilename;
 
         if (!::CopyFile(OrigHelpPath, helpPath, TRUE))
         {
@@ -68,34 +68,35 @@ HWND CMainFrame::Create(HWND parent)
     }
     else
     {
-        ::MessageBox(NULL, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
+        CString msg = L"Failed to find " + LoadString(IDS_HELP_FILE);
+        ::MessageBox(nullptr, msg, L"File not found", MB_ICONWARNING);
     }
 
     // Generate the Win32++ version string.
     UINT ver = _WIN32XX_VER;
     CString win32Version;
-    win32Version.Format(_T("using Win32++ Version %d.%d.%d"), ver / 0x100,
+    win32Version.Format(L"using Win32++ Version %d.%d.%d", ver / 0x100,
         (ver % 0x100) / 0x10, (ver % 0x10));
 
     // Generate compiler information for the About box.
     CString sCompiler;
 #ifdef __GNUC__
-    sCompiler.Format(_T("Gnu C++ %d.%d.%d"), __GNUC__, __GNUC_MINOR__,
+    sCompiler.Format(L"Gnu C++ %d.%d.%d", __GNUC__, __GNUC_MINOR__,
         __GNUC_PATCHLEVEL__);
 #elif defined(_MSC_VER)
-    sCompiler.Format(_T("MS C++ %d.%d"), _MSC_VER / 100, _MSC_VER % 100);
+    sCompiler.Format(L"MS C++ %d.%d", _MSC_VER / 100, _MSC_VER % 100);
 #elif defined(__BORLANDC__)
-    sCompiler = _T("a Borland compiler");
+    sCompiler = L"an Embarcadero compiler";
 #else
-    sCompiler = _T("(unknown compiler name)");
+    sCompiler = L"an unknown compiler";
 #endif
 
     // Set the information used in the Help About dialog.
     CString aboutBoxInfo = LoadString(IDW_MAIN);
-    aboutBoxInfo += _T("\n") + LoadString(IDS_APP_VERSION);
-    aboutBoxInfo += _T("\ncompiled with ") + sCompiler;
-    aboutBoxInfo += _T(" on ") + CString(__DATE__);
-    aboutBoxInfo += _T("\n") + win32Version;
+    aboutBoxInfo += '\n' + LoadString(IDS_APP_VERSION);
+    aboutBoxInfo += "\ncompiled with " + sCompiler;
+    aboutBoxInfo += " on " + CString(__DATE__);
+    aboutBoxInfo += "\n" + win32Version;
     m_appHelp.SetCredits(aboutBoxInfo);
 
     return CFrame::Create(parent);
@@ -106,28 +107,18 @@ HWND CMainFrame::Create(HWND parent)
 // CUserException if the folder creation fails.
 CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 {
-    ::SetLastError(0);
     CString appDataPath = GetAppDataPath();
-
-    int from = 0;
-    int to = subfolder.GetLength();
-    while (from < to)
+    if (!appDataPath.IsEmpty())
     {
-        int next = subfolder.Find(_T("\\"), from);
-        if (next < 0)
-            next = to;
+        appDataPath += L"\\" + subfolder;
+        ::SHCreateDirectory(nullptr, appDataPath);
 
-        CString add = subfolder.Mid(from, next - from);
-        appDataPath += _T("\\") + add;
-
-        if (!::CreateDirectory(appDataPath, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
-        {
-            CString msg = appDataPath + _T("Directory creation error.");
-            throw CUserException(msg);
-        }
-
-        from = ++next;
+        DWORD attributes = GetFileAttributes(appDataPath);
+        if ((attributes == INVALID_FILE_ATTRIBUTES) || !(attributes & FILE_ATTRIBUTE_DIRECTORY))
+            throw CFileException(appDataPath, L"Failed to access app directory");
     }
+    else
+        appDataPath = L".";
 
     return appDataPath;
 }
@@ -165,7 +156,7 @@ UINT CMainFrame::GetIDFromCursorPos()
     return id;
 }
 
-BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
+BOOL CMainFrame::LoadRegistrySettings(LPCWSTR keyName)
 {
     CFrame::LoadRegistrySettings(keyName);
     GetDoc().LoadSettings(GetRegistryKeyName().c_str());
@@ -238,7 +229,7 @@ BOOL CMainFrame::OnF1()
     if (id != 0)
         m_appHelp.ShowHelpTopic(id);
     else
-        m_appHelp.ShowHelpTopic(_T("Introduction"));
+        m_appHelp.ShowHelpTopic(L"Introduction");
 
     return TRUE;
 }
@@ -295,7 +286,7 @@ LRESULT CMainFrame::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (m_isChoosing)
     {
-        ::SetCursor(::LoadCursor(NULL, IDC_HELP));
+        ::SetCursor(::LoadCursor(nullptr, IDC_HELP));
         return TRUE;
     }
 
@@ -333,7 +324,7 @@ void CMainFrame::OnUpdateCheckC(UINT id)
 // Updates the menu when a radio button is selected.
 void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
-    int fileItem = GetFrameMenu().FindMenuItem(_T("&Select"));
+    int fileItem = GetFrameMenu().FindMenuItem(L"&Select");
     CMenu radioMenu = GetFrameMenu().GetSubMenu(fileItem);
     if (GetDoc().GetRadio() == id)
         radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
@@ -363,7 +354,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(255, 0, 255), IDB_TOOLBAR24);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -430,10 +421,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << '\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -441,7 +432,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

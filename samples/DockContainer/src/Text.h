@@ -14,17 +14,17 @@ class CViewText : public CRichEdit
 {
 public:
     CViewText();
-    virtual ~CViewText();
+    virtual ~CViewText() override;
     void SetDPIFont();
 
 protected:
     // Virtual functions that override base class functions.
-    virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnAttach() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewText(const CViewText&);               // Disable copy construction
-    CViewText& operator=(const CViewText&);    // Disable assignment operator
+    CViewText(const CViewText&) = delete;
+    CViewText& operator=(const CViewText&) = delete;
 
     CFont m_font;
 };
@@ -37,15 +37,15 @@ class CContainText : public CDockContainer
 {
 public:
     CContainText();
-    virtual ~CContainText() {}
+    virtual ~CContainText() override {}
 
 protected:
     // Virtual functions that override base class functions.
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CContainText(const CContainText&);              // Disable copy construction
-    CContainText& operator=(const CContainText&);   // Disable assignment operator
+    CContainText(const CContainText&) = delete;
+    CContainText& operator=(const CContainText&) = delete;
 
     CViewText m_viewText;
 };
@@ -58,15 +58,15 @@ class CDockText : public CDocker
 {
 public:
     CDockText();
-    virtual ~CDockText() {}
+    virtual ~CDockText() override {}
 
 protected:
-    virtual void RecalcDockLayout();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void RecalcDockLayout() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockText(const CDockText&);              // Disable copy construction
-    CDockText& operator=(const CDockText&);   // Disable assignment operator
+    CDockText(const CDockText&) = delete;
+    CDockText& operator=(const CDockText&) = delete;
 
     CContainText m_view;
 };

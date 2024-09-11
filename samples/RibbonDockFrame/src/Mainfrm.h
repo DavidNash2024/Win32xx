@@ -18,23 +18,23 @@ class CMainFrame : public CRibbonDockFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
-    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUnknown*, UI_VIEWVERB, INT32);
-    virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt  const PROPVARIANT*, __out PROPVARIANT*);
+    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*) override;
+    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUnknown*, UI_VIEWVERB, INT32) override;
+    virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt  const PROPVARIANT*, __out PROPVARIANT*) override;
 
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void    OnInitialUpdate();
-    virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual void    OnInitialUpdate() override;
+    virtual void    SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Command handlers
     void OnFileExit();
@@ -54,7 +54,7 @@ private:
 
     IUIRibbon* GetIUIRibbon() const;
     CDoc& GetDoc() { return m_doc; }
-    void LoadFile(LPCTSTR fileName);
+    void LoadFile(LPCWSTR fileName);
     void MRUFileOpen(UINT mruIndex);
     void SetPenColor(COLORREF clr);
 

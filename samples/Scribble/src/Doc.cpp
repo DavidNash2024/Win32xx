@@ -7,7 +7,7 @@
 
 // Loads the plotpoint data from the archive.
 // Throws an exception if unable to read the file.
-void CDoc::FileOpen(LPCTSTR fileName)
+void CDoc::FileOpen(LPCWSTR fileName)
 {
     GetAllPoints().clear();
     CArchive ar(fileName, CArchive::load);
@@ -16,7 +16,7 @@ void CDoc::FileOpen(LPCTSTR fileName)
 
 // Stores the plotpoint data in the archive.
 // Throws an exception if unable to save the file.
-void CDoc::FileSave(LPCTSTR fileName)
+void CDoc::FileSave(LPCWSTR fileName)
 {
     CArchive ar(fileName, CArchive::store);
     ar << *this;
@@ -28,15 +28,14 @@ void CDoc::Serialize(CArchive &ar)
 
     if (ar.IsStoring())
     {
-        // Store the number of points
+        // Store the number of points.
         UINT points = UINT(GetAllPoints().size());
         ar << points;
 
         // Store the PlotPoint data.
-        std::vector<PlotPoint>::iterator iter;
-        for (iter = GetAllPoints().begin(); iter != GetAllPoints().end(); ++iter)
+        for (PlotPoint& pp : GetAllPoints())
         {
-            ArchiveObject ao( &(*iter), sizeof(PlotPoint) );
+            ArchiveObject ao(&pp, sizeof(pp));
             ar << ao;
         }
     }
@@ -69,5 +68,5 @@ void CDoc::StorePoint(int x, int y, bool isPenDown, COLORREF penColor)
     pp.isPenDown = isPenDown;
     pp.penColor = penColor;
 
-    m_points.push_back(pp); //Add the point to the vector
+    m_points.push_back(pp); // Add the point to the vector.
 }

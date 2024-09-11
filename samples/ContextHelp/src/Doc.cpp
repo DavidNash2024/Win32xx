@@ -21,37 +21,37 @@ CDoc::~CDoc()
 }
 
 // Load values from the registry.
-void CDoc::LoadSettings(LPCTSTR keyName)
+void CDoc::LoadSettings(LPCWSTR keyName)
 {
-    CString fullKeyName = _T("Software\\");
+    CString fullKeyName = "Software\\";
     fullKeyName += keyName;
-    fullKeyName += _T("\\Document Settings");
+    fullKeyName += "\\Document Settings";
     CRegKey key;
     if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, fullKeyName, KEY_READ))
     {
-        key.QueryBoolValue(_T("CheckA"), m_isCheckA);
-        key.QueryBoolValue(_T("CheckB"), m_isCheckB);
-        key.QueryBoolValue(_T("CheckC"), m_isCheckC);
-        key.QueryDWORDValue(_T("Radio"), m_radio);
+        key.QueryBoolValue(L"CheckA", m_isCheckA);
+        key.QueryBoolValue(L"CheckB", m_isCheckB);
+        key.QueryBoolValue(L"CheckC", m_isCheckC);
+        key.QueryDWORDValue(L"Radio", m_radio);
     }
 }
 
 // Store values in the registry.
-void CDoc::SaveSettings(LPCTSTR keyName)
+void CDoc::SaveSettings(LPCWSTR keyName)
 {
-    CString fullKeyName = _T("Software\\");
+    CString fullKeyName = "Software\\";
     fullKeyName += keyName;
-    fullKeyName += _T("\\Document Settings");
+    fullKeyName += "\\Document Settings";
 
     CRegKey key;
     if (ERROR_SUCCESS == key.Create(HKEY_CURRENT_USER, fullKeyName))
     {
         if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, fullKeyName))
         {
-            key.SetBoolValue(_T("CheckA"), m_isCheckA);
-            key.SetBoolValue(_T("CheckB"), m_isCheckB);
-            key.SetBoolValue(_T("CheckC"), m_isCheckC);
-            key.SetDWORDValue(_T("Radio"), m_radio);
+            key.SetBoolValue(L"CheckA", m_isCheckA);
+            key.SetBoolValue(L"CheckB", m_isCheckB);
+            key.SetBoolValue(L"CheckC", m_isCheckC);
+            key.SetDWORDValue(L"Radio", m_radio);
         }
     }
 }

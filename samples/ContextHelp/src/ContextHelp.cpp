@@ -54,14 +54,13 @@ CContextHelp::~CContextHelp()
 
 // Add the (control-id, string topic) pair to the help topic table.
 // Assert if a duplicate id entered.
-void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
+void CContextHelp::AddHelpTopic(UINT id, LPCWSTR topic)
 {
     assert(id);
     assert(topic);
-    std::map<UINT, CString>::const_iterator m;
 
     // Ensure this isn't a duplicate entry
-    m = m_helpTopics.find(id);
+    auto m = m_helpTopics.find(id);
     assert(m == m_helpTopics.end());
 
     // Add the topic to the map
@@ -71,39 +70,39 @@ void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 // Creates the HtmlHelp window, and binds this object to its HWND.
 // This function uses LoadLibrary to gain access to the HtmHelpW function from "hhctrl.ocx".
 // Refer to HtmlHelp in the Windows API documentation for more information.
-HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data)
+HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCWSTR string, UINT command, DWORD data)
 {
     // Prepare this CWnd for possible re-use
     if (*this != 0)
         Detach();
 
-    typedef HWND WINAPI HTMLHELPW(HWND, LPCWSTR, UINT, DWORD_PTR);
-    HTMLHELPW* pHtmlHelpW = NULL;
-    HWND hWnd = NULL;
+    using HTMLHELPW = HWND (WINAPI*)(HWND, LPCWSTR, UINT, DWORD_PTR);
+    HTMLHELPW pHtmlHelpW = nullptr;
+    HWND hWnd = nullptr;
 
     CString system;
     ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
     system.ReleaseBuffer();
 
-    HMODULE module = ::LoadLibrary(system + _T("\\hhctrl.ocx"));
+    HMODULE module = ::LoadLibrary(system + "\\hhctrl.ocx");
     if (module)
     {
-        pHtmlHelpW = reinterpret_cast<HTMLHELPW*>(
+        pHtmlHelpW = reinterpret_cast<HTMLHELPW>(
             reinterpret_cast<void*>(::GetProcAddress(module, "HtmlHelpW")));
     }
 
     // Create the HtmlHelp window.
     if (pHtmlHelpW)
     {
-        hWnd = pHtmlHelpW(hwndCaller, TtoW(string), command, data);
+        hWnd = pHtmlHelpW(hwndCaller, string, command, data);
+
+        // Throw an exception if the window wasn't created.
+        if (hWnd == nullptr)
+            throw CWinException(L"Failed to initiate Context Help");
 
         // Bind the hWnd to this CWnd object.
-        if (hWnd != NULL)
-            Attach(hWnd);
+        Attach(hWnd);
     }
-
-    // Throw an exception if the window wasn't created.
-    if (hWnd == NULL) throw CWinException(_T("Failed to initiate Context Help"));
 
     return hWnd;
 }
@@ -113,22 +112,20 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
 // in the guide.
 void CContextHelp::ShowHelpTopic(UINT id)
 {
-    std::map<UINT, CString>::const_iterator m;
-
     // Find the CString mapped to this UINT
-    m = m_helpTopics.find(id);
-    CString topic = (m != m_helpTopics.end()) ? m->second : CString(_T("FeatureNotDescribed"));
+    auto m = m_helpTopics.find(id);
+    CString topic = (m != m_helpTopics.end()) ? m->second : CString("FeatureNotDescribed");
 
     ShowHelpTopic(topic);
 }
 
 // Display the application guide topic, if present, or show the topic
 // in a message box if there is no such topic in the guide.
-void CContextHelp::ShowHelpTopic(LPCTSTR topic)
+void CContextHelp::ShowHelpTopic(LPCWSTR topic)
 {
     CString topic_url;
     if (topic[0] != 0)
-        topic_url << _T("::/") << topic << _T(".htm");
+        topic_url << "::/" << topic << ".htm";
 
     CString seek_url = m_helpFilePath + topic_url;
 
@@ -141,12 +138,12 @@ void CContextHelp::ShowHelpTopic(LPCTSTR topic)
     {
         // if no help guide topic was opened, show that this happened
         CString s;
-        CString fmt = _T("Help topic could not be located:\n\n%s%s");
-        CString add = (m_helpFilePath.IsEmpty() ? _T("\n\nNo help guide exists.")
-            : _T("\n\nMake sure the .chm file is in the .exe directory."));
+        CString fmt = "Help topic could not be located:\n\n%s%s";
+        CString add = (m_helpFilePath.IsEmpty() ? "\n\nNo help guide exists."
+            : "\n\nMake sure the .chm file is in the .exe directory.");
 
         s.Format(fmt, topic, add.c_str());
-        ::MessageBox(NULL, s, _T("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+        ::MessageBox(nullptr, s, L"Information", MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
     }
 }
 
@@ -164,10 +161,10 @@ LRESULT CContextHelp::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << '\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -175,7 +172,7 @@ LRESULT CContextHelp::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

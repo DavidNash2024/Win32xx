@@ -35,7 +35,7 @@ CApp()                                                                      /*
       // extract the app name, directory, and  path names
     m_months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec";
     CString appPath;
-    ::GetModuleFileName(NULL, appPath.GetBuffer(FILENAME_MAX),
+    ::GetModuleFileName(nullptr, appPath.GetBuffer(FILENAME_MAX),
         FILENAME_MAX);
     appPath.ReleaseBuffer();
     CFile f; // no file opened here, just using the name parsing parts
@@ -45,7 +45,7 @@ CApp()                                                                      /*
     CString arcvDir = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) +
         appName);
       // form the archive file path name
-    CString arcvPath = arcvDir + _T("\\") + appName +
+    CString arcvPath = arcvDir + L"\\" + appName +
         LoadString(IDS_ARCHIVE_FILE_EXT);
       // the maximum allowed number of MRU entries (limited to be under 16
       // by Win32++)
@@ -53,23 +53,23 @@ CApp()                                                                      /*
       // make Win32++ version string
     CString win32Version;
     UINT ver = _WIN32XX_VER;
-    win32Version.Format(_T("Win32++ Version %d.%d.%d"), ver / 0x100,
+    win32Version.Format(L"Win32++ Version %d.%d.%d", ver / 0x100,
         (ver % 0x100) / 0x10, (ver % 0x10));
       // generate compiler information for the About box
     CString sCompiler;
 #ifdef __GNUC__
-        sCompiler.Format(_T("Gnu C++ %d.%d.%d"), __GNUC__, __GNUC_MINOR__,
+        sCompiler.Format(L"Gnu C++ %d.%d.%d", __GNUC__, __GNUC_MINOR__,
             __GNUC_PATCHLEVEL__);
 #elif defined(_MSC_VER)
-        sCompiler.Format(_T("MS C++ %d.%d"), _MSC_VER / 100,
+        sCompiler.Format(L"MS C++ %d.%d", _MSC_VER / 100,
             _MSC_VER % 100);
 #else
-        sCompiler = _T("(unknown compiler name)");
+        sCompiler = L"(unknown compiler)";
 #endif
     CString date = __DATE__; // necesary on VCE2010
     CString aboutBoxInfo;
-    aboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")
-        _T("%s on %s"), LoadString(IDW_MAIN).c_str(), appName.c_str(),
+    aboutBoxInfo.Format(L"%s\n\n(%s.exe)\n%s\n%s\ncompiled with %s on %s",
+        LoadString(IDW_MAIN).c_str(), appName.c_str(),
         LoadString(IDS_APP_VERSION).c_str(), win32Version.c_str(),
         sCompiler.c_str(), date.c_str());
     m_frame.SetArchivePath(arcvPath);
@@ -94,7 +94,7 @@ InitInstance()                                                              /*
 
 /*============================================================================*/
     ULONG CApp::
-DatInt(LPCTSTR pDate) const                                                 /*
+DatInt(LPCWSTR pDate) const                                                 /*
 
     Convert the pDate, of form mmm dd yyyy, to a long integer of the form
     0xyyyymodd, where mmm is character based month, and mo is 0 (Jan) to
@@ -122,7 +122,7 @@ IntDat(ULONG hexdate) const                                                 /*
     UINT    mo = (hexdate / 100) % 100;
     UINT    yyyy = (hexdate / 10000);
     CString ans;
-    ans.Format(_T("%s %02d, %u"),  m_months.Mid(4 * mo, 3).c_str(), dd, yyyy);
+    ans.Format(L"%s %02d, %u",  m_months.Mid(4 * mo, 3).c_str(), dd, yyyy);
     return ans;
 }
 
@@ -135,28 +135,20 @@ MakeAppDataPath(const CString& subpath) const                               /*
     an error is encountered, throw a user exception.
 *-----------------------------------------------------------------------------*/
 {
-    ::SetLastError(0);
-    CString app_data_path = GetAppDataPath();
+    CString appDataPath = GetAppDataPath();
 
-    int from, to, next;
-    for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
+    if (!appDataPath.IsEmpty())
     {
-        int nextbk  = subpath.Find(_T("\\"), from);
-        int nextfwd = subpath.Find(_T("/"), from);
-        next = MAX(nextbk, nextfwd);
-        if (next < 0)
-            next = to;
+        appDataPath += L"\\" + subpath;
+        ::SHCreateDirectory(nullptr, appDataPath);
 
-        CString add = subpath.Mid(from, next - from);
-        app_data_path += _T("\\") + add;
-        if ((::CreateDirectory(app_data_path, 0) == 0) &&
-            GetLastError() != ERROR_ALREADY_EXISTS)
-        {
-            CString msg = app_data_path +
-                _T("\nDirectory creation error.");
-            throw CUserException(msg);
-        }
+        DWORD attributes = GetFileAttributes(appDataPath);
+        if ((attributes == INVALID_FILE_ATTRIBUTES) || !(attributes & FILE_ATTRIBUTE_DIRECTORY))
+            throw CFileException(appDataPath, L"Failed to access app directory");
     }
-    return app_data_path;
+    else
+        appDataPath = L".";
+
+    return appDataPath;
 }
 /*----------------------------------------------------------------------------*/

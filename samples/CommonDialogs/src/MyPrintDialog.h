@@ -27,30 +27,34 @@ MyPrintDialog : public CPrintDialog                                         /*
         MyPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES |
             PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION | PD_ENABLEPRINTHOOK)
             :   CPrintDialog(dwFlags) {}
-        virtual ~MyPrintDialog() {}
+        virtual ~MyPrintDialog() override {}
 
-        virtual void    SetBoxTitle (LPCTSTR title) {m_sPDTitle  = title;}
-        virtual void    SetWindowTitle() const { SetWindowText(m_sPDTitle); }
+        void    SetBoxTitle (LPCWSTR title) {m_sPDTitle  = title;}
+        void    SetWindowTitle() const { SetWindowText(m_sPDTitle); }
 
     protected:
-        virtual BOOL    OnInitDialog()
-                        { SetWindowTitle();
-                          HWND hbtn = FindWindowEx(*this, NULL, _T("Button"), _T("OK"));
-                          if (hbtn != NULL)
-                              ::SetWindowText(hbtn, _T("&Print"));
-                          return TRUE; }
+        virtual BOOL    OnInitDialog() override
+        {
+            SetWindowTitle();
+            HWND hbtn = FindWindowEx(*this, nullptr, L"Button", L"OK");
+            if (hbtn != nullptr)
+                ::SetWindowText(hbtn, L"&Print");
+            return TRUE;
+        }
 
-        virtual void    OnCancel()
-                                  { ::MessageBox(NULL, _T("Print job cancelled."),
-                                    _T("Information"), MB_OK | MB_TASKMODAL |
-                                    MB_ICONINFORMATION); }
+        virtual void    OnCancel() override
+        {
+            ::MessageBox(nullptr, L"Print job cancelled.",
+                                  L"Information", MB_OK | MB_TASKMODAL |
+                                  MB_ICONINFORMATION);
+        }
           // override this method to provide the needed preparation to
           // print the document upon user approval
         virtual void    OnOK() {}
 
     private:
-        MyPrintDialog(const MyPrintDialog&);               // Disable copy construction
-        MyPrintDialog& operator=(const MyPrintDialog&);    // Disable assignment operator
+        MyPrintDialog(const MyPrintDialog&) = delete;
+        MyPrintDialog& operator=(const MyPrintDialog&) = delete;
 
         CString m_sPDTitle;     // persistent over span of object
 };
@@ -64,33 +68,33 @@ MyPageSetup : public CPageSetupDialog                                   /*
     public:
         MyPageSetup(DWORD dwFlags = PSD_MARGINS)
             :   CPageSetupDialog(dwFlags) { }
-        virtual ~MyPageSetup() {}
+        virtual ~MyPageSetup() override {}
 
-           // Record the title of the page setup dialog box after an object
+          // Record the title of the page setup dialog box after an object
           // of this class is constructed, but before DoModal() is invoked.
-       virtual void SetBoxTitle(LPCTSTR title) {m_PSDTitle = title;}
+       void SetBoxTitle(LPCWSTR title) {m_PSDTitle = title;}
+       void SetWindowTitle() const { SetWindowText(m_PSDTitle); }
 
     protected:
           //  Override this member method to perform special processing
           //  when the printer box is initialized. Return TRUE.
-        virtual BOOL OnInitDialog() {SetWindowTitle(); return TRUE;}
+        virtual BOOL OnInitDialog() override {SetWindowTitle(); return TRUE;}
 
           // Override this member to perform any special processing to reset
           // the printer to its incoming state. For now just announce that
           //the dialog was cancelled
-        virtual void OnCancel()
-                        { ::MessageBox(NULL, _T("Page setup cancelled. "),
-                            _T("Information"), MB_OK | MB_ICONINFORMATION |
+        virtual void OnCancel() override
+                        { ::MessageBox(nullptr, L"Page setup cancelled. ",
+                            L"Information", MB_OK | MB_ICONINFORMATION |
                             MB_TASKMODAL); }
 
           // override this member to store the page parameters for  use
           // in printing
-        virtual void OnOK() {}
-        virtual void SetWindowTitle() const { SetWindowText( m_PSDTitle);}
+        virtual void OnOK() override {}
 
     private:
-        MyPageSetup(const MyPageSetup&);                // Disable copy construction
-        MyPageSetup& operator=(const MyPageSetup&);   // Disable assignment operator
+        MyPageSetup(const MyPageSetup&) = delete;
+        MyPageSetup& operator=(const MyPageSetup&) = delete;
 
         CString  m_PSDTitle;
 };

@@ -10,7 +10,7 @@
 //
 
 // An example of how to load document data.
-void CDoc::FileLoad(LPCTSTR filename)
+void CDoc::FileLoad(LPCWSTR filename)
 {
     try
     {
@@ -21,12 +21,12 @@ void CDoc::FileLoad(LPCTSTR filename)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
     }
 }
 
 // An example of how to save document data.
-void CDoc::FileStore(LPCTSTR /* filename */)
+void CDoc::FileStore(LPCWSTR /* filename */)
 {
 //  try
 //  {
@@ -37,7 +37,7 @@ void CDoc::FileStore(LPCTSTR /* filename */)
 //  catch (const CFileException &e)
 //  {
 //      // An exception occurred. Display the relevant information.
-//      ::MessageBox(nullptr, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+//      ::MessageBox(nullptr, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 //  }
 
 }

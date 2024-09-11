@@ -14,9 +14,7 @@
 #define WM_TESTMESSAGE   WM_USER + 2   // the test message
 
 
-// Note: Modern C++ compilers can use this typedef instead.
-// typedef std::shared_ptr<CTestWindow> TestWindowPtr;
-typedef Shared_Ptr<CTestWindow> TestWindowPtr;
+using TestWindowPtr = std::unique_ptr<CTestWindow>;
 
 ///////////////////////////////////////////////////////////
 // CMainWindow manages the main window for the application.
@@ -24,21 +22,21 @@ class CMainWindow : public CWnd
 {
 public:
     CMainWindow();
-    virtual ~CMainWindow();
-    virtual HWND Create(HWND hParent = NULL);
+    virtual ~CMainWindow() override;
+    virtual HWND Create(HWND hParent = nullptr) override;
     void CreateTestWindows(int windows);
     void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
 
 protected:
     // Virtual functions that override base class functions
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnDestroy() override;
+    virtual void OnInitialUpdate() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainWindow(const CMainWindow&);               // Disable copy construction
-    CMainWindow& operator=(const CMainWindow&);    // Disable assignment operator
+    CMainWindow(const CMainWindow&) = delete;
+    CMainWindow& operator=(const CMainWindow&) = delete;
 
     // Message handlers
     LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
@@ -48,7 +46,7 @@ private:
     LONGLONG GetCounter() const;
     void OnAllWindowsCreated();
     void PerformanceTest() const;
-    void SendText(LPCTSTR str) const;
+    void SendText(LPCWSTR str) const;
 
     // Member variables
     std::vector<TestWindowPtr> m_pTestWindows; // A vector CTestWindow smart pointers

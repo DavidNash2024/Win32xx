@@ -16,16 +16,16 @@ class CDialogApp : public CWinApp
 {
 public:
     CDialogApp();
-    virtual ~CDialogApp();
+    virtual ~CDialogApp() override;
     CClientDialog& GetDialog() { return m_clientDialog; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CDialogApp(const CDialogApp&);               // Disable copy construction
-    CDialogApp& operator=(const CDialogApp&);    // Disable assignment operator
+    CDialogApp(const CDialogApp&) = delete;
+    CDialogApp& operator=(const CDialogApp&) = delete;
 
     CClientDialog m_clientDialog;
 };

@@ -13,18 +13,18 @@ class CSimpleView : public CWnd
 {
 public:
     CSimpleView();
-    ~CSimpleView() {}
+    ~CSimpleView() override {}
     COLORREF GetColor() {return m_color;}
     void SetColor(COLORREF color) { m_color = color; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CSimpleView(const CSimpleView&);               // Disable copy construction
-    CSimpleView& operator=(const CSimpleView&);    // Disable assignment operator
+    CSimpleView(const CSimpleView&) = delete;
+    CSimpleView& operator=(const CSimpleView&) = delete;
 
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -42,16 +42,16 @@ class CDockSimple : public CDocker
 {
 public:
     CDockSimple();
-    virtual ~CDockSimple() {}
+    virtual ~CDockSimple() override {}
 
     CSimpleView& GetSimpleView() { return m_view; }
 
 protected:
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CDockSimple(const CDockSimple&);                // Disable copy construction
-    CDockSimple& operator=(const CDockSimple&);   // Disable assignment operator
+    CDockSimple(const CDockSimple&) = delete;
+    CDockSimple& operator=(const CDockSimple&) = delete;
 
     CSimpleView m_view;
 };
@@ -66,18 +66,18 @@ class CSplitterMDIChild : public CMDIChild
 {
 public:
     CSplitterMDIChild();
-    virtual ~CSplitterMDIChild();
+    virtual ~CSplitterMDIChild() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnInitialUpdate();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnInitialUpdate() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CSplitterMDIChild(const CSplitterMDIChild&);                // Disable copy construction
-    CSplitterMDIChild& operator=(const CSplitterMDIChild&);   // Disable assignment operator
+    CSplitterMDIChild(const CSplitterMDIChild&) = delete;
+    CSplitterMDIChild& operator=(const CSplitterMDIChild&) = delete;
 
     // Command handlers
     BOOL    OnColor(COLORREF rgb);

@@ -31,15 +31,15 @@ public:
 
     CMainFrame();
     virtual ~CMainFrame() override;
-    CMainFrame(const CMainFrame&) = delete;               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&) = delete;    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     virtual HWND Create(HWND parent = nullptr) override;
     void SetCaptionColor(COLORREF color);
 
 protected:
-    // Virtual functions that override base class functions
-    virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName) override;
+    // Virtual functions that override base class functions.
+    virtual BOOL    LoadRegistrySettings(LPCWSTR szKeyName) override;
     virtual void    OnClose() override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
@@ -73,31 +73,31 @@ private:
     void FillImageData(const CString& source, std::vector<BYTE>& dest);
     void FillList();
     void FillListFromAllBoxSets();
-    void FillListFromBoxSet(LPCTSTR boxset);
-    void FillListFromDateRange(LPCTSTR dateRange);
+    void FillListFromBoxSet(LPCWSTR boxset);
+    void FillListFromDateRange(LPCWSTR dateRange);
     void FillListFromFlags(DWORD dwMask);
-    void FillListFromGenre(LPCTSTR genre);
-    void FillListFromGenres(LPCTSTR genreList);
+    void FillListFromGenre(LPCWSTR genre);
+    void FillListFromGenres(LPCWSTR genreList);
     void FillListFromSearch();
-    void FillListFromType(LPCTSTR videoType);
+    void FillListFromType(LPCWSTR videoType);
     void FillTreeItems();
     void ForceToForeground();
     void LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie);
     void LoadMovies();
     void OnFilesLoaded();
 
-    // Message handlers
+    // Message handlers.
     LRESULT OnBoxSetChanged();
-    LRESULT OnBarEnd(LPDRAGPOS pDragPos);
+    LRESULT OnBarEnd(DragPos* pDragPos);
     LRESULT OnRClickListItem();
     LRESULT OnRClickTreeItem();
     LRESULT OnSelectListItem(const MovieInfo* pmi);
     LRESULT OnSelectTreeItem();
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT PlayMovie(LPCTSTR path);
+    LRESULT PlayMovie(LPCWSTR path);
 
-    // Command handlers
+    // Command handlers.
     BOOL    OnAddBoxSet();
     BOOL    OnAddFolder();
     BOOL    OnBoxSet(UINT nID);
@@ -109,10 +109,10 @@ private:
     BOOL    OnRemoveBoxSet();
     BOOL    OnRemoveFile();
     BOOL    OnSearch();
-    BOOL    OnVideoType(LPCTSTR videoType);
+    BOOL    OnVideoType(LPCWSTR videoType);
     BOOL    OnWatchList();
 
-    // Member variables
+    // Member variables.
     CCriticalSection m_cs;
     CViewList        m_viewList;
     CWorkThread      m_thread;
@@ -133,7 +133,7 @@ private:
 
     CDockTree*   m_pDockTree;
     CDockDialog* m_pDockDialog;
-    CEvent       m_stopRequest;     // An event to signal the event thread should stop
+    CEvent       m_stopRequest;     // An event to signal the event thread should stop.
     bool         m_isDirty;         // Has m_MoviesData has been modified?
     HTREEITEM    m_boxSetsItem;
     int          m_dialogHeight;

@@ -29,8 +29,7 @@ CView::~CView()
 void CView::AddItem(CString subItem0, CString subItem1, CString subItem2)
 {
     // Create the itemData smart pointer.
-    ListItemDataPtr itemData(new ListItemData(subItem0, subItem1, subItem2));
-    m_allListItemData.push_back(itemData);
+    ListItemDataPtr itemData = std::make_unique<ListItemData>(subItem0, subItem1, subItem2);
 
     // Set the text for the all the subItems belonging to the item.
     int item = GetItemCount();
@@ -42,6 +41,8 @@ void CView::AddItem(CString subItem0, CString subItem1, CString subItem2)
     // The item's lparam is used for sorting.
     LPARAM lparam = reinterpret_cast<LPARAM>(itemData.get());
     SetItemData(item, lparam);
+
+    m_allListItemData.push_back(std::move(itemData));
 }
 
 // Compares two items using their lparam values.
@@ -73,16 +74,19 @@ int CALLBACK CView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortVi
 // Insert 4 list view items.
 void CView::AddAllItems()
 {
-    AddItem(_T("ListViewApp.h"),   _T("1 KB"), _T("C++ Header file"));
-    AddItem(_T("main.cpp"),        _T("1 KB"), _T("C++ Source file"));
-    AddItem(_T("ListViewApp.cpp"), _T("3 KB"), _T("C++ Source file"));
-    AddItem(_T("Resource.rc"),     _T("2 KB"), _T("C++ Resource Script"));
-    AddItem(_T("Readme.txt"),      _T("4 KB"), _T("Text file"));
+    AddItem(L"ListViewApp.h",    L"1 KB",   L"C++ Header file");
+    AddItem(L"main.cpp",         L"1 KB",   L"C++ Source file");
+    AddItem(L"ListViewApp.cpp",  L"3 KB",   L"C++ Source file");
+    AddItem(L"Resource.rc",      L"2 KB",   L"C++ Resource Script");
+    AddItem(L"Readme.txt",       L"4 KB",   L"Text file");
 }
 
 // The window handle (HWND) is attached to CView when it is created.
 void CView::OnAttach()
 {
+    // Call the base class.
+    CListView::OnAttach();
+
     // The extended ListView styles must be set after the window is created.
     // Full row select is required to support the editing of subitems.
     SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
@@ -223,8 +227,7 @@ LRESULT CView::OnItemChanged(LPNMLISTVIEW pListView)
 LRESULT CView::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
 {
     // Determine the required sort order.
-    HDITEM  hdrItem;
-    ZeroMemory(&hdrItem, sizeof(hdrItem));
+    HDITEM  hdrItem{};
     hdrItem.mask = HDI_FORMAT;
     int column = pnmitem->iSubItem;
     VERIFY(Header_GetItem(GetHeader(), column, &hdrItem));
@@ -308,30 +311,28 @@ void CView::SetColumns()
     DeleteAllItems();
 
     // initialize the LV_COLUMN struct
-    LV_COLUMN lvColumn;
-    ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
+    LV_COLUMN lvColumn{};
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
     lvColumn.fmt = LVCFMT_LEFT;
 
     // 1st column
-    lvColumn.pszText = const_cast<LPTSTR>(_T("Name"));
+    lvColumn.pszText = const_cast<LPWSTR>(L"Name");
     InsertColumn(0, lvColumn);
 
     // 2nd column
-    lvColumn.pszText = const_cast<LPTSTR>(_T("Size"));
+    lvColumn.pszText = const_cast<LPWSTR>(L"Size");
     InsertColumn(1, lvColumn);
 
     // 3rd column
-    lvColumn.pszText = const_cast<LPTSTR>(_T("Type"));
+    lvColumn.pszText = const_cast<LPWSTR>(L"Type");
     InsertColumn(2, lvColumn);
 }
 
 // Sets the up and down sort arrows in the listview's header.
 void CView::SetHeaderSortImage(int  columnIndex, int showArrow)
 {
-    HWND    hHeader = 0;
-    HDITEM  hdrItem;
-    ZeroMemory(&hdrItem, sizeof(hdrItem));
+    HWND hHeader = 0;
+    HDITEM  hdrItem{};
 
     hHeader = GetHeader();
     if (hHeader)
@@ -401,10 +402,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -412,7 +413,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

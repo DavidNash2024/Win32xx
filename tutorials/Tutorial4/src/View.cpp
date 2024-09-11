@@ -1,11 +1,6 @@
 //////////////////////////////////////////////
 // View.cpp
-//  Definitions for the CView class
-
-// VS6 requires these macros to be defined.
-#define WINVER          0x0410
-#define _WIN32_WINDOWS  0x0410
-#define _WIN32_IE       0x0401
+//  Definitions for the CView class.
 
 #include "View.h"
 
@@ -35,12 +30,12 @@ void CView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-// Called when drawing to the window
+// Called when drawing to the window.
 void CView::OnDraw(CDC& dc)
 {
     if (m_points.size() > 0)
     {
-        bool isPenDown = false;  //Start with the pen up
+        bool isPenDown = false;  // Start with the pen up.
 
         for (size_t i = 0 ; i < m_points.size(); i++)
         {

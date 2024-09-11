@@ -9,8 +9,8 @@
 #include "UserMessages.h"
 
 
-/////////////////////////////////
-// CViewTree function definitions
+//////////////////////////////////
+// CViewTree function definitions.
 //
 
 // Constructor.
@@ -25,7 +25,7 @@ CViewTree::~CViewTree()
 }
 
 // Returns true if the text for the box set is unique.
-bool CViewTree::IsBoxSetUnique(LPCTSTR text, HTREEITEM item)
+bool CViewTree::IsBoxSetUnique(LPCWSTR text, HTREEITEM item)
 {
     HTREEITEM parentItem = GetParentItem(item);
     HTREEITEM childItem = GetChild(parentItem);
@@ -48,7 +48,7 @@ bool CViewTree::IsBoxSetUnique(LPCTSTR text, HTREEITEM item)
     return isUnique;
 }
 
-// Allows label editing for Box Set children
+// Allows label editing for Box Set children.
 BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
 {
     LPNMTVDISPINFO pTVDispInfo = (LPNMTVDISPINFO)lparam;
@@ -57,7 +57,7 @@ BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
     HTREEITEM parentItem = GetParentItem(item);
     if (GetItemText(parentItem) == L"Box Sets")
     {
-        // Permit label editing for Box Set children
+        // Permit label editing for Box Set children.
         return FALSE;
     }
 
@@ -84,7 +84,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
     CString oldText = m_itemText;
 
     // Use the new text unless the user cancelled the edit
-    LPTSTR text = pTVDispInfo->item.pszText;
+    LPWSTR text = pTVDispInfo->item.pszText;
     if ((text != nullptr) && (lstrlen(text) != 0))
         m_itemText.GetWindowText(GetEditControl());
 
@@ -106,7 +106,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 
     // Confirm the edit, and update the item text.
     SetItemText(item, m_itemText);
-    pTVDispInfo->item.pszText = (LPTSTR)m_itemText.c_str();
+    pTVDispInfo->item.pszText = (LPWSTR)m_itemText.c_str();
 
     if (oldText != m_itemText)
     {
@@ -218,7 +218,7 @@ void CViewTree::Swap(HTREEITEM item1, HTREEITEM item2)
     CString str1 = GetItemText(item1);
 
     tv1.cchTextMax = str1.GetLength();
-    tv1.pszText = const_cast<LPTSTR>(str1.c_str());
+    tv1.pszText = const_cast<LPWSTR>(str1.c_str());
 
     TVITEM tv2{};
     tv2.mask = TVIF_HANDLE | TVIF_IMAGE | TVIF_TEXT;
@@ -227,12 +227,12 @@ void CViewTree::Swap(HTREEITEM item1, HTREEITEM item2)
     CString str2 = GetItemText(item2);
 
     tv2.cchTextMax = str2.GetLength();
-    tv2.pszText = const_cast<LPTSTR>(str2.c_str());
+    tv2.pszText = const_cast<LPWSTR>(str2.c_str());
 
     tv1.hItem = item2;
     tv2.hItem = item1;
 
-    // swap the items in the treeview
+    // Swap the items in the treeview.
     SetItem(tv1);
     SetItem(tv2);
 }
@@ -257,7 +257,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -268,14 +268,14 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
 }
 
-/////////////////////////////////
-// CDockTree function definitions
+//////////////////////////////////
+// CDockTree function definitions.
 //
 
 // Constructor.
@@ -283,7 +283,7 @@ CDockTree::CDockTree()
 {
     SetView(m_treeView);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 }
 
@@ -300,7 +300,7 @@ LRESULT CDockTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -311,7 +311,7 @@ LRESULT CDockTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

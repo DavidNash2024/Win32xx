@@ -6,7 +6,7 @@
 #include "MovieShowApp.h"
 
 //////////////////////////////////////
-// CMovieShowApp function definitions
+// CMovieShowApp function definitions.
 //
 
 // Constructor

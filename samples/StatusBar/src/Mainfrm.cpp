@@ -28,7 +28,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\StatusBar Sample"));
+    LoadRegistrySettings(L"Win32++\\StatusBar Sample");
 
     return CFrame::Create(parent);
 }
@@ -62,7 +62,7 @@ void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
     }
 
     // Draw the owner drawn text, stored in the itemData.
-    LPCTSTR text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
+    LPCWSTR text = reinterpret_cast<LPCWSTR>(pDrawItem->itemData);
     dc.SetBkMode(TRANSPARENT);
     dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
 }
@@ -98,7 +98,7 @@ BOOL CMainFrame::DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusbar)
 }
 
 // Retrieves the width of the part required to contain the specified text.
-int CMainFrame::GetTextPartWidth(LPCTSTR text) const
+int CMainFrame::GetTextPartWidth(LPCWSTR text) const
 {
     CClientDC dc = GetDC();
     dc.SelectObject(GetStatusBar().GetFont());
@@ -239,10 +239,9 @@ void CMainFrame::SetStatusParts()
     partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_SCRL)));
 
     int sumWidths = 0;
-    std::vector<int>::iterator iter;
-    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    for (int i : partWidths)
     {
-        sumWidths += *iter;
+        sumWidths += i;
     }
     sumWidths += gripWidth;
 
@@ -250,14 +249,14 @@ void CMainFrame::SetStatusParts()
     CRect clientRect = GetClientRect();
     const LONG minWidth = 300;
     int width = std::max(minWidth, clientRect.right);
-    std::vector<int>::iterator begin = partWidths.begin();
+    auto begin = partWidths.begin();
     partWidths.insert(begin, width - sumWidths);
 
     // Create or resize the status bar parts.
-    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    int part = 0;
+    for (int i : partWidths)
     {
-        int part = static_cast<int>(iter - partWidths.begin());
-        GetStatusBar().SetPartWidth(part, *iter);
+        GetStatusBar().SetPartWidth(part++, i);
     }
 
     // Reposition the hyperlink over part 1.
@@ -285,7 +284,7 @@ void CMainFrame::SetupMenuIcons()
 {
     // Use the MenuIcons bitmap for images in menu items.
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -329,10 +328,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -340,7 +339,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

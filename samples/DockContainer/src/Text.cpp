@@ -26,13 +26,13 @@ CViewText::~CViewText()
 void CViewText::OnAttach()
 {
     SetDPIFont();
-    SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
+    SetWindowText(L"Text Edit Window\r\n\r\n You can type some text here ...");
 }
 
 // Adjusts the font size in response to window DPI changes.
 void CViewText::SetDPIFont()
 {
-    m_font.CreatePointFont(100, _T("Courier New"));
+    m_font.CreatePointFont(100, L"Courier New");
     m_font = DpiScaleFont(m_font, 9);
     SetFont(m_font);
 }
@@ -51,10 +51,10 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -62,7 +62,7 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -76,8 +76,8 @@ LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Constructor.
 CContainText::CContainText()
 {
-    SetDockCaption(_T("Text View - Docking container"));
-    SetTabText(_T("Text"));
+    SetDockCaption(L"Text View - Docking container");
+    SetTabText(L"Text");
     SetTabIcon(IDI_TEXT);
     SetView(m_viewText);
 }
@@ -96,10 +96,10 @@ LRESULT CContainText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -107,7 +107,7 @@ LRESULT CContainText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -164,10 +164,10 @@ LRESULT CDockText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -175,7 +175,7 @@ LRESULT CDockText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

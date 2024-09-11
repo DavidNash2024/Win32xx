@@ -16,15 +16,15 @@ class CDoubleBufferApp : public CWinApp
 {
 public:
     CDoubleBufferApp();
-    virtual ~CDoubleBufferApp();
+    virtual ~CDoubleBufferApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CDoubleBufferApp(const CDoubleBufferApp&);               // Disable copy construction
-    CDoubleBufferApp& operator=(const CDoubleBufferApp&);    // Disable assignment operator
+    CDoubleBufferApp(const CDoubleBufferApp&) = delete;
+    CDoubleBufferApp& operator=(const CDoubleBufferApp&) = delete;
 
     CMainFrame m_frame;
 };

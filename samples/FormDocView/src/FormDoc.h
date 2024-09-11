@@ -16,8 +16,8 @@ class CFormDoc
 public:
     CFormDoc();
     virtual ~CFormDoc();
-    void  LoadSettings(LPCTSTR keyName);
-    void  SaveSettings(LPCTSTR keyName);
+    void  LoadSettings(LPCWSTR keyName);
+    void  SaveSettings(LPCWSTR keyName);
 
     bool  GetCheckA() { return m_isCheckA; }
     void  SetCheckA(bool isChecked) { m_isCheckA = isChecked; }

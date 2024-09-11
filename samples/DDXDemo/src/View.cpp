@@ -33,7 +33,7 @@
 #define CFM_BACKCOLOR       0x04000000
 #endif // CFM_BACKCOLOR
 
-static const  CString unit[] = {_T("A"), _T("B"), _T("C")};
+static const  CString unit[] = {L'A', L'B', L'C'};
 
 /*=============================================================================*
 
@@ -97,7 +97,7 @@ CView(UINT nResID)                                                          /*
     m_ULongVal      = 10;
     m_floatVal      = 0.0;
     m_doubleVal     = 0.0;
-    m_LPTSTRVal[0]  = _T('\0');
+    m_LPWSTRVal[0]  = L'\0';
     m_checkVal[0]     = FALSE;
     m_checkVal[1]     = FALSE;
     m_checkVal[2]     = FALSE;
@@ -164,14 +164,14 @@ AddToolTip(UINT id, const CString & sToolTip)                               /*
 *-----------------------------------------------------------------------------*/
 {
     HWND ctl = ::GetDlgItem(*this, id);
-    if (ctl == NULL)
+    if (ctl == nullptr)
     {
-        TRACE(_T("cannot connect tooltip: ") + sToolTip);
+        TRACE("cannot connect tooltip: " + sToolTip);
         return FALSE;
     }
     if (!m_toolTip.AddTool(ctl, sToolTip.c_str()))
     {
-        TRACE(_T("unable to add tooltip: ") + sToolTip);
+        TRACE("unable to add tooltip: " + sToolTip);
         return FALSE;
     }
     return TRUE;
@@ -185,40 +185,40 @@ AdjustStatus()                                                              /*
     dialog.
 *-----------------------------------------------------------------------------*/
 {
-    LPCTSTR TorF[]   = {_T("OFF"), _T("ON")};
+    LPCWSTR TorF[]   = {L"OFF", L"ON"};
 
       // display the DateTime control content
     CTime t(m_dateSysTime);
-    CString dt = t.Format(_T("%d-%b-%Y %H:%M:%S"));
+    CString dt = t.Format(L"%d-%b-%Y %H:%M:%S");
       // display the MonthCalendar control content
     t = m_calDateSysTime;
-    CString mc = t.Format(_T("%d-%b-%Y"));
+    CString mc = t.Format(L"%d-%b-%Y");
 
       // set m_statusBoxVal to display values of all controls
-    LPCTSTR fmt = _T("STATUS Button Pressed.\nStatus is:\n\n")
-        _T("ID of focus is %d\n")
-        _T("BYTE        is %hu\n")
-        _T("short       is %hd\n")
-        _T("int         is %d\n")
-        _T("UINT        is %u\n")
-        _T("long        is %ld\n")
-        _T("ULONG       is %lu\n")
-        _T("float       is %g\n")
-        _T("double      is %g\n")
-        _T("LPTSTR      is %s\n")
-        _T("Text Box    is '%s'\n")
-        _T("RichEdit    is '%s'\n")
-        _T("ListBox     is '%s'\n")
-        _T("ComboBox    is '%s'\n")
-        _T("Radio_%s     is selected\n")
-        _T("Check Box A is %s\n")
-        _T("Check Box B is %s\n")
-        _T("Check Box C is %s\n")
-        _T("Slider Pos  is %d\n")
-        _T("ScrollBar   is %d\n")
-        _T("Progress    is %d\n")
-        _T("DateTime    is %s\n")
-        _T("Month Clndr is %s\n")
+    LPCWSTR fmt = L"STATUS Button Pressed.\nStatus is:\n\n"
+        L"ID of focus is %d\n"
+        L"BYTE        is %hu\n"
+        L"short       is %hd\n"
+        L"int         is %d\n"
+        L"UINT        is %u\n"
+        L"long        is %ld\n"
+        L"ULONG       is %lu\n"
+        L"float       is %g\n"
+        L"double      is %g\n"
+        L"LPWSTR      is %s\n"
+        L"Text Box    is '%s'\n"
+        L"RichEdit    is '%s'\n"
+        L"ListBox     is '%s'\n"
+        L"ComboBox    is '%s'\n"
+        L"Radio_%s     is selected\n"
+        L"Check Box A is %s\n"
+        L"Check Box B is %s\n"
+        L"Check Box C is %s\n"
+        L"Slider Pos  is %d\n"
+        L"ScrollBar   is %d\n"
+        L"Progress    is %d\n"
+        L"DateTime    is %s\n"
+        L"Month Clndr is %s\n"
         ;
     m_statusBoxVal.Format(fmt,
         m_focusID,
@@ -230,7 +230,7 @@ AdjustStatus()                                                              /*
         m_ULongVal,
         m_floatVal,
         m_doubleVal,
-        m_LPTSTRVal,
+        m_LPWSTRVal,
         m_editVal.c_str(),
         m_richEditVal.c_str(),
         m_listBoxVal.c_str(),
@@ -257,10 +257,10 @@ AssignToolTips()                                                            /*
     HWND hParent = *this;
     if (!m_toolTip.Create(hParent))
     {
-        TRACE(_T("unable to create tool tips\n"));
+        TRACE("unable to create tool tips\n");
         return;
     }
-    m_toolTip.AddTool(hParent, _T("Client area"));
+    m_toolTip.AddTool(hParent, L"Client area");
     AddToolTip(IDC_RADIO_A);
     AddToolTip(IDC_RADIO_B);
     AddToolTip(IDC_RADIO_C);
@@ -283,7 +283,7 @@ AssignToolTips()                                                            /*
     AddToolTip(IDC_EDIT_DWORD);
     AddToolTip(IDC_EDIT_FLOAT);
     AddToolTip(IDC_EDIT_DOUBLE);
-    AddToolTip(IDC_EDIT_LPTSTR);
+    AddToolTip(IDC_EDIT_LPWSTR);
     AddToolTip(IDC_CALENDAR);
     AddToolTip(IDC_DATE_TIME);
     AddToolTip(IDC_SCROLLBAR);
@@ -349,10 +349,10 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -360,7 +360,7 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -414,9 +414,9 @@ DoDataExchange(CDataExchange& dx)                                           /*
       // connect double box to m_doubleVal and specify limits
     dx.DDX_Text(IDC_EDIT_DOUBLE,    m_doubleVal);
     dx.DDV_MinMaxDouble(            m_doubleVal, -10.0, 100000.);
-      // connect the LPTSTR box and specify length
-    dx.DDX_Text(IDC_EDIT_LPTSTR,    m_LPTSTRVal, 255);
-    dx.DDV_MaxChars(                m_LPTSTRVal, 25);
+      // connect the LPWSTR box and specify length
+    dx.DDX_Text(IDC_EDIT_LPWSTR,    m_LPWSTRVal, 255);
+    dx.DDV_MaxChars(                m_LPWSTRVal, 25);
       // connect the regular edit box to m_editVal and specify length
     dx.DDX_Text(IDC_EDIT_CSTRING,   m_editVal);
     dx.DDV_MaxChars(                m_editVal, 25);
@@ -497,7 +497,7 @@ GetDocumentValues()                                                         /*
     m_sliderVal     = m_doc.GetSlider();
     m_dateSysTime   = m_doc.GetDateTime();
     m_calDateSysTime = m_doc.GetMoCalendar();
-    StrCopy(m_LPTSTRVal, m_doc.GetLPTSTR(), 256);
+    StrCopy(m_LPWSTRVal, m_doc.GetLPWSTR(), 256);
 }
 
 /*============================================================================*/
@@ -511,7 +511,7 @@ OnBitmap()                                                                  /*
       // save current contents of controls
     UpdateData(m_dx, READFROMCONTROL);
       // reset status to just this message:
-    m_statusBoxVal = _T("The moondance rose.");
+    m_statusBoxVal = L"The moondance rose.";
       // post the message
     UpdateData(m_dx, SENDTOCONTROL);
     TRACE("Bitmap Pressed\n");
@@ -528,7 +528,7 @@ OnButton()                                                                  /*
       // read current contents of controls to memory
     UpdateData(m_dx, READFROMCONTROL);
       // reset the status message to just this:
-    m_statusBoxVal = _T("PUSH ME button Pressed");
+    m_statusBoxVal = L"PUSH ME button Pressed";
       // send this status message (and also the other values) back into
       // the control
     UpdateData(m_dx, SENDTOCONTROL);
@@ -722,7 +722,7 @@ OnInitDialog()                                                              /*
     for (int i = 0 ; i < 10 ; i++)
     {
         CString s;
-        s.Format(_T("List Box%d"), i);
+        s.Format(L"List Box%d", i);
         m_listBox.AddString(s);
     }
       // ditto for the combo box
@@ -730,7 +730,7 @@ OnInitDialog()                                                              /*
     for (int j = 0 ; j < 8 ; j++)
     {
         CString s;
-        s.Format(_T("Combo Box%d"), j);
+        s.Format(L"Combo Box%d", j);
         m_comboBox.AddString(s);
     }
       // set the slider, progress, and scroll bar ranges
@@ -744,7 +744,7 @@ OnInitDialog()                                                              /*
     m_slider.SetPageSize(page);
     m_progressBar.SetRange((short)lo, (short)hi);
       // set Date-Time display format
-    m_dateTime.SetFormat(_T("dd'-'MMM'-'yyyy' 'HH':'mm':'ss"));
+    m_dateTime.SetFormat(L"dd'-'MMM'-'yyyy' 'HH':'mm':'ss");
       // retrieve values from the document
     GetDocumentValues();
       // gang together progress, scroll bar, and slider
@@ -799,8 +799,8 @@ SetCheck(UINT check)                                                        /*
       // toggle the check control
     m_checkVal[check] = (m_checkVal[check]? FALSE : TRUE);
       // set the status
-    m_statusBoxVal = CString("Check ") + unit[check] + " set " +
-        (m_checkVal[check] ? _T("ON.") : _T("OFF."));
+    m_statusBoxVal = "Check " + unit[check] + " set " +
+        (m_checkVal[check] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
@@ -812,8 +812,8 @@ SetCheckAStatus()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal = CString("Check A set ") + (m_checkVal[0] ?
-        _T("ON.") : _T("OFF."));
+    m_statusBoxVal;
+    m_statusBoxVal << "Check A set " << (m_checkVal[0] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
@@ -826,8 +826,8 @@ SetCheckBStatus()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal = CString("Check B set ") + (m_checkVal[1] ?
-        _T("ON.") : _T("OFF."));
+    m_statusBoxVal;
+    m_statusBoxVal << "Check B set " << (m_checkVal[1] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
@@ -839,8 +839,8 @@ SetCheckCStatus()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal = CString("Check C set ") + (m_checkVal[2] ?
-        _T("ON.") : _T("OFF."));
+    m_statusBoxVal;
+    m_statusBoxVal << "Check C set " << (m_checkVal[2] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
@@ -901,7 +901,7 @@ UpdateDocument()                                                            /*
     m_doc.SetULong(m_ULongVal);
     m_doc.SetFloat(m_floatVal);
     m_doc.SetDouble(m_doubleVal);
-    m_doc.SetLPTSTR(m_LPTSTRVal);
+    m_doc.SetLPWSTR(m_LPWSTRVal);
     m_doc.SetEditBox(m_editVal);
     m_doc.SetRichEditBox(m_richEditVal);
     m_doc.SetListBoxS(m_listBoxVal);

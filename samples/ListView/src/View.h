@@ -34,7 +34,7 @@ const int SHOW_NO_ARROW = 1;
 const int SHOW_UP_ARROW = 2;
 const int SHOW_DOWN_ARROW = 3;
 
-typedef Shared_Ptr<ListItemData> ListItemDataPtr;
+using ListItemDataPtr = std::unique_ptr<ListItemData>;
 
 
 //////////////////////////////////////////
@@ -43,19 +43,19 @@ class CView : public CListView
 {
 public:
     CView();
-    virtual ~CView();
+    virtual ~CView() override;
     void AddItem(CString subItem0, CString subItem1, CString subItem2);
 
 protected:
     // Virtual functions that override base class functions.
-    virtual void    OnAttach();
-    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnAttach() override;
+    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam) override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     // Message Handlers.
     LRESULT OnClick(LPNMLISTVIEW pListView);

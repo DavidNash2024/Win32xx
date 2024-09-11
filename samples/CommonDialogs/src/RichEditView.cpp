@@ -29,7 +29,7 @@ CRichEditView()                                                             /*
 *-----------------------------------------------------------------------------*/
     :   m_textLength(0), m_isAppBanded(FALSE)
 {
-    ZeroMemory(&m_fr, sizeof(m_fr));
+        m_fr = {};
 }
 
 /*============================================================================*/
@@ -39,7 +39,7 @@ Clean()                                                                     /*
     Clear the control of all text.
 *-----------------------------------------------------------------------------*/
 {
-    SetWindowText(_T(""));
+    SetWindowText(L"");
 }
 
 /*============================================================================*/
@@ -92,7 +92,7 @@ SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                        /*
     void CRichEditView::
 SetFont(HFONT font, BOOL redraw) const                                      /*
 
-    Set the display font; if NULL, the system font is used. Immediately
+    Set the display font; if nullptr, the system font is used. Immediately
     redraw the view if TRUE.  Prevent the control from automatically changing
     fonts if there is a change in the keyboard layout.
 *-----------------------------------------------------------------------------*/
@@ -125,7 +125,7 @@ SetWrapping(int wrap)                                                       /*
       // 0  turns word wrap on based on the window width
       // 1  turns word wrap off completely
       // >1 turns word wrap on for a line width equal to the wrap value
-    SetTargetDevice(NULL, (wrap == 0 ? TRUE : FALSE));
+    SetTargetDevice(nullptr, (wrap == 0 ? TRUE : FALSE));
 }
 
 /*============================================================================*/
@@ -192,8 +192,8 @@ StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)         /*
 
     *pcb = 0;
     if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb,
-      NULL))
-        ::MessageBox(NULL, _T("StreamInFile Failed"), _T(""), MB_OK);
+      nullptr))
+        ::MessageBox(nullptr, L"StreamInFile Failed", L"", MB_OK);
 
     return 0;
 }
@@ -216,8 +216,8 @@ StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)        /*
 
     *pcb = 0;
     if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb,
-      NULL))
-        ::MessageBox(NULL, _T("StreamOutFile Failed"), _T(""), MB_OK);
+      nullptr))
+        ::MessageBox(nullptr, L"StreamOutFile Failed", L"", MB_OK);
     return 0;
 }
 
@@ -256,7 +256,7 @@ DoPreparePrinting(CPrintInfo& info)                                         /*
     info.SetMinPage(pd.nMinPage);
     info.SetMaxPage(pd.nMaxPage);
     info.SetToPage(pd.nToPage);
-    info.m_strPageDesc = _T("Page %u");
+    info.m_strPageDesc = L"Page %u";
     return TRUE;
 }
 
@@ -296,14 +296,13 @@ DoPrintView()                                                               /*
         OnBeginPrinting(DC, info);
 
           // Set up the print job
-        DOCINFO di;
-        ZeroMemory(&di, sizeof(di));
+        DOCINFO di{};
         di.cbSize       = sizeof(DOCINFO);
         di.lpszDocName  = m_docPath; // the spooler label
         di.lpszOutput   = (m_printPath.IsEmpty() ?
-            NULL : m_printPath.c_str());
+            nullptr : m_printPath.c_str());
         di.lpszDatatype = (m_dataType.IsEmpty() ?
-            NULL : m_dataType.c_str());
+            nullptr : m_dataType.c_str());
         di.fwType       = (m_isAppBanded ?  DI_APPBANDING : 0);
           // Start the document.
         DC.StartDoc(&di);
@@ -372,15 +371,15 @@ DoPrintView()                                                               /*
     catch (const CWinException& /* e */)
     {
         // No default printer
-        ::MessageBox(0, _T("Unable to display print dialog"),
-            _T("Print Failed"), MB_OK);
+        ::MessageBox(0, L"Unable to display print dialog",
+            L"Print Failed", MB_OK);
         return;
     }
 }
 
 /*============================================================================*/
     void CRichEditView::
-DoPrintRichView(LPCTSTR sDocPath)                                           /*
+DoPrintRichView(LPCWSTR sDocPath)                                           /*
 
     Print the contents of the CRichEditView control in the CView client
     area accessed by pView. Label the spooler output using the sDocPath.
@@ -453,7 +452,7 @@ OnBeginPrinting(CDC& DC, CPrintInfo& info)                                  /*
     HDC hPrinterDC = DC.GetHDC();
 
       // Rendering to the same DC we are measuring.
-    ZeroMemory(&m_fr, sizeof(m_fr));
+    m_fr = {};
     m_fr.hdc       = hPrinterDC;  // device to render to
     m_fr.hdcTarget = hPrinterDC;  // device to format to
 
@@ -498,7 +497,7 @@ OnEndPrinting(CDC& DC, CPrintInfo& info)                                    /*
 
 /*============================================================================*/
     void CRichEditView::
-OnPrepareDC(CDC& DC, CPrintInfo& info /* = NULL */)                         /*
+OnPrepareDC(CDC& DC, CPrintInfo& info /* = nullptr */)                         /*
 
     Make preparations for printing the next page. Here, check for an
     end-of-printing condition.
@@ -521,7 +520,7 @@ OnPreparePrinting(CPrintInfo& info)                                         /*
 {
       // set up the dialog to choose the printer and printing parameters
     MyPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    PrintDlg.SetBoxTitle(_T("Print contents of rich edit box."));
+    PrintDlg.SetBoxTitle(L"Print contents of rich edit box.");
     info.InitInfo(&PrintDlg, 1, 0xffff, 1, 0xffff, 1);
     if (!DoPreparePrinting(info))
         return FALSE;

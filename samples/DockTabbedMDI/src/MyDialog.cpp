@@ -22,14 +22,14 @@ CViewDialog::~CViewDialog()
 }
 
 // This function appends text to an edit control.
-void CViewDialog::AppendText(int id, LPCTSTR text)
+void CViewDialog::AppendText(int id, LPCWSTR text)
 {
     // Append Line Feed
     LRESULT dx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
     if (dx)
     {
         SendDlgItemMessage(id, EM_SETSEL, dx, dx);
-        SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(_T("\r\n")));
+        SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(L"\r\n"));
     }
 
     // Append text
@@ -60,10 +60,10 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -71,7 +71,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -80,7 +80,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Suppress closing the dialog when the Esc key is pressed.
 void CViewDialog::OnCancel()
 {
-    AppendText(IDC_RICHEDIT2, _T("Cancel Pressed"));
+    AppendText(IDC_RICHEDIT2, L"Cancel Pressed");
     TRACE("Cancel Pressed\n");
 }
 
@@ -124,8 +124,8 @@ BOOL CViewDialog::OnInitDialog()
     AttachItem(IDC_RICHEDIT2, m_richEdit2);
 
     // Put some text in the edit boxes
-    m_richEdit1.SetWindowText(_T("Rich Edit Window"));
-    m_richEdit2.SetWindowText(_T("Rich Edit Window"));
+    m_richEdit1.SetWindowText(L"Rich Edit Window");
+    m_richEdit2.SetWindowText(L"Rich Edit Window");
 
     // Initialize dialog resizing
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
@@ -157,14 +157,14 @@ LRESULT CViewDialog::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Suppress closing the dialog when the enter key is pressed.
 void CViewDialog::OnOK()
 {
-    AppendText(IDC_RICHEDIT2, _T("OK Button Pressed"));
+    AppendText(IDC_RICHEDIT2, L"OK Button Pressed");
     TRACE("OK Button Pressed\n");
 }
 
 // Called when the button is pressed.
 BOOL CViewDialog::OnButton()
 {
-    AppendText(IDC_RICHEDIT2, _T("Button Pressed"));
+    AppendText(IDC_RICHEDIT2, L"Button Pressed");
     TRACE("Button Pressed\n");
     return TRUE;
 }
@@ -172,7 +172,7 @@ BOOL CViewDialog::OnButton()
 // Called when check box 1 is clicked.
 BOOL CViewDialog::OnCheck1()
 {
-    AppendText(IDC_RICHEDIT2, _T("Check Box 1"));
+    AppendText(IDC_RICHEDIT2, L"Check Box 1");
     TRACE("Check Box 1\n");
     return TRUE;
 }
@@ -180,7 +180,7 @@ BOOL CViewDialog::OnCheck1()
 // Called when check box 2 is clicked.
 BOOL CViewDialog::OnCheck2()
 {
-    AppendText(IDC_RICHEDIT2, _T("Check Box 2"));
+    AppendText(IDC_RICHEDIT2, L"Check Box 2");
     TRACE("Check Box 2\n");
     return TRUE;
 }
@@ -188,7 +188,7 @@ BOOL CViewDialog::OnCheck2()
 // Called when check box 3 is clicked.
 BOOL CViewDialog::OnCheck3()
 {
-    AppendText(IDC_RICHEDIT2, _T("Check Box 3"));
+    AppendText(IDC_RICHEDIT2, L"Check Box 3");
     TRACE("Check Box 3\n");
     return TRUE;
 }
@@ -200,7 +200,7 @@ BOOL CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 
     CString str;
     int button = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), button);
+    str.Format(L"Radio%d", button);
     AppendText(IDC_RICHEDIT2, str);
     TRACE(str); TRACE("\n");
 
@@ -216,8 +216,8 @@ BOOL CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 CContainDialog::CContainDialog() : m_viewDialog(IDD_MYDIALOG)
 {
     SetView(m_viewDialog);
-    SetDockCaption (_T("Dialog View - Docking container"));
-    SetTabText(_T("Dialog"));
+    SetDockCaption (L"Dialog View - Docking container");
+    SetTabText(L"Dialog");
     SetTabIcon(IDI_DIALOGVIEW);
 }
 
@@ -235,10 +235,10 @@ LRESULT CContainDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -246,7 +246,7 @@ LRESULT CContainDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -303,10 +303,10 @@ LRESULT CDockDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -314,7 +314,7 @@ LRESULT CDockDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

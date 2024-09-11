@@ -8,7 +8,7 @@
 /////////////////////////////
 // CDoc function definitions.
 //
-void CDoc::FileOpen(LPCTSTR filename)
+void CDoc::FileOpen(LPCWSTR filename)
 // Loads the plotpoint data from the archive.
 // Throws an exception if unable to read the file.
 {
@@ -17,7 +17,7 @@ void CDoc::FileOpen(LPCTSTR filename)
     ar >> *this;
 }
 
-void CDoc::FileSave(LPCTSTR filename)
+void CDoc::FileSave(LPCWSTR filename)
 // Stores the plotpoint data in the archive.
 // Throws an exception if unable to save the file.
 {
@@ -26,7 +26,7 @@ void CDoc::FileSave(LPCTSTR filename)
 }
 
 void CDoc::Serialize(CArchive &ar)
-// Uses CArchive to stream data to or from a file
+// Uses CArchive to stream data to or from a file.
 {
 
     if (ar.IsStoring())
@@ -36,10 +36,9 @@ void CDoc::Serialize(CArchive &ar)
         ar << points;
 
         // Store the PlotPoint data.
-        std::vector<PlotPoint>::iterator iter;
-        for (iter = GetAllPoints().begin(); iter != GetAllPoints().end(); ++iter)
+        for (PlotPoint& pp : GetAllPoints())
         {
-            ArchiveObject ao( &(*iter), sizeof(PlotPoint) );
+            ArchiveObject ao(&pp, sizeof(pp));
             ar << ao;
         }
     }

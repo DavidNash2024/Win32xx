@@ -16,15 +16,15 @@ class CPropertySheetApp : public CWinApp
 {
 public:
     CPropertySheetApp();
-    virtual ~CPropertySheetApp();
+    virtual ~CPropertySheetApp() override;
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CPropertySheetApp(const CPropertySheetApp&);               // Disable copy construction
-    CPropertySheetApp& operator=(const CPropertySheetApp&);    // Disable assignment operator
+    CPropertySheetApp(const CPropertySheetApp&) = delete;
+    CPropertySheetApp& operator=(const CPropertySheetApp&) = delete;
 
     CMainFrame m_frame;
 };

@@ -10,6 +10,7 @@
 #include "Text.h"
 #include "resource.h"
 
+using namespace std;
 
 //////////////////////////////////
 // CMainFrame function definitions
@@ -32,7 +33,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\DockContainer"));
+    LoadRegistrySettings(L"Win32++\\DockContainer");
 
     return CDockFrame::Create(parent);
 }
@@ -41,12 +42,11 @@ HWND CMainFrame::Create(HWND parent)
 void CMainFrame::HideSingleContainerTab(bool hideSingle)
 {
     m_hideSingleTab = hideSingle;
-    std::vector<CDocker*>::const_iterator iter;
 
     // Set the Tab position for each container
-    for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
+    for (CDocker* docker : GetAllDockers())
     {
-        CDockContainer* pContainer = (*iter)->GetContainer();
+        CDockContainer* pContainer = docker->GetContainer();
         if (pContainer && pContainer->IsWindow())
         {
             pContainer->SetHideSingleTab(hideSingle);
@@ -62,58 +62,58 @@ void CMainFrame::LoadDefaultDockers()
     DWORD style = DS_CLIENTEDGE; // The style added to each docker
 
     // Add the right most dockers.
-    CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | style, DpiScaleInt(200), ID_DOCK_CLASSES1);
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_FILES1);
-    pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_CLASSES2);
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_FILES2);
+    CDocker* pDockRight = AddDockedChild(make_unique<CDockClasses>(), DS_DOCKED_RIGHT | style, DpiScaleInt(200), ID_DOCK_CLASSES1);
+    pDockRight->AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_FILES1);
+    pDockRight->AddDockedChild(make_unique<CDockClasses>(), DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_CLASSES2);
+    pDockRight->AddDockedChild(make_unique<CDockFiles>(), DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_FILES2);
 
     // Add the bottom dockers.
-    CDocker* pDockBottom = AddDockedChild(new CDockOutput, DS_DOCKED_BOTTOM | style, DpiScaleInt(100), ID_DOCK_OUTPUT1);
-    pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_OUTPUT2);
+    CDocker* pDockBottom = AddDockedChild(make_unique<CDockOutput>(), DS_DOCKED_BOTTOM | style, DpiScaleInt(100), ID_DOCK_OUTPUT1);
+    pDockBottom->AddDockedChild(make_unique<CDockOutput>(), DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_OUTPUT2);
 
     // Add the frame's dockers.
-    AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_TEXT1);
-    AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_TEXT2);
+    AddDockedChild(make_unique<CDockText>(), DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_TEXT1);
+    AddDockedChild(make_unique<CDockText>(), DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_TEXT2);
 
     SetDockStyle(style);
 }
 
 // Adds a new docker. The id specifies its type.
-CDocker* CMainFrame::NewDockerFromID(int id)
+DockPtr CMainFrame::NewDockerFromID(int id)
 {
-    CDocker* pDock = NULL;
+    DockPtr docker;
     switch(id)
     {
     case ID_DOCK_CLASSES1:
-        pDock = new CDockClasses;
+        docker = make_unique<CDockClasses>();
         break;
     case ID_DOCK_CLASSES2:
-        pDock = new CDockClasses;
+        docker = make_unique<CDockClasses>();
         break;
     case ID_DOCK_FILES1:
-        pDock = new CDockFiles;
+        docker = make_unique<CDockFiles>();
         break;
     case ID_DOCK_FILES2:
-        pDock = new CDockFiles;
+        docker = make_unique<CDockFiles>();
         break;
     case ID_DOCK_OUTPUT1:
-        pDock = new CDockOutput;
+        docker = make_unique<CDockOutput>();
         break;
     case ID_DOCK_OUTPUT2:
-        pDock = new CDockOutput;
+        docker = make_unique<CDockOutput>();
         break;
     case ID_DOCK_TEXT1:
-        pDock = new CDockText;
+        docker = make_unique<CDockText>();
         break;
     case ID_DOCK_TEXT2:
-        pDock = new CDockText;
+        docker = make_unique<CDockText>();
         break;
     default:
         TRACE("Unknown Dock ID\n");
         break;
     }
 
-    return pDock;
+    return docker;
 }
 
 // OnCommand responds to menu and and toolbar input.
@@ -289,12 +289,11 @@ BOOL CMainFrame::SaveRegistrySettings()
 void CMainFrame::SetContainerTabsAtTop(bool isAtTop)
 {
     m_isContainerTabsAtTop = isAtTop;
-    std::vector<CDocker*>::const_iterator iter;
 
     // Set the Tab position for each container
-    for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
+    for (CDocker* docker : GetAllDockers())
     {
-        CDockContainer* pContainer = (*iter)->GetContainer();
+        CDockContainer* pContainer = docker->GetContainer();
         if (pContainer && pContainer->IsWindow())
         {
             pContainer->SetTabsAtTop(isAtTop);
@@ -306,7 +305,7 @@ void CMainFrame::SetContainerTabsAtTop(bool isAtTop)
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -354,10 +353,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -365,7 +364,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

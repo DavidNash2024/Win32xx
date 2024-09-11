@@ -6,6 +6,8 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
+using namespace std;
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -27,7 +29,7 @@ HWND CMainFrame::Create(HWND parent)
 {
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(_T("Win32++\\PropertySheet Sample"));
+    LoadRegistrySettings(L"Win32++\\PropertySheet Sample");
 
     return CFrame::Create(parent);
 }
@@ -118,9 +120,9 @@ BOOL CMainFrame::OnModeless()
     // Permit only one Modeless property sheet.
     if (!m_modelessPS.IsWindow())
     {
-        m_modelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-        m_modelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
-        m_modelessPS.SetTitle(_T("Modeless Property Sheet"));
+        m_modelessPS.AddPage(make_unique<CButtonPage>(IDD_BUTTONS, L"Buttons"));
+        m_modelessPS.AddPage(make_unique<CComboPage>(IDD_COMBOBOXES, L"Combo Boxes"));
+        m_modelessPS.SetTitle(L"Modeless Property Sheet");
         m_modelessPS.Create(*this);
     }
     else
@@ -135,9 +137,9 @@ BOOL CMainFrame::OnModal()
     if (m_modelessPS.IsWindow())
         m_modelessPS.Destroy();
 
-    CMyPropertySheet mps(_T("Modal Property Sheet"), *this);
-    mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-    mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+    CMyPropertySheet mps(L"Modal Property Sheet", *this);
+    mps.AddPage(make_unique<CButtonPage>(IDD_BUTTONS, L"Buttons"));
+    mps.AddPage(make_unique<CComboPage>(IDD_COMBOBOXES, L"Combo Boxes"));
     mps.DoModal();
 
     return TRUE;
@@ -165,9 +167,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Create a wizard. A wizard displays a series of property sheets.
 BOOL CMainFrame::OnWizard()
 {
-    CMyPropertySheet mps(NULL, *this);
-    mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-    mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+    CMyPropertySheet mps(nullptr, *this);
+    mps.AddPage(make_unique<CButtonPage>(IDD_BUTTONS, L"Buttons"));
+    mps.AddPage(make_unique<CComboPage>(IDD_COMBOBOXES, L"Combo Boxes"));
     mps.SetWizardMode(TRUE);
     mps.DoModal();
     return TRUE;
@@ -178,7 +180,7 @@ void CMainFrame::SetupMenuIcons()
 {
     // Use the MenuIcons bitmap for images in menu items.
     std::vector<UINT> data = GetToolBarData();
-    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
+    if (GetMenuIconHeight() >= 24)
         AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
@@ -224,10 +226,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -235,7 +237,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

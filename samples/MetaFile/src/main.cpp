@@ -15,28 +15,28 @@ class CApp : public CWinApp
 {
 public:
     CApp() {};
-    virtual ~CApp() {}
+    virtual ~CApp() override {}
 
 protected:
-    virtual BOOL InitInstance()
+    virtual BOOL InitInstance() override
     {
         m_metaView.Create();    // throws a CWinException on failure
         return TRUE;
     }
 
-private:
-    CApp(const CApp&);               // Disable copy construction
-    CApp& operator=(const CApp&);    // Disable assignment operator
+private:               // Disable copy construction
+    CApp& operator=(const CApp&) = delete;
 
     CMetaView m_metaView;
 };
 
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1920) // >= VS2019
-  int WINAPI WinMain (__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
-#else
-  int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
+#pragma warning( disable : 28251 )  // Ignore the annotation requirement for wWinMain.
 #endif
+
+int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
     try
     {
@@ -52,10 +52,10 @@ private:
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -63,7 +63,7 @@ private:
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return -1;

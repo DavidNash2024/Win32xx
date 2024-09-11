@@ -83,7 +83,7 @@ CPreviewPaneEx : public CScrollView                                       /*
 {
     public:
         CPreviewPaneEx();
-        virtual ~CPreviewPaneEx() {}
+        virtual ~CPreviewPaneEx() override {}
 
         void    SetBitmap(CBitmap Bitmap) { m_bitmap = Bitmap; }
         void    SetPaneZoomState(int val)
@@ -95,16 +95,16 @@ CPreviewPaneEx : public CScrollView                                       /*
         CPrintPreviewEx&  GetPreviewDlg()
                             { HWND h = ::GetParent(*this);
                               return *(CPrintPreviewEx*)GetCWndPtr(h);}
-        virtual void    OnDraw(CDC& dc);
-        virtual BOOL    OnEraseBkgnd(CDC&);
-        virtual LRESULT OnHScroll(UINT , WPARAM , LPARAM );
-        virtual LRESULT OnMouseWheel(UINT , WPARAM , LPARAM );
-        virtual LRESULT OnPaint(UINT , WPARAM , LPARAM );
-        virtual LRESULT OnVScroll(UINT , WPARAM , LPARAM );
+        virtual void    OnDraw(CDC& dc) override;
+        virtual BOOL    OnEraseBkgnd(CDC&) override;
+        virtual LRESULT OnHScroll(UINT , WPARAM , LPARAM ) override;
+        virtual LRESULT OnMouseWheel(UINT , WPARAM , LPARAM ) override;
+        virtual LRESULT OnPaint(UINT , WPARAM , LPARAM ) override;
+        virtual LRESULT OnVScroll(UINT , WPARAM , LPARAM ) override;
 
     private:
-        CPreviewPaneEx(const CPreviewPaneEx&);               // Disable copy construction
-        CPreviewPaneEx& operator=(const CPreviewPaneEx&);    // Disable assignment operator
+        CPreviewPaneEx(const CPreviewPaneEx&) = delete;
+        CPreviewPaneEx& operator=(const CPreviewPaneEx&) = delete;
 
         DSize   GetZoom();
 
@@ -151,8 +151,8 @@ CPrintPreviewEx : public CDialog                                         /*
         virtual void    SetWindowSizes();
 
     private:
-        CPrintPreviewEx(const CPrintPreviewEx&);                // Disable copy construction
-        CPrintPreviewEx& operator=(const CPrintPreviewEx&);   // Disable assignment operator
+        CPrintPreviewEx(const CPrintPreviewEx&) = delete;
+        CPrintPreviewEx& operator=(const CPrintPreviewEx&) = delete;
 
         BOOL    AddToolTip(UINT id)
                     { HWND h = GetDlgItem(id);
@@ -171,7 +171,7 @@ CPrintPreviewEx : public CDialog                                         /*
         BOOL    OnPrintButton();
         BOOL    OnZoomChange();
         void    PopulateScaleBox();
-        CString RegQueryStringValue(CRegKey &key, LPCTSTR name);
+        CString RegQueryStringValue(CRegKey &key, LPCWSTR name);
         void    UpdateButtons();
 
         CDataExchange m_dx;

@@ -14,8 +14,6 @@ struct BandData
 {
     UINT index;
     UINT id;
-//    UINT style;
-//    UINT size;
 };
 
 ///////////////////////////////////////////////////////////
@@ -26,26 +24,26 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr);
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void    OnInitialUpdate();
-    virtual void    OnMenuUpdate(UINT id);
-    virtual BOOL    SaveRegistrySettings();
-    virtual void    SetupMenuIcons();
-    virtual void    SetupToolBar();
-    virtual void    SetTheme();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL    LoadRegistrySettings(LPCWSTR keyName) override;
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void    OnInitialUpdate() override;
+    virtual void    OnMenuUpdate(UINT id) override;
+    virtual BOOL    SaveRegistrySettings() override;
+    virtual void    SetupMenuIcons() override;
+    virtual void    SetupToolBar() override;
+    virtual void    SetTheme() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
     LRESULT AddCombo();
     void ArrangeBands();

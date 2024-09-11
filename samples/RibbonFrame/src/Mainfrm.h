@@ -17,24 +17,24 @@ class CMainFrame : public CRibbonFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = NULL);
+    virtual ~CMainFrame() override;
+    virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
-    // Virtual functions that override base class functions
-    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
-    virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*);
-    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32);
+    // Virtual functions that override base class functions.
+    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*) override;
+    virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*) override;
+    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32) override;
 
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual void SetupToolBar() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CMainFrame(const CMainFrame&);               // Disable copy construction
-    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
-    // Command handlers
+    // Command handlers.
     LRESULT OnDropFile(WPARAM wparam);
     BOOL OnFileExit();
     BOOL OnFileNew();
@@ -47,16 +47,16 @@ private:
 
     IUIRibbon* GetIUIRibbon() const;
     CDoc& GetDoc() { return m_view.GetDoc(); }
-    void LoadFile(LPCTSTR str);
+    void LoadFile(LPCWSTR str);
     void MRUFileOpen(UINT mruIndex);
     BOOL SetPenColor(COLORREF clr);
 
-    // Member variables
+    // Member variables.
     CView m_view;
     CString m_pathName;
     IUIRibbon* m_pIUIRibbon;
 };
 
 
-#endif //MAINFRM_H
+#endif // MAINFRM_H
 

@@ -5,7 +5,6 @@
 #ifndef SCINTILLAVIEW_H
 #define SCINTILLAVIEW_H
 
-#include "targetver.h"
 #include "Scintilla.h"
 
 
@@ -13,6 +12,11 @@
 // ScintillaView manages the application's main window.
 class ScintillaView : public CWnd
 {
+    const int blockSize = 128 * 1024;
+    const COLORREF black = RGB(0, 0, 0);
+    const COLORREF gray = RGB(159, 159, 159);
+    const COLORREF white = RGB(255, 255, 255);
+
 public:
     ScintillaView();
     virtual ~ScintillaView();
@@ -26,7 +30,7 @@ public:
     void PrintFooter(CDC& dc, const CString& footerText) const;
     void PrintHeader(CDC& dc, const CString& headerText) const;
     void PrintPage(CDC& dc, int page);
-    void QuickPrint(LPCTSTR docName);
+    void QuickPrint(LPCWSTR docName);
     void SaveFile(LPCWSTR fullPath);
     void SetHeaderText(const CString& headerText) { m_header = headerText; }
 
