@@ -29,9 +29,9 @@ to program using the Windows API directly. Win32++ wraps the Windows API in a co
 classes in a similar style to MFC.</p>
 
 <p dir="auto">The code has been designed to run on a wide range of C++ compilers, including those
-from Microsoft, Borland and the free MinGW compiler from GNU. Win32++ supports all Windows operating
-systems, from Windows 95 through to Windows 11. It can be used to create both 32 bit and 64 bit
-applications.</p>
+from Microsoft, Embarcadero and the free MinGW compiler from GNU. Win32++ supports all Windows
+operating systems, from Windows 95 through to Windows 11. It can be used to create both 32 bit and
+64 bit applications.</p>
 <p dir="auto">Win32++ can be used to build applications based simple windows, 
 dialogs, forms, and frames. The frames produced using Win32++ can have the following features.</p>
 <ul dir="auto">
