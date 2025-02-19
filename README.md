@@ -1,7 +1,7 @@
 
 <head>
 <meta name="keywords" content="Win32++, C++, Win32 API, Windows API, MFC"></meta>
-<meta name="description" content="Win32++: A Simple Alternative to MFC"></meta>
+<meta name="description" content="Win32++"></meta>
 </head>
 <body>
 
