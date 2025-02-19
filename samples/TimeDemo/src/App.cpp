@@ -1,4 +1,4 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (App.cpp) *
+/* (21-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (App.cpp) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |
@@ -32,7 +32,7 @@ CApp()                                                                      /*
     Default constructor.
 *-----------------------------------------------------------------------------*/
 {
-    m_credits = L"CTime, MRU, CArchive, and Scrolling Demo";
+    m_credits = L"CTime, and Scrolling Demo";
     m_version = L"Version 3.0 (2024)";
 
       // generate compiler information for the About box
@@ -50,8 +50,6 @@ CApp()                                                                      /*
 #endif
 
     m_months = L"Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec";
-      // serialized data file type (here: "time-demo info")
-    m_archiveFileType = L".arc";
 }
 
 /*============================================================================*/
@@ -67,18 +65,11 @@ InitInstance()                                                              /*
     file name are generated and saved as public data members of this object.
 *-----------------------------------------------------------------------------*/
 {
-         // extract the app name, directory, and  path names
-    ::GetModuleFileName(nullptr, m_appPath.GetBuffer(FILENAME_MAX),
-        FILENAME_MAX);
-    m_appPath.ReleaseBuffer();
-    CFile f;
-    f.SetFilePath(m_appPath.c_str());
-    m_appDir = f.GetFileDirectory();
-    m_appName = f.GetFileNameWOExt();
-      // locate the archive file
-    m_arcvDir = MakeAppDataPath(L"Win32++\\" + m_appName);
-      // form the archive file path name
-    m_arcvFile  = m_arcvDir + L"\\" + m_appName + m_archiveFileType;
+      // Retrieve the application's filename.
+    CString appPath = GetCommandLineArgs().front();
+    int index = appPath.ReverseFind(L"\\");
+    if (index >= 0)
+         m_appName = appPath.Mid(index + 1);
 
       // generate the About box static information: first the latest
       // date one of the main stream files was compiled
@@ -86,7 +77,7 @@ InitInstance()                                                              /*
     compiled_on = std::max(compiled_on, DatInt(CDoc::m_compiledOn));
     compiled_on = std::max(compiled_on, DatInt(CMainFrame::m_compiledOn));
     compiled_on = std::max(compiled_on, DatInt(CView::m_compiledOn));
-    m_aboutStatement.Format(L"%s\n\n(%s.exe)\n%s\ncompiled with %s\non %s",
+    m_aboutStatement.Format(L"%s\n\n(%s)\n%s\ncompiled with %s\non %s",
         m_credits.c_str(), m_appName.c_str(),
         m_version.c_str(), m_compiledWith.c_str(),
         IntDat(compiled_on).c_str());
@@ -95,7 +86,6 @@ InitInstance()                                                              /*
     m_frame.GetAboutBox().SetStatus(m_aboutStatement);
       // Create the frame window
     m_frame.SetAppName(m_appName);
-    m_frame.SetArcFileName(m_arcvFile);
     m_frame.Create();   // throws a CWinException on failure
     return TRUE;
 }

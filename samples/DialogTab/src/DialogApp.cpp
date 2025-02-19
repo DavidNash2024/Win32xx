@@ -14,10 +14,6 @@ CDialogApp::CDialogApp() : m_myDialog(IDD_DIALOG1)
 {
 }
 
-CDialogApp::~CDialogApp()
-{
-}
-
 BOOL CDialogApp::InitInstance()
 {
     // Display the modeless dialog.

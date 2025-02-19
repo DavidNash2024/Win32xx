@@ -9,9 +9,6 @@
 ///////////////////////////////////
 // CViewFiles function definitions.
 //
-CViewFiles::CViewFiles()
-{
-}
 
 CViewFiles::~CViewFiles()
 {

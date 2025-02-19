@@ -11,11 +11,6 @@
 // CViewList function definitions
 //
 
-// Constructor.
-CViewList::CViewList()
-{
-}
-
 // Destructor.
 CViewList::~CViewList()
 {
@@ -122,11 +117,6 @@ CMDIChildList::CMDIChildList()
     m_menu.LoadMenu(L"MdiMenuList");
     SetHandles(m_menu, nullptr);
     SetView(m_listView);
-}
-
-// Destructor.
-CMDIChildList::~CMDIChildList()
-{
 }
 
 // Called when the window is created.

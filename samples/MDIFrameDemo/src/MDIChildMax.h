@@ -11,8 +11,8 @@
 class CViewMax : public CWnd
 {
 public:
-    CViewMax() {}
-    virtual ~CViewMax() override {}
+    CViewMax() = default;
+    virtual ~CViewMax() override = default;
 
 protected:
     // Virtual functions that override base class functions
@@ -32,7 +32,7 @@ class CMDIChildMax : public CMDIChild
 {
 public:
     CMDIChildMax();
-    virtual ~CMDIChildMax() override;
+    virtual ~CMDIChildMax() override = default;
 
 protected:
     // Virtual functions that override base class functions

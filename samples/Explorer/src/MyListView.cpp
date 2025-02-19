@@ -17,16 +17,6 @@
 // CMyListView function definitions
 //
 
-// Constructor.
-CMyListView::CMyListView()
-{
-}
-
-// Destructor.
-CMyListView::~CMyListView()
-{
-}
-
 // Compares param1 and param2. Used to sort items in a list view.
 int CALLBACK CMyListView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortViewItems)
 {

@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -67,8 +67,19 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)                        /*
 }
 
 /*============================================================================*/
+    CString CDoc::
+GetDocDir() const                                                          /*
+
+    Returns the directory of the file associated with this object.
+*----------------------------------------------------------------------------*/
+{
+    CFile f; f.SetFilePath(m_docPath);
+    return f.GetFileDirectory();
+}
+
+/*============================================================================*/
     CRichEditView& CDoc::
-GetRichView() const                                                             /*
+GetRichView() const                                                         /*
 
     Return a reference to the document data repository object.
 *----------------------------------------------------------------------------*/
@@ -78,12 +89,34 @@ GetRichView() const                                                             
 
 /*============================================================================*/
     BOOL CDoc::
-IsDirty()                                                                   /*
+IsDirty() const                                                             /*
 
     Indicate the modification state of the document text.
 *-----------------------------------------------------------------------------*/
 {
-    return GetRichView().GetModify();
+    return GetRichView().GetModify() && IsOpen();
+}
+
+/*============================================================================*/
+    BOOL CDoc::
+IsSelected() const                                                          /*
+
+    Returns TRUE if text is selected.
+*-----------------------------------------------------------------------------*/
+{
+    CHARRANGE range;
+    GetRichView().GetSel(range);
+    return m_isOpen && (range.cpMin != range.cpMax);
+}
+
+/*============================================================================*/
+    BOOL CDoc::
+CanPaste() const                                                            /*
+
+    Returns TRUE if text can be pasted.
+*-----------------------------------------------------------------------------*/
+{
+    return m_isOpen && GetRichView().CanPaste(CF_TEXT);
 }
 
 /*============================================================================*/
@@ -137,9 +170,7 @@ NotFound(const MyFindReplaceDialog& FR)                                     /*
     void CDoc::
 OnCloseDoc()                                                                /*
 
-    Perform any cleanup necessary to close the document, except for
-    serialization chores, which are performed separately in the Serialize()
-    member.
+    Perform any cleanup necessary to close the document.
 *-----------------------------------------------------------------------------*/
 {
     if (!IsOpen())
@@ -175,14 +206,17 @@ OnFindReplace(UINT msg, WPARAM wparam, LPARAM lparam)                       /*
     MyFindReplaceDialog* fr =
         (MyFindReplaceDialog*)MyFindReplaceDialog::GetNotifier(lparam);
     assert(fr != nullptr);
-    if (fr->IsTerminating())
-        OnFRTerminating(fr);
-    else if (fr->FindNext())
-        OnFRFindNext(fr);
-    else if (fr->ReplaceCurrent())
-        OnFRReplaceCurrent(fr);
-    else if (fr->ReplaceAll())
-        OnFRReplaceAll(fr);
+    if (fr != nullptr)
+    {
+        if (fr->IsTerminating())
+            OnFRTerminating(fr);
+        else if (fr->FindNext())
+            OnFRFindNext(fr);
+        else if (fr->ReplaceCurrent())
+            OnFRReplaceCurrent(fr);
+        else if (fr->ReplaceAll())
+            OnFRReplaceAll(fr);
+    }
 }
 
 /*============================================================================*/
@@ -332,8 +366,7 @@ OnSaveDoc()                                                                 /*
     BOOL CDoc::
 OpenDoc(LPCWSTR docPath)                                                    /*
 
-    Open the document from the given path. Previous state parameters that
-    were serialized in the prior execution will have already been loaded.
+    Open the document from the given path.
     Return TRUE if file is open on return, FALSE if not.
 *-----------------------------------------------------------------------------*/
 {
@@ -362,7 +395,6 @@ OpenDoc(LPCWSTR docPath)                                                    /*
         ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         m_isOpen = FALSE;
-          // if the_path was in the MRU list, remove it
         m_docPath.Empty();
         return FALSE;
     }
@@ -379,26 +411,6 @@ SetDataPath(CView* path)                                                    /*
 *-----------------------------------------------------------------------------*/
 {
     m_data = path;
-}
-
-/*============================================================================*/
-        void CDoc::
-Serialize(CArchive &ar)                                                     /*
-
-    Called to serialize the document to or deserialize it from the
-    archive ar, depending on the sense of IsStoring().  Leaves the
-    archive open for for further operations.
-*-----------------------------------------------------------------------------*/
-{
-    // TODO: save and restore document elements
-
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-    }
-    else    // recovering
-    {
-    }
 }
 
 /*============================================================================*/

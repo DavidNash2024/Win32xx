@@ -15,11 +15,6 @@ CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
-// Destructor
-CMyDialog::~CMyDialog()
-{
-}
-
 // Called when the dialog window is destroyed.
 void CMyDialog::OnDestroy()
 {

@@ -15,8 +15,8 @@
 class CPropertySheetApp : public CWinApp
 {
 public:
-    CPropertySheetApp();
-    virtual ~CPropertySheetApp() override;
+    CPropertySheetApp() = default;
+    virtual ~CPropertySheetApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

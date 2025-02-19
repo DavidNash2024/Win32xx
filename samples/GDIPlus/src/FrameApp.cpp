@@ -9,16 +9,6 @@
 // CFrameApp function definitions
 //
 
-// Constructor.
-CFrameApp::CFrameApp()
-{
-}
-
-// Destructor.
-CFrameApp::~CFrameApp()
-{
-}
-
 // Called when the application starts.
 BOOL CFrameApp::InitInstance()
 {

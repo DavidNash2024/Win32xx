@@ -16,8 +16,8 @@ using namespace ShellWrapper;
 class CMyTreeView : public CTreeView
 {
 public:
-    CMyTreeView();
-    virtual ~CMyTreeView() override;
+    CMyTreeView() = default;
+    virtual ~CMyTreeView() override = default;
     BOOL GetRootItems();
     BOOL SelectFromListView(Cpidl& cpidlFull);
 
@@ -57,9 +57,7 @@ private:
 
     };  //class TreeItemData
 
-    // Note: Modern C++ compilers can use this typedef instead.
-    // typedef std::shared_ptr<TreeItemData> TreeItemDataPtr;
-    typedef std::unique_ptr<TreeItemData> TreeItemDataPtr;
+    using TreeItemDataPtr = std::unique_ptr<TreeItemData>;
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort);
 

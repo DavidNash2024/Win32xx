@@ -12,8 +12,8 @@
 class CMyTaskDialog : public CTaskDialog
 {
 public:
-    CMyTaskDialog() {}
-    virtual ~CMyTaskDialog() override {}
+    CMyTaskDialog() = default;
+    virtual ~CMyTaskDialog() override = default;
 
 protected:
     // Virtual functions that override base class functions

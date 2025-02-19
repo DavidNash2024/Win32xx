@@ -15,8 +15,8 @@
 class CMDIFrameApp : public CWinApp
 {
 public:
-    CMDIFrameApp();
-    virtual ~CMDIFrameApp() override {}
+    CMDIFrameApp() = default;
+    virtual ~CMDIFrameApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

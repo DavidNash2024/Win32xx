@@ -143,11 +143,6 @@ CSplitterMDIChild::CSplitterMDIChild()
     SetHandles(LoadMenu(GetApp()->GetResourceHandle(), L"MdiMenuView"), nullptr);
 }
 
-// Destructor.
-CSplitterMDIChild::~CSplitterMDIChild()
-{
-}
-
 // Called when the window is created.
 int CSplitterMDIChild::OnCreate(CREATESTRUCT& cs)
 {

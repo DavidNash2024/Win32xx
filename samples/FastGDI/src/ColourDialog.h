@@ -12,7 +12,7 @@ class CColourDialog : public CDialog
 {
 public:
     CColourDialog(UINT resID, CBitmap& image);
-    virtual ~CColourDialog() override;
+    virtual ~CColourDialog() override = default;
     int  GetBlue() const   { return m_cBlue; }
     int  GetGreen() const  { return m_cGreen; }
     int  GetRed() const    { return m_cRed; }

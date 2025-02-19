@@ -20,8 +20,8 @@ const int ID_MDI_RECT = 6;
 class CMyTabbedMDI : public CTabbedMDI
 {
 public:
-    CMyTabbedMDI();
-    virtual ~CMyTabbedMDI() override {}
+    CMyTabbedMDI() = default;
+    virtual ~CMyTabbedMDI() override = default;
 
 protected:
     // Virtual functions that override base class functions.

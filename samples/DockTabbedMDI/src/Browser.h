@@ -12,8 +12,8 @@
 class CViewWeb : public CWebBrowser
 {
 public:
-    CViewWeb() {}
-    virtual ~CViewWeb() override {}
+    CViewWeb() = default;
+    virtual ~CViewWeb() override = default;
 
 protected:
     // Virtual functions that override base class functions.

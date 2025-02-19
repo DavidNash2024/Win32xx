@@ -1,5 +1,5 @@
-// Win32++   Version 10.0.0
-// Release Date: 9th September 2024
+// Win32++   Version 10.1.0
+// Release Date: 17th Feb 2025
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -7,7 +7,7 @@
 //           https://github.com/DavidNash2024/Win32xx
 //
 //
-// Copyright (c) 2005-2024  David Nash
+// Copyright (c) 2005-2025  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -64,8 +64,8 @@ namespace Win32xx
     class CAnimation : public CWnd
     {
     public:
-        CAnimation() {}
-        virtual ~CAnimation() {}
+        CAnimation() = default;
+        virtual ~CAnimation() = default;
 
         BOOL Close() const;
         BOOL Open(LPCTSTR pathName) const;
@@ -90,8 +90,8 @@ namespace Win32xx
     class CComboBox : public CWnd
     {
     public:
-        CComboBox() {}
-        virtual ~CComboBox()  override {}
+        CComboBox() = default;
+        virtual ~CComboBox()  override = default;
 
         virtual int CompareItem(LPCOMPAREITEMSTRUCT pCompareItemStruct);
 
@@ -155,8 +155,8 @@ namespace Win32xx
     class CComboBoxEx : public CComboBox
     {
     public:
-        CComboBoxEx() {}
-        virtual ~CComboBoxEx() {}
+        CComboBoxEx() = default;
+        virtual ~CComboBoxEx() = default;
 
         int     DeleteItem(int index ) const;
         HWND    GetComboBoxCtrl() const;
@@ -190,8 +190,8 @@ namespace Win32xx
     class CHeader : public CWnd
     {
     public:
-        CHeader() {}
-        virtual ~CHeader() override {}
+        CHeader() = default;
+        virtual ~CHeader() override = default;
 
         // Accessors and mutators
         CImageList GetImageList() const;
@@ -237,8 +237,8 @@ namespace Win32xx
     class CHotKey : public CWnd
     {
     public:
-        CHotKey() {}
-        virtual ~CHotKey() override {}
+        CHotKey() = default;
+        virtual ~CHotKey() override = default;
 
         DWORD GetHotKey() const;
         CString GetKeyName(UINT keyCode, BOOL isExtended) const;
@@ -262,8 +262,8 @@ namespace Win32xx
     class CIPAddress : public CWnd
     {
     public:
-        CIPAddress();
-        virtual ~CIPAddress() override {}
+        CIPAddress() = default;
+        virtual ~CIPAddress() override = default;
 
         void ClearAddress() const;
         int GetAddress(BYTE& field0, BYTE& field1, BYTE& field2, BYTE& field3) const;
@@ -292,8 +292,8 @@ namespace Win32xx
     class CMonthCalendar : public CWnd
     {
     public:
-        CMonthCalendar();
-        virtual ~CMonthCalendar() override {}
+        CMonthCalendar() = default;
+        virtual ~CMonthCalendar() override = default;
 
         // Accessors and mutators
         COLORREF GetColor(int region) const;
@@ -312,12 +312,12 @@ namespace Win32xx
         LRESULT GetSelRange(SYSTEMTIME& minRange, SYSTEMTIME& maxRange) const;
         SYSTEMTIME GetToday() const;
         LRESULT HitTest(MCHITTESTINFO& mcHitTest) const;
-        BOOL SetCurSel(const SYSTEMTIME& dateTime) const;
+        BOOL SetCurSel(SYSTEMTIME dateTime) const;
         BOOL SetDayState(int months, LPMONTHDAYSTATE pStateArray) const;
         BOOL SetMaxSelCount(int max) const;
-        BOOL SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const;
-        BOOL SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& maxRange) const;
-        void SetToday(const SYSTEMTIME&  dateTime) const;
+        BOOL SetRange(SYSTEMTIME minRange, SYSTEMTIME maxRange) const;
+        BOOL SetSelRange(SYSTEMTIME MinRange, SYSTEMTIME maxRange) const;
+        void SetToday(SYSTEMTIME  dateTime) const;
 
     protected:
         // Overridables
@@ -336,8 +336,8 @@ namespace Win32xx
     class CDateTime : public CWnd
     {
     public:
-        CDateTime();
-        virtual ~CDateTime() override {}
+        CDateTime() = default;
+        virtual ~CDateTime() override = default;
 
         COLORREF GetMonthCalColor(int region) const;
         HWND GetMonthCalCtrl() const;
@@ -347,8 +347,8 @@ namespace Win32xx
         COLORREF SetMonthCalColor(int region, COLORREF color) const;
         BOOL SetFormat(LPCTSTR format) const;
         void SetMonthCalFont(HFONT font, BOOL redraw = TRUE) const;
-        BOOL SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const;
-        BOOL SetTime(const SYSTEMTIME& time) const;
+        BOOL SetRange(SYSTEMTIME minRange, SYSTEMTIME maxRange) const;
+        BOOL SetTime(SYSTEMTIME time) const;
         BOOL SetTimeNone() const;
 
     protected:
@@ -368,11 +368,11 @@ namespace Win32xx
     class CProgressBar : public CWnd
     {
     public:
-        CProgressBar() {}
-        virtual ~CProgressBar() override {}
+        CProgressBar() = default;
+        virtual ~CProgressBar() override = default;
 
         int  GetPos() const;
-        int  GetRange(BOOL whichLimit, const PBRANGE& range) const;
+        int  GetRange(BOOL whichLimit, PBRANGE range) const;
         int  GetRange(BOOL whichLimit) const;
         int  OffsetPos(int increment) const;
         int  SetPos(int pos) const;
@@ -399,8 +399,8 @@ namespace Win32xx
     class CScrollBar : public CWnd
     {
     public:
-        CScrollBar() {}
-        virtual ~CScrollBar() override {}
+        CScrollBar() = default;
+        virtual ~CScrollBar() override = default;
 
         BOOL EnableScrollBar( UINT arrowFlags = ESB_ENABLE_BOTH )  const;
         BOOL GetScrollInfo(SCROLLINFO& si)  const;
@@ -429,8 +429,8 @@ namespace Win32xx
     class CSlider : public CWnd
     {
     public:
-        CSlider() {}
-        virtual ~CSlider() override {}
+        CSlider() = default;
+        virtual ~CSlider() override = default;
 
         void ClearSel() const;
         void ClearTics(BOOL redraw = FALSE ) const;
@@ -479,8 +479,8 @@ namespace Win32xx
     class CSpinButton : public CWnd
     {
     public:
-        CSpinButton() {}
-        virtual ~CSpinButton() override {}
+        CSpinButton() = default;
+        virtual ~CSpinButton() override = default;
 
         int  GetAccel(int accels, LPUDACCEL pAccels) const;
         int  GetBase() const;
@@ -510,8 +510,8 @@ namespace Win32xx
     class CToolTip : public CWnd
     {
     public:
-        CToolTip();
-        virtual ~CToolTip() override;
+        CToolTip() = default;
+        virtual ~CToolTip() override = default;
 
         // Accessors and mutators
         CSize    GetBubbleSize(HWND control, UINT id = -1) const;
@@ -525,7 +525,7 @@ namespace Win32xx
         TOOLINFO GetToolInfo(HWND control, UINT id = -1) const;
         void     SetDelayTime(UINT delay) const;
         void     SetDelayTime(DWORD duration, int time) const;
-        void     SetMargin(const RECT& rc) const;
+        void     SetMargin(RECT rc) const;
         int      SetMaxTipWidth(int width) const;
         void     SetTipBkColor(COLORREF color) const;
         void     SetTipTextColor(COLORREF color) const;
@@ -533,9 +533,9 @@ namespace Win32xx
 
         //Operations
         void Activate(BOOL activate) const;
-        BOOL AddTool(HWND control, const RECT& toolRect, UINT id, UINT textID) const;
+        BOOL AddTool(HWND control, RECT toolRect, UINT id, UINT textID) const;
         BOOL AddTool(HWND control, UINT textID) const;
-        BOOL AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR text = LPSTR_TEXTCALLBACK) const;
+        BOOL AddTool(HWND control, RECT toolRect, UINT id, LPCTSTR text = LPSTR_TEXTCALLBACK) const;
         BOOL AddTool(HWND control, LPCTSTR text = LPSTR_TEXTCALLBACK) const;
         BOOL AdjustRect(RECT& rc, BOOL isLarger = TRUE) const;
         void DelTool(HWND control, UINT id = -1) const;
@@ -543,7 +543,7 @@ namespace Win32xx
         void Pop() const;
         void RelayEvent(MSG& msg) const;
         BOOL SetTitle(UINT icon, LPCTSTR title) const;
-        void SetToolRect(const RECT& rc, HWND control, UINT id = -1) const;
+        void SetToolRect(RECT rc, HWND control, UINT id = -1) const;
         void SetTTWindowTheme(LPCWSTR theme) const;
         void Update() const;
         void UpdateTipText(LPCTSTR text, HWND control, UINT id = -1) const;
@@ -552,7 +552,7 @@ namespace Win32xx
     protected:
         // Overridables
         virtual void FillToolInfo(TOOLINFO& info, HWND control) const;
-        virtual void FillToolInfo(TOOLINFO& info, HWND control, const RECT& rc, UINT id) const;
+        virtual void FillToolInfo(TOOLINFO& info, HWND control, RECT rc, UINT id) const;
         virtual void PreCreate(CREATESTRUCT& cs) override;
         virtual void PreRegisterClass(WNDCLASS& wc) override;
 
@@ -1148,10 +1148,6 @@ namespace Win32xx
     // Definitions for the CDateTime class
     //
 
-    inline CDateTime::CDateTime()
-    {
-    }
-
     // Retrieves the color for a given portion of the month calendar within the date and time picker (DTP) control.
     // Refer to DateTime_GetMonthCalColor in the Windows API documentation for more information.
     inline COLORREF CDateTime::GetMonthCalColor(int region) const
@@ -1235,7 +1231,7 @@ namespace Win32xx
 
     // Sets the minimum and maximum allowable system times for the date and time picker (DTP) control.
     // Refer to DateTime_SetRange in the Windows API documentation for more information.
-    inline BOOL CDateTime::SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const
+    inline BOOL CDateTime::SetRange(SYSTEMTIME minRange, SYSTEMTIME maxRange) const
     {
         assert(IsWindow());
         SYSTEMTIME ranges[2]{};
@@ -1248,7 +1244,7 @@ namespace Win32xx
 
     // Sets the date and time picker (DTP) control to a given date and time.
     // Refer to DateTime_SetSystemtime in the Windows API documentation for more information.
-    inline BOOL CDateTime::SetTime(const SYSTEMTIME& time) const
+    inline BOOL CDateTime::SetTime(SYSTEMTIME time) const
     {
         assert(IsWindow());
         return DateTime_SetSystemtime(*this, GDT_VALID, &time);
@@ -1513,15 +1509,6 @@ namespace Win32xx
     // Definitions for the CIPAddress class
     //
 
-    inline CIPAddress::CIPAddress()
-    {
-        // Call InitCommonControlsEx.
-        INITCOMMONCONTROLSEX initStruct{};
-        initStruct.dwSize = sizeof(initStruct);
-        initStruct.dwICC = ICC_INTERNET_CLASSES;
-        InitCommonControlsEx(&initStruct);
-    }
-
     // Clears the contents of the IP address control.
     // Refer to IPM_CLEARADDRESS in the Windows API documentation for more information.
     inline void CIPAddress::ClearAddress() const
@@ -1615,10 +1602,6 @@ namespace Win32xx
     ///////////////////////////////////////////
     // Definitions for the CMonthCalendar class
     //
-
-    inline CMonthCalendar::CMonthCalendar()
-    {
-    }
 
     // Retrieves the color for a given portion of the month calendar control.
     // Refer to MonthCal_GetColor in the Windows API documentation for more information.
@@ -1748,7 +1731,7 @@ namespace Win32xx
 
     // Sets the currently selected date for the month calendar control.
     // Refer to MonthCal_SetCurSel in the Windows API documentation for more information.
-    inline BOOL CMonthCalendar::SetCurSel(const SYSTEMTIME& dateTime) const
+    inline BOOL CMonthCalendar::SetCurSel(SYSTEMTIME dateTime) const
     {
         assert(IsWindow());
         return MonthCal_SetCurSel(*this, &dateTime);
@@ -1794,7 +1777,7 @@ namespace Win32xx
 
     // Sets the minimum and maximum allowable dates for the month calendar control.
     // Refer to MonthCal_SetRange in the Windows API documentation for more information.
-    inline BOOL CMonthCalendar::SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const
+    inline BOOL CMonthCalendar::SetRange(SYSTEMTIME minRange, SYSTEMTIME maxRange) const
     {
         SYSTEMTIME minMax[2]{};
         DWORD limit = GDTR_MIN | GDTR_MAX;
@@ -1807,7 +1790,7 @@ namespace Win32xx
 
     // Sets the selection for the month calendar control to a given date range.
     // Refer to MonthCal_SetSelRange in the Windows API documentation for more information.
-    inline BOOL CMonthCalendar::SetSelRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const
+    inline BOOL CMonthCalendar::SetSelRange(SYSTEMTIME minRange, SYSTEMTIME maxRange) const
     {
         SYSTEMTIME minMax[2]{};
         minMax[0] = minRange;
@@ -1818,7 +1801,7 @@ namespace Win32xx
 
     // Sets the "today" selection for the month calendar control.
     // Refer to MonthCal_SetToday in the Windows API documentation for more information.
-    inline void CMonthCalendar::SetToday(const SYSTEMTIME& dateTime) const
+    inline void CMonthCalendar::SetToday(SYSTEMTIME dateTime) const
     {
         assert(IsWindow());
         MonthCal_SetToday(*this, &dateTime);
@@ -1839,7 +1822,7 @@ namespace Win32xx
 
     // Retrieves information about the current high and low limits of the progress bar control.
     // Refer to PBM_GETRANGE in the Windows API documentation for more information.
-    inline int CProgressBar::GetRange(BOOL whichLimit, const PBRANGE& range) const
+    inline int CProgressBar::GetRange(BOOL whichLimit, PBRANGE range) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(whichLimit);
@@ -2336,14 +2319,6 @@ namespace Win32xx
     // Definitions for the CToolTip class
     //
 
-    inline CToolTip::CToolTip()
-    {
-    }
-
-    inline CToolTip::~CToolTip()
-    {
-    }
-
     // Activates or deactivates a ToolTip control.
     // Refer to TTM_ACTIVATE in the Windows API documentation for more information.
     inline void CToolTip::Activate(BOOL activate) const
@@ -2359,7 +2334,7 @@ namespace Win32xx
     // textID specifies the ID of the text resource.
     // id is a user defined ID. It is required if the control has multiple tooltips.
     // Refer to TTM_ADDTOOL in the Windows API documentation for more information.
-    inline BOOL CToolTip::AddTool(HWND control, const RECT& toolRect, UINT id, UINT textID) const
+    inline BOOL CToolTip::AddTool(HWND control, RECT toolRect, UINT id, UINT textID) const
     {
         assert(IsWindow());
         TOOLINFO info;
@@ -2392,7 +2367,7 @@ namespace Win32xx
     // messages are sent to the parent window.
     // id is a user defined ID. It is required if the control has multiple tooltips.
     // Refer to TTM_ADDTOOL in the Windows API documentation for more information.
-    inline BOOL CToolTip::AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
+    inline BOOL CToolTip::AddTool(HWND control, RECT toolRect, UINT id, LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
     {
         assert(IsWindow());
         TOOLINFO info;
@@ -2567,7 +2542,7 @@ namespace Win32xx
     // 5) The tooltip always manages its messages (uses TTF_SUBCLASS).
     // 6) The TTF_IDISHWND style is incompatible with using a RECT.
     // Override this function to specify different flags.
-    inline void CToolTip::FillToolInfo(TOOLINFO& info, HWND control, const RECT& rc, UINT id) const
+    inline void CToolTip::FillToolInfo(TOOLINFO& info, HWND control, RECT rc, UINT id) const
     {
         info = {};
         info.cbSize = sizeof(info);
@@ -2655,7 +2630,7 @@ namespace Win32xx
 
     // Sets the top, left, bottom, and right margins for a ToolTip window.
     // Refer to TTM_SETMARGIN in the Windows API documentation for more information.
-    inline void CToolTip::SetMargin(const RECT& rc) const
+    inline void CToolTip::SetMargin(RECT rc) const
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
@@ -2712,7 +2687,7 @@ namespace Win32xx
 
     // Sets a new bounding rectangle for a tool.
     // Refer to TTM_NEWTOOLRECT in the Windows API documentation for more information.
-    inline void CToolTip::SetToolRect(const RECT& rc, HWND control, UINT id) const
+    inline void CToolTip::SetToolRect(RECT rc, HWND control, UINT id) const
     {
         assert(IsWindow());
         TOOLINFO ti = GetToolInfo(control, id);

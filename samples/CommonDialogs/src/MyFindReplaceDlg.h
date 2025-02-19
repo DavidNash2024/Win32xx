@@ -1,4 +1,4 @@
-/* (08-Feb-2016)                                          (MyFindReplaceDlg.h) *
+/* (20-Oct-2024)                                          (MyFindReplaceDlg.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -25,8 +25,8 @@ MyFindReplaceDialog : public CFindReplaceDialog
 /*----------------------------------------------------------------------------*/
 {
     public:
-        MyFindReplaceDialog() {}
-        virtual ~MyFindReplaceDialog() override {}
+        MyFindReplaceDialog() = default;
+        virtual ~MyFindReplaceDialog() override = default;
 
           // Record the title of the find/replace dialog box after an object
           // of this class is constructed, but before DoModal() is invoked.

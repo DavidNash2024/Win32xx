@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]             (PrintInfo.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]             (PrintInfo.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -30,7 +30,7 @@ CPrintInfo                                                              /*
 {
     public:
             CPrintInfo();
-            ~CPrintInfo() {}
+            ~CPrintInfo() = default;
 
         UINT    GetFromPage() const { return m_nFromPage;}
         UINT    GetMaxPage() const  { return m_nMaxPage; }

@@ -37,11 +37,11 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "New\tCtrl+N",                 IDM_FILE_NEW
-        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
-        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
+        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN, GRAYED
+        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE, GRAYED
+        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
+        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END

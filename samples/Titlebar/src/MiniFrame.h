@@ -47,7 +47,7 @@ public:
                    m_aboutDialog(IDW_ABOUT),
                    m_accel(0)
               {}
-    virtual ~CMiniFrame() override {}
+    virtual ~CMiniFrame() override = default;
 
     // Accessors
     ButtonRects    GetButtonRects() const;

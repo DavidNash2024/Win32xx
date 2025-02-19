@@ -13,8 +13,8 @@
 class CView : public CWnd
 {
 public:
-    CView() {}
-    virtual ~CView() override {}
+    CView() = default;
+    virtual ~CView() override = default;
 
 protected:
     // Virtual functions that override base class functions

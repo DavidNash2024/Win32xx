@@ -18,11 +18,6 @@ CButtonDialog::CButtonDialog(UINT resID) : CDialog(resID)
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
-// Destructor.
-CButtonDialog::~CButtonDialog()
-{
-}
-
 // Process the dialog's window messages.
 INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -148,11 +143,6 @@ CComboBoxDialog::CComboBoxDialog(int resID) : CDialog(resID)
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
-// Destructor.
-CComboBoxDialog::~CComboBoxDialog()
-{
-}
-
 // Process the dialog's window messages.
 INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -220,11 +210,6 @@ CMyDialog::CMyDialog(int resID) : CDialog(resID)
 {
     m_pButtonDlg = nullptr;
     m_pComboDlg = nullptr;
-}
-
-// Destructor.
-CMyDialog::~CMyDialog()
-{
 }
 
 // Process the dialog's window messages.

@@ -13,8 +13,8 @@
 class CViewText : public CRichEdit
 {
 public:
-    CViewText();
-    virtual ~CViewText() override;
+    CViewText() = default;
+    virtual ~CViewText() override = default;
     void SetDPIFont();
 
 protected:
@@ -37,7 +37,7 @@ class CContainText : public CDockContainer
 {
 public:
     CContainText();
-    virtual ~CContainText() override {}
+    virtual ~CContainText() override = default;
 
 protected:
     // Virtual functions that override base class functions.
@@ -58,7 +58,7 @@ class CDockText : public CDocker
 {
 public:
     CDockText();
-    virtual ~CDockText() override {}
+    virtual ~CDockText() override = default;
 
 protected:
     virtual void RecalcDockLayout() override;

@@ -12,9 +12,9 @@
 class CMyWindow : public CWnd
 {
 public:
-    CMyWindow() {}
+    CMyWindow() = default;
     virtual void OnDestroy() override { PostQuitMessage(0); }    // End the program.
-    virtual ~CMyWindow() override {}
+    virtual ~CMyWindow() override = default;
 };
 
 

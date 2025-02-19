@@ -15,8 +15,8 @@
 class CFormApp : public CWinApp
 {
 public:
-    CFormApp();
-    virtual ~CFormApp() override;
+    CFormApp() = default;
+    virtual ~CFormApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

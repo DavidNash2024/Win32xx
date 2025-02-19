@@ -9,16 +9,6 @@
 // CReBarApp function definitions
 //
 
-// Constructor.
-CReBarApp::CReBarApp()
-{
-}
-
-// Destructor.
-CReBarApp::~CReBarApp()
-{
-}
-
 // Called when the application starts.
 BOOL CReBarApp::InitInstance()
 {

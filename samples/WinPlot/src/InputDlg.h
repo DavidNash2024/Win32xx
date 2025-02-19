@@ -15,7 +15,7 @@ class CInputDlg : public CDialog
 {
 public:
     CInputDlg(UINT resID) : CDialog(resID), m_xMin(-10), m_xMax(10) {}
-    virtual ~CInputDlg() override {}
+    virtual ~CInputDlg() override = default;
     double GetMax() const { return m_xMax; }
     double GetMin() const { return m_xMin; }
     const CString& GetFunction() const { return m_function; }

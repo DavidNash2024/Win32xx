@@ -59,10 +59,6 @@ CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
     m_info = (HICON)GetApp()->LoadIcon(IDI_INFO);
 }
 
-CMyDialog::~CMyDialog()
-{
-}
-
 void CMyDialog::OnDestroy()
 {
     // End the application.

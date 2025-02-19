@@ -19,7 +19,7 @@ using namespace std;
 class CClientSocket : public CSocket
 {
 public:
-    CClientSocket() {}
+    CClientSocket() = default;
     virtual void OnReceive()
     {
         // This function is called automatically when there is data to receive.

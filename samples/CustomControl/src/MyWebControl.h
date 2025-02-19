@@ -13,6 +13,7 @@ class CWebControl : public CWebBrowser
 {
 public:
     CWebControl();
+    virtual ~CWebControl() override = default;
 
 protected:
     virtual void OnInitialUpdate() override;

@@ -23,18 +23,14 @@ using namespace std;
 CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_isHideSingleTab(TRUE),
                             m_isMDITabsAtTop(TRUE), m_pActiveDocker(nullptr)
 {
-    // Set m_MyTabbedMDI as the view window of the frame.
-    SetView(m_myTabbedMDI);
-}
-
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_myTabbedMDI as the view window of the frame.
+    SetView(m_myTabbedMDI);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\TabbedMDI Docking");

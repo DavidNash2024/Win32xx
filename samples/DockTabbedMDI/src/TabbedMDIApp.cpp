@@ -9,16 +9,6 @@
 // CDockContainerApp function definitions
 //
 
-// Constructor.
-CTabbedMDIApp::CTabbedMDIApp()
-{
-}
-
-// Destructor.
-CTabbedMDIApp::~CTabbedMDIApp()
-{
-}
-
 // Called when the application starts.
 BOOL CTabbedMDIApp::InitInstance()
 {

@@ -11,16 +11,6 @@
 // CMyTreeView function definitions
 //
 
-// Constructor.
-CMyTreeView::CMyTreeView()
-{
-}
-
-// Destructor.
-CMyTreeView::~CMyTreeView()
-{
-}
-
 // Compares param1 and param2. Used for sorting.
 int CALLBACK CMyTreeView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM)
 {

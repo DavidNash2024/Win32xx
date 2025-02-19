@@ -15,7 +15,7 @@ class CDialogApp : public CWinApp
 {
 public:
     CDialogApp();
-    virtual ~CDialogApp() override;
+    virtual ~CDialogApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

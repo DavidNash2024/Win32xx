@@ -10,16 +10,6 @@
 // ScintillaApp function definitions
 //
 
-// Constructor.
-ScintillaApp::ScintillaApp()
-{
-}
-
-// Destructor.
-ScintillaApp::~ScintillaApp()
-{
-}
-
 // Called when the application starts.
 BOOL ScintillaApp::InitInstance()
 {

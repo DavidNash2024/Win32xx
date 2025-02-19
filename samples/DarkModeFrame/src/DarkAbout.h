@@ -18,7 +18,7 @@ class CDarkAbout : public CDialog
 {
 public:
     CDarkAbout();
-    virtual ~CDarkAbout() override;
+    virtual ~CDarkAbout() override = default;
     void SetDarkMode(bool isDarkMode);
 
 protected:

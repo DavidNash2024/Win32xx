@@ -8,13 +8,6 @@
 //////////////////////////////////
 // CFrameApp function definitions.
 //
-CThemesApp::CThemesApp()
-{
-}
-
-CThemesApp::~CThemesApp()
-{
-}
 
 BOOL CThemesApp::InitInstance()
 {

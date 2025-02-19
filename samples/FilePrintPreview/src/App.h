@@ -26,8 +26,8 @@ CApp : public CWinApp                                                       /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CApp() {}
-        virtual ~CApp() override {}
+        CApp() = default;
+        virtual ~CApp() override = default;
 
         virtual BOOL    InitInstance() override;
         CMainFrame& TheFrame() { return m_frame; }

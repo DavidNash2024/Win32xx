@@ -13,8 +13,8 @@
 class CFastGDIApp : public CWinApp
 {
 public:
-    CFastGDIApp();
-    virtual ~CFastGDIApp() override;
+    CFastGDIApp() = default;
+    virtual ~CFastGDIApp() override = default;
     CMainFrame& GetMainFrame() { return m_frame; }
 
 protected:

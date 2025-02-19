@@ -13,7 +13,7 @@ class CViewDialog : public CDialog
 {
 public:
     CViewDialog(UINT resID);
-    virtual ~CViewDialog() override;
+    virtual ~CViewDialog() override = default;
 
 protected:
     // Virtual functions that override base class functions

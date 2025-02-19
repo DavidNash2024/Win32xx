@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]               (FontEx.cpp) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]               (FontEx.cpp) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -79,55 +79,16 @@ SaveFontSize()                                                              /*
 
 /*============================================================================*/
     void CFontEx::
-Serialize(CArchive &ar)                                                     /*
-
-    Save and restore the current CFontEx object in the archive ar,
-    maintaining compatibility between ANSI and UNICODE versions of archived
-    objects. The difference between the two character representations lies
-    in the lengths of the face name strings in the two modes.
-*-----------------------------------------------------------------------------*/
-{
-    LOGFONT lf;
-      // get the size of the LOGFONT, sans face name
-    UINT lfTopLength = sizeof(LOGFONTA) - LF_FACESIZE*sizeof(CHAR);
-      // f will archive this top part
-    ArchiveObject f(&lf, lfTopLength);
-    if (ar.IsStoring()) // storing
-    {
-        lf = m_font.GetLogFont();
-          // store the face name separately: ar recognizes the char mode
-        CString face = lf.lfFaceName;
-        ar << f;     // store the top part
-        ar << face;  // store the face name part
-        ar << m_txcolor;  // store the rest
-        ar << m_flags;
-    }
-    else    // recovering
-    {
-        CString face;
-        ar >> f;    // recover the top part
-        ar >> face; // recover the face name and put it in the LOGFONT
-        UINT size = face.GetLength() + 1;
-        memcpy(lf.lfFaceName, face.c_str(), size * sizeof(wchar_t));
-        m_font.CreateFontIndirect(lf);
-        SaveFontSize();
-         // recover the rest
-        ar >> m_txcolor;
-        ar >> m_flags;
-    }
-}
-
-/*============================================================================*/
-    void CFontEx::
 SetDefault()                                                                /*
 
     Create the default view font. Throw an exception if it cannot be created.
 *-----------------------------------------------------------------------------*/
 {
-    const int fontSize = 10;
+    m_txcolor = RGB(0, 0, 0);
+    constexpr int fontSize = 10;
+    constexpr int tenthsOfPoint = 10;
     LPCWSTR fontName   = L"Courier New";
-    m_txcolor          = RGB(0, 0, 0);
-    m_font.CreatePointFont(10 * fontSize, fontName);
+    m_font.CreatePointFont(tenthsOfPoint * fontSize, fontName);
     SaveFontSize();
 }
 /*----------------------------------------------------------------------------*/

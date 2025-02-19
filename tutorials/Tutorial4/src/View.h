@@ -25,8 +25,8 @@ struct PlotPoint
 class CView : public CWnd
 {
 public:
-    CView();
-    virtual ~CView() override;
+    CView() = default;
+    virtual ~CView() override = default;
 
     void DrawLine(int x, int y);
     void StorePoint(int x, int y, bool isPenDown);

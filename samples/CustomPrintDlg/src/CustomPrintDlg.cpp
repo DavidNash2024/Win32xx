@@ -18,10 +18,6 @@ CCustomPrintDlg::CCustomPrintDlg()
     m_owner = nullptr;
 }
 
-CCustomPrintDlg::~CCustomPrintDlg()
-{
-}
-
 // Creates and assigns the hDevMode and hDevNames global memory for the specified printer.
 bool CCustomPrintDlg::CreateGlobalHandles(LPCWSTR printerName, HGLOBAL* pHDevMode, HGLOBAL* pHDevNames)
 {

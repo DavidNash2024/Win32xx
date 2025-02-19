@@ -13,7 +13,7 @@ class CDoc
 {
 public:
     CDoc();
-    virtual ~CDoc();
+    virtual ~CDoc() = default;;
     void  LoadSettings(LPCWSTR keyName);
     void  SaveSettings(LPCWSTR keyName);
 

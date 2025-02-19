@@ -16,7 +16,7 @@ class CCustomControlApp : public CWinApp
 {
 public:
     CCustomControlApp();
-    virtual ~CCustomControlApp() override;
+    virtual ~CCustomControlApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

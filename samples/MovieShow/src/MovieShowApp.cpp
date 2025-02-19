@@ -9,16 +9,6 @@
 // CMovieShowApp function definitions.
 //
 
-// Constructor
-CMovieShowApp::CMovieShowApp()
-{
-}
-
-// Destructor
-CMovieShowApp::~CMovieShowApp()
-{
-}
-
 // Called when the application starts.
 BOOL CMovieShowApp::InitInstance()
 {

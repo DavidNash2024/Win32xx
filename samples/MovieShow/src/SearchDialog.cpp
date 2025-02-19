@@ -15,11 +15,6 @@ CSearchDialog::CSearchDialog(UINT resID) : CDialog(resID)
 {
 }
 
-// Destructor.
-CSearchDialog::~CSearchDialog()
-{
-}
-
 // Process the dialog's window messages.
 INT_PTR CSearchDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {

@@ -8,10 +8,6 @@
 /////////////////////////////////
 // CTrayApp function definitions.
 //
-CTrayApp::CTrayApp()
-{
-    // Constructor for CTrayApp
-}
 
 BOOL CTrayApp::InitInstance()
 {

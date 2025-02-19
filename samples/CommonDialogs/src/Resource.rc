@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -37,7 +37,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                      RT_MANIFEST            "../src/res/SystemDPI.manifest"
+1                      RT_MANIFEST            "../src/res/PerMonitorV2.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -120,7 +120,7 @@ EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
 BEGIN
       // controls within the client area:
-    CONTROL "", IDC_RICHEDITBOX, "RichEdit20A" , ES_MULTILINE |ES_AUTOHSCROLL |
+    CONTROL "", IDC_RICHEDITBOX, "RichEdit50W" , ES_MULTILINE |ES_AUTOHSCROLL |
                     WS_BORDER  | WS_TABSTOP | ES_WANTRETURN  | WS_VSCROLL |
                     WS_HSCROLL, 10, 10, 280, 180, WS_EX_CLIENTEDGE |
                     WS_EX_ACCEPTFILES
@@ -277,12 +277,9 @@ END
 
 STRINGTABLE     // app-specific program values
 BEGIN
-    IDS_APP_VERSION         "Version 1.0 (2016)"
-    IDS_ARCHIVE_FILE_EXT    ".arc"
-    IDS_DATAPATH_SUBDIR     "win32++\\"
+    IDS_APP_VERSION         "Version 2.0 (2024)"
     IDS_DOC_DEFAULT_EXT     ".txt"
     IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
-    IDS_MAX_MRU_ENTRIES     "5"
 END
 
 #endif    // English (U.S.) resources

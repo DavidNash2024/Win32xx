@@ -11,16 +11,6 @@
 // CView function definitions
 //
 
-// Constructor.
-CView::CView()
-{
-}
-
-// Destructor.
-CView::~CView()
-{
-}
-
 // Loads a bitmap image from a file.
 // Only bitmap images (bmp files) can be loaded.
 BOOL CView::LoadFileImage(LPCWSTR filename)

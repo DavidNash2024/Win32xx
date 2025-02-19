@@ -10,11 +10,6 @@
 // CTextApp function definitions
 //
 
-// Constructor.
-CTextApp::CTextApp()
-{
-}
-
 // Called when the application starts.
 BOOL CTextApp::InitInstance()
 {

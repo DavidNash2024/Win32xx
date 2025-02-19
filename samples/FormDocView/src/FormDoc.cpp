@@ -18,11 +18,6 @@ CFormDoc::CFormDoc() : m_isCheckA(false), m_isCheckB(false), m_isCheckC(false), 
 {
 }
 
-// Destructor.
-CFormDoc::~CFormDoc()
-{
-}
-
 // Loads the settings from the registry.
 void CFormDoc::LoadSettings(LPCWSTR keyName)
 {

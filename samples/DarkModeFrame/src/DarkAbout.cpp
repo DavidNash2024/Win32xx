@@ -18,11 +18,6 @@ CDarkAbout::CDarkAbout() : m_isDarkMode(false)
     SetDialogFromID(IDW_ABOUT);
 }
 
-// Destructor.
-CDarkAbout::~CDarkAbout()
-{
-}
-
 // Process the dialog's window messages.
 INT_PTR CDarkAbout::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {

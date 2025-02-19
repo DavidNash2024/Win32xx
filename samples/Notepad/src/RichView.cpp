@@ -16,16 +16,6 @@
 // CRichView function definitions
 //
 
-// Constructor.
-CRichView::CRichView()
-{
-}
-
-// Destructor.
-CRichView::~CRichView()
-{
-}
-
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
 int CRichView::CollatePages(const CDC& printerDC, int startChar, int endChar)
@@ -228,8 +218,10 @@ void CRichView::SetFontDefaults()
     CHARFORMAT cf{};
     cf.cbSize = sizeof(cf);
     cf.dwMask = CFM_SIZE | CFM_FACE | CFM_EFFECTS;
-    StrCopy(cf.szFaceName, L"Courier New", 32);
-    cf.yHeight = 204;
+    StrCopy(cf.szFaceName, L"Courier New", LF_FACESIZE);
+    constexpr int twipsPerPoint = 20;
+    constexpr int fontSize = 10;
+    cf.yHeight = fontSize * twipsPerPoint;
     SetDefaultCharFormat(cf);
 
     // Prevent Unicode characters from changing the font.

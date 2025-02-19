@@ -11,8 +11,8 @@
 class CMyEdit : public CEdit
 {
 public:
-    CMyEdit();
-    virtual ~CMyEdit();
+    CMyEdit() = default;
+    virtual ~CMyEdit() = default;
 
 protected:
     // Virtual functions that override base class functions.

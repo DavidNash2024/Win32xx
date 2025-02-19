@@ -14,7 +14,7 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView() override {}
+    virtual ~CView() override = default;
     CDoc& GetDoc();
     void PrintPage(CDC& dc, int page = 1);
     void QuickPrint(LPCWSTR docName);

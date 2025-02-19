@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                    (Doc.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (Doc.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -30,14 +30,14 @@ CDoc    : public CObject                                                    /*
 {
     public:
         CDoc();
-        virtual ~CDoc(){}
+        virtual ~CDoc() = default;
 
-        CString GetDocDir()  const
-                    { CFile f; f.SetFilePath(m_docPath);
-                      return f.GetFileDirectory();}
+        CString GetDocDir()  const;
         CString GetDocPath() const { return m_docPath;}
-        BOOL    IsDirty();
+        BOOL    IsDirty() const;
         BOOL    IsOpen() const {return m_isOpen;}
+        BOOL    IsSelected() const;
+        BOOL    CanPaste() const;
         BOOL    MakeNewDoc(LPCWSTR);
         void    OnCloseDoc();
         void    OnFindReplace(UINT, WPARAM, LPARAM);
@@ -54,7 +54,6 @@ CDoc    : public CObject                                                    /*
         CHARRANGE   FindNext(const MyFindReplaceDialog&, CHARRANGE);
         CRichEditView& GetRichView() const;
         void        NotFound(const MyFindReplaceDialog&);
-        void        Serialize(CArchive &ar);
 
         BOOL        m_isOpen;       // the document status
         CString     m_findNext;     // current string to find

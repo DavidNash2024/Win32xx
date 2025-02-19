@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (ListBoxDlg.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (ListBoxDlg.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -27,7 +27,7 @@ CListBoxDlg : public CDialog                                                  /*
 {
     public:
         CListBoxDlg();
-        virtual ~CListBoxDlg() override {}
+        virtual ~CListBoxDlg() override = default;
 
         void   AddListItem(LPCWSTR s)
                    { m_listContent.push_back(s);}
@@ -40,7 +40,6 @@ CListBoxDlg : public CDialog                                                  /*
         virtual void    OnCancel() override;
         virtual BOOL    OnInitDialog() override;
         virtual void    OnOK() override;
-        virtual void    SetWindowTitle() const;
 
     private:
         CListBoxDlg(const CListBoxDlg&) = delete;

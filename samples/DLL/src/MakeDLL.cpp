@@ -2,21 +2,21 @@
 // MakeDLL.cpp
 //
 
-// Defines the entry point for the DLL application.
-
 #include "StdAfx.h"
 #include "MyDialog.h"
 #include "MakeDLL.h"
+#include "MyWinThread.h"
 #include "resource.h"
+#include <list>
 
 
-// Start Win32++ for the DLL
-CWinApp App;
+// Start Win32++ for this DLL.
+CWinApp dllApp;
 
-// MyDialog is global for the DLL
-CMyDialog MyDialog(IDD_DIALOG1);
+using ThreadPtr = std::unique_ptr<CMyWinThread>;
+std::list<ThreadPtr> allThreads;
 
-// The entry point for the dll.
+// DllMain defines the entry point for this DLL.
 BOOL WINAPI DllMain( HANDLE, DWORD  ul_reason_for_call, LPVOID )
 {
     switch( ul_reason_for_call )
@@ -38,19 +38,22 @@ BOOL WINAPI DllMain( HANDLE, DWORD  ul_reason_for_call, LPVOID )
     return TRUE;
 }
 
-void __declspec(dllexport) ShowDialog()
+// Define the ShowDialog function exported by this DLL.
+__declspec(dllexport) void ShowDialog()
 {
-    //NOTE: This function doesn't return until the dialog is closed.
-    //      CThread can be used to put the dialog creation and message loop in
-    //      a separate thread if you wish the function to return immediately.
+    TRACE("ShowDialog called by the DLL.\n");
 
-    // Create the dialog
-    TRACE("Creating a dialog inside the DLL:\n");
-    MyDialog.Create();
-    TRACE("Dialog inside DLL created\n");
+    // Remove finished threads from allThreads.
+    for (auto it = allThreads.begin(); it != allThreads.end();)
+    {
+        if (!(*it)->IsRunning())
+            it = allThreads.erase(it);
+        else
+            ++it;
+    }
 
-    // Run the message loop
-    App.Run();
+    allThreads.push_back(std::make_unique<CMyWinThread>());
+
+    // The dialog is created when the thread starts.
+    allThreads.back()->CreateThread();
 }
-
-

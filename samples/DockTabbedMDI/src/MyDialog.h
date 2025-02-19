@@ -13,7 +13,7 @@ class CViewDialog : public CDialog
 {
 public:
     CViewDialog(UINT resID);
-    virtual ~CViewDialog() override;
+    virtual ~CViewDialog() override = default;
 
 protected:
     // Virtual functions that override base class functions.
@@ -63,7 +63,7 @@ class CContainDialog : public CDockContainer
 {
 public:
     CContainDialog();
-    virtual ~CContainDialog() override {}
+    virtual ~CContainDialog() override = default;
 
 protected:
     // Virtual functions that override base class functions.
@@ -84,7 +84,7 @@ class CDockDialog : public CDocker
 {
 public:
     CDockDialog();
-    virtual ~CDockDialog() override {}
+    virtual ~CDockDialog() override = default;
 
 protected:
     virtual void RecalcDockLayout() override;

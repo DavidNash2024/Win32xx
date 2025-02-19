@@ -32,7 +32,6 @@ void CDoc::FileStore(LPCWSTR /* filename */)
 //  {
 //      CArchive ar(filename, CArchive::store);
 //      ar << *this;        // Uses the Serialize function
-//      result = TRUE;
 //  }
 //  catch (const CFileException &e)
 //  {

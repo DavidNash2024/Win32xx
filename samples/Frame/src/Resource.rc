@@ -39,7 +39,6 @@ BEGIN
         MENUITEM "New\tCtrl+N",                 IDM_FILE_NEW
         MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
         MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
         MENUITEM "Print Preview",               IDM_FILE_PREVIEW
         MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT

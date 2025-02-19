@@ -15,8 +15,8 @@
 class CPerformanceApp : public CWinApp
 {
 public:
-    CPerformanceApp();
-    virtual ~CPerformanceApp() override;
+    CPerformanceApp() = default;
+    virtual ~CPerformanceApp() override = default;
     CMainWindow& GetMainWnd() {return m_mainWnd;}
 
 protected:

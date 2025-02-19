@@ -12,8 +12,8 @@
 class CRichView : public CRichEdit
 {
 public:
-    CRichView();
-    virtual ~CRichView() override;
+    CRichView() = default;
+    virtual ~CRichView() override = default;
     int  CollatePages(const CDC& printerDC, int startChar = 0, int endChar = -1);
     void  DoPrint(LPCWSTR docName);
     void  PrintPage(CDC& dc, int page);

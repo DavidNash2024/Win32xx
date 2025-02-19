@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Tutorial4" />
+		<Option pch_mode="0" />
+		<Option default_target="Release MinGW GNU compiler" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug MinGW GNU compiler">
+				<Option output="GNU/Debug/Tutorial4.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Debug" />
+				<Option object_output="GNU/Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-g3" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-municode" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="WS2_32" />
+				</Linker>
+			</Target>
+			<Target title="Release MinGW GNU compiler">
+				<Option output="GNU/Release/Tutorial4.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Release" />
+				<Option object_output="GNU/Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-municode" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+		</VirtualTargets>
+		<Unit filename="../src/ScribbleApp.cpp" />
+		<Unit filename="../src/ScribbleApp.h" />
+		<Unit filename="../src/View.cpp" />
+		<Unit filename="../src/View.h" />
+		<Unit filename="../src/main.cpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

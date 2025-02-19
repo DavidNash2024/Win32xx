@@ -1,8 +1,7 @@
 DDXDemo Example
 ===============
-
-This sample program has a frame window which includes a Menu bar, Tool Bar
-and Status Bar, in which a modeless dialog is used as the client window of
+This sample program has a frame window which includes a menu bar, toolbar
+and status bar, in which a modeless dialog is used as the client window of
 the frame. It was adapted from the FormDocView sample program in the Win32++
 release.
 
@@ -13,7 +12,6 @@ system registry,
 
 Features demonstrated in this example
 =====================================
-
 * App-Frame-Doc-View program architecture.
 * Use of a modeless dialog derived from CDialog as the view window
 * Use of the CRegKey class to store and retrieve persistent data in the 
@@ -30,6 +28,3 @@ Features demonstrated in this example
 * Tool tips that appear when the mouse hovers over tool bar, dialog controls,
   and the dialog client area
 * Use of a rich edit control on the form derived from the CRichEdit class.
-
-
-

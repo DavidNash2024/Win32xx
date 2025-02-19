@@ -13,13 +13,12 @@ class CView : public CWnd
 {
 public:
     CView() : m_menu(IDW_MAIN), m_isMinimized(false) {}
-    virtual ~CView() override {}
+    virtual ~CView() override = default;
 
 protected:
     // Virtual functions that override base class functions
-
-    virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnDestroy() override;
     virtual void    OnDraw(CDC& dc) override;
     virtual void    OnInitialUpdate() override;

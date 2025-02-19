@@ -11,8 +11,8 @@
 class CMyButton : public CButton
 {
 public:
-    CMyButton() {}
-    virtual ~CMyButton() override {}
+    CMyButton() = default;
+    virtual ~CMyButton() override = default;
 
 protected:
     // Virtual functions that override base class functions

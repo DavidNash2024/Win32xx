@@ -16,16 +16,11 @@ CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
-// Destructor.
-CMyDialog::~CMyDialog()
-{
-}
-
 // Called when the dialog window is destroyed.
 void CMyDialog::OnDestroy()
 {
-    TRACE("Dialog inside DLL destroyed\n");
-    ::PostQuitMessage(0);
+    TRACE("Destroyed the dialog created by the DLL.\n");
+    PostQuitMessage(0);
 }
 
 // Process the dialog's window messages.

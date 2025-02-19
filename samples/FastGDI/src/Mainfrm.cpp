@@ -14,18 +14,14 @@
 CMainFrame::CMainFrame() : m_preview(m_view), m_isDPIChanging(false),
                            m_isToolbarShown(true)
 {
-    // Set m_MyView as the view window of the frame.
-    SetView(m_view);
-}
-
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\Fast GDI Demo");

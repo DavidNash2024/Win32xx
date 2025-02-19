@@ -12,7 +12,7 @@ class CTestWindow : public CWnd
 {
 public:
     CTestWindow(int thread, HWND mainWindow);
-    virtual ~CTestWindow() override {}
+    virtual ~CTestWindow() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:

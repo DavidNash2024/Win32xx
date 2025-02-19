@@ -13,11 +13,6 @@
 // CViewTree function definitions.
 //
 
-// Constructor.
-CViewTree::CViewTree()
-{
-}
-
 // Destructor.
 CViewTree::~CViewTree()
 {
@@ -85,7 +80,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 
     // Use the new text unless the user cancelled the edit
     LPWSTR text = pTVDispInfo->item.pszText;
-    if ((text != nullptr) && (lstrlen(text) != 0))
+    if ((text != nullptr) && (text[0] != L'\0'))
         m_itemText.GetWindowText(GetEditControl());
 
     // Ensure the boxset name is unique. Append (2) etc. if required.

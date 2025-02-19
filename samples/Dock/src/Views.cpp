@@ -11,11 +11,6 @@
 // CViewClasses function definitions
 //
 
-// Constructor.
-CViewClasses::CViewClasses()
-{
-}
-
 // Destructor.
 CViewClasses::~CViewClasses()
 {
@@ -130,11 +125,6 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 /////////////////////////////////
 // CViewFiles function definitions
 //
-
-// Constructor.
-CViewFiles::CViewFiles()
-{
-}
 
 // Destructor.
 CViewFiles::~CViewFiles()

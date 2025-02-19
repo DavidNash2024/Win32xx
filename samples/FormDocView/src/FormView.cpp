@@ -15,11 +15,6 @@ CFormView::CFormView(UINT resID) : CDialog(resID)
 {
 }
 
-// Destructor
-CFormView::~CFormView()
-{
-}
-
 // Process the dialog's window messages.
 INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {

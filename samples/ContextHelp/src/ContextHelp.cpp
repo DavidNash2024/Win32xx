@@ -42,16 +42,6 @@
 // CContextHelp function definitions
 //
 
-// Constructor.
-CContextHelp::CContextHelp()
-{
-}
-
-// Destructor
-CContextHelp::~CContextHelp()
-{
-}
-
 // Add the (control-id, string topic) pair to the help topic table.
 // Assert if a duplicate id entered.
 void CContextHelp::AddHelpTopic(UINT id, LPCWSTR topic)
@@ -60,8 +50,7 @@ void CContextHelp::AddHelpTopic(UINT id, LPCWSTR topic)
     assert(topic);
 
     // Ensure this isn't a duplicate entry
-    auto m = m_helpTopics.find(id);
-    assert(m == m_helpTopics.end());
+    assert(m_helpTopics.find(id) == m_helpTopics.end());
 
     // Add the topic to the map
     m_helpTopics.insert(std::make_pair(id, topic));

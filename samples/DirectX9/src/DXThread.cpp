@@ -15,11 +15,6 @@ CDXThread::CDXThread() : m_pView(nullptr)
 {
 }
 
-// Destructor
-CDXThread::~CDXThread()
-{
-}
-
 // This function runs when the thread starts
 BOOL CDXThread::InitInstance()
 {

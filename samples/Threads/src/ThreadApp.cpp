@@ -9,16 +9,6 @@
 // CThreadApp function definitions.
 //
 
-// Constructor.
-CThreadApp::CThreadApp()
-{
-}
-
-// Destructor.
-CThreadApp::~CThreadApp()
-{
-}
-
 // Called when the application starts.
 BOOL CThreadApp::InitInstance()
 {

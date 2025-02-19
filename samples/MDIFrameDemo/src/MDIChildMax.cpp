@@ -19,11 +19,6 @@ CMDIChildMax::CMDIChildMax()
     SetView(m_maxView);
 }
 
-// Destructor.
-CMDIChildMax::~CMDIChildMax()
-{
-}
-
 // Called when the window is created.
 int CMDIChildMax::OnCreate(CREATESTRUCT& cs)
 {

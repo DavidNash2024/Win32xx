@@ -8,9 +8,6 @@
 //////////////////////////////
 // CView function definitions.
 //
-CView::CView()
-{
-}
 
 void CView::OnDraw(CDC& dc)
 // OnDraw is called when part or all of the window needs to be redrawn.

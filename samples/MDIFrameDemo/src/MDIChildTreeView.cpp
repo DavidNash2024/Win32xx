@@ -11,11 +11,6 @@
 // CViewTree function definitions
 //
 
-// Constructor.
-CViewTree::CViewTree()
-{
-}
-
 // Destructor.
 CViewTree::~CViewTree()
 {
@@ -103,11 +98,6 @@ CMDIChildTree::CMDIChildTree()
     m_menu.LoadMenu(L"MdiMenuTree");
     SetHandles(m_menu, nullptr);
     SetView(m_treeView);
-}
-
-// Destructor.
-CMDIChildTree::~CMDIChildTree()
-{
 }
 
 // Called when the window is created.

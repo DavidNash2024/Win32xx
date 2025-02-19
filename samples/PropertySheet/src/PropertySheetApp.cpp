@@ -8,16 +8,6 @@
 // CPropertySheetApp function definitions
 //
 
-// Constructor.
-CPropertySheetApp::CPropertySheetApp()
-{
-}
-
-// Destructor.
-CPropertySheetApp::~CPropertySheetApp()
-{
-}
-
 // Called when the application starts.
 BOOL CPropertySheetApp::InitInstance()
 {

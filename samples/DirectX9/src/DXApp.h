@@ -15,8 +15,8 @@
 class CDXApp : public CWinApp
 {
 public:
-    CDXApp();
-    virtual ~CDXApp() override {}
+    CDXApp() = default;
+    virtual ~CDXApp() override = default;
     CMainFrame& GetMainFrame() { return m_frame; }
 
 protected:

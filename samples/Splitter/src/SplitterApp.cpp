@@ -8,9 +8,6 @@
 /////////////////////////////////////
 // CSplitterApp function definitions.
 //
-CSplitterApp::CSplitterApp()
-{
-}
 
 BOOL CSplitterApp::InitInstance()
 {

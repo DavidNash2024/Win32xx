@@ -15,8 +15,8 @@
 class CPictureApp : public CWinApp
 {
 public:
-    CPictureApp();
-    virtual ~CPictureApp() override;
+    CPictureApp() = default;
+    virtual ~CPictureApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

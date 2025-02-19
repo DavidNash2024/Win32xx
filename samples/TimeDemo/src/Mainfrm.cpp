@@ -1,4 +1,4 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |
@@ -33,24 +33,31 @@ CMainFrame()                                                                /*
 
     Construct and initiallize the CMainFrame object.
 *-----------------------------------------------------------------------------*/
-    :   m_maxMRUEntries(5)
 {
-      // Set screen default position and  size.
-    m_xWin  = 100;
-    m_yWin  = 100;
-    m_cxWin = 800;
-    m_cyWin = 700;
-    m_plWnd = {};
+}
 
+/*============================================================================*/
+    HWND CMainFrame::
+        Create(HWND parent)                                                 /*
+
+    Create the frame window.
+*-----------------------------------------------------------------------------*/
+{
       // Set m_view as the view window of the frame.
     SetView(m_view);
+
+      // Set the registry key name, and load the initial window position.
+      // Use a registry key name like "CompanyName\\Application".
+    LoadRegistrySettings(L"Win32++\\TimeDemo");
+
+    return CFrame::Create(parent);
 }
 
 /*============================================================================*/
     void CMainFrame::
 OnColorChoice()                                                             /*
 
-        Select the view's backbround color.
+    Select the view's backbround color.
 *-----------------------------------------------------------------------------*/
 {
     CColorDialog ColorDlg(m_view.GetBkgndColor(), CC_RGBINIT | CC_ANYCOLOR);
@@ -64,7 +71,7 @@ OnColorChoice()                                                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
+OnCommand(WPARAM wparam, LPARAM)                                     /*
 
     The framework calls this member function when the user selects an
     item from a menu, when a child control sends a notification message,
@@ -72,18 +79,11 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
     menu selections, toolbar events, scrollbar actions, and  accelerator
     keys.
 
-    Here, the actions are divided into two groups: those that invoke help
-    actions, and  those that program invoke actions.
-
     The method returns nonzero if it processes the message; otherwise it
     returns zero.
 *-----------------------------------------------------------------------------*/
 {
         UINT lowParam = LOWORD(wparam);
-        // map all MRU file messages to one representative
-        if (IDW_FILE_MRU_FILE1 <= lowParam &&
-            lowParam < IDW_FILE_MRU_FILE1 + m_maxMRUEntries)
-            lowParam = IDW_FILE_MRU_FILE1;
 
         switch (lowParam)
         {
@@ -97,7 +97,6 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
             case IDM_FONT_CHOICE:    OnFontChoice();    return TRUE;
             case IDW_VIEW_TOOLBAR:   OnViewToolBar();   return TRUE;
             case IDW_VIEW_STATUSBAR: OnViewStatusBar(); return TRUE;
-            case IDW_FILE_MRU_FILE1: OnProcessMRU(wparam, lparam); return TRUE;
         }
         return FALSE;
 }
@@ -127,89 +126,16 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
 
       // call the base class function
     CFrame::OnCreate(cs);
-      // Connect the MRU to the frame's menu
-    m_MRU.AssignMenu(GetFrameMenu(), m_maxMRUEntries);
-      // get archived values
-    try
-    {
-          // open the application's saved parameter archive
-        CArchive ar(m_arcName, CArchive::load);
-          // recover the frame saved parameters
-        ar >> *this;
-    }
-    catch (const CException& e)
-    {
-          // Process the exception and  quit
-        CString msg;
-        CString what(e.what());
-        msg.Format(L"Error restoring previous parameters.\n%s\n%s",
-            e.GetText(), e.GetErrorString());
-        ::MessageBox(nullptr, msg.c_str(), what.c_str(),
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-          // remove the corrupted application archive file
-        ::DeleteFile(m_arcName);
-        m_view.SetDefaults();
-    }
-    catch(...)
-    {
-        CString msg = L"Error restoring previous parameters.\n";
-        ::MessageBox(nullptr, msg.c_str(), L"Exception",
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-        m_view.SetDefaults();
-    }
-      // recover the window placement, if read in ok
-    if (m_plWnd.length != 0)
-    {
-        m_plWnd.length = sizeof(WINDOWPLACEMENT);
-        m_plWnd.showCmd = SW_RESTORE;
-        SetWindowPlacement(m_plWnd);
-    }
-      // weed out any MRU entries that have disappeared
-    m_MRU.ValidateMRU();
-    // Show the gripper in the ToolBar
-    GetReBar().ShowGripper(GetReBar().GetBand(GetToolBar()), TRUE);
+
     return 0;
-}
-
-/*============================================================================*/
-    void CMainFrame::
-OnDestroy()                                                                 /*
-
-    Save the mainframe, MRU, and view status parameters before termination.
-*-----------------------------------------------------------------------------*/
-{
-    try
-    {
-        CArchive ar(m_arcName, CArchive::store);
-          // no serialization on Open() error
-        ar << *this;  // for the frame
-    }
-    catch (const CException& e)
-    {
-          // Process the exception and  quit
-        CString msg;
-        CString what(e.what());
-        msg.Format(L"Error while saving program settings:\n%s\n%s",
-            e.GetText(), e.GetErrorString());
-        ::MessageBox(nullptr, msg.c_str(), what.c_str(),
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-    }
-    catch(...)
-    {
-        CString msg = L"Error while saving program settings:\n";
-        ::MessageBox(nullptr, msg.c_str(), L"Exception",
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-    }
-    CFrame::OnDestroy();
 }
 
 /*============================================================================*/
     void CMainFrame::
 OnFileExit()                                                                /*
 
-    Perform whatever functions are necessary, other than Serialize(), as
-    it is invoked in response to the WM_CLOSE message that is sent when
-    the frame is close.
+    Perform whatever functions are necessary, as it is invoked in
+    response to the WM_CLOSE message that is sent when the frame is close.
 *-----------------------------------------------------------------------------*/
 {
       // Issue a close request to the frame
@@ -245,35 +171,9 @@ OnFileOpen()                                                                /*
 
     if (ThisDoc().OpenDoc(str))
     {
-        m_MRU.AddEntry(str);
         SetWindowTitle(str);
     }
     m_view.Invalidate();
-}
-
-/*============================================================================*/
-    bool CMainFrame::
-OnFileOpenMRU(UINT index)                                                   /*
-
-    Open the MRU file at nIndex as the next document.
-*-----------------------------------------------------------------------------*/
-{
-      // get the MRU entry if there is one (str will be empty if not)
-    CString str = m_MRU.GetEntry(index);
-    if (str.IsEmpty())
-        return false;
-
-    if (ThisDoc().OpenDoc(str))
-    {         // now it's ok to add it to the top of the MRU list
-        m_MRU.AddEntry(str);
-        SetWindowTitle(str);
-        m_view.Invalidate();
-        return true;
-    }
-    else // if it could not be opened, remove the entry from the MRU list
-        m_MRU.RemoveEntry(str.c_str());
-
-    return false;
 }
 
 /*============================================================================*/
@@ -287,7 +187,6 @@ OnFileSave()                                                                /*
     {
         CString docPath = ThisDoc().GetDocPath();
         SetWindowTitle(docPath);
-        TheMRU().AddEntry(docPath);
     }
 }
 
@@ -304,7 +203,6 @@ OnFileSaveAs()                                                              /*
     {
         CString docPath = ThisDoc().GetDocPath();
         SetWindowTitle(docPath);
-        TheMRU().AddEntry(docPath);
     }
 }
 
@@ -375,117 +273,6 @@ OnInitialUpdate()                                                           /*
 }
 
 /*============================================================================*/
-    BOOL CMainFrame::
-OnProcessMRU(WPARAM wparam, LPARAM lparam)                                  /*
-
-    One of the MRU entries has been selected.  Process accordingly.
-*-----------------------------------------------------------------------------*/
-{
-    UNREFERENCED_PARAMETER(lparam);
-
-      // compute the MRU index, where IDW_FILE_MRU_FILE1 is index 0
-    UINT nMRUIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
-    OnFileOpenMRU(nMRUIndex);
-    return TRUE;
-}
-
-/*============================================================================*/
-    void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                                 /*
-
-    Set cs members to select window frame parameters desired. This gets
-    executed before CView::PreCreate(). Use the deserialized position
-     and  size information to set the frame positioning and  size.
-*-----------------------------------------------------------------------------*/
-{
-      // do the base class stuff
-    CFrame::PreCreate(cs);
-    cs.x  = m_xWin;  // set to deserialized or default values
-    cs.y  = m_yWin;
-    cs.cx = m_cxWin;
-    cs.cy = m_cyWin;
-       // specify a title bar and  border with a window-menu on the title bar
-    cs.style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_VISIBLE
-        | WS_MINIMIZEBOX    // adds the minimize box
-        | WS_MAXIMIZEBOX    // adds the maximize box
-        | WS_THICKFRAME     // same as WS_SIZEBOX, enables resizing
-        ;
-}
-
-/*============================================================================*/
-        void CMainFrame::
-Serialize(CArchive &ar)                                                     /*
-
-        Called serialize or deserialize the frame to and  from the archive ar,
-        depending on the sense of IsStoring().
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-          // each item serialized is written to the archive
-          // file as a char stream of the proper length,
-          // preceded by that length. In some cases, other forms of
-          // data are saved, from with the primary items are then
-          // reconstructed.
-
-          // save current window placement information
-        m_plWnd = {};
-        m_plWnd.length = sizeof(WINDOWPLACEMENT);
-        GetWindowPlacement(m_plWnd);
-        ArchiveObject w(&m_plWnd, m_plWnd.length);
-        ar << w;
-          // save the base class frame status and  tool bar switches:
-          // these control the display of the StatusBar and  ToolBar
-
-        BOOL showbar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
-        ar << showbar;
-        showbar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-        ar << showbar;
-        // save MRU list and view
-        ar << m_MRU;
-        ar << m_view;
-
-        CString str = L"Complete";
-        ar << str;
-
-    }
-    else    // recovering
-    {
-          // each item deserialized from the archive is
-          // retrieved by first reading its length and  then
-          // loading in that number of bytes into the data
-          // item saved in the archive, as above. Some items require
-          // additional conversion procedures, as shown below.
-
-          // recover window frame placement, but do not invoke
-          // SetWindowPlacement(), as the window is not yet created.
-        ArchiveObject w(&m_plWnd, sizeof(WINDOWPLACEMENT));
-        ar >> w;
-          // recover frame status and  tool bar base class switches
-        BOOL showbar;
-        ar >> showbar;
-        ShowStatusBar(showbar);
-        ar >> showbar;
-        ShowToolBar(showbar);
-          // no exception having been raised, set frame parameters
-        RECT rc = m_plWnd.rcNormalPosition;
-        m_xWin = rc.left;
-        m_yWin = rc.top;
-        m_cxWin = rc.right  - rc.left;
-        m_cyWin = rc.bottom - rc.top;
-        // load MRU and view parameters
-        ar >> m_MRU;
-        ar >> m_view;
-        // ensure we've read the entire archive
-        CString str;
-        ar >> str;
-        if (str != L"Complete")
-            throw CUserException(L"Invalid archive");
-    }
-}
-
-/*============================================================================*/
     void CMainFrame::
 SetupMenuIcons()                                                            /*
 
@@ -510,19 +297,19 @@ SetupToolBar()                                                              /*
     on the toolbar at runtime.
 *-----------------------------------------------------------------------------*/
 {
-          // Connect button IDs to button icons, show enabled status,  and
-          // give the explicit image index iImage of each button in the bitmap.
-          // Add the toolbar buttons in the order they are to appear at runtime.
-        AddToolBarButton(IDM_FILE_NEW);
-        AddToolBarButton(IDM_FILE_OPEN);
-        AddToolBarButton(IDM_FILE_SAVE);
-        AddToolBarButton(0);  // Separator
-        AddToolBarButton(IDM_FONT_CHOICE);
-        AddToolBarButton(IDM_COLOR_CHOICE);
-        AddToolBarButton(0);  // Separator
-        AddToolBarButton(IDM_HELP_ABOUT);
-        // Specify the toolbar bitmap and color mask.
-        SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
+      // Connect button IDs to button icons, show enabled status,  and
+      // give the explicit image index iImage of each button in the bitmap.
+      // Add the toolbar buttons in the order they are to appear at runtime.
+    AddToolBarButton(IDM_FILE_NEW);
+    AddToolBarButton(IDM_FILE_OPEN);
+    AddToolBarButton(IDM_FILE_SAVE);
+    AddToolBarButton(0);  // Separator
+    AddToolBarButton(IDM_FONT_CHOICE);
+    AddToolBarButton(IDM_COLOR_CHOICE);
+    AddToolBarButton(0);  // Separator
+    AddToolBarButton(IDM_HELP_ABOUT);
+    // Specify the toolbar bitmap and color mask.
+    SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
 }
 
 /*============================================================================*/

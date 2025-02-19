@@ -1,4 +1,4 @@
-/* (24-Jul-2015) [Tab/Indent: 8/8][Line/Box: 80/74]          (MyScrollBar.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]          (MyScrollBar.cpp) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -35,15 +35,12 @@ CMyScrollBar()                                                              /*
 
 /*============================================================================*/
     int CMyScrollBar::
-GetHScrollPos(UINT msg, WPARAM wparam, LPARAM lparam)                       /*
+GetHScrollPos(UINT, WPARAM wparam, LPARAM)                       /*
 
     Respond to WM_HSCROLL messages and return the current position of the
     scroll bar.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(lparam);
-
     GetScrollInfo(m_scrollInfo);
     switch (LOWORD (wparam))
     {

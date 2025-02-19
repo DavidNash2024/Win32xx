@@ -12,16 +12,6 @@
 // CViewText function definitions
 //
 
-// Constructor.
-CViewText::CViewText()
-{
-}
-
-// Destructor.
-CViewText::~CViewText()
-{
-}
-
 // Called when a window handle (HWND) is attached to CViewText.
 void CViewText::OnAttach()
 {

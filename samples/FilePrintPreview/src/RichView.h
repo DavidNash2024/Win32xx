@@ -30,8 +30,8 @@ CRichView : public CRichEdit                                                /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CRichView() {}
-        virtual ~CRichView() override {}
+        CRichView() = default;
+        virtual ~CRichView() override = default;
 
         UINT    GetPageBreaks(CDC& dcPrinter);
         BOOL    GetNewFont() const;

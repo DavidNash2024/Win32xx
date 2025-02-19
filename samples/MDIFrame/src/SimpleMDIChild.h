@@ -12,6 +12,7 @@ class CSimpleView : public CWnd
 {
 public:
     CSimpleView();
+    virtual ~CSimpleView() override = default;
 
     COLORREF GetColor() { return m_color; }
     void SetColor(COLORREF color) { m_color = color; }
@@ -38,7 +39,7 @@ class CSimpleMDIChild : public CMDIChild
 {
 public:
     CSimpleMDIChild();
-    virtual ~CSimpleMDIChild() override;
+    virtual ~CSimpleMDIChild() override = default;
 
 protected:
     // Virtual functions that override base class functions

@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (ColorChoice.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]          (ColorChoice.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -203,63 +203,8 @@ OnInitDialog()                                                              /*
     the color choice is being initialized.
 *-----------------------------------------------------------------------------*/
 {
-    SetWindowTitle();
+    SetWindowText(m_boxTitle);
     return TRUE;
-}
-
-/*============================================================================*/
-        void CColorChoice::
-Serialize(CArchive &ar)                                                     /*
-
-    Called to serialize the current color choice table to or from the
-    archive ar, depending on the sense of IsStoring(). Leaves the archive
-    open for for further operations.
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-          // save the current color
-        ar << GetParameters().rgbResult;
-          // save the custom colors
-        ArchiveObject ao(GetCustomColors(), 16 * sizeof(COLORREF) );
-        ar << ao;
-          // save the color table entries
-        UINT entries = static_cast<UINT>(m_colorTable.size());
-        ar << entries;
-        for (UINT i = 0; i < entries ; i++)
-        {
-            ar << m_colorTable[i].id;
-            ar << m_colorTable[i].usage;
-            ar << m_colorTable[i].color;
-        }
-    }
-    else    // recovering
-    {
-          // recover current color
-        COLORREF rgbResult;
-        ar >> rgbResult;
-        SetColor(rgbResult); // set base class current color
-          // read in the custom colors
-        COLORREF cr[16];
-        ArchiveObject ao(cr, 16 * sizeof(COLORREF));
-        ar >> ao;
-        SetCustomColors(cr);
-          // recover the color table entries
-        UINT entries;
-        ar >> entries;
-        m_colorTable.clear();
-        for (UINT i = 0; i < entries ; i++)
-        {
-            ctl_color cc;
-            ar >> cc.id;
-            ar >> cc.usage;
-            ar >> cc.color;
-            m_colorTable.push_back(cc);
-        }
-    }
-
-    CColorDialog::Serialize(ar);
 }
 
 /*============================================================================*/

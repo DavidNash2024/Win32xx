@@ -1,4 +1,4 @@
-/* (26-Aug-2023) [Tab/Indent: 4/4][Line/Box: 80/74]              (Resource.rc) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -142,11 +142,8 @@ STRINGTABLE     // window-related items
 
 STRINGTABLE
 {     // app-specific program values
-    IDS_APP_VERSION         "Version 1.1 (2020)"
-    IDS_ARCHIVE_FILE_EXT    ".arc"
-    IDS_DATAPATH_SUBDIR     "win32++\\"
+    IDS_APP_VERSION         "Version 3.0 (2024)"
     IDS_DOC_DEFAULT_EXT     ".txt"
-    IDS_MAX_MRU_ENTRIES     "5"
     IDS_FILE_FILTER "Text Files (*.txt; *.xml)|*.txt;*.xml| All Files (*.*)|*.*||"
 }
 

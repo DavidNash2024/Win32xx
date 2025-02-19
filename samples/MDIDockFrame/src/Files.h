@@ -12,7 +12,7 @@
 class CViewFiles : public CListView
 {
 public:
-    CViewFiles();
+    CViewFiles() = default;
     virtual ~CViewFiles() override;
 
 protected:
@@ -39,7 +39,7 @@ class CContainFiles : public CDockContainer
 {
 public:
     CContainFiles();
-    virtual ~CContainFiles() override {}
+    virtual ~CContainFiles() override = default;
 
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -59,7 +59,7 @@ class CDockFiles : public CDocker
 {
 public:
     CDockFiles();
-    virtual ~CDockFiles() override {}
+    virtual ~CDockFiles() override = default;
 
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

@@ -25,7 +25,7 @@ AboutBox        : public CDialog                                        /*
 {
     public:
         AboutBox();
-        virtual ~AboutBox() override {}
+        virtual ~AboutBox() override = default;
 
         void SetStatus(const CString& status) { m_status = status; }
 

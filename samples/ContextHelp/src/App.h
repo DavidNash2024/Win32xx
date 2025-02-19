@@ -14,8 +14,8 @@
 class CApp : public CWinApp
 {
 public:
-    CApp();
-    virtual ~CApp() override;
+    CApp() = default;;
+    virtual ~CApp() override = default;;
 
 protected:
     virtual BOOL InitInstance() override;

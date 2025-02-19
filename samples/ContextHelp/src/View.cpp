@@ -15,11 +15,6 @@ CView::CView(UINT resID) : CDialog(resID), m_parent(nullptr)
 {
 }
 
-// Destructor.
-CView::~CView()
-{
-}
-
 // Creates the view window. Its a modeless dialog.
 HWND CView::Create(HWND parent = nullptr)
 {

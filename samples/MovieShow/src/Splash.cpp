@@ -19,11 +19,6 @@ CSplash::CSplash() : m_fontHandle(nullptr)
     LoadFont();
 }
 
-// Destructor.
-CSplash::~CSplash()
-{
-}
-
 // Called during window creation.
 int CSplash::OnCreate(CREATESTRUCT&)
 {

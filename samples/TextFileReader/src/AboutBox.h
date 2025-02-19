@@ -25,7 +25,7 @@ AboutBox    : public CDialog                                            /*
 {
     public:
         AboutBox();
-        virtual ~AboutBox() override {}
+        virtual ~AboutBox() override = default;
 
         void    SetAboutBoxInfo(LPCWSTR info) { m_aboutBoxInfo = info;}
 

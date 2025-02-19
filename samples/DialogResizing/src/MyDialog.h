@@ -13,7 +13,7 @@ class CMyDialog : public CDialog
 {
 public:
     CMyDialog(UINT resID);
-    virtual ~CMyDialog() override;
+    virtual ~CMyDialog() override = default;
 
 protected:
     // Virtual functions that override base class functions

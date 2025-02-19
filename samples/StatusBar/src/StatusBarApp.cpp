@@ -8,13 +8,6 @@
 //////////////////////////////////////
 // CStatusBarApp function definitions.
 //
-CStatusBarApp::CStatusBarApp()
-{
-}
-
-CStatusBarApp::~CStatusBarApp()
-{
-}
 
 BOOL CStatusBarApp::InitInstance()
 {

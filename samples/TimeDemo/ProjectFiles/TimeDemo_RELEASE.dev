@@ -1,7 +1,7 @@
 [Project]
 FileName=TimeDemo_RELEASE.dev
 Name=timedemo
-UnitCount=17
+UnitCount=15
 Type=0
 Ver=2
 ObjFiles=
@@ -102,26 +102,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\src\MRU.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit10]
-FileName=..\src\MRU.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -131,8 +111,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit10]
+FileName=..\src\Resource.rc
+CompileCpp=1
+Folder=Resource
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=..\src\stdafx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit14]
-FileName=..\src\stdafx.h
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -142,7 +142,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\src\View.cpp
+FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -251,7 +251,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\src\stdafx.cpp
+FileName=..\src\View.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -281,11 +281,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\Resource.rc
+FileName=..\src\stdafx.h
 CompileCpp=1
-Folder=Resource
+Folder=Header
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

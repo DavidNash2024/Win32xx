@@ -17,5 +17,5 @@ Dialog applications are easy to create, provided we have access to a
 resource editor to build the resource script file for us (often called
 resource.rc). Commercial compilers usually include a resource editor
 for this purpose, but free compilers generally don't. A resource
-editor is include with Microsoft's Visual Studio Studio Community.
+editor is included with Microsoft's Visual Studio Studio Community.
 

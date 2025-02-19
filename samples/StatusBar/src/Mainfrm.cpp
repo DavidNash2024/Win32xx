@@ -14,18 +14,14 @@
 // Constructor for CMainFrame. Its called after CFrame's constructor.
 CMainFrame::CMainFrame() : m_colored("Colored text")
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_view);
-}
-
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\StatusBar Sample");
@@ -62,9 +58,9 @@ void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
     }
 
     // Draw the owner drawn text, stored in the itemData.
-    LPCWSTR text = reinterpret_cast<LPCWSTR>(pDrawItem->itemData);
+    CString text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
     dc.SetBkMode(TRANSPARENT);
-    dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
+    dc.DrawText(text, text.GetLength(), partRect, DT_SINGLELINE | DT_VCENTER);
 }
 
 // Draws the StatusBar's background when StatusBar themes are enabled.
@@ -273,7 +269,7 @@ void CMainFrame::SetStatusParts()
 
     // Add the icon to part 3.
     iconSide = iconSide - (iconSide % 8);
-    GetStatusBar().SetPartIcon(3, (HICON)GetApp()->LoadImage(MAKEINTRESOURCE(IDW_MAIN), IMAGE_ICON, iconSide, iconSide));
+    GetStatusBar().SetPartIcon(3, (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, iconSide, iconSide));
 
     // Assign the colored text for part 4.
     GetStatusBar().SetPartText(4, m_colored, SBT_OWNERDRAW);

@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                (MainFrm.h) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -25,30 +25,22 @@
 CMainFrame : public CFrame                                                  /*
 
     This class administers the user interaction with the file to be displayed
-    and the view class that displays it. Parameters of this class deemed to
-    be persistent may be serialized.
+    and the view class that displays it.
 *-----------------------------------------------------------------------------*/
 {
     public:
         CMainFrame(void);
-        virtual     ~CMainFrame() override {}
-        CDoc&       TheDoc()      {return m_view.TheDoc();}
+        virtual     ~CMainFrame() override = default;
+        virtual HWND Create(HWND parent = nullptr) override;
 
+        CDoc&       TheDoc()      {return m_view.TheDoc();}
         AboutBox&   GetAboutBox()   { return m_aboutDialog; }
-        void        SaveSettings();
-        void        SetArchivePath(const CString& archivePath)
-                        { m_arcvPath = archivePath; }
-        void        SetMaxMRUSlots(UINT maxMRU) { m_maxMRU = maxMRU; }
 
     protected:
-        virtual void OnClose() override;
-
         virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
         virtual int  OnCreate(CREATESTRUCT& cs) override;
         virtual BOOL OnHelp() override;
         virtual void OnInitialUpdate() override;
-        virtual void PreCreate(CREATESTRUCT& cs) override;
-        virtual void Serialize(CArchive& ar) override;
         virtual void SetupMenuIcons() override;
         virtual void SetupToolBar() override;
 
@@ -56,24 +48,17 @@ CMainFrame : public CFrame                                                  /*
         CMainFrame(const CMainFrame&) = delete;
         CMainFrame& operator=(const CMainFrame&) = delete;
 
-        void OnColorChoice();
-        void OnFileClose();
-        void OnFileExit();
-        void OnFileOpenMRU(UINT);
-        void OnFileOpen();
-        void OnFontChoice() { m_view.ClientFontChoice(); }
-        BOOL OnProcessMRU(WPARAM wparam, LPARAM lparam);
+        BOOL OnColorChoice();
+        BOOL OnFileClose();
+        BOOL OnFileExit();
+        BOOL OnFileOpenMRU(WPARAM wparam);
+        BOOL OnFileOpen();
+        BOOL OnFontChoice() { m_view.ClientFontChoice(); return TRUE; }
+        BOOL OnLineNumbering();
 
           // private data members
-         CString    m_arcvPath;       // archived data path
          CView      m_view;           // the view
-         UINT       m_xWin;           // deserialized window x position
-         UINT       m_yWin;           // deserialized window y position
-         UINT       m_cxWin;          // deserialized window width
-         UINT       m_cyWin;          // deserialized window height
-         UINT       m_maxMRU;         // limit on MRU entries
          AboutBox   m_aboutDialog;    // about dialog handled here
-         WINDOWPLACEMENT m_wndPl;     // window placement information
 };
 /*------------------------------------------------------------------------------*/
 #endif // SDI_MAINFRM_H

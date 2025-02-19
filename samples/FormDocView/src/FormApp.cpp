@@ -9,16 +9,6 @@
 // CFormApp function definitions
 //
 
-// Constructor.
-CFormApp::CFormApp()
-{
-}
-
-// Destructor.
-CFormApp::~CFormApp()
-{
-}
-
 // Called when the application starts.
 BOOL CFormApp::InitInstance()
 {

@@ -16,7 +16,7 @@ class CRightPane : public CDocker
 {
 public:
     CRightPane();
-    virtual ~CRightPane() override {}
+    virtual ~CRightPane() override = default;
 
 protected:
     // Virtual functions that override base class functions

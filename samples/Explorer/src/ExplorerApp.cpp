@@ -10,11 +10,6 @@
 // CExplorerApp function definitions
 //
 
-// Constructor.
-CExplorerApp::CExplorerApp()
-{
-}
-
 // Destructor.
 CExplorerApp::~CExplorerApp()
 {

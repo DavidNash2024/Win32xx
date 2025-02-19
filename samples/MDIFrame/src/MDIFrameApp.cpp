@@ -9,11 +9,6 @@
 // CMDIFrameApp function definitions
 //
 
-// Constructor.
-CMDIFrameApp::CMDIFrameApp()
-{
-}
-
 // Called when the application starts.
 BOOL CMDIFrameApp::InitInstance()
 {

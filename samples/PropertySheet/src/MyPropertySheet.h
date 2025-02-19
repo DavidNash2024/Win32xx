@@ -13,7 +13,7 @@ class CMyPropertySheet : public CPropertySheet
 {
 public:
     CMyPropertySheet(LPCWSTR caption = nullptr, HWND hParent = nullptr);
-    virtual ~CMyPropertySheet() override {}
+    virtual ~CMyPropertySheet() override = default;
 
 protected:
     // Virtual functions that override base class functions
@@ -36,7 +36,7 @@ class CButtonPage : public CPropertyPage
 {
 public:
     CButtonPage(UINT templateID, LPCWSTR title = nullptr);
-    virtual ~CButtonPage() override {}
+    virtual ~CButtonPage() override = default;
 
     BOOL Validate();
 
@@ -64,7 +64,7 @@ class CComboPage : public CPropertyPage
 {
 public:
     CComboPage(UINT templateID, LPCWSTR title  = nullptr);
-    virtual ~CComboPage() override {}
+    virtual ~CComboPage() override = default;
 
 protected:
     // Virtual functions that override base class functions.

@@ -1,0 +1,120 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_DIALOG               ICON                    "../src/res/Dialog.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP1             BITMAP                  "../src/res/Zapotec.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 320, 200
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "My Dialog"
+//FONT 8, "MS Shell Dlg", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,241,153,50,16
+    CONTROL         "Radio1",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,30,24,38,
+                    10
+    CONTROL         "Radio2",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,30,36,38,
+                    10
+    CONTROL         "Radio3",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,30,48,38,
+                    10
+    EDITTEXT        IDC_EDIT1,120,82,84,35,ES_MULTILINE | ES_AUTOHSCROLL |
+                    NOT WS_BORDER,WS_EX_STATICEDGE
+    CONTROL         "Check Box 1",IDC_CHECK1,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,30,114,55,10
+    CONTROL         "Check Box 2",IDC_CHECK2,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,30,126,55,10
+    CONTROL         "Check Box 3",IDC_CHECK3,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,30,139,55,10
+    LISTBOX         IDC_LIST1,120,23,84,35,LBS_SORT | LBS_NOINTEGRALHEIGHT |
+                    NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "Button",IDC_BUTTON1,30,82,49,11
+    CONTROL         "",IDC_RICHEDIT1,"RichEdit50W",ES_MULTILINE |
+                    ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP,120,142,84,35
+    CONTROL         IDB_BITMAP1,IDC_STATIC1,"Static",SS_BITMAP,231,7,64,59
+    GROUPBOX        "Static Window",IDC_STATIC2,226,78,78,51,BS_CENTER
+    LTEXT           "Actions are displayed here",IDC_STATIC3,229,91,71,35
+END
+#ifdef APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                 "Simple Window"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////

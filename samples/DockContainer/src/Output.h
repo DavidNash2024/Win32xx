@@ -15,8 +15,8 @@
 class CViewOutput : public CRichEdit
 {
 public:
-    CViewOutput();
-    virtual ~CViewOutput() override;
+    CViewOutput() = default;
+    virtual ~CViewOutput() override = default;
     void SetDPIFont();
 
 protected:
@@ -39,7 +39,7 @@ class CContainOutput : public CDockContainer
 {
 public:
     CContainOutput();
-    virtual ~CContainOutput() override {}
+    virtual ~CContainOutput() override = default;
 
 protected:
     // Virtual functions that override base class functions.
@@ -60,7 +60,7 @@ class CDockOutput : public CDocker
 {
 public:
     CDockOutput();
-    virtual ~CDockOutput() override {}
+    virtual ~CDockOutput() override = default;
 
 protected:
     virtual void RecalcDockLayout() override;

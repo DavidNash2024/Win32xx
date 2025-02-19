@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                 (View.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                 (View.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -109,9 +109,15 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
 
     switch (msg)
     {
-        case WM_SIZE:
+    case WM_SIZE:
+    {
+        CRect rc = GetClientRect();
+        int gap = DpiScaleInt(10);
+        rc.DeflateRect(gap, gap);
+        GetRichView().SetWindowPos(nullptr, rc, SWP_SHOWWINDOW);
         Invalidate();
         break;  // Also do default processing
+    }
     }
       // pass unhandled messages on for default processing
     return DialogProcDefault(msg, wparam, lparam);
@@ -184,6 +190,7 @@ OnInitDialog()                                                              /*
     m_richView.SetFont(m_editFont, TRUE);
       // put some arbitrary text in the edit control just for this demo
     NoDocOpen();
+
     return TRUE;
 }
 
@@ -245,25 +252,8 @@ SetRichEditColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                /*
 }
 
 /*============================================================================*/
-        void CView::
-Serialize(CArchive &ar)                                                     /*
-
-        Called to serialize or deserialize the view to and from the archive ar,
-        depending on the sense of IsStoring().
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-    }
-    else    // recovering
-    {
-    }
-}
-
-/*============================================================================*/
     void CView::
-SetEditFont(const CFont f)                                                  /*
+SetEditFont(const CFont& f)                                                  /*
 
     Set the font for the edit box in the client window.
 *-----------------------------------------------------------------------------*/

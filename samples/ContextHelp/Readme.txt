@@ -54,5 +54,3 @@ of HTML files using the Microsoft Help Workshop. The HTML files can be created
 using an ordinary text editor or HTML editor. Consult the ContestHelpDemo.chm
 user manual topic "Creating Help Files" for complete instructions.
 
-
-

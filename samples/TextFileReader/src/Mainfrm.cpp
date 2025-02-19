@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]              (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -20,32 +20,35 @@
 
 /*============================================================================*/
     CMainFrame::
-CMainFrame() : m_xWin(0), m_yWin(0), m_cxWin(0), m_cyWin(0), m_maxMRU(0)                                                            /*
+CMainFrame()                                                            /*
 
     Constructor for CMainFrame, which is called after CFrame's constructor.
+*-----------------------------------------------------------------------------*/
+{
+}
+
+/*============================================================================*/
+    HWND CMainFrame::
+Create(HWND parent)                                                         /*
+
+    Create the frame window.
 *-----------------------------------------------------------------------------*/
 {
       // Set m_view as the view window of the frame.
     SetView(m_view);
 
-    m_wndPl = {};
-    m_wndPl.length = sizeof(WINDOWPLACEMENT);
+      // Set the registry key name, and load the initial window position.
+      // Use a registry key name like "CompanyName\\Application".
+    LoadRegistrySettings(L"Win32++\\TextFileReader");
+
+      // Load the settings from the registry with 5 MRU entries.
+    LoadRegistryMRUSettings(5);
+
+    return CFrame::Create(parent);
 }
 
 /*============================================================================*/
-    void CMainFrame::
-OnClose()                                                                   /*
-
-    Save the program persistent settings and terminate execution in response to
-    the WM_CLOSE message.
-*-----------------------------------------------------------------------------*/
-{
-    SaveSettings();
-    CFrame::OnClose();
-}
-
-/*============================================================================*/
-    void CMainFrame::
+    BOOL CMainFrame::
 OnColorChoice()                                                             /*
 
         Select the view backbround color.
@@ -54,11 +57,12 @@ OnColorChoice()                                                             /*
     m_view.OnColorChoice();
     Invalidate();
     UpdateWindow();
+    return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
+OnCommand(WPARAM wparam, LPARAM)                                            /*
 
     The framework calls this member function when the user selects an
     item from a menu, when a child control sends a notification message,
@@ -74,56 +78,25 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
     returns zero.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT nID = LOWORD(wparam);
-
-      // map all MRU file messages to one representative
-    if(IDW_FILE_MRU_FILE1 <= nID &&
-        nID < IDW_FILE_MRU_FILE1 + m_maxMRU)
-        nID = IDW_FILE_MRU_FILE1;
 
     switch(nID)
     {
-    case IDM_COLOR_CHOICE:
-        OnColorChoice();
-        return TRUE;
-
-    case IDM_FILE_CLOSE:
-        OnFileClose();
-        return TRUE;
-
-    case IDM_FILE_EXIT:
-        OnFileExit();
-        return TRUE;
-
-    case IDM_FILE_OPEN:
-        OnFileOpen();
-        return TRUE;
-
-    case IDM_FONT_CHOICE:
-        OnFontChoice();
-        return TRUE;
-
-    case IDW_VIEW_STATUSBAR:
-        CFrame::OnViewStatusBar();
-        return TRUE;
-
-    case IDW_VIEW_TOOLBAR:
-        CFrame::OnViewToolBar();
-        return TRUE;
-
-    case IDM_LINE_NUMBERING:
-        GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING, MF_BYCOMMAND |
-            (m_view.ToggleLineNumbers() ? MF_CHECKED : MF_UNCHECKED));
-        break;
-
-    case IDW_ABOUT:
-        return OnHelp();
+    case IDM_COLOR_CHOICE:      return OnColorChoice();
+    case IDM_FILE_CLOSE:        return OnFileClose();
+    case IDM_FILE_EXIT:         return OnFileExit();
+    case IDM_FILE_OPEN:         return OnFileOpen();
+    case IDM_FONT_CHOICE:       return OnFontChoice();
+    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
+    case IDM_LINE_NUMBERING:    return OnLineNumbering();
+    case IDW_ABOUT:             return OnHelp();
 
     case IDW_FILE_MRU_FILE1:
-        OnProcessMRU(wparam, lparam);
-        return TRUE;
+    case IDW_FILE_MRU_FILE2:
+    case IDW_FILE_MRU_FILE3:
+    case IDW_FILE_MRU_FILE4:
+    case IDW_FILE_MRU_FILE5:    return OnFileOpenMRU(wparam);
     }
     return FALSE;
 }
@@ -153,49 +126,11 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
 
       // call the base class function
     CFrame::OnCreate(cs);
-      // determine the availability of the archive file
-    if (::_taccess(m_arcvPath, 4) != 0)
-    {
-        CString msg = L"Default values are being used on this first\n"
-            L"startup. Your customized settings, colors, and font\n"
-            L"will be restored in future usages.\n";
-        ::MessageBox(nullptr, msg, L"Information", MB_OK |
-            MB_ICONINFORMATION | MB_TASKMODAL);
-        return 0;
-    }
-      // get archved values
-    try
-    {
-        SetMRULimit(m_maxMRU);
-          // get archived values
-        CArchive ar(m_arcvPath, CArchive::load);
-        ar >> *TheApp();    // for the app
-        ar >> *this;        // for the frame
-        ar >> m_view;       // for the view
-    }
-    catch (const CFileException &e)
-    {
-        CString text = e.GetText();
-        if (!text.IsEmpty())
-            text += L"\n";
-        CString msg = "Error restoring program's previous state.\n" +
-            text + e.GetErrorString() + L"\n" + e.what();
-        ::MessageBox(nullptr, msg.c_str(), L"Exception",
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-    }
-    catch(...) // catch all other exception events
-    {
-        CString msg = L"Program's previous state not restored.\n";
-        ::MessageBox(nullptr, msg.c_str(), L"Unknown Exception",
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-    }
-    m_wndPl.showCmd = SW_RESTORE;
-    SetWindowPlacement(m_wndPl);
     return 0;
 }
 
 /*============================================================================*/
-    void CMainFrame::
+    BOOL CMainFrame::
 OnFileClose()                                                               /*
 
     Respond to the close toolbar button and main menu item by closing the
@@ -208,10 +143,11 @@ OnFileClose()                                                               /*
     m_view.SetAppSize();
     Invalidate();
     UpdateWindow();
+    return TRUE;
 }
 
 /*============================================================================*/
-    void CMainFrame::
+    BOOL CMainFrame::
 OnFileExit()                                                                /*
 
     Close the application and terminate execution.
@@ -219,10 +155,11 @@ OnFileExit()                                                                /*
 {
       // Issue a close request to the frame
     Close();
+    return TRUE;
 }
 
 /*============================================================================*/
-    void CMainFrame::
+    BOOL CMainFrame::
 OnFileOpen()                                                                /*
 
     Respond to the open file toolbar button and menu item by prompting for
@@ -234,11 +171,11 @@ OnFileOpen()                                                                /*
     CString filter = LoadString(IDS_FILE_FILTER);
     CFileDialog fd(TRUE, nullptr, nullptr, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filter);
     if (fd.DoModal(*this) != IDOK)
-        return;
+        return FALSE;
 
       // open the document and read its content
     if (!TheDoc().OpenDoc(fd.GetPathName()))
-        return;
+        return FALSE;
 
     AddMRUEntry(fd.GetPathName());
     SetWindowText(fd.GetPathName());
@@ -247,16 +184,18 @@ OnFileOpen()                                                                /*
       // show the document
     Invalidate();
     UpdateWindow();
+    return TRUE;
 }
 
 /*============================================================================*/
-    void CMainFrame::
-OnFileOpenMRU(UINT index)                                                  /*
+    BOOL CMainFrame::
+OnFileOpenMRU(WPARAM wparam)                                                  /*
 
     Open the MRU file at nIndex as the next document.
 *-----------------------------------------------------------------------------*/
 {
       // get the MRU entry
+    UINT index = static_cast<UINT>(LOWORD(wparam)) - IDW_FILE_MRU_FILE1;
     CString mru_entry = GetMRUEntry(index);
     if (TheDoc().OpenDoc(mru_entry))
     {
@@ -272,6 +211,8 @@ OnFileOpenMRU(UINT index)                                                  /*
         RemoveMRUEntry(mru_entry);
         OnFileClose();
     }
+
+    return TRUE;
 }
 
 /*============================================================================*/
@@ -292,147 +233,21 @@ OnHelp()                                                                    /*
     This function is called after the window is created.
 *-----------------------------------------------------------------------------*/
 OnInitialUpdate()
-    {
-        GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING,
-            MF_UNCHECKED);
-    }
+{
+    GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING,
+        MF_UNCHECKED);
+}
 
 /*============================================================================*/
-    BOOL CMainFrame::
-OnProcessMRU(WPARAM wparam, LPARAM lparam)                                  /*
+BOOL CMainFrame::
+    OnLineNumbering()                                                       /*
 
-    One of the MRU entries has been selected.  Process accordingly.
+    Toggle the text line numbering.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(lparam);
-
-      // compute the MRU index, where IDW_FILE_MRU_FILE1 is index 0
-    UINT MRUIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
-    OnFileOpenMRU(MRUIndex);
+    GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING, MF_BYCOMMAND |
+        (m_view.ToggleLineNumbers() ? MF_CHECKED : MF_UNCHECKED));
     return TRUE;
-}
-
-/*============================================================================*/
-    void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                                 /*
-
-    Set cs members to select window frame parameters desired. This gets
-    executed before CScrollWin::PreCreate(). Use the deserialized position
-    and size information to set the frame positioning and size.
-*-----------------------------------------------------------------------------*/
-{
-      // do the base class stuff
-    CFrame::PreCreate(cs);
-    cs.x  = m_xWin;  // set to default values
-    cs.y  = m_yWin;
-    cs.cx = m_cxWin;
-    cs.cy = m_cyWin;
-       // specify a title bar and  border with a window-menu on the title bar
-    cs.style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_VISIBLE
-        | WS_MINIMIZEBOX    // adds the minimize box
-        | WS_MAXIMIZEBOX    // adds the maximize box
-        | WS_THICKFRAME     // same as WS_SIZEBOX, enables resizing
-        ;
-}
-
-/*============================================================================*/
-    void CMainFrame::
-SaveSettings()                                                              /*
-
-    Save the progam's persistent data in preparation for termination.
-*-----------------------------------------------------------------------------*/
-{
-    try
-    {
-        CArchive ar(m_arcvPath, CArchive::store);
-        ar << *TheApp();    // for the app
-        ar << *this;        // for the frame
-        ar << m_view;       // for the view
-    }
-    catch (const CFileException &e)
-    {
-        CString text = e.GetText();
-        if (!text.IsEmpty())
-            text += L"\n";
-        CString msg = L"Error while saving program's state.\n" + text +
-            e.GetErrorString() + L"\n" + e.what();
-        ::MessageBox(nullptr, msg.c_str(), L"Exception",
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-    }
-    catch(...) // catch all other exception events
-    {
-        CString msg = "Program's current state not saved.\n";
-        ::MessageBox(nullptr, msg.c_str(), L"Unknown Exception",
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-    }
-}
-
-/*============================================================================*/
-        void CMainFrame::
-Serialize(CArchive& ar)                                                     /*
-
-        Called serialize or deserialize the frame to and from the archive ar,
-        depending on the sense of IsStoring().  Leave the archive open for
-        further serializations.
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    ArchiveObject w(&m_wndPl, sizeof(WINDOWPLACEMENT));
-    if (ar.IsStoring())
-    {
-          // save current window placement information
-        m_wndPl = {};
-        m_wndPl.length = sizeof(WINDOWPLACEMENT);
-        GetWindowPlacement(m_wndPl);
-        ar << w;
-          // save the base class frame status and  tool bar switches:
-          // these control the display of the StatusBar and  ToolBar
-        BOOL showbar = GetStatusBar().IsWindowVisible();
-        ar << showbar;
-        showbar = GetToolBar().IsWindowVisible();
-        ar << showbar;
-          // save MRU entries
-        UINT i, nMRU = static_cast<UINT>(GetMRUEntries().size());
-        ar << nMRU;
-          // save this many entries (don't use a copied list)
-        for (i = 0; i < nMRU; ++i)
-        {
-            ar << GetMRUEntries()[i];
-        }
-    }
-    else    // recovering
-    {
-          // recover window frame placement, but do not invoke
-          // SetWindowPlacement(), as the window is not yet created.
-        ar >> w;
-          // recover frame status and  tool bar base class switches
-        BOOL showbar;
-        ar >> showbar;
-        ShowStatusBar(showbar);
-        ar >> showbar;
-        ShowToolBar(showbar);
-          // Read MRU values from archive: use a separate dummy list to
-          // work with the entries. First, clear the MRU array (it
-          // should already be empty).
-        UINT MRU;
-        std::vector<CString> MRUEntries;
-          // now read from the archive
-        ar >> MRU; // the number of entries to read in
-        for (UINT i = 0; i < MRU; ++i)
-        {
-            CString s;
-            ar >> s;
-            if (i < m_maxMRU)  // keep only those within the limit
-                MRUEntries.push_back(s);
-        }
-          // all successfully read in, so store them LIFO order into
-          // the MRU list for proper display
-        std::vector<CString>::reverse_iterator it;
-        for (it = MRUEntries.rbegin(); it != MRUEntries.rend(); ++it)
-        {
-            AddMRUEntry(*it);
-        }
-    }
 }
 
 /*============================================================================*/

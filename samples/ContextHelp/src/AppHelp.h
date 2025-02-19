@@ -16,7 +16,7 @@ class CHelp
 {
 public:
     CHelp();
-    virtual ~CHelp() {}
+    virtual ~CHelp() = default;
 
     BOOL About(HWND hParent = nullptr);
     void SetCredits(LPCWSTR credits);

@@ -18,7 +18,7 @@ class CMainWindow : public CWnd
 {
 public:
     CMainWindow();
-    virtual ~CMainWindow() override {}
+    virtual ~CMainWindow() override = default;
     HWND Create(HWND parent = nullptr) override;
 
 protected:

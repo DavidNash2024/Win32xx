@@ -8,10 +8,6 @@
 ///////////////////////////////////
 // CApp function definitions.
 //
-CApp::CApp()
-{
-    // Constructor for CApp
-}
 
 BOOL CApp::InitInstance()
 {

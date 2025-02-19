@@ -1,4 +1,4 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |
@@ -38,8 +38,6 @@ IDW_MAIN MENU
         MENUITEM "&Save\tCtrl+S",         IDM_FILE_SAVE
         MENUITEM "Save &As\tCtrl+Shft+S", IDM_FILE_SAVEAS
         MENUITEM "&Close",                IDM_FILE_CLOSE
-        MENUITEM SEPARATOR
-        MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
     }
@@ -103,7 +101,7 @@ IDW_MAIN ACCELERATORS
   // String Tables
 STRINGTABLE
 {
-    IDW_MAIN                "CTime, CArchive, and MRU Demo"
+    IDW_MAIN                "TimeDemo Application"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"

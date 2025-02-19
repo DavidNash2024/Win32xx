@@ -11,7 +11,7 @@ class CCustomPrintDlg : public CDialog
 {
 public:
     CCustomPrintDlg();
-    virtual ~CCustomPrintDlg() override;
+    virtual ~CCustomPrintDlg() override = default;
 
     virtual INT_PTR DoModal(HWND owner = nullptr) override;
 

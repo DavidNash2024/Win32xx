@@ -13,7 +13,7 @@
 class CViewFiles : public CListView
 {
 public:
-    CViewFiles();
+    CViewFiles() = default;
     virtual ~CViewFiles() override;
     void SetDPIColumnWidths();
     void SetDPIImages();
@@ -43,7 +43,7 @@ class CContainFiles : public CDockContainer
 {
 public:
     CContainFiles();
-    virtual ~CContainFiles() override {}
+    virtual ~CContainFiles() override = default;
 
 protected:
     // Virtual functions that override base class functions.
@@ -64,7 +64,7 @@ class CDockFiles : public CDocker
 {
 public:
     CDockFiles();
-    virtual ~CDockFiles() override {}
+    virtual ~CDockFiles() override = default;
 
 protected:
     virtual void RecalcDockLayout() override;

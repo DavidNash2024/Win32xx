@@ -219,7 +219,6 @@ LRESULT CViewList::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lpar
     // Adjust the column width in response to window DPI changes.
     SetRedraw(FALSE);
     int lastCol = Header_GetItemCount(GetHeader()) - 1;
-    std::vector<int> columnWidths;
     int dpi = GetWindowDpi(*this);
     for (int i = 0; i <= lastCol; ++i)
     {

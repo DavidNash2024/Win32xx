@@ -15,8 +15,8 @@
 class CScribbleApp : public CWinApp
 {
 public:
-    CScribbleApp();
-    virtual ~CScribbleApp() override {}
+    CScribbleApp() = default;
+    virtual ~CScribbleApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

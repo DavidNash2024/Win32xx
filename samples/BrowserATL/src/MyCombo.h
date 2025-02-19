@@ -12,8 +12,8 @@
 class CMyCombo : public CComboBoxEx
 {
 public:
-    CMyCombo() {}
-    virtual ~CMyCombo() override {}
+    CMyCombo() = default;
+    virtual ~CMyCombo() override = default;
     const CEdit* GetCBEdit() const { return &m_edit; }
 
 protected:

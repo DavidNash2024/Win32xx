@@ -1,4 +1,4 @@
-/* (03-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]              (resource.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (resource.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |

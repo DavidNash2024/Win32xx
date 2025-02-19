@@ -8,13 +8,6 @@
 ////////////////////////////////////
 // CTabDemoApp function definitions.
 //
-CTabDemoApp::CTabDemoApp()
-{
-}
-
-CTabDemoApp::~CTabDemoApp()
-{
-}
 
 BOOL CTabDemoApp::InitInstance()
 {

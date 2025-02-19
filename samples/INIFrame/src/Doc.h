@@ -12,11 +12,11 @@
 class CDoc : public CObject
 {
 public:
-    CDoc() {}
-    virtual ~CDoc() override {}
+    CDoc() = default;
+    virtual ~CDoc() override = default;
 
-    BOOL FileLoad(LPCWSTR filename);
-    BOOL FileStore(LPCWSTR filename);
+    void FileLoad(LPCWSTR filename);
+    void FileStore(LPCWSTR filename);
 
 protected:
     // Virtual functions that override base class functions

@@ -14,7 +14,7 @@ class CTestWindow : public CWnd
 {
 public:
     CTestWindow();
-    virtual ~CTestWindow() override {}
+    virtual ~CTestWindow() override = default;
     void CreateWin(int i);
 
 protected:

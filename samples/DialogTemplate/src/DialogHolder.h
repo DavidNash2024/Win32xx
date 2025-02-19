@@ -13,8 +13,8 @@
 class CDialogHolder : public CWnd
 {
 public:
-    CDialogHolder() {}
-    virtual ~CDialogHolder() override {}
+    CDialogHolder() = default;
+    virtual ~CDialogHolder() override = default;
     void ShowDialog(CWnd* pFrame, unsigned char* dlg);
 
 protected:

@@ -15,11 +15,6 @@ CColourDialog::CColourDialog(UINT resID, CBitmap& image) : CDialog(resID), m_ima
 {
 }
 
-// Destructor.
-CColourDialog::~CColourDialog()
-{
-}
-
 // Creates the two Preview bitmaps: m_Preview and m_PreviewOrig.
 void CColourDialog::CreateImagePreviews()
 {

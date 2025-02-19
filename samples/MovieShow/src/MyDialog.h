@@ -16,7 +16,7 @@ class CViewDialog : public CDialog
 {
 public:
     CViewDialog(UINT resID);
-    virtual ~CViewDialog() override;
+    virtual ~CViewDialog() override = default;
     CViewDialog(const CViewDialog&) = delete;
     CViewDialog& operator=(const CViewDialog&) = delete;
 
@@ -63,7 +63,7 @@ class CDockDialog : public CDocker
 {
 public:
     CDockDialog();
-    virtual ~CDockDialog() override {}
+    virtual ~CDockDialog() override = default;
     CDockDialog(const CDockDialog&) = delete;
     CDockDialog& operator=(const CDockDialog&) = delete;
 

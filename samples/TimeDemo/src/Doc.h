@@ -27,7 +27,7 @@ CDoc : public CObject                           /*
     public:
 
         CDoc();
-        virtual ~CDoc() override {}
+        virtual ~CDoc() override = default;
 
         int     GetDocLength() const;
         CString GetDocOpenFileName(const CString&) const;

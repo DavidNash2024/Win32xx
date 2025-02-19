@@ -15,8 +15,8 @@
 class CFrameApp : public CWinApp
 {
 public:
-    CFrameApp();
-    virtual ~CFrameApp() override;
+    CFrameApp() = default;
+    virtual ~CFrameApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

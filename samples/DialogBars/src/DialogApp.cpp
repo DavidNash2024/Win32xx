@@ -24,9 +24,3 @@ BOOL CDialogApp::InitInstance()
 
     return TRUE;
 }
-
-// Destructor.
-CDialogApp::~CDialogApp()
-{
-}
-

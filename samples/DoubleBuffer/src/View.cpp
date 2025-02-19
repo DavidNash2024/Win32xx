@@ -10,11 +10,6 @@
 // CView function definitions
 //
 
-// Constructor.
-CView::CView()
-{
-}
-
 // Creates the mask bitmap for the ball.
 CBitmap CView::CreateMaskBitmap()
 {

@@ -9,11 +9,6 @@
 // CBrowserApp function definitions
 //
 
-// Constructor for CBrowserApp
-CBrowserApp::CBrowserApp()
-{
-}
-
 // This function is called automatically when the application starts.
 BOOL CBrowserApp::InitInstance()
 {

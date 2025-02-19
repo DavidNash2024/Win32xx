@@ -17,19 +17,13 @@
 CMainFrame::CMainFrame() : m_preview(m_richView), m_pDockDialogsTree(nullptr),
                            m_isTemplateShown(false)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_richView);
-}
-
-// Destructor.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-
+    // Set m_view as the view window of the frame.
+    SetView(m_richView);
 
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
@@ -118,7 +112,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_PREVIEW:      return OnFilePreview();
     case IDM_FILE_PRINT:        return OnFilePrint();
     case IDM_FILE_SAVE:         return OnFileSave();
-    case IDM_FILE_SAVEAS:       return OnFileSave();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();

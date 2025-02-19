@@ -16,11 +16,6 @@ CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
 {
 }
 
-// Destructor.
-CClientDialog::~CClientDialog()
-{
-}
-
 // Appends text to the specified edit control.
 void CClientDialog::AppendText(const CEdit& edit, LPCWSTR text)
 {

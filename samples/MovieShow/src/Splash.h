@@ -14,7 +14,7 @@ class CSplash : public CWnd
 {
 public:
     CSplash();
-    virtual ~CSplash() override;
+    virtual ~CSplash() override = default;
     CSplash(const CSplash&) = delete;
     CSplash& operator=(const CSplash&) = delete;
 

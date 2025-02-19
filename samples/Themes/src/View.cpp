@@ -8,9 +8,6 @@
 //////////////////////////////
 // CView function definitions.
 //
-CView::CView()
-{
-}
 
 void CView::OnDraw(CDC& dc)
 {

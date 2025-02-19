@@ -1,4 +1,4 @@
-/* (26-Aug-2023) [Tab/Indent: 4/4][Line/Box: 80/74]               (resource.h) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]               (resource.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -32,11 +32,8 @@
 #define IDB_TOOLBAR_SML                 1203
   // app parameters
 #define IDS_APP_VERSION                 1300
-#define IDS_ARCHIVE_FILE_EXT            1301
-#define IDS_DATAPATH_SUBDIR             1302
-#define IDS_DOC_DEFAULT_EXT             1303
-#define IDS_FILE_FILTER                 1304
-#define IDS_MAX_MRU_ENTRIES             1306
+#define IDS_DOC_DEFAULT_EXT             1301
+#define IDS_FILE_FILTER                 1302
 
 /*-----------------------------------------------------------------------------*/
 

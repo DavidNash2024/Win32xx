@@ -10,12 +10,6 @@
 #include "resource.h"
 
 
-struct BandData
-{
-    UINT index;
-    UINT id;
-};
-
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
 // The main window is a frame that has a menubar, toolbar,
@@ -24,7 +18,7 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame() override;
+    virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr);
 
 protected:
@@ -46,7 +40,6 @@ private:
     CMainFrame& operator=(const CMainFrame&) = delete;
 
     LRESULT AddCombo();
-    void ArrangeBands();
     BOOL ChooseColor(UINT color);
     void SetCaptionColor(COLORREF color);
     void SetCaptionTextColor(COLORREF color);
@@ -71,8 +64,6 @@ private:
     BOOL OnViewCards();
 
     // Message handlers
-    LRESULT OnArrangeBands(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnGetDpiScaledSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
@@ -80,7 +71,6 @@ private:
     CToolBar m_arrows;
     CToolBar m_cards;
     CMyCombo m_comboBoxEx;
-    std::vector<BandData> m_bandData;
 
     DWORD m_color;
     bool m_useThemes;

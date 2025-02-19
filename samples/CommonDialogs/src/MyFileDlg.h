@@ -1,4 +1,4 @@
-/* (08-Feb-2016)                                                 (MyFileDlg.h) *
+/* (20-Oct-2024)                                                 (MyFileDlg.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -34,6 +34,8 @@ MyFileDialog : public CFileDialog
             LPCWSTR  sFilter     = nullptr
         )   : CFileDialog(bOpenFileDialog, sDefExt, sFileName,
                 dwFlags, sFilter) {}
+
+        virtual ~MyFileDialog() override = default;
 
           // Record the title of the read/saveas dialog box after an object
           // of this class is constructed, but before DoModal() is invoked.

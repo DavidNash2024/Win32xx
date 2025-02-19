@@ -14,13 +14,6 @@
 // Constructor
 CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
 {
-    // Set the modeless dialog as the view window of the frame.
-    SetView(m_view);
-}
-
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Enables choose topic mode
@@ -35,11 +28,13 @@ BOOL CMainFrame::ChooseHelpTopic()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    CString appName = LoadString(IDS_APP_NAME);
-    CString groupFolder = LoadString(IDS_GROUP_FOLDER);
+    // Set the modeless dialog as the view window of the frame.
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
+    CString appName = LoadString(IDS_APP_NAME);
+    CString groupFolder = LoadString(IDS_GROUP_FOLDER);
     LoadRegistrySettings(groupFolder + appName);
 
     // Set the path to the chm help file for m_AppHelp

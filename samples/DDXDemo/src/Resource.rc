@@ -1,4 +1,4 @@
-/* (04-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -43,7 +43,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                      RT_MANIFEST            "../src/res/SystemDPI.manifest"
+1                      RT_MANIFEST            "../src/res/PerMonitorV2.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,13 +56,6 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New\tCtrl+N",                 IDM_FILE_NEW
-        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
-        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
-        MENUITEM SEPARATOR
-        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
-        MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
     POPUP "&Edit"
@@ -156,7 +149,7 @@ BEGIN
     EDITTEXT    IDC_EDIT_CSTRING, 15, 200, 135, 35, WS_GROUP | NOT WS_BORDER |
                     ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |
                     ES_WANTRETURN, WS_EX_STATICEDGE
-    CONTROL     "Rich edit box", IDC_EDIT_RICHEDIT, "RichEdit20A" ,
+    CONTROL     "Rich edit box", IDC_EDIT_RICHEDIT, "RichEdit50W" ,
                     WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL | ES_MULTILINE |
                     ES_WANTRETURN, 15, 240, 135, 35
     LISTBOX     IDC_LISTBOX, 15, 280, 135, 70, WS_GROUP | WS_TABSTOP |

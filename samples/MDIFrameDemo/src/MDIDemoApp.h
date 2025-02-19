@@ -15,8 +15,8 @@
 class CMDIDemoApp : public CWinApp
 {
 public:
-    CMDIDemoApp();
-    virtual ~CMDIDemoApp() override {}
+    CMDIDemoApp() = default;
+    virtual ~CMDIDemoApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

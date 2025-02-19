@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                 (View.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                 (View.cpp) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -125,7 +125,7 @@ CView(UINT nResID)                                                          /*
       // the dialog box
     m_dialogFgClr   = COLOR_WHITE;
     m_dialogBgClr   = COLOR_BLUE;
-    m_dialogBgBrush.CreateSolidBrush(COLOR_LT_BLUE);
+    m_dialogBgBrush.CreateSolidBrush(COLOR_LILAC);
       // list boxes
     m_listBoxFgClr  = COLOR_BLACK;
     m_listBoxBgClr  = COLOR_GREEN;
@@ -537,14 +537,13 @@ OnButton()                                                                  /*
 
 /*============================================================================*/
     BOOL CView::
-OnCommand(WPARAM wparam, LPARAM lparam)                                  /*
+OnCommand(WPARAM wparam, LPARAM)                                  /*
 
     The framework calls this member function when the user selects an item
     from a menu, when a child control sends a notification message, or when
     an accelerator keystroke is translated.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(lparam);
     WORD id  = LOWORD(wparam);
     WORD ctl = HIWORD(wparam);
     switch (id)
@@ -812,7 +811,6 @@ SetCheckAStatus()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal;
     m_statusBoxVal << "Check A set " << (m_checkVal[0] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
@@ -826,7 +824,6 @@ SetCheckBStatus()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal;
     m_statusBoxVal << "Check B set " << (m_checkVal[1] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
@@ -839,7 +836,6 @@ SetCheckCStatus()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal;
     m_statusBoxVal << "Check C set " << (m_checkVal[2] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }

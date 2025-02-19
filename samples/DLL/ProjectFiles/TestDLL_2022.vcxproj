@@ -222,6 +222,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\TestApp.cpp" />
+    <ClCompile Include="..\src\TestWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\default_resource.h" />
@@ -278,6 +280,10 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
+    <ClInclude Include="..\src\resource.h" />
+    <ClInclude Include="..\src\StdAfx.h" />
+    <ClInclude Include="..\src\TestApp.h" />
+    <ClInclude Include="..\src\TestWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\ResourceTest.rc" />

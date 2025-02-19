@@ -30,8 +30,8 @@ struct ResourceInfo
 class CResourceFinder
 {
 public:
-    CResourceFinder() {}
-    ~CResourceFinder() {}
+    CResourceFinder() = default;
+    ~CResourceFinder() = default;
 
     void FindResources(LPCWSTR fileName);
     const std::vector<ResourceInfo>& GetAllInfo() const { return m_allInfo; }

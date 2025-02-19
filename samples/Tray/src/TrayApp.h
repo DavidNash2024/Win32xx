@@ -15,8 +15,8 @@
 class CTrayApp : public CWinApp
 {
 public:
-    CTrayApp();
-    virtual ~CTrayApp() override {}
+    CTrayApp() = default;
+    virtual ~CTrayApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

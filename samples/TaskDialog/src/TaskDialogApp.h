@@ -13,8 +13,8 @@
 class CTaskDialogApp : public CWinApp
 {
 public:
-    CTaskDialogApp();
-    virtual ~CTaskDialogApp() override;
+    CTaskDialogApp() = default;
+    virtual ~CTaskDialogApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

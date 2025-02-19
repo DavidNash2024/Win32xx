@@ -9,9 +9,6 @@
 /////////////////////////////////////
 // CViewClasses function definitions.
 //
-CViewClasses::CViewClasses()
-{
-}
 
 CViewClasses::~CViewClasses()
 {

@@ -16,11 +16,6 @@ CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
-// Destructor.
-CMyDialog::~CMyDialog()
-{
-}
-
 // Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {

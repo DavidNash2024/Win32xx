@@ -65,14 +65,12 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 //////////////////////////////////
 // CViewList function definitions.
 //
-CViewList::CViewList()
-{
-}
 
 CViewList::~CViewList()
 {
     if (IsWindow()) DeleteAllItems();
 }
+
 // Insert 4 list view items.
 void CViewList::InsertItems()
 {
@@ -95,7 +93,6 @@ void CViewList::InsertItems()
     item = InsertItem(item, L"ListView", 0);
     SetItemText(item, 2, L"Folder");
 }
-
 
 void CViewList::OnAttach()
 {
@@ -196,9 +193,6 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 //////////////////////////////////
 // CViewTree function definitions.
 //
-CViewTree::CViewTree()
-{
-}
 
 CViewTree::~CViewTree()
 {

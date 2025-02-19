@@ -114,11 +114,6 @@ CMDIChildRect::CMDIChildRect()
     SetView(m_rectView);
 }
 
-// Destructor.
-CMDIChildRect::~CMDIChildRect()
-{
-}
-
 // Called when the window is created.
 int CMDIChildRect::OnCreate(CREATESTRUCT& cs)
 {

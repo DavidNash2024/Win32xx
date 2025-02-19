@@ -17,18 +17,14 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(true)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_view);
-}
-
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     // Normally we would use LoadRegistrySettings here, but this
     // is omitted in this sample. We use an ini file instead.
 
@@ -47,7 +43,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDM_FILE_OPEN:       return OnFileOpen();
     case IDM_FILE_SAVE:       return OnFileSave();
-    case IDM_FILE_SAVEAS:     return OnFileSave();
     case IDM_FILE_PREVIEW:    return OnFilePreview();
     case IDM_FILE_PRINT:      return OnFilePrint();
     case IDM_FILE_EXIT:       return OnFileExit();
@@ -363,8 +358,6 @@ void CMainFrame::SerializeINI(BOOL isStoring)
                 CPoint midpoint(left + width / 2, top + height / 2);
                 CPoint midtop( left + width / 2, top);
 
-#ifdef MONITOR_DEFAULTTONULL
-
                 HMONITOR monitor = ::MonitorFromPoint(midpoint, MONITOR_DEFAULTTONULL);
                 if (monitor == nullptr)
                     throw CUserException();
@@ -373,11 +366,6 @@ void CMainFrame::SerializeINI(BOOL isStoring)
                 mi.cbSize = sizeof(mi);
                 ::GetMonitorInfo(monitor, &mi);
                 CRect workArea = mi.rcWork;
-
-#else
-                CRect workArea;
-                SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
-#endif
 
                 // Check if window is mostly within work area.
                 if (!workArea.PtInRect(midpoint))

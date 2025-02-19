@@ -15,7 +15,7 @@ class CDockText : public CDocker
 {
 public:
     CDockText();
-    virtual ~CDockText() override {}
+    virtual ~CDockText() override = default;
 
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -35,7 +35,7 @@ class CDockTree : public CDocker
 {
 public:
     CDockTree();
-    virtual ~CDockTree() override {}
+    virtual ~CDockTree() override = default;
 
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -55,7 +55,7 @@ class CDockList : public CDocker
 {
 public:
     CDockList();
-    virtual ~CDockList() override {}
+    virtual ~CDockList() override = default;
 
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

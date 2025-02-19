@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (View.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (View.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -38,7 +38,7 @@ CView : public CDialog                                                      /*
 {
     public:
         CView(UINT nResID);
-        virtual ~CView() override {}
+        virtual ~CView() override = default;
 
         void    AdjustStatus();
         BOOL    GetCheckA() const       { return m_checkVal[0]; }

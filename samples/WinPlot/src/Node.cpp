@@ -18,7 +18,7 @@ namespace Calc
     ////////////////////////////////////
     // Node_Number function definitions.
     //
-    Node_Number::Node_Number(double Number) : m_number(Number)
+    Node_Number::Node_Number(double number) : m_number(number)
     {
     }
 
@@ -42,27 +42,27 @@ namespace Calc
         double Value = 0.0;
         for (unsigned u = 0; u < m_leaves.size(); ++u)
         {
-            double NodeVal = m_leaves[u]->Calc();
+            double nodeVal = m_leaves[u]->Calc();
             switch (m_tokens[u])
             {
             case tPlus:
-                Value += NodeVal;
+                Value += nodeVal;
                 break;
 
             case tMinus:
-                Value -= NodeVal;
+                Value -= nodeVal;
                 break;
 
             case tMultiply:
-                Value *= NodeVal;
+                Value *= nodeVal;
                 break;
 
             case tDivide:
-                Value /= NodeVal;
+                Value /= nodeVal;
                 break;
 
             case tPower:
-                Value = pow(Value, NodeVal);
+                Value = pow(Value, nodeVal);
                 break;
             default:
                 break;

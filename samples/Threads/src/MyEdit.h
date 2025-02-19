@@ -12,8 +12,8 @@
 class CMyEdit : public CEdit
 {
 public:
-    CMyEdit();
-    virtual ~CMyEdit() override {}
+    CMyEdit() = default;
+    virtual ~CMyEdit() override = default;
     void DPISetFont();
 
 protected:

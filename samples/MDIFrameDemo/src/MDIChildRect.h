@@ -14,6 +14,7 @@ class CViewRect : public CWnd
 {
 public:
     CViewRect() : m_cxClientMax(0), m_cyClientMax(0) {}
+    virtual ~CViewRect() override = default;
 
 protected:
     // Virtual functions that override base class functions
@@ -42,7 +43,7 @@ class CMDIChildRect : public CMDIChild
 {
 public:
     CMDIChildRect();
-    virtual ~CMDIChildRect() override;
+    virtual ~CMDIChildRect() override = default;
 
 protected:
     // Virtual functions that override base class functions

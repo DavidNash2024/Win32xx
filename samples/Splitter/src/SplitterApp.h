@@ -15,8 +15,8 @@
 class CSplitterApp : public CWinApp
 {
 public:
-    CSplitterApp();
-    virtual ~CSplitterApp() override {}
+    CSplitterApp() = default;
+    virtual ~CSplitterApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

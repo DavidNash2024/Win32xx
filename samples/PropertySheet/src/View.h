@@ -11,8 +11,8 @@
 class CView : public CWnd
 {
 public:
-    CView();
-    virtual ~CView() override {}
+    CView() = default;
+    virtual ~CView() override = default;
 
 protected:
     virtual void OnDraw(CDC& dc) override;

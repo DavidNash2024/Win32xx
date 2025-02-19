@@ -12,7 +12,7 @@
 class CViewFiles : public CListView
 {
 public:
-    CViewFiles();
+    CViewFiles() = default;
     virtual ~CViewFiles() override;
     void InsertItems();
     void SetColumns();

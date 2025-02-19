@@ -14,8 +14,8 @@
 class CBrowserApp : public CWinApp
 {
 public:
-    CBrowserApp();
-    virtual ~CBrowserApp() override;
+    CBrowserApp() = default;
+    virtual ~CBrowserApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

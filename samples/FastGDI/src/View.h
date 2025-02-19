@@ -11,8 +11,8 @@
 class CView : public CScrollView
 {
 public:
-    CView();
-    virtual ~CView() override;
+    CView() = default;
+    virtual ~CView() override = default;
 
     CBitmap& GetImage() { return m_image; }
     CRect    GetImageRect();

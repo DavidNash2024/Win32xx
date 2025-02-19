@@ -16,18 +16,14 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_pIUIRibbon(0)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_view);
-}
-
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\Ribbon Frame");
@@ -374,6 +370,7 @@ STDMETHODIMP CMainFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* pVi
             result = S_OK;
             break;
         case UI_VIEWVERB_DESTROY:   // The ribbon has been destroyed.
+            m_pIUIRibbon = nullptr;
             result = S_OK;
             break;
         case UI_VIEWVERB_ERROR:

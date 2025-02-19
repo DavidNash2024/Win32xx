@@ -15,8 +15,8 @@
 class CRoundApp : public CWinApp
 {
 public:
-    CRoundApp();
-    virtual ~CRoundApp() override {}
+    CRoundApp() = default;
+    virtual ~CRoundApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

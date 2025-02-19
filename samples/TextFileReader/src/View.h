@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                   (View.h) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                   (View.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -31,7 +31,7 @@ CColorExDialog : public CColorDialog                                      /*
         CColorExDialog(COLORREF init = 0, DWORD flags = 0)
             : CColorDialog(init, flags | CC_ENABLEHOOK | CC_RGBINIT | CC_ANYCOLOR)
                 { SetBoxTitle(L"Color...");}
-        virtual ~CColorExDialog() override {}
+        virtual ~CColorExDialog() override = default;
 
         void    SetBoxTitle(const CString& title) { m_boxTitle = title;}
 
@@ -54,12 +54,12 @@ CColorExDialog : public CColorDialog                                      /*
 CView : public CScrollView                                                  /*
 
     This class enables displaying the text lines of a document in a scrolling
-    window whose parameters may be serialized.
+    window.
 *-----------------------------------------------------------------------------*/
 {
     public:
         CView();
-        virtual ~CView() override {}
+        virtual ~CView() override = default;
 
         COLORREF GetWndBkColor() const
                     { return GetScrollBkgnd().GetLogBrush().lbColor; }
@@ -81,7 +81,6 @@ CView : public CScrollView                                                  /*
         virtual void    OnDraw(CDC& memDC) override;
         virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual void    PreCreate(CREATESTRUCT& cs) override;
-        virtual void    Serialize(CArchive& ar) override;
 
     private:
         CView(const CView&) = delete;

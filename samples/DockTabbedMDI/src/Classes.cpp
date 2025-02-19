@@ -15,11 +15,6 @@
 // CViewClasses function definitions
 //
 
-// Constructor.
-CViewClasses::CViewClasses()
-{
-}
-
 // Destructor.
 CViewClasses::~CViewClasses()
 {

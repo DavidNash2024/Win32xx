@@ -83,11 +83,6 @@ CMDIChildSimple::CMDIChildSimple()
     SetView(m_view);
 }
 
-// Destructor.
-CMDIChildSimple::~CMDIChildSimple()
-{
-}
-
 // Called when the window is created.
 int CMDIChildSimple::OnCreate(CREATESTRUCT& cs)
 {

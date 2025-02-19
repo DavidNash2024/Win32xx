@@ -31,5 +31,5 @@ Features demonstrated in this example
 * Use of CDockFrame to provide docking support.
 * Use of RichEdit, ListView and TreeView windows as view windows for CDocker.
 * Saving the dock layout in the registry.
-* Use of OnMenuUpdate to manage menu item check boxes
-* Demonstrates the effects of the various dock styles
+* Use of OnMenuUpdate to manage menu item check boxes.
+* Demonstrates the effects of the various dock styles.

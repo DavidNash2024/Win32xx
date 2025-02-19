@@ -9,11 +9,6 @@
 // CMyEdit function definitions.
 //
 
-// Constructor.
-CMyEdit::CMyEdit()
-{
-}
-
 void CMyEdit::DPISetFont()
 {
     m_font.CreatePointFont(100, L"Courier New");

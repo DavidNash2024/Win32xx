@@ -22,7 +22,7 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView() override;
+    virtual ~CView() override = default;
 
     CMemDC Draw();
     void DrawLine(int x, int y);

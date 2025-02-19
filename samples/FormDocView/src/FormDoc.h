@@ -15,7 +15,7 @@ class CFormDoc
 {
 public:
     CFormDoc();
-    virtual ~CFormDoc();
+    virtual ~CFormDoc() = default;
     void  LoadSettings(LPCWSTR keyName);
     void  SaveSettings(LPCWSTR keyName);
 

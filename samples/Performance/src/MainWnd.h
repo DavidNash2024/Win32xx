@@ -22,7 +22,7 @@ class CMainWindow : public CWnd
 {
 public:
     CMainWindow();
-    virtual ~CMainWindow() override;
+    virtual ~CMainWindow() override = default;
     virtual HWND Create(HWND hParent = nullptr) override;
     void CreateTestWindows(int windows);
     void SetTestMessages(int testMessages) {m_testMessages = testMessages;}

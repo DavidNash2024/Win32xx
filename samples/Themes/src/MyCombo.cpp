@@ -9,13 +9,6 @@
 /////////////////////////////////
 // CMyCombo function definitions.
 //
-CMyCombo::CMyCombo()
-{
-}
-
-CMyCombo::~CMyCombo()
-{
-}
 
 void CMyCombo::OnAttach()
 {

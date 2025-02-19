@@ -13,7 +13,7 @@
 class CViewTree : public CTreeView
 {
 public:
-    CViewTree();
+    CViewTree() = default;
     virtual ~CViewTree() override;
     CViewTree(const CViewTree&) = delete;
     CViewTree& operator=(const CViewTree&) = delete;
@@ -53,7 +53,7 @@ class CDockTree : public CDocker
 {
 public:
     CDockTree();
-    virtual ~CDockTree() override {}
+    virtual ~CDockTree() override = default;
     CDockTree(const CDockTree&) = delete;
     CDockTree& operator=(const CDockTree&) = delete;
 

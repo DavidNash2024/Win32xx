@@ -20,7 +20,7 @@ class CHyperlink :  public CStatic
 {
 public:
     CHyperlink();
-    virtual ~CHyperlink() override;
+    virtual ~CHyperlink() override = default;
 
     const CString& GetLinkName() const { return m_urlName; }
 

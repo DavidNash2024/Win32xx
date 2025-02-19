@@ -12,11 +12,6 @@ CView::CView()
     m_brush.CreateSolidBrush(RGB(255,255,230));
 }
 
-// Destructor.
-CView::~CView()
-{
-}
-
 // Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
 {

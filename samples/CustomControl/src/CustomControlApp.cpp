@@ -14,10 +14,6 @@ CCustomControlApp::CCustomControlApp() : m_myDialog(IDD_DIALOG1)
 {
 }
 
-CCustomControlApp::~CCustomControlApp()
-{
-}
-
 BOOL CCustomControlApp::InitInstance()
 {
     // Display the modal dialog.

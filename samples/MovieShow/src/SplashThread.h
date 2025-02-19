@@ -15,7 +15,7 @@
 class CSplashThread : public CWinThread
 {
 public:
-    CSplashThread();
+    CSplashThread() = default;
     virtual ~CSplashThread() override;
     CSplashThread(const CSplashThread&) = delete;
     CSplashThread& operator=(const CSplashThread&) = delete;

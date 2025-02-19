@@ -9,11 +9,6 @@
 // CView function definitions
 //
 
-// Constructor.
-CView::CView()
-{
-}
-
 // Returns a reference to CDoc.
 CDoc& CView::GetDoc()
 {

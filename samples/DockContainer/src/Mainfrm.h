@@ -27,7 +27,7 @@ class CMainFrame : public CDockFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame();
+    virtual ~CMainFrame() = default;
     virtual HWND Create(HWND parent = nullptr);
 
 protected:

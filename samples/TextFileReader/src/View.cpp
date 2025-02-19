@@ -1,4 +1,4 @@
-/* (26-Aug-2023) [Tab/Indent: 4/4][Line/Box: 80/74]                 (View.cpp) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                 (View.cpp) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -212,39 +212,6 @@ PreCreate(CREATESTRUCT &cs)                                                 /*
       // Set extended style to include a 3-D look with border and sunken edge
     cs.dwExStyle = WS_EX_CLIENTEDGE;
     CScrollView::PreCreate(cs);
-}
-
-/*============================================================================*/
-    void CView::
-Serialize(CArchive &ar)                                                     /*
-
-        Serialize or deserialize the view to and from the archive ar, depending
-    on the sense of IsStoring().  Leave the archive open for for further
-    serialization.
-*-----------------------------------------------------------------------------*/
-{
-      // an object for loading and storing the custom colors
-    ArchiveObject ao(m_colors, 16 * sizeof(COLORREF));
-    if (ar.IsStoring())
-    {
-          // save the current font
-        ar << m_fontEx;
-          // save background color
-        ar << m_bkColor;
-          // save the custom colors
-        ar << ao;
-    }
-    else    // recovering
-    {
-          // recover the font
-        ar >> m_fontEx;
-        SetScrollPosition(CPoint(0, 0));
-          // recover the background color
-        ar >> m_bkColor;
-        SetWndBkColor(m_bkColor);
-          // recover the custom colors
-        ar >> ao;
-    }
 }
 
 /*============================================================================*/

@@ -5,7 +5,7 @@
 		<Option title="TimeDemo" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
-		<Option compiler="bcc" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug MinGW GNU compiler">
 				<Option output="GNU/Debug/TimeDemo.exe" prefix_auto="0" extension_auto="0" />
@@ -72,8 +72,6 @@
 		<Unit filename="../src/App.h" />
 		<Unit filename="../src/Doc.cpp" />
 		<Unit filename="../src/Doc.h" />
-		<Unit filename="../src/MRU.cpp" />
-		<Unit filename="../src/MRU.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/Resource.rc">

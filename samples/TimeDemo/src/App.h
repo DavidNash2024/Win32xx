@@ -1,4 +1,4 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
+/* (21-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |
@@ -29,12 +29,10 @@ CApp : public CWinApp                                                   /*
 {
     public:
         CApp();
-        virtual ~CApp() override {}
+        virtual ~CApp() override = default;
 
         const CString&  GetAppName() const { return m_appName; }
-        const CString&  GetArcFileName() const { return m_arcvFile; }
         const CString&  GetAboutStatement() const { return m_aboutStatement; }
-        CString         MakeAppDataPath(const CString& subpath);
 
     protected:
         virtual BOOL    InitInstance() override;
@@ -49,16 +47,11 @@ CApp : public CWinApp                                                   /*
 
         CMainFrame  m_frame;            // the mainframe
         CString     m_appName;          // name of app: minus directory and .exe
-        CString     m_appDir;           // directory of this app
-        CString     m_appPath;          // path to this app
-        CString     m_arcvDir;          // name of archive directory
-        CString     m_arcvFile;         // serialization file name
         CString     m_aboutStatement;   // latest compile date
         CString     m_months;           // month enumeration
         CString     m_compiledWith;     // compiler + system info
         CString     m_version;          // app version info
         CString     m_credits;          // About box notices
-        CString     m_archiveFileType;  // Archive type
 
         static const CString m_compiledOn;   // latest compile date
 

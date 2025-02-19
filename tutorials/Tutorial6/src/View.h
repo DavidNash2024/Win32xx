@@ -26,7 +26,7 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView() override;
+    virtual ~CView() override = default;
 
     void DrawLine(int x, int y);
     void StorePoint(int x, int y, bool isPenDown);

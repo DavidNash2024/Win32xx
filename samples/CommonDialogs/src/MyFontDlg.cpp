@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]         (MyFontDialog.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]         (MyFontDialog.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -46,7 +46,7 @@ OnInitDialog()                                                          /*
     the font choice is being initialized.
 *-----------------------------------------------------------------------------*/
 {
-    SetWindowTitle();
+    SetWindowText(m_boxTitle);
     return TRUE;
 }
 
@@ -81,53 +81,6 @@ RecordFontMetrics()                                                     /*
     dc.GetTextMetrics(m_tm);
     m_fontSize.cx = m_tm.tmAveCharWidth;
     m_fontSize.cy = m_tm.tmHeight + m_tm.tmExternalLeading;
-}
-
-/*============================================================================*/
-    void MyFontDialog::
-Serialize(CArchive &ar)                                                 /*
-
-        Called to serialize the current font dialog object to or deserialize it
-    from the archive ar, depending on the sense of IsStoring().  Leaves the
-    archive open for for further operations.
-*-----------------------------------------------------------------------------*/
-{
-    // perform loading or storing
-    if (ar.IsStoring())
-    {
-          // save the font as a LOGFONT
-        LOGFONT lf = GetLogFont();
-        ArchiveObject f(&lf, sizeof(LOGFONT));
-            ar << f;
-          // save m_tm
-        ArchiveObject g(GetTextMetric(), sizeof(TEXTMETRIC));
-        ar << g;
-          // save character height and width
-        ar << GetAvgSize();
-          // save the font color
-        ar << GetParameters().rgbColors;
-    }
-    else
-    {     // recover the font as LOGFONT
-        LOGFONT lf;
-        ArchiveObject f(&lf, sizeof(LOGFONT));
-        ar >> f;
-        CHOOSEFONT cf = GetParameters();
-        cf.lpLogFont = &lf;
-        SetParameters(cf);
-        SetChoiceLogFont(lf);
-          // recover the text metrics
-        ArchiveObject g(GetTextMetric(), sizeof(TEXTMETRIC));
-        ar >> g;
-          // recover character height and width
-        SIZE z;
-        ar >> z;
-        m_fontSize = z;
-          // retrieve the font color
-        COLORREF rgb;
-        ar >> rgb;
-        SetColor(rgb);
-    }
 }
 
 /*============================================================================*/

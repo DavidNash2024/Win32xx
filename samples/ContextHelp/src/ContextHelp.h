@@ -41,8 +41,8 @@
 class CContextHelp : public CWnd
 {
 public:
-    CContextHelp();
-    virtual ~CContextHelp() override;
+    CContextHelp() = default;;
+    virtual ~CContextHelp() override = default;;
 
     void  AddHelpTopic(UINT id, LPCWSTR topic);
     const CString& GetHelpFilePath() const     { return m_helpFilePath; }

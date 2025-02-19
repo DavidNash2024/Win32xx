@@ -1,4 +1,4 @@
-/* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                    (Doc.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (Doc.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -35,7 +35,7 @@ CDoc    : public CObject                                                    /*
 {
     public:
         CDoc();
-        virtual ~CDoc() override {}
+        virtual ~CDoc() override = default;
 
         void    LoadDocRegistry(LPCWSTR keyName);
         void    SaveDocRegistry(LPCWSTR keyName);

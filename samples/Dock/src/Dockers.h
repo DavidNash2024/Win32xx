@@ -14,7 +14,7 @@ class CDockSimple : public CDocker
 {
 public:
     CDockSimple();
-    virtual ~CDockSimple() override {}
+    virtual ~CDockSimple() override = default;
 
 protected:
     // Virtual functions overriding base class functions.
@@ -36,7 +36,7 @@ class CDockClasses : public CDocker
 {
 public:
     CDockClasses();
-    virtual ~CDockClasses() override {}
+    virtual ~CDockClasses() override = default;
 
 protected:
     // Virtual functions overriding base class functions.
@@ -58,7 +58,7 @@ class CDockFiles : public CDocker
 {
 public:
     CDockFiles();
-    virtual ~CDockFiles() override {}
+    virtual ~CDockFiles() override = default;
 
 protected:
     // Virtual functions overriding base class functions.
@@ -80,7 +80,7 @@ class CDockText : public CDocker
 {
 public:
     CDockText();
-    virtual ~CDockText() override {}
+    virtual ~CDockText() override = default;
 
 protected:
     // Virtual functions overriding base class functions.

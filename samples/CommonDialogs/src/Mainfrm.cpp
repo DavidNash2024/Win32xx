@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -7,11 +7,7 @@
 
     Contents Description: Implementation of the CMainFrame class for the
     CommonDialogs demonstration sample application using the Win32++ Windows
-    interface classes. This particular frame class contains features a
-    fixed-size form for the display, with no resizing gripper tool at the end
-    of the status bar, and provisions for selection of client background color,
-    selection of edit box font, use of external serialization files, and MRU
-    lists.
+    interface classes.
 
     Programming Notes: The programming style roughly follows that established
     by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
@@ -23,9 +19,6 @@
 #include "StdApp.h"
 #include <io.h>
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
-#pragma warning (disable : 26812 )  // allow unscoped enums
-#endif
 
 /*============================================================================*/
     CMainFrame::
@@ -35,11 +28,28 @@ CMainFrame()                                                                /*
     resource defined in resource.rc. Note that the initial window location and
     size are set here.
 *-----------------------------------------------------------------------------*/
-    :   m_view(IDD_MAIN_DIALOG), m_maxMRU(0), m_isTextWrap(TRUE),
-        m_frameXY(100, 100), m_frameSize(700, 600)
+    :   m_view(IDD_MAIN_DIALOG), m_isTextWrap(TRUE)
+{
+}
+
+/*============================================================================*/
+    HWND CMainFrame::
+        Create(HWND parent)                                                 /*
+
+    Create the frame window.
+*-----------------------------------------------------------------------------*/
 {
       // Set m_view as the view window of the frame.
     SetView(m_view);
+
+      // Set the registry key name, and load the initial window position.
+      // Use a registry key name like "CompanyName\\Application".
+    LoadRegistrySettings(L"Win32++\\CommonDialogs Sample");
+
+      // Load the settings from the registry with 5 MRU entries.
+    LoadRegistryMRUSettings(5);
+
+    return CFrame::Create(parent);
 }
 
 /*============================================================================*/
@@ -60,21 +70,6 @@ DropFiles(LPARAM lparam)                                                    /*
 
 /*============================================================================*/
     void CMainFrame::
-EmptyMRUList()                                                              /*
-
-    Remove all entries from the MRU list and  display the empty list
-    on the MRU menu.
-*-----------------------------------------------------------------------------*/
-{
-      // use a separate list to get the entries
-    const std::vector<CString>& MRUEntries = GetMRUEntries();
-      // then remove items from the MRU list one by one
-    for (const CString& str : MRUEntries)
-        RemoveMRUEntry(str);
-}
-
-/*============================================================================*/
-    void CMainFrame::
 InitCtlColors()                                                             /*
 
     Populate the color table with the initial ctl_color triplets used in the
@@ -85,8 +80,6 @@ InitCtlColors()                                                             /*
 {
     m_colorChoice.AddColorChoice(DlgBg,     L"o  Dialog background",
         COLOR_LT_BLUE);
-    m_colorChoice.AddColorChoice(SBBg,      L"o  Status bar background",
-        GetStatusBarTheme().clrBkgnd1);
       // richedit controls (these are set differently than the others)
     m_colorChoice.AddColorChoice(REdTxFg,   L"o  RichEdit text foreground",
         COLOR_WHITE);
@@ -94,47 +87,6 @@ InitCtlColors()                                                             /*
         COLOR_RED);
     m_colorChoice.AddColorChoice(REdBg,     L"o  RichEdit background",
         COLOR_LT_RED);
-}
-
-/*============================================================================*/
-    void    CMainFrame::
-LoadPersistentData()                                                        /*
-
-    Recover app, mainframe, MRU, and view serialized data from previous
-    execution. MRU strings that are not valid file paths are discarded.
-*-----------------------------------------------------------------------------*/
-{
-      // determine the availability of the archive file
-    if (_taccess(m_archivePath, 0x04) != 0)
-    {
-        CString msg = "Default values are being used on this first\n";
-        msg += L"startup. Your customized settings, colors, and font\n";
-        msg += L"will be restored in future usages.\n";
-        ::MessageBox(nullptr, msg, L"Information", MB_OK |
-            MB_ICONINFORMATION | MB_TASKMODAL);
-        return;
-    }
-    try
-    {
-        CArchive ar(m_archivePath, CArchive::load);
-              // deserialize in the same order as serialized
-        ar >> *TheApp();  // for the app
-        ar >> *this;    // for the mainframe and base classes
-        ar >> m_view;   // for the view, including control colors
-          // the ar object closes on destruction
-    }
-    catch(...) // catch all exceptions in trying to load the archive
-    {
-        CString msg = "Previous settings could not be restored.\n";
-        msg += "Unable to read archived values.\n";
-        ::MessageBox(nullptr, msg, L"Exception", MB_OK | MB_ICONSTOP |
-            MB_TASKMODAL);
-    }
-
-    Invalidate();   // repaint the client with recovered colors
-
-      // weed out any MRU entries that have disappeared
-    ValidateMRU(); // remove invalid file path names
 }
 
 /*============================================================================*/
@@ -165,13 +117,7 @@ OnColorChoice()                                                             /*
     if (m_colorChoice.DoModal(*this) != IDOK)
         return;
 
-      // reset the status bar color
     UINT selection = m_colorChoice.GetSelectedColorID();
-    if (selection == SBBg)
-    {
-        COLORREF sb = GetSBBkColor();
-        SetSBBkColor(sb);
-    }
       // reset the client background
     if (selection == DlgBg)
         SetViewBgColor();
@@ -185,7 +131,7 @@ OnColorChoice()                                                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
+OnCommand(WPARAM wparam, LPARAM)                                            /*
 
     The framework calls this member method when the user selects an
     item from a menu, when a child control sends a notification message,
@@ -197,107 +143,36 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 {
     UINT id = LOWORD(wparam);
 
-      // map all MRU file messages to one representative
-    if(IDW_FILE_MRU_FILE1 <= id && id < IDW_FILE_MRU_FILE1 + m_maxMRU)
-        id = IDW_FILE_MRU_FILE1;
-
     switch(id)
     {
-        case IDM_COLOR_CHOICE:
-            OnColorChoice();
-            return TRUE;
-
-        case IDM_EDIT_COPY:
-            GetRichView().Copy();
-            return TRUE;
-
-        case IDM_EDIT_CUT:
-            GetRichView().Cut();
-            return TRUE;
-
-        case IDM_EDIT_DELETE:
-            GetRichView().Clear();
-            return TRUE;
-
-        case IDM_EDIT_FIND:
-            OnEditFind();
-            return TRUE;
-
-        case IDM_EDIT_PASTE:
-            GetRichView().Paste();
-            return TRUE;
-
-        case IDM_EDIT_REPLACE:
-            OnEditReplace();
-            return TRUE;
-
-        case IDM_EDIT_REDO:
-            GetRichView().Redo();
-            return TRUE;
-
-        case IDM_EDIT_UNDO:
-            GetRichView().Undo();
-            return TRUE;
-
-        case IDM_FILE_CLOSE:
-            OnCloseDoc();
-            return TRUE;
-
-        case IDM_FILE_EXIT:
-            OnCloseDoc();
-            Close();
-            return TRUE;
-
-        case IDM_FILE_NEW:
-            OnNewDoc();
-            return TRUE;
-
-        case IDM_FILE_OPEN:
-            OnOpenDoc();
-            return TRUE;
-
-        case IDM_FILE_PAGESETUP:
-            m_view.OnPageSetup();
-            return TRUE;
-
-        case IDM_FILE_PRINT:
-            m_view.OnPrintDocument(m_doc.GetDocPath());
-            return TRUE;
-
-        case IDM_FILE_SAVE:
-            m_doc.OnSaveDoc();
-            return TRUE;
-
-        case IDM_FILE_SAVEAS:
-            OnSaveAs();
-            return TRUE;
-
-        case IDM_FONT_CHOICE:
-            OnFontChoice();
-            return TRUE;
-
-        case IDM_RICHEDWRAP:
-            OnWrapText();
-            return TRUE;
-
-        case IDW_ABOUT:         // invoked by F1 and Help->About menu item
-            OnHelp();
-            return TRUE;
-
-        case IDW_VIEW_STATUSBAR:
-            OnViewStatusBar(); // toggle status bar
-            return TRUE;
-
-        case IDW_VIEW_TOOLBAR:
-            OnViewToolBar(); // toggle tool bar
-            return TRUE;
+        case IDM_COLOR_CHOICE:    OnColorChoice();       return TRUE;
+        case IDM_EDIT_COPY:       GetRichView().Copy();  return TRUE;
+        case IDM_EDIT_CUT:        GetRichView().Cut();   return TRUE;
+        case IDM_EDIT_DELETE:     GetRichView().Clear(); return TRUE;
+        case IDM_EDIT_FIND:       OnEditFind();          return TRUE;
+        case IDM_EDIT_PASTE:      GetRichView().Paste(); return TRUE;
+        case IDM_EDIT_REPLACE:    OnEditReplace();       return TRUE;
+        case IDM_EDIT_REDO:       GetRichView().Redo();  return TRUE;
+        case IDM_EDIT_UNDO:       GetRichView().Undo();  return TRUE;
+        case IDM_FILE_CLOSE:      OnCloseDoc();          return TRUE;
+        case IDM_FILE_EXIT:       OnExit();              return TRUE;
+        case IDM_FILE_NEW:        OnNewDoc();            return TRUE;
+        case IDM_FILE_OPEN:       OnOpenDoc();           return TRUE;
+        case IDM_FILE_PAGESETUP:  m_view.OnPageSetup();  return TRUE;
+        case IDM_FILE_PRINT:      OnPrint();             return TRUE;
+        case IDM_FILE_SAVE:       OnSave();              return TRUE;
+        case IDM_FILE_SAVEAS:     OnSaveAs();            return TRUE;
+        case IDM_FONT_CHOICE:     OnFontChoice();        return TRUE;
+        case IDM_RICHEDWRAP:      OnWrapText();          return TRUE;
+        case IDW_ABOUT:           OnHelp();              return TRUE;
+        case IDW_VIEW_STATUSBAR:  OnViewStatusBar();     return TRUE;
+        case IDW_VIEW_TOOLBAR:    OnViewToolBar();       return TRUE;
 
         case IDW_FILE_MRU_FILE1:
-            OnProcessMRU(wparam, lparam);
-            return TRUE;
-
-        default:
-            break;
+        case IDW_FILE_MRU_FILE2:
+        case IDW_FILE_MRU_FILE3:
+        case IDW_FILE_MRU_FILE4:
+        case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
     }
     return FALSE;
 }
@@ -328,12 +203,9 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
 
       // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
-      // set theme colors
-    SetThemeColors();  //Set the theme colors
       // establish communications
     m_doc.SetDataPath(&m_view);
-      // populate the initial control colors (will be overwritten by
-      // deserialized values)
+      // populate the initial control colors
     InitCtlColors();
       // and set the initial flags to show all colors
     CHOOSECOLOR cc = m_colorChoice.GetParameters();
@@ -341,8 +213,6 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
     cc.Flags |= CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
       // setup the CColorChoice object
     m_colorChoice.SetParameters(cc);
-      // tell CFrame the max MRU size
-    SetMRULimit(m_maxMRU);
       // set the initial flags to use the font style,
     CHOOSEFONT cf = m_fontChoice.GetParameters();
     cf.Flags |= CF_USESTYLE;
@@ -354,10 +224,6 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
     m_fontChoice.SetChoiceFont(f);
     m_fontChoice.SetColor(m_colorChoice.GetTableColor(REdTxFg));
     m_view.SetEditFont(f);
-    LoadPersistentData();
-      // set the default status bar color
-    COLORREF sb = GetSBBkColor();
-    SetSBBkColor(sb);
       // set the view background color
     SetViewBgColor();
       // set the edit box colors
@@ -395,15 +261,34 @@ OnEditReplace()                                                             /*
 }
 
 /*============================================================================*/
-    void CMainFrame::
-OnFileOpenMRU(UINT nIndex)                                                  /*
+void CMainFrame::
+    OnExit()                                                                /*
 
-    Open the MRU file at nIndex as the next document.
+        Close the application.
+    *-----------------------------------------------------------------------------*/
+{
+    m_docDir = m_doc.GetDocDir(); // save for next file open/save
+    m_doc.OnCloseDoc();
+    SetWindowTitle(L"");
+    GetRichView().Clean();
+    m_view.NoDocOpen();
+    Close();
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnFileMRU(WPARAM wparam)                                                    /*
+
+        Open a file from the Most Recently Used (MRU) list.
 *-----------------------------------------------------------------------------*/
 {
-      // get the MRU entry
-    CString mru_entry = GetMRUEntry(nIndex);
-    OpenDoc(mru_entry);
+    UINT mruIndex = static_cast<UINT>(LOWORD(wparam)) - IDW_FILE_MRU_FILE1;
+    CString mruText = GetMRUEntry(mruIndex);
+
+    if (!OpenDoc(mruText))
+        RemoveMRUEntry(mruText);
+
+    return TRUE;
 }
 
 /*============================================================================*/
@@ -458,29 +343,40 @@ OnInitialUpdate()                                                           /*
     formatting.
 *-----------------------------------------------------------------------------*/
 {
-    CRect framePos = CRect(m_frameXY, m_frameSize);
-    SetWindowPos(HWND_TOP, framePos, SWP_SHOWWINDOW);
-      // the status bar cannot be recolored if XP themes are on, so
-    GetStatusBar().SetWindowTheme(L" ", L" ");  // turn XP themes off
-      // enable drag-and-drop file entry mode
-    DragAcceptFiles(TRUE);
-      // Resize the rich text window within the client window
-    CRect rc = m_view.GetClientRect();
-    rc.DeflateRect(10, 10);
-    GetRichView().SetWindowPos(nullptr, rc, SWP_SHOWWINDOW);
-      // if there is a MRU item at the top of the list, use it
-      // as the name of the document to open
-    CString openPath = GetMRUEntry(0);
-    CString msg;
-    msg.Format(L"Open previous document?\n    %s", openPath.c_str());
-    if (!openPath.IsEmpty() &&  (::MessageBox(nullptr, msg, L"Question...",
-      MB_YESNO | MB_ICONQUESTION) == IDYES))
-        OpenDoc(openPath);
-
       // Unselect the text
     GetRichView().SetSel(0, 0);
     GetRichView().SetFocus();
+
     TRACE("Frame created\n");
+}
+
+/*============================================================================*/
+    void CMainFrame::
+OnMenuUpdate(UINT id)                                                       /*
+
+    Update the enable and chack status of menu items.
+*-----------------------------------------------------------------------------*/
+{
+    UINT enabled;
+    UINT checked;
+
+    switch (id)
+    {
+    case IDM_FILE_SAVE:
+        enabled = m_doc.IsDirty() ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(id, enabled);
+        break;
+    case IDM_FILE_SAVEAS:
+        enabled = m_doc.IsOpen() ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(id, enabled);
+        break;
+    case IDM_RICHEDWRAP:
+        checked = m_isTextWrap ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, checked);
+        break;
+    }
+
+    return CFrame::OnMenuUpdate(id);
 }
 
 /*============================================================================*/
@@ -586,21 +482,6 @@ OnOpenDoc()                                                            /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnProcessMRU(WPARAM wparam, LPARAM lparam)                                  /*
-
-    One of the MRU entries has been selected.  Process accordingly.
-*-----------------------------------------------------------------------------*/
-{
-    UNREFERENCED_PARAMETER(lparam);
-
-      // compute the MRU index, where IDW_FILE_MRU_FILE1 is index 0
-    UINT nMRUIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
-    OnFileOpenMRU(nMRUIndex);
-    return TRUE;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
 SetRichEditColor()                                                           /*
 
     Set the rich edit control colors to those found in the color table.
@@ -614,12 +495,32 @@ SetRichEditColor()                                                           /*
 }
 
 /*============================================================================*/
+void CMainFrame::
+    OnPrint()                                                                /*
+
+    Invoke a MyPrintDialog dialog to get printing parameters and then print
+    the contents of the rich view control.
+*-----------------------------------------------------------------------------*/
+{
+    m_view.OnPrintDocument(m_doc.GetDocPath());
+}
+
+/*============================================================================*/
+void CMainFrame::
+    OnSave()                                                                  /*
+
+    Save the current document.
+*-----------------------------------------------------------------------------*/
+{
+    m_doc.OnSaveDoc();
+}
+
+/*============================================================================*/
     void CMainFrame::
 OnSaveAs()                                                                  /*
 
     Save the current document into a file named in a file dialog and make
-    that file the current document. Return TRUE and set the path if the
-    document was saved, FALSE otherwise.
+    that file the current document.
 *-----------------------------------------------------------------------------*/
 {
     if (!m_doc.IsOpen())
@@ -680,7 +581,7 @@ OnSaveAs()                                                                  /*
     void CMainFrame::
 OnWrapText()                                                                /*
 
-    Description
+    Toggle the word wrapping mode in the rich edit control.
 *-----------------------------------------------------------------------------*/
 {
     m_isTextWrap = !m_isTextWrap;
@@ -711,205 +612,11 @@ OpenDoc(LPCWSTR docPath)                                             /*
     if (m_doc.OpenDoc(docPath))
     {
         m_docDir = m_doc.GetDocPath();
-        AddMRUEntry(docPath);
         SetWindowTitle(docPath);
+        AddMRUEntry(docPath);
         return TRUE;
     }
     return FALSE;
-}
-
-/*============================================================================*/
-    void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                                 /*
-
-    Set cs members to select window frame parameters desired. This gets
-    executed before CView::PreCreate(). Use the serialized position
-    and size information to set the frame positioning and size.
-*-----------------------------------------------------------------------------*/
-{
-      // do the base class stuff
-    CFrame::PreCreate(cs);
-      // specify a title bar and border with a window-menu on the title bar
-    cs.style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_VISIBLE
-        | WS_MINIMIZEBOX    // adds the minimize box
-        | WS_MAXIMIZEBOX    // adds the maximize box
-//      | WS_THICKFRAME     // same as WS_SIZEBOX, enables resizing
-        ;
-    cs.dwExStyle = WS_EX_CLIENTEDGE
-        | WS_EX_CONTROLPARENT       // TAB key navigation
-//      | WS_EX_CONTEXTHELP     // doesn't work if WS_MINIMIZEBOX
-                    // or WS_MAXIMIZEBOX is specified
-        ;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-SaveRegistrySettings()                                                      /*
-
-    This member is called in response to a WM_CLOSE message for the
-    frame.  The base class saves settings into the registry. In this
-    override, the archive member is called to save everything into
-    archive files.
-*-----------------------------------------------------------------------------*/
-{
-    try
-    {
-        CArchive ar(m_archivePath, CArchive::store);
-             // serialize in the following order
-        ar << *TheApp();   // for the App
-        ar << *this;    // for the mainframe and base classes
-        ar << m_view;   // for the view, including control colors
-    }
-    catch (const CWinException &e)  // catch all std::exception events
-    {
-          // Process the exception and quit
-        CString msg;
-        msg.Format(L"%s\n%s\n%s",
-            L"Program settings could not be saved.",
-            e.GetErrorString(), e.what());
-        ::MessageBox(nullptr, msg, L"Exception", MB_OK | MB_ICONSTOP |
-            MB_TASKMODAL);
-    }
-    catch(...)
-    {
-        CString msg = "\nProgram settings could not be saved.\n    ";
-        ::MessageBox(nullptr, msg, L"Unregistered Exception", MB_OK |
-            MB_ICONSTOP | MB_TASKMODAL);
-    }
-    return TRUE;
-}
-
-/*============================================================================*/
-        void CMainFrame::
-Serialize(CArchive &ar)                                                     /*
-
-        Called serialize or deserialize the frame to and from the archive ar,
-        depending on the sense of IsStoring().  Leave the archive open for
-        further serializations.
-*-----------------------------------------------------------------------------*/
-{
-        // perform loading or storing
-    if (ar.IsStoring())
-    {     // save current window placement information
-        m_frameXY = GetWindowRect().TopLeft();
-        ar << m_frameXY;
-          // save the base class frame status and tool bar switches:
-          // these control the display of the StatusBar and ToolBar
-        BOOL showbar = GetStatusBar().IsWindowVisible();
-        ar << showbar;
-        showbar = GetToolBar().IsWindowVisible();
-        ar << showbar;
-          // save font parameters
-        ar << m_fontChoice;
-          // save regular control class colors
-        ar << m_colorChoice;
-        ar << m_isTextWrap;
-          // record the number of MRU entries to write
-        size_t i, nMRU = GetMRUSize();
-        ar << nMRU;
-          // save this many entries (don't use a copied list)
-        for (i = 0; i < nMRU; ++i)
-            ar << GetMRUEntries()[i];
-    }
-    else
-    {     // recover window frame placement
-        ar >> m_frameXY;
-        CRect framePos = CRect(m_frameXY, m_frameSize);
-        SetWindowPos(HWND_TOP, framePos, SWP_SHOWWINDOW);
-          // recover frame status and  tool bar base class switches
-        BOOL showbar;
-        ar >> showbar;
-        ShowStatusBar(showbar);
-        ar >> showbar;
-        ShowToolBar(showbar);
-          // recover font parameters
-        ar >> m_fontChoice;
-        m_view.SetFont(m_fontChoice.GetChoiceFont(), TRUE);
-            // set font elements into view
-        m_view.SetEditFont(m_fontChoice.GetChoiceFont());
-        m_colorChoice.SetTableColor(REdTxFg, m_fontChoice.GetColor());
-          // recover colors
-        ar >> m_colorChoice;
-          // reset the status bar color
-        COLORREF sb = GetSBBkColor();
-        SetSBBkColor(sb);
-        ar >> m_isTextWrap;
-        GetRichView().SetWrapping(m_isTextWrap);
-          // read MRU values from archive
-        EmptyMRUList();
-          // use dummy vector in case an exception occurs
-        std::vector<CString> vMRUEntries;
-          // extract all the MRU entries that were archived to preserve
-          // the archive for subsequent use
-        size_t i, nMRU;
-        ar >> nMRU; // the number of entries to read in
-        CString s;
-        for (i = 0; i < nMRU; ++i)
-        {
-            ar >> s;
-            if (i < m_maxMRU)  // keep only those within the limit
-                vMRUEntries.push_back(s);
-        }
-          // all successfully read in, so store them LIFO order into
-          // the MRU list for proper display
-        for (auto it = vMRUEntries.rbegin(); it != vMRUEntries.rend(); ++it)
-        {
-            AddMRUEntry(*it);
-        }
-    }
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-SetCheckStatus(UINT id, BOOL bCheck, ControlBars where)                    /*
-
-*-----------------------------------------------------------------------------*/
-{
-    BOOL ok = FALSE;
-    if (where == mainmenu || where == both)
-    {
-        if (bCheck > 1)
-            ok = (GetFrameMenu().EnableMenuItem(id, MF_BYCOMMAND |
-                MF_GRAYED) != 0xFFFFFFFF);
-        else
-            ok = (GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND |
-                (bCheck ? MF_CHECKED : MF_UNCHECKED)) != 0xFFFFFFFF);
-    }
-
-    if (!ok)
-        ok = TRUE;
-    if (where == mainmenu || where == both)
-    {
-        if (bCheck > 1)
-            ok = GetToolBar().SetButtonState(id, TBSTATE_INDETERMINATE);
-        else
-        {
-            GetToolBar().CheckButton(id, bCheck);
-            ok = TRUE;
-        }
-    }
-    return ok;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-SetEnableStatus(UINT id, BOOL status, ControlBars which)                   /*
-
-    Set the control having the given id to the enable/disable
-    status, on the toolbar, main menu, or both, as indicated by which.
-*-----------------------------------------------------------------------------*/
-{
-    UINT action = MF_BYCOMMAND | (status ? MF_ENABLED : MF_GRAYED);
-    if (which == mainmenu)
-        return (GetFrameMenu().EnableMenuItem(id, action) != 0xFFFFFFFF);
-    else if (which == toolbar)
-        return (status ? GetToolBar().EnableButton(id) :
-            GetToolBar().DisableButton(id));
-      // else must be both
-    BOOL rtn = (GetFrameMenu().EnableMenuItem(id, action) != 0xFFFFFFFF);
-    rtn |= (status ? GetToolBar().EnableButton(id) :
-        GetToolBar().DisableButton(id));
-    return rtn;
 }
 
 /*============================================================================*/
@@ -934,42 +641,6 @@ SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
     rt.UseLines     = TRUE;
 
     SetReBarTheme(rt);
-}
-
-/*============================================================================*/
-     void CMainFrame::
-SetStatusbarMsg(CString status)                                             /*
-
-    Write the status message on the status bar.
-*-----------------------------------------------------------------------------*/
-{
-    SetStatusText(status);
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-SetThemeColors()                                                            /*
-
-    Set the colors of each rebar in the frame, i.e., the theme colors.
-    These were taken from the Win32++ Themes sample program recommended
-    colors for Windows XP, case IDM_BLUE.
-*-----------------------------------------------------------------------------*/
-{
-    SetReBarColors(RGB(150, 190, 245), RGB(196, 215, 250),
-        RGB(220, 230, 250), RGB( 70,130,220));
-
-    StatusBarTheme sbt = {TRUE, RGB(150, 190, 245), RGB(196, 215, 250)};
-    SetStatusBarTheme(sbt);
-
-    ToolBarTheme tbt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100),
-        RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-    SetToolBarTheme(tbt);
-
-    MenuTheme mt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100),
-        RGB(150, 190, 245), RGB(220, 230, 250), RGB(128, 128, 200)};
-    SetMenuTheme(mt);
-    RecalcLayout();
-    return TRUE;
 }
 
 /*============================================================================*/
@@ -1001,9 +672,6 @@ SetupToolBar()                                                              /*
     on the toolbar at runtime.
 *-----------------------------------------------------------------------------*/
 {
-          // start out with a separator just to give some space at the
-          // left of the toolbar
-    AddToolBarButton(0);  // Separator
       // Connect button IDs to button icons, show enabled status, and
       // give the explicit image index iImage of each button in the bitmap.
       // Add the toolbar buttons in the order they are to appear at runtime.
@@ -1027,6 +695,16 @@ SetupToolBar()                                                              /*
 }
 
 /*============================================================================*/
+void CMainFrame::
+    SetViewBgColor()                                                        /*
+
+    Sets the background color of the dialog used as the view window.
+*-----------------------------------------------------------------------------*/
+{
+    m_view.SetBgColor(m_colorChoice.GetBrush(DlgBg));
+}
+
+/*============================================================================*/
     void CMainFrame::
 SetWindowTitle(LPCWSTR path)                                                /*
 
@@ -1034,178 +712,30 @@ SetWindowTitle(LPCWSTR path)                                                /*
     displayed text length to that of the frame.
 *-----------------------------------------------------------------------------*/
 {
-      // the app title is in resources.rc
-    CString docPath = path,
-            appTitle = LoadString(IDW_MAIN);
-      // compute text lengths
-    int applen = appTitle.GetLength();
-    int doclen = docPath.GetLength();
-      // only count "\\" as one character
-    for (int i = 0; i < doclen; )
-    {
-        i = docPath.Find(L"\\", i);
-        if (i < 0)
-            break;
+    CString pathname = path;
+    CString title = LoadString(IDW_MAIN);
 
-        --doclen;
-        i++;
-    }
-      // form the caption title
-    if (!docPath.IsEmpty())
-        appTitle  += L":    " + docPath;
-      // compute maximum characters in the caption from its height in pixels,
-      // assumed to be proportional to the font width
-    INT height = ::GetSystemMetrics(SM_CYCAPTION);
-      // the width = client - 3 buttons - the icon
-    int width = m_view.GetClientRect().Width() - ::GetSystemMetrics(SM_CXSMICON)
-        - 3 * ::GetSystemMetrics(SM_CXSIZE);
-      // estimate the max char length using empirical formula, minus "..."
-    int maxlen = (37 * width) / (10 * height) - 3;
-      // limit the caption line to that which will fit
-    if (appTitle.GetLength() > maxlen)
-    {
-          // eliminate characters in the middle
-        int mid = applen + (maxlen - applen - 1) / 2;
-        appTitle.Delete(mid, appTitle.GetLength() - maxlen);
-        appTitle.Insert(mid, L"...");
-    }
-    SetWindowText(appTitle);
+    if (!pathname.IsEmpty())
+        title += " - " + pathname;
+
+    SetWindowText(title);
 }
 
 /*============================================================================*/
     void CMainFrame::
-UpdateControlUIState()                                                      /*
+UpdateToolbar()                                                             /*
 
-    Check the status of controls whose enabled/disabled or check/uncheck
-    status needs to be changed and make changes as necessary. Caution:
-    only use one SetXXXXStatus per control m_Win32Version.
+Called by CApp::OnIdle to update toolbar buttons
 *-----------------------------------------------------------------------------*/
 {
-      // document status
-    BOOL    doc_is_ready = m_doc.IsOpen();
+    BOOL isSelected = m_doc.IsSelected();
+    BOOL canPaste = m_doc.CanPaste();
+    BOOL isDirty = m_doc.IsDirty();
 
-      // determine enabled status of controls (TODO: redo for actual app)
-    BOOL    ok_to_cut         = doc_is_ready && GetRichView().IsSelected();
-    BOOL    ok_to_copy        = doc_is_ready && GetRichView().IsSelected();
-    BOOL    ok_to_delete      = doc_is_ready && GetRichView().IsSelected();
-    BOOL    ok_to_find        = doc_is_ready;
-    BOOL    ok_to_paste       = doc_is_ready && GetRichView().CanPaste();
-    BOOL    ok_to_print       = doc_is_ready;
-    BOOL    ok_to_page_setup  = TRUE;
-    BOOL    ok_to_redo        = GetRichView().CanRedo();
-    BOOL    ok_to_replace     = doc_is_ready;
-    BOOL    ok_to_save        = doc_is_ready && GetRichView().GetModify();
-    BOOL    ok_to_saveas      = doc_is_ready;
-    BOOL    ok_to_undo        = GetRichView().CanUndo();
-    BOOL    ok_to_close       = doc_is_ready;
-
-      // set the control button status
-    SetEnableStatus(IDM_EDIT_CUT,       ok_to_cut,         both);
-    SetEnableStatus(IDM_EDIT_COPY,      ok_to_copy,        both);
-    SetEnableStatus(IDM_EDIT_DELETE,    ok_to_delete,      both);
-    SetEnableStatus(IDM_EDIT_FIND,      ok_to_find,        both);
-    SetEnableStatus(IDM_FILE_PAGESETUP, ok_to_page_setup,  mainmenu);
-    SetEnableStatus(IDM_EDIT_PASTE,     ok_to_paste,       both);
-    SetEnableStatus(IDM_FILE_PRINT,     ok_to_print,       both);
-    SetEnableStatus(IDM_EDIT_REDO,      ok_to_redo,        both);
-    SetEnableStatus(IDM_EDIT_REPLACE,   ok_to_replace,     both);
-    SetEnableStatus(IDM_FILE_CLOSE,     ok_to_close,       mainmenu);
-    SetEnableStatus(IDM_FILE_SAVE,      ok_to_save,        both);
-    SetEnableStatus(IDM_FILE_SAVEAS,    ok_to_saveas,      both);
-    SetEnableStatus(IDM_EDIT_UNDO,      ok_to_undo,        both);
-    SetCheckStatus(IDM_RICHEDWRAP,      m_isTextWrap,        mainmenu);
-}
-
-/*============================================================================*/
-    void CMainFrame::
-UpdateMRUMenu()                                                             /*
-
-    Override the base class method to truncate long MRU list entries using
-    a '...' splice at the midpoint, rather than at the beginning, as does
-    the base class. This will be called by the framework whenever a menu
-    element is changed.
-*-----------------------------------------------------------------------------*/
-{
-      // find in the leftmost submenu (i.e., the one with index 0)
-    CMenu fileMenu = GetFrameMenu().GetSubMenu(0);
-      // compute the index of the last entry in the MRU list
-    int last = static_cast<int>(std::min(GetMRUSize(), m_maxMRU)) - 1;
-      // if there is no leftmost submenu, or if there are no entries to
-      // post, or if we cannot modify the first entry to indicate an empty
-      // MRU list, we cannot proceed
-    if (!fileMenu.GetHandle())
-    {     // just refresh the frame menu bar and  leave
-        DrawMenuBar();
-        return;
-    }
-      // insert the empty MRU list label in the top slot
-    fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
-        IDW_FILE_MRU_FILE1, L"Recent Files");
-    fileMenu.EnableMenuItem(IDW_FILE_MRU_FILE1, MF_BYCOMMAND | MF_GRAYED);
-
-      // remove all the other MRU Menu entries
-    for (UINT i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 + m_maxMRU; ++i)
-        fileMenu.DeleteMenu(i, MF_BYCOMMAND);
-      // if the list is not empty, there's more to do
-    if (last >= 0)
-    {
-          // create the MRU "show" list, which contains only strings
-          // of limited length, chars removed at the midpoint, as needed
-        int maxlen = WXX_MAX_STRING_SIZE - 10;
-        int mid = maxlen / 2;
-        CString strMRUShow[16];
-        for (int i = 0; i <= last; i++)
-        {
-            CString s = GetMRUEntries()[i];
-            if (s.GetLength() > maxlen)
-            {
-                  // eliminate middle if too long
-                s.Delete(mid, s.GetLength() - maxlen);
-                s.Insert(mid, L"...");
-            }
-            // Prefix with its number
-            CString v;
-            v.Format(L"%d ", i + 1);
-            strMRUShow[i] = v + s;
-        }
-
-          // display the MRU items: start by replacing the first item
-          // in the the list with the last MRU item
-        fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
-            static_cast<INT_PTR>(last) + IDW_FILE_MRU_FILE1, strMRUShow[last]);
-          // now insert the remaining items in reverse order, starting
-          // at the next-to-last entry and  pushing all the others
-          // down in the menu (entries thus end up in the correct order)
-        for (int j = last - 1; j >= 0; last--, j--)
-            fileMenu.InsertMenu(IDW_FILE_MRU_FILE1 + last,
-                static_cast<INT_PTR>(j) + MF_BYCOMMAND, IDW_FILE_MRU_FILE1,
-                strMRUShow[j]);
-    }
-      // refresh the frame menu bar and  leave
-    DrawMenuBar();
-}
-
-/*============================================================================*/
-    void CMainFrame::
-ValidateMRU()                                                               /*
-    Validate the that the MRU list entries, if there are any, correspond
-    to actual file paths. Remove any that do not.
-*-----------------------------------------------------------------------------*/
-{
-      // get a copy of the MRU list entries
-    const std::vector<CString> MRUEntries = GetMRUEntries();
-      // check them one by one as a valid file path
-    for (const CString& str : MRUEntries)
-    {
-          // check whether the current entry exists
-        if (_taccess(str, 4) != 0)
-        {
-              // for the demo, announce removal
-            ::MessageBox(nullptr, str, L"Removing invalid MRU entry...",
-                MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-            RemoveMRUEntry(str);
-        }
-    }
+    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
+    GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
 }
 
 /*============================================================================*/

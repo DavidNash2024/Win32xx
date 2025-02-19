@@ -12,7 +12,7 @@ class CMyScrollBar : public CScrollBar
 {
 public:
     CMyScrollBar();
-    virtual ~CMyScrollBar() override {}
+    virtual ~CMyScrollBar() override = default;
 
     int  GetPos(WPARAM wparam);
     void SetPos(int pos);

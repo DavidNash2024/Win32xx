@@ -26,7 +26,7 @@ public:
     };
 
     CView();
-    virtual ~CView() override {}
+    virtual ~CView() override = default;
 
     Calc::Calculator& GetCalc() { return m_calc; }
     CInputDlg& GetInput() { return m_inputDlg; }

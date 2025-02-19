@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -22,12 +22,12 @@
     class
 CApp : public CWinApp                                                       /*
 
-    This application's app class, a pattern for developing new apps.
+    This application's app class.
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CApp() {}
-        virtual ~CApp() override {}
+        CApp() = default;
+        virtual ~CApp() override = default;
 
         CString MakeAppDataPath(const CString&) const;
 

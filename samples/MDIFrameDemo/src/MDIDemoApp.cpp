@@ -10,11 +10,6 @@
 // CMDIDemoApp function definitions
 //
 
-// Constructor.
-CMDIDemoApp::CMDIDemoApp()
-{
-}
-
 // Called when the application starts.
 BOOL CMDIDemoApp::InitInstance()
 {

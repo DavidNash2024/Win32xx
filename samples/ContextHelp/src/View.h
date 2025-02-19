@@ -13,7 +13,7 @@ class CView : public CDialog
 {
 public:
     CView(UINT resID);
-    virtual ~CView() override;
+    virtual ~CView() override = default;
     virtual HWND Create(HWND hParent) override;
 
     void DpiScaleImage();

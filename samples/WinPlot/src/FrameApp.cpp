@@ -8,13 +8,6 @@
 //////////////////////////////////
 // CFrameApp function definitions.
 //
-CFrameApp::CFrameApp()
-{
-}
-
-CFrameApp::~CFrameApp()
-{
-}
 
 BOOL CFrameApp::InitInstance()
 {

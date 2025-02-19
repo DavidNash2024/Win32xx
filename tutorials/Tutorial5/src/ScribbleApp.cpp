@@ -3,11 +3,6 @@
 
 #include "ScribbleApp.h"
 
-// Constructor.
-CScribbleApp::CScribbleApp()
-{
-}
-
 // Called when the application starts.
 BOOL CScribbleApp::InitInstance()
 {

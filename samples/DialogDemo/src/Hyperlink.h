@@ -18,7 +18,7 @@ class CHyperlink :  public CStatic
 {
 public:
     CHyperlink();
-    virtual ~CHyperlink() override;
+    virtual ~CHyperlink() override = default;
 
     void SetUrlFont(CFont urlFont) { m_urlFont = urlFont; }
 

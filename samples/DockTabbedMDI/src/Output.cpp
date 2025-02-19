@@ -13,16 +13,6 @@
 // CViewOutput function definitions
 //
 
-// Constructor.
-CViewOutput::CViewOutput()
-{
-}
-
-// Destructor.
-CViewOutput::~CViewOutput()
-{
-}
-
 // Called when a window handle (HWND) is attached to CViewOutput.
 void CViewOutput::OnAttach()
 {

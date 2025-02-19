@@ -15,7 +15,7 @@
 class CViewClasses : public CTreeView
 {
 public:
-    CViewClasses();
+    CViewClasses() = default;
     virtual ~CViewClasses() override;
     void SetDPIImages();
 
@@ -42,7 +42,7 @@ class CContainClasses : public CDockContainer
 {
 public:
     CContainClasses();
-    virtual ~CContainClasses() override {}
+    virtual ~CContainClasses() override = default;
 
 protected:
     // Virtual functions that override base class functions.
@@ -69,7 +69,7 @@ class CDockClasses : public CDocker
 {
 public:
     CDockClasses();
-    virtual ~CDockClasses() override {}
+    virtual ~CDockClasses() override = default;
 
 protected:
     virtual void RecalcDockLayout() override;

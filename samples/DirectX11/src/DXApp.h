@@ -15,8 +15,8 @@
 class CDXApp : public CWinApp
 {
 public:
-    CDXApp() {}
-    virtual ~CDXApp() override {}
+    CDXApp() = default;
+    virtual ~CDXApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

@@ -9,11 +9,6 @@
 // CRoundApp function definitions.
 //
 
-// Constructor for CRoundApp
-CRoundApp::CRoundApp()
-{
-}
-
 // This function is called automatically when the application starts.
 BOOL CRoundApp::InitInstance()
 {

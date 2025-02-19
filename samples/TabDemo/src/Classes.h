@@ -12,7 +12,7 @@
 class CViewClasses : public CTreeView
 {
 public:
-    CViewClasses();
+    CViewClasses() = default;
     virtual ~CViewClasses() override;
     void SetDPIImages();
 

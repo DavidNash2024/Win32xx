@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                    (App.h) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                    (App.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -26,7 +26,7 @@ CApp : public CWinApp                                                       /*
 {
     public:
         CApp();
-        virtual ~CApp() override {}
+        virtual ~CApp() override = default;
 
         CMainFrame&  GetFrame() { return m_frame;}
 
@@ -36,10 +36,6 @@ CApp : public CWinApp                                                       /*
     private:
         CApp(const CApp&) = delete;
         CApp& operator=(const CApp&) = delete;
-
-        CString     MakeAppDataPath(const CString& subpath) const;
-        ULONG       DatInt(LPCWSTR) const;
-        CString     IntDat(ULONG) const;
 
         CMainFrame  m_frame;
         CString     m_months;

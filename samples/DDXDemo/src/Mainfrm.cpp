@@ -1,4 +1,4 @@
-/* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -37,8 +37,6 @@ CMainFrame()                                                                /*
 *-----------------------------------------------------------------------------*/
     : m_view(IDD_MAIN_DIALOG)
 {
-      // Set m_view as the view window of the frame.
-    SetView(m_view);
 }
 
 /*============================================================================*/
@@ -54,21 +52,12 @@ Create(HWND parent)                                                          /*
     Note: the <key name> used here refers to the registerKeyName above.
 * ---------------------------------------------------------------------------- - */
 {
+      // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     LoadRegistrySettings(registryKeyName);
 
     return CFrame::Create(parent);
-}
-
-/*============================================================================*/
-    void  CMainFrame::
-FeatureNotImplemented()                                                     /*
-
-    Message the user that this feature is not yet implemented in this sample
-    program.
-*-----------------------------------------------------------------------------*/
-{
-    ::MessageBox(nullptr, L"This feature is not yet implemented.", L"",
-        MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
@@ -88,6 +77,17 @@ LoadRegistrySettings(LPCWSTR keyName)                                     /*
     CFrame::LoadRegistrySettings(keyName);
       // load the saved document entries from the same key
     TheDoc().LoadDocRegistry(keyName);
+    return TRUE;
+}
+
+/*============================================================================*/
+BOOL CMainFrame::
+    OnCheckButton(UINT id)                                                  /*
+
+    Toggle the check state of the button with the specified id.
+*-----------------------------------------------------------------------------*/
+{
+    m_view.SetCheck(id - IDC_CHECK_A);
     return TRUE;
 }
 
@@ -115,86 +115,34 @@ OnClose()                                                                   /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
+OnCommand(WPARAM wparam, LPARAM)                                     /*
 
     The framework calls this member function when the user selects an item
     from a menu, when a child control sends a notification message, or when
     an accelerator keystroke is translated.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
     switch(id)
     {
-        case IDM_FILE_NEW:
-            return OnFileNew();
-
-        case IDM_FILE_OPEN:
-            return OnFileOpen();
-
-        case IDM_FILE_SAVE:
-            return OnFileSave();
-
-        case IDM_FILE_SAVEAS:
-            return OnFileSaveAs();
-
-        case IDM_FILE_PRINT:
-            return OnFilePrint();
-
-        case IDM_FILE_EXIT:
-            return OnFileExit();
-
-        case IDM_EDIT_CUT:
-            GetFocus().SendMessage(WM_CUT, 0, 0);
-            return TRUE;
-
-        case IDM_EDIT_COPY:
-            GetFocus().SendMessage(WM_COPY, 0, 0);
-            return TRUE;
-
-        case IDM_EDIT_PASTE:
-            GetFocus().SendMessage(WM_PASTE, 0, 0);
-            return TRUE;
-
-        case IDM_EDIT_DELETE:
-            GetFocus().SendMessage(WM_CLEAR, 0, 0);
-            return TRUE;
-
-        case IDM_EDIT_UNDO:
-            GetFocus().SendMessage(EM_UNDO, 0, 0);
-            return TRUE;
-
-        case IDM_EDIT_REDO:
-            GetFocus().SendMessage(EM_REDO, 0, 0);
-            return TRUE;
-
-        case IDW_VIEW_STATUSBAR:
-            OnViewStatusBar();
-            return TRUE;
-
-        case IDW_VIEW_TOOLBAR:
-            OnViewToolBar();
-            return TRUE;
-
-        case IDC_RADIO_A:
-        case IDC_RADIO_B:
-        case IDC_RADIO_C:
-            m_view.SetRadio(id - IDC_RADIO_A);
-            return TRUE;
+        case IDM_EDIT_CUT:         return OnEditCut();
+        case IDM_EDIT_COPY:        return OnEditCopy();
+        case IDM_EDIT_DELETE:      return OnEditDelete();
+        case IDM_EDIT_PASTE:       return OnEditPaste();
+        case IDM_EDIT_REDO:        return OnEditRedo();
+        case IDM_EDIT_UNDO:        return OnEditUndo();
+        case IDM_FILE_EXIT:        return OnFileExit();
+        case IDW_ABOUT:            return CFrame::OnHelp();
+        case IDW_VIEW_STATUSBAR:   return OnViewStatusBar();
+        case IDW_VIEW_TOOLBAR:     return OnViewToolBar();
 
         case IDC_CHECK_A:
         case IDC_CHECK_B:
-        case IDC_CHECK_C:
-            m_view.SetCheck(id - IDC_CHECK_A);
-            return TRUE;
+        case IDC_CHECK_C:          return OnCheckButton(id);
 
-        case IDW_ABOUT:
-            CFrame::OnHelp();
-            return TRUE;
-
-        case WM_CLOSE:
-            return TRUE;
+        case IDC_RADIO_A:
+        case IDC_RADIO_B:
+        case IDC_RADIO_C:          return OnRadioButton(id);
     }
       // indicate not processed here
     return FALSE;
@@ -220,12 +168,75 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
       // call the base class function
     int rtn = CFrame::OnCreate(cs);
 
-      //Set our theme colors
-    SetThemeColors();
-
       // show the initial document and status
     UpdateDialog(SENDTOCONTROL);
     return rtn;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnEditCopy()                                                                /*
+
+    Copy text to the control with keyboard focus.
+*-----------------------------------------------------------------------------*/
+{
+    GetFocus().SendMessage(WM_COPY, 0, 0);
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnEditCut()                                                                /*
+
+    Cut text from the control with keyboard focus.
+*-----------------------------------------------------------------------------*/
+{
+    GetFocus().SendMessage(WM_CUT, 0, 0);
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnEditDelete()                                                                /*
+
+    Delete text from the control with keyboard focus.
+*-----------------------------------------------------------------------------*/
+{
+    GetFocus().SendMessage(WM_CLEAR, 0, 0);
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnEditPaste()                                                                /*
+
+    Paste text to the control with keyboard focus.
+*-----------------------------------------------------------------------------*/
+{
+    GetFocus().SendMessage(WM_PASTE, 0, 0);
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnEditRedo()                                                                /*
+
+    Redo the last text operation for the control with keyboard focus.
+*-----------------------------------------------------------------------------*/
+{
+    GetFocus().SendMessage(EM_REDO, 0, 0);
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnEditUndo()                                                                /*
+
+    Undo the last text operation for the control with keyboard focus.
+*-----------------------------------------------------------------------------*/
+{
+    GetFocus().SendMessage(EM_UNDO, 0, 0);
+    return TRUE;
 }
 
 /*============================================================================*/
@@ -237,61 +248,6 @@ OnFileExit()                                                                /*
 {
       // Issue a close request to the frame
     Close();
-    return TRUE;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-OnFileNew()                                                                 /*
-
-    Open a new instance of the application.
-*-----------------------------------------------------------------------------*/
-{
-    FeatureNotImplemented();
-    return TRUE;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-OnFileOpen()                                                                /*
-
-    Close the application.
-*-----------------------------------------------------------------------------*/
-{
-    FeatureNotImplemented();
-    return TRUE;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-OnFilePrint()                                                                /*
-
-    Print the application data.
-*-----------------------------------------------------------------------------*/
-{
-    FeatureNotImplemented();
-    return TRUE;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-OnFileSave()                                                                /*
-
-    Save the application data.
-*-----------------------------------------------------------------------------*/
-{
-    FeatureNotImplemented();
-    return TRUE;
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-OnFileSaveAs()                                                                /*
-
-    Close the application.
-*-----------------------------------------------------------------------------*/
-{
-    FeatureNotImplemented();
     return TRUE;
 }
 
@@ -353,80 +309,13 @@ OnMenuUpdate(UINT id)                                                       /*
 }
 
 /*============================================================================*/
-    void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                                 /*
+BOOL CMainFrame::
+    OnRadioButton(UINT id)                                                        /*
 
-    This method is called by the framework before the creation of the
-    window attached to this CWnd object.  Use it to modify the CREATESTRUCT
-    structure before the window is created.
+    Select the radio button with the specified id.
 *-----------------------------------------------------------------------------*/
 {
-      // set default window placement
-    cs.x  = 100;
-    cs.y  = 100;
-    cs.cx = 950;
-    cs.cy = 675;
-      // reset frame values with those from the registry, if they exist
-    CFrame::PreCreate(cs);
-
-       // specify a title bar and border with a window-menu on the title bar
-    cs.style = WS_VISIBLE   // must be present, or screen is blank
-        | WS_OVERLAPPED     // implied, the default 0x00000000L.
-        | WS_CAPTION        // redundant, but put in anyway
-        | WS_SYSMENU        // adds close box at top right
-        | WS_MINIMIZEBOX    // adds minimize box to close box
-        | WS_THICKFRAME     // enables resizing
-        ;
-    cs.dwExStyle = WS_EX_CLIENTEDGE;
-}
-
-/*============================================================================*/
-    void CMainFrame::
-SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
-    COLORREF clrBand2)                                                      /*
-
-    Set the colors to be used in the rebar theme.
-*-----------------------------------------------------------------------------*/
-{
-    ReBarTheme rt{};
-    rt.UseThemes    = TRUE;
-    rt.clrBkgnd1    = clrBkGnd1;
-    rt.clrBkgnd2    = clrBkGnd2;
-    rt.clrBand1     = clrBand1;
-    rt.clrBand2     = clrBand2;
-    rt.FlatStyle    = FALSE;
-    rt.BandsLeft    = TRUE;
-    rt.LockMenuBand = TRUE;
-    rt.RoundBorders = TRUE;
-    rt.ShortBands   = TRUE;
-    rt.UseLines     = TRUE;
-
-    SetReBarTheme(rt);
-}
-
-/*============================================================================*/
-    BOOL CMainFrame::
-SetThemeColors()                                                            /*
-
-    Set the colors of each rebar in the frame, i.e., the theme colors.
-    These were taken from the Win32++ Themes sample program recommended
-    colors for Windows XP, case IDM_BLUE.
-*-----------------------------------------------------------------------------*/
-{
-    SetReBarColors(RGB(150,190,245), RGB(196,215,250), RGB(220,230,250),
-        RGB( 70,130,220));
-
-    StatusBarTheme sbt = {TRUE, RGB(150,190,245), RGB(196,215,250)};
-    SetStatusBarTheme (sbt);
-
-    ToolBarTheme tbt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100),
-        RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-    SetToolBarTheme(tbt);
-
-    MenuTheme mt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100),
-        RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-    SetMenuTheme(mt);
-    RecalcLayout();
+    m_view.SetRadio(id - IDC_CHECK_A);
     return TRUE;
 }
 

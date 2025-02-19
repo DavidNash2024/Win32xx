@@ -15,11 +15,6 @@ CDialogApp::CDialogApp() : m_clientDialog(IDD_CLIENT)
 {
 }
 
-// Destructor.
-CDialogApp::~CDialogApp()
-{
-}
-
 // Called when the application starts.
 BOOL CDialogApp::InitInstance()
 {

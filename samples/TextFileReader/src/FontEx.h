@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                 (FontEx.h) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                 (FontEx.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -31,7 +31,7 @@ CFontExDialog : public CFontDialog                                          /*
         CFontExDialog(DWORD flags = 0, HDC printer = nullptr)
             : CFontDialog(flags | CF_ENABLEHOOK, printer)
                 { SetBoxTitle(L"Font..."); }
-        virtual ~CFontExDialog() override {}
+        virtual ~CFontExDialog() override = default;
 
         void    SetBoxTitle(const CString& title)
                     { m_dlgBoxTitle = title; }
@@ -60,7 +60,7 @@ CFontEx : public CObject                                                       /
         CFontEx();
         CFontEx(COLORREF txtcolor, DWORD options)
                     { m_txcolor = txtcolor; m_flags = options; }
-        virtual ~CFontEx() override {}
+        virtual ~CFontEx() override = default;
 
         void    Choose(LPCWSTR wintitle = nullptr);
         void    SetDefault();
@@ -72,9 +72,6 @@ CFontEx : public CObject                                                       /
         void    SetFlags(DWORD f)       { m_flags = f; }
         void    SetFont(CFont f)        { m_font = f; SaveFontSize(); }
         void    SetTxColor(COLORREF c)  { m_txcolor = c; }
-
-    protected:
-        virtual void Serialize(CArchive &ar) override;
 
     private:
         CFontEx(const CFontEx&) = delete;

@@ -5,16 +5,6 @@
 #include "View.h"
 
 
-// Constructor.
-CView::CView()
-{
-}
-
-// Destructor.
-CView::~CView()
-{
-}
-
 // Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
 {

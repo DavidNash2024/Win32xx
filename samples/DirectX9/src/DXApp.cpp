@@ -9,11 +9,6 @@
 // CDXApp function definitions
 //
 
-// Constructor.
-CDXApp::CDXApp()
-{
-}
-
 // Called when the application starts.
 BOOL CDXApp::InitInstance()
 {

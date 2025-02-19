@@ -10,16 +10,6 @@
 // CViewText function definitions
 //
 
-// Constructor.
-CViewText::CViewText()
-{
-}
-
-// Destructor.
-CViewText::~CViewText()
-{
-}
-
 // Called when a window handle (HWND) is attached to CViewText.
 void CViewText::OnAttach()
 {
@@ -81,11 +71,6 @@ CMDIChildText::CMDIChildText()
     m_menu.LoadMenu(L"MdiMenuText");
     SetHandles(m_menu, nullptr);
     SetView(m_textView);
-}
-
-// Destructor.
-CMDIChildText::~CMDIChildText()
-{
 }
 
 // Process menu and toolbar input forwarded from the MDI frame.

@@ -50,8 +50,8 @@
 class CServerSocket : public CSocket
 {
 public:
-    CServerSocket() { }
-    virtual ~CServerSocket() override { }
+    CServerSocket() = default;
+    virtual ~CServerSocket() override = default;
 
 protected:
     // Virtual functions that override base class functions
@@ -71,8 +71,8 @@ private:
 class CWorkerSocket : public CSocket
 {
 public:
-    CWorkerSocket() { }
-    virtual ~CWorkerSocket() override { }
+    CWorkerSocket() = default;
+    virtual ~CWorkerSocket() override = default;
 
 protected:
     // Virtual functions that override base class functions

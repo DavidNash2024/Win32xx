@@ -16,7 +16,7 @@ class CDXThread : public CWinThread
 {
 public:
     CDXThread();
-    virtual ~CDXThread() override;
+    virtual ~CDXThread() override = default;
 
 protected:
     // Virtual functions that override base class functions

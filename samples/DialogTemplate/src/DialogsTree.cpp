@@ -15,11 +15,6 @@
 // CDialogsTree function definitions
 //
 
-// Constructor.
-CDialogsTree::CDialogsTree()
-{
-}
-
 // Destructor.
 CDialogsTree::~CDialogsTree()
 {

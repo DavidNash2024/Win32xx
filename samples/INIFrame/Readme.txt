@@ -27,7 +27,7 @@ Features demonstrated in this example
 * Responding to ToolBar and menu commands in OnCommand
 * Responding to notifications in OnNotify.
 * Use of OpenFile and print dialogs.
-* Responding to frame window messages in CFrame::WndProc
+* Responding to frame window messages in CMainFrame::WndProc
 * Responding to view window messages in CView::WndProc
 * Using the TRACE command to output debug text
 * Using the Window API functions write and read to an INI file, including:

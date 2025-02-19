@@ -15,8 +15,8 @@
 class CReBarApp : public CWinApp
 {
 public:
-    CReBarApp();
-    virtual ~CReBarApp() override;
+    CReBarApp() = default;
+    virtual ~CReBarApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

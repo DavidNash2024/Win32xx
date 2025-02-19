@@ -31,7 +31,7 @@ class CMainFrame : public CDockFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame() override;
+    virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:

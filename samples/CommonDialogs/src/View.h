@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                   (View.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                   (View.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -8,10 +8,9 @@
     Contents Description: Declaration of the  CView class for the
     CommonDialogs sample application using the Win32++ Windows interface
     classes. This particular view class utilizes a rich edit control to
-    contain, view, and manage the document'd data.  It also  applies methods
+    contain, view, and manage the document's data.  It also  applies methods
     for setting the view's foreground and background colors and the edit box
-    font. It also demonstrates serialization of class parameters in an external
-    file.
+    font.
 
     Programming Notes: The programming style roughly follows that established
     by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
@@ -30,7 +29,6 @@ enum CtlColors
     REdTxFg,                 // rich edit text foreground
     REdTxBg,                 // rich edit text background
     REdBg,                   // rich edit control background
-    SBBg,                    // status bar
     EndColors                // end color IDs
 };
 
@@ -43,7 +41,7 @@ CView : public CDialog                                                      /*
 {
     public:
         CView(UINT id);
-        virtual ~CView() override {}
+        virtual ~CView() override = default;
 
         virtual HWND   Create(HWND) override;
         CRichEditView& GetRichView() { return m_richView;}
@@ -51,8 +49,8 @@ CView : public CDialog                                                      /*
         void           NoDocOpen();
         void           OnPageSetup();
         void           OnPrintDocument(LPCWSTR);
-        void           SetEditFont(const CFont f);
-        void           SetBgColor(CBrush br) { m_bgBrush = br;}
+        void           SetEditFont(const CFont& f);
+        void           SetBgColor(const CBrush& br) { m_bgBrush = br;}
         void           SetRichEditColors(COLORREF, COLORREF, COLORREF);
 
     protected:
@@ -61,7 +59,6 @@ CView : public CDialog                                                      /*
         virtual void    OnClose() override {}   // Suppress esc key closing the dialog
         virtual BOOL    OnInitDialog() override;
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
-        virtual void    Serialize(CArchive& ar) override;
 
     private:
         CView(const CView&) = delete;

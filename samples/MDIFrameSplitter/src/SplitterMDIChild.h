@@ -13,7 +13,7 @@ class CSimpleView : public CWnd
 {
 public:
     CSimpleView();
-    ~CSimpleView() override {}
+    ~CSimpleView() override = default;
     COLORREF GetColor() {return m_color;}
     void SetColor(COLORREF color) { m_color = color; }
 
@@ -42,7 +42,7 @@ class CDockSimple : public CDocker
 {
 public:
     CDockSimple();
-    virtual ~CDockSimple() override {}
+    virtual ~CDockSimple() override = default;
 
     CSimpleView& GetSimpleView() { return m_view; }
 
@@ -66,7 +66,7 @@ class CSplitterMDIChild : public CMDIChild
 {
 public:
     CSplitterMDIChild();
-    virtual ~CSplitterMDIChild() override;
+    virtual ~CSplitterMDIChild() override = default;
 
 protected:
     // Virtual functions that override base class functions

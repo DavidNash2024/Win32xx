@@ -15,21 +15,12 @@ using namespace std;
 // CMainFrame function definitions.
 //
 
-// Constructor for CMainFrame.
-CMainFrame::CMainFrame()
-{
-    // Set the tab control as the frame's view window.
-    SetView(m_view);
-}
-
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
-}
-
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set the tab control as the frame's view window.
+    SetView(m_view);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\Tab Demo");

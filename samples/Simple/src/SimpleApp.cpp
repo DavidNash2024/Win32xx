@@ -8,11 +8,6 @@
 // CSimpleApp function definitions.
 //
 
-// Constructor for CSimpleApp.
-CSimpleApp::CSimpleApp()
-{
-}
-
 // This function is called automatically when the application starts.
 BOOL CSimpleApp::InitInstance()
 {

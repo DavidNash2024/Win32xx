@@ -15,8 +15,8 @@
 class CMetaView : public CWnd
 {
 public:
-    CMetaView() {}
-    virtual ~CMetaView() override {}
+    CMetaView() = default;
+    virtual ~CMetaView() override = default;
 
 protected:
     // Virtual functions that override base class functions

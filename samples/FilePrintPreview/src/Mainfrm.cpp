@@ -32,7 +32,6 @@ CMainFrame()                                                                /*
 *-----------------------------------------------------------------------------*/
     :   m_wrapOption(WRAP_NONE)
 {
-    SetView(m_richView);
 }
 
 /*============================================================================*/
@@ -42,6 +41,9 @@ Create(HWND parent)                                                         /*
     Create the frame window.
 *-----------------------------------------------------------------------------*/
 {
+      // Set the frame's view window.
+    SetView(m_richView);
+
       // Set the registry key name, and load persistent data.
     LoadRegistrySettings(FRAME_REGISTRY_KEY);
       // Load the MRU settings from the registry: allow MAXMRU entries.

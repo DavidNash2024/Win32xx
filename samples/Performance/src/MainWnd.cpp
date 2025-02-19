@@ -20,11 +20,6 @@ CMainWindow::CMainWindow() : m_testMessages(0), m_testWindows(0), m_windowsCreat
     m_frequency = li.QuadPart;
 }
 
-// Destructor.
-CMainWindow::~CMainWindow()
-{
-}
-
 // Creates the main window.
 HWND CMainWindow::Create(HWND hParent /*= nullptr*/)
 {

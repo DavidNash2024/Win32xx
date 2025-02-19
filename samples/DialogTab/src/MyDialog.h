@@ -13,7 +13,7 @@ class CButtonDialog : public CDialog
 {
 public:
     CButtonDialog(UINT resID);
-    virtual ~CButtonDialog() override;
+    virtual ~CButtonDialog() override = default;
 
 protected:
     // Virtual functions that override base class functions
@@ -47,7 +47,7 @@ class CComboBoxDialog : public CDialog
 {
 public:
     CComboBoxDialog (int resID);
-    virtual ~CComboBoxDialog() override;
+    virtual ~CComboBoxDialog() override = default;
 
 protected:
     // Virtual functions overriding base class functions
@@ -73,7 +73,7 @@ class CMyDialog : public CDialog
 {
 public:
     CMyDialog(int resID);
-    virtual ~CMyDialog() override;
+    virtual ~CMyDialog() override = default;
 
 protected:
     // Virtual functions overriding base class functions

@@ -17,11 +17,6 @@ using namespace std;
 // CMyTabbedMDI function definitions
 //
 
-// Constructor.
-CMyTabbedMDI::CMyTabbedMDI()
-{
-}
-
 // Adds a new MDI. The mdiChild parameter specifies the MDI type.
 WndPtr CMyTabbedMDI::NewMDIChildFromID(int mdiChild)
 {

@@ -16,7 +16,7 @@ class CDarkPreview : public CPrintPreview<T>
 public:
     CDarkPreview() : m_isDarkMode(false) {}
     CDarkPreview(T& source) : CPrintPreview<T>(source), m_isDarkMode(false) {}
-    virtual ~CDarkPreview() override {}
+    virtual ~CDarkPreview() override = default;
 
     LRESULT OnCtlColors(UINT, WPARAM wparam, LPARAM);
     LRESULT OnDrawItem(WPARAM, LPARAM lparam);

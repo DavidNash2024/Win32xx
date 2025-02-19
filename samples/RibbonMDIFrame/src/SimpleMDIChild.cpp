@@ -82,10 +82,6 @@ CSimpleMDIChild::CSimpleMDIChild()
     SetHandles(m_menu, 0);
 }
 
-CSimpleMDIChild::~CSimpleMDIChild()
-{
-}
-
 int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window caption.

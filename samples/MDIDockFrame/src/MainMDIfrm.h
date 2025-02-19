@@ -13,8 +13,8 @@
 class CMainMDIFrame : public CMDIDockFrame
 {
 public:
-    CMainMDIFrame();
-    virtual ~CMainMDIFrame() override;
+    CMainMDIFrame() = default;
+    virtual ~CMainMDIFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:

@@ -163,6 +163,18 @@
     <ClInclude Include="..\..\..\include\wxx_messagepump.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\TestApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TestWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Win32++">
@@ -185,6 +197,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TestApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TestWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

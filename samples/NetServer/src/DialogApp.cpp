@@ -15,11 +15,6 @@ CDialogApp::CDialogApp() : m_svrDialog(IDD_SERVER)
 {
 }
 
-// Destructor.
-CDialogApp::~CDialogApp()
-{
-}
-
 // Called when the application starts.
 BOOL CDialogApp::InitInstance()
 {

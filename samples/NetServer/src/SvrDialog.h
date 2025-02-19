@@ -21,7 +21,7 @@ class CTCPClientDlg : public CDialog
 {
 public:
     CTCPClientDlg(UINT resID);
-    virtual ~CTCPClientDlg() override {}
+    virtual ~CTCPClientDlg() override = default;
     ServerSocketPtr& ServerSocket() { return m_pSocket; }
     void Receive();
     void Send();

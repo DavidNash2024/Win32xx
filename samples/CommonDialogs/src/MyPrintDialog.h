@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (MyPrintDialog.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]          (MyPrintDialog.h) *
 ********************************************************************************
 |                    Authors: Robert Tausworthe, David Nash                    |
 |                                                                              |
@@ -27,15 +27,14 @@ MyPrintDialog : public CPrintDialog                                         /*
         MyPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES |
             PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION | PD_ENABLEPRINTHOOK)
             :   CPrintDialog(dwFlags) {}
-        virtual ~MyPrintDialog() override {}
+        virtual ~MyPrintDialog() override = default;
 
         void    SetBoxTitle (LPCWSTR title) {m_sPDTitle  = title;}
-        void    SetWindowTitle() const { SetWindowText(m_sPDTitle); }
 
     protected:
         virtual BOOL    OnInitDialog() override
         {
-            SetWindowTitle();
+            SetWindowText(m_sPDTitle);
             HWND hbtn = FindWindowEx(*this, nullptr, L"Button", L"OK");
             if (hbtn != nullptr)
                 ::SetWindowText(hbtn, L"&Print");
@@ -67,18 +66,18 @@ MyPageSetup : public CPageSetupDialog                                   /*
 {
     public:
         MyPageSetup(DWORD dwFlags = PSD_MARGINS)
-            :   CPageSetupDialog(dwFlags) { }
-        virtual ~MyPageSetup() override {}
+            :   CPageSetupDialog(dwFlags) {}
+        virtual ~MyPageSetup() override = default;
 
           // Record the title of the page setup dialog box after an object
           // of this class is constructed, but before DoModal() is invoked.
        void SetBoxTitle(LPCWSTR title) {m_PSDTitle = title;}
-       void SetWindowTitle() const { SetWindowText(m_PSDTitle); }
 
     protected:
           //  Override this member method to perform special processing
           //  when the printer box is initialized. Return TRUE.
-        virtual BOOL OnInitDialog() override {SetWindowTitle(); return TRUE;}
+        virtual BOOL OnInitDialog() override
+        { SetWindowText(m_PSDTitle); return TRUE;}
 
           // Override this member to perform any special processing to reset
           // the printer to its incoming state. For now just announce that

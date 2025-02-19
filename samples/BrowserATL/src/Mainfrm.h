@@ -16,8 +16,8 @@
 class CMainFrame : public CFrame
 {
 public:
-    CMainFrame(void);
-    virtual ~CMainFrame() override;
+    CMainFrame() = default;
+    virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
     IWebBrowser2* GetBrowser() { return m_view.GetIWebBrowser2(); }

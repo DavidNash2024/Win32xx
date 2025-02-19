@@ -24,8 +24,8 @@ struct PlotPoint
 class CDoc : public CObject
 {
 public:
-    CDoc() {}
-    virtual ~CDoc() override {}
+    CDoc() = default;
+    virtual ~CDoc() override = default;
     std::vector<PlotPoint>& GetAllPoints() { return m_points; }   // returns a vector of PlotPoint data
     void FileOpen(LPCWSTR filename);
     void FileSave(LPCWSTR filename);

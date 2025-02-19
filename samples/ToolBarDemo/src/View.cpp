@@ -9,9 +9,6 @@
 //////////////////////////////
 // CView function definitions.
 //
-CView::CView()
-{
-}
 
 void CView::DpiScaleToolBar()
 {
@@ -152,7 +149,7 @@ BOOL CView::OnLeft()
 
 
 // Called when a notification is received from a child window.
-inline LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
+LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
     switch (pHeader->code)

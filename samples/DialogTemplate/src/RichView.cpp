@@ -11,11 +11,6 @@
 // CRichView function definitions
 //
 
-// Constructor.
-CRichView::CRichView()
-{
-}
-
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
 int CRichView::CollatePages()
@@ -129,6 +124,9 @@ void CRichView::OnAttach()
     GetDefaultCharFormat(cf);
     cf.dwEffects = 0;
     StrCopy(cf.szFaceName, L"Consolas", LF_FACESIZE);
+    constexpr int twipsPerPoint = 20;
+    constexpr int fontSize = 10;
+    cf.yHeight = fontSize * twipsPerPoint;
     SetDefaultCharFormat(cf);
 
     // Support Drag and Drop on this window

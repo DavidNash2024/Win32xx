@@ -14,18 +14,14 @@
 // Constructor.
 CMainFrame::CMainFrame() : m_isDPIChanging(false)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_view);
-}
-
-// Destructor.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\Picture Sample");
@@ -56,8 +52,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDM_FILE_NEW:          return OnFileNew();
     case IDM_FILE_OPEN:         return OnFileOpen();
-    case IDM_FILE_SAVE:         return OnFileSaveAs();
-    case IDM_FILE_SAVEAS:       return OnFileSaveAs();
+    case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -174,7 +169,7 @@ LRESULT CMainFrame::OnFileLoaded(LPCWSTR fileName)
 }
 
 // Displays the file choose dialog and saves the image to the file.
-BOOL CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSave()
 {
     if (m_view.GetPicture())
     {

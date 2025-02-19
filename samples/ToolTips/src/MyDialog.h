@@ -12,8 +12,8 @@
 class CBalloonToolTip : public CToolTip
 {
 public:
-    CBalloonToolTip() {}
-    virtual ~CBalloonToolTip() override {}
+    CBalloonToolTip() = default;
+    virtual ~CBalloonToolTip() override = default;
 
 protected:
     virtual void PreCreate(CREATESTRUCT& cs) override;
@@ -31,7 +31,7 @@ class CMyDialog : public CDialog
 {
 public:
     CMyDialog(UINT resID);
-    virtual ~CMyDialog() override;
+    virtual ~CMyDialog() override = default;
 
 protected:
     // Virtual functions that override base class functions

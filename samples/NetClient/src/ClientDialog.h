@@ -17,7 +17,7 @@ class CClientDialog : public CDialog
 {
 public:
     CClientDialog(UINT resID);
-    virtual ~CClientDialog() override;
+    virtual ~CClientDialog() override = default;
 
     LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
 

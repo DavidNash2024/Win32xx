@@ -12,9 +12,9 @@
 class CView : public CWnd
 {
 public:
-    CView() {}
+    CView() = default;
     virtual void OnDestroy() override { PostQuitMessage(0); } // End the program.
-    virtual ~CView() override {}
+    virtual ~CView() override = default;
 };
 
 
@@ -24,8 +24,8 @@ public:
 class CSimpleApp : public CWinApp
 {
 public:
-    CSimpleApp() {}
-    virtual ~CSimpleApp() override {}
+    CSimpleApp() = default;
+    virtual ~CSimpleApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

@@ -18,8 +18,8 @@
 class CClientSocket : public CSocket
 {
 public:
-    CClientSocket() {}
-    virtual ~CClientSocket() override {}
+    CClientSocket() = default;
+    virtual ~CClientSocket() override = default;
 
 protected:
     // Virtual functions that override base class functions,

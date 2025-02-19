@@ -16,7 +16,7 @@
 class CDialogsTree : public CTreeView
 {
 public:
-    CDialogsTree();
+    CDialogsTree() = default;
     virtual ~CDialogsTree() override;
 
     void FillTree(const std::vector<ResourceInfo>& allInfo, LPCWSTR fileName);
@@ -46,7 +46,7 @@ class CDockDialogsTree : public CDocker
 {
 public:
     CDockDialogsTree();
-    virtual ~CDockDialogsTree() override {}
+    virtual ~CDockDialogsTree() override = default;
     CDialogsTree* GetTree() { return &m_tree; }
 
 protected:

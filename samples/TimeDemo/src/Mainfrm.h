@@ -1,4 +1,4 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
+/* (21-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |
@@ -22,7 +22,6 @@
 
 #include "View.h"
 #include "AboutBox.h"
-#include "MRU.h"
 
 
 /*============================================================================*/
@@ -35,15 +34,13 @@ CMainFrame : public CFrame                      /*
 {
     public:
                     CMainFrame();
-        virtual     ~CMainFrame() override {}
+        virtual     ~CMainFrame() override = default;
+        virtual HWND Create(HWND parent = nullptr) override;
         void        SetAppName(const CString& appName)
                                     { m_appName = appName; }
-        void        SetArcFileName(const CString& arcName)
-                                    { m_arcName = arcName; }
         void        SetWindowTitle(const CString &title = L"");
         CView&      TheView()       {return m_view;}
         CDoc&       ThisDoc()       {return m_view.TheDoc();}
-        CMRU&       TheMRU()        {return m_MRU;};
         AboutBox&   GetAboutBox()   { return m_aboutDialog; }
 
         static const CString m_compiledOn; // compilation date
@@ -52,10 +49,7 @@ CMainFrame : public CFrame                      /*
 
         virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
         virtual int     OnCreate(CREATESTRUCT& cs) override;
-        virtual void    OnDestroy() override;
         virtual void    OnInitialUpdate() override;
-        virtual void    PreCreate(CREATESTRUCT& cs) override;
-        virtual void    Serialize(CArchive &ar) override;
         virtual void    SetupMenuIcons() override;
         virtual void    SetupToolBar() override;
         virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -68,28 +62,16 @@ CMainFrame : public CFrame                      /*
         void    OnFileExit();
         void    OnFileNew();
         void    OnFileOpen();
-        bool    OnFileOpenMRU(UINT);
         void    OnFileSave();
         void    OnFileSaveAs();
         void    OnFontChoice();
         BOOL    OnHelpAbout();
-        BOOL    OnProcessMRU(WPARAM wparam, LPARAM lparam);
 
           // private data members
         AboutBox   m_aboutDialog;  // about dialog object
-        CMRU       m_MRU;          // the MRU list object
         CView      m_view;         // the view object
 
         CString    m_appName;      // application name
-        CString    m_arcName;      // archive file name
-
-        UINT       m_xWin;        // deserialized window x position
-        UINT       m_yWin;        // deserialized window y position
-        UINT       m_cxWin;       // deserialized window width
-        UINT       m_cyWin;       // deserialized window height
-        WINDOWPLACEMENT m_plWnd;  // window placement information
-
-        const size_t m_maxMRUEntries;
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_MAINFRM_H

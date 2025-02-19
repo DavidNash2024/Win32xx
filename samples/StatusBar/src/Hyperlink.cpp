@@ -14,16 +14,8 @@ CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false),
 {
     m_urlName = L"Win32++";
 
-    // Create the cursor.
+    // Create the hand cursor.
     m_hCursor = ::LoadCursor(nullptr, IDC_HAND);
-
-    // IDC_HAND is not available on Win95, so load a reasonable alternative.
-    if( !m_hCursor )
-        m_hCursor = ::LoadCursor(nullptr, IDC_ARROW);
-}
-
-CHyperlink::~CHyperlink()
-{
 }
 
 void CHyperlink::OnAttach()

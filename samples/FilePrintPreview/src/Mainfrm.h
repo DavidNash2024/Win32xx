@@ -29,7 +29,7 @@ CMainFrame : public CFrame                                                  /*
 {
     public:
         CMainFrame();
-        virtual ~CMainFrame() override {}
+        virtual ~CMainFrame() override = default;
         virtual HWND Create(HWND parent = nullptr) override;
         const CString& GetPath() const  { return m_path;}
         CRichView&  GetRichView()       { return m_richView; }

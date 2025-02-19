@@ -15,11 +15,6 @@ CViewDialog::CViewDialog(UINT resID) : CDialog(resID)
 {
 }
 
-// Destructor.
-CViewDialog::~CViewDialog()
-{
-}
-
 // This function appends text to an edit control.
 void CViewDialog::AppendText(int nID, LPCWSTR text)
 {

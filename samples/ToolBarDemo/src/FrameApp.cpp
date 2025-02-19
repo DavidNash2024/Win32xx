@@ -8,13 +8,6 @@
 ////////////////////////////////////////
 // CToolBarDemoApp function definitions.
 //
-CToolBarDemoApp::CToolBarDemoApp()
-{
-}
-
-CToolBarDemoApp::~CToolBarDemoApp()
-{
-}
 
 BOOL CToolBarDemoApp::InitInstance()
 {

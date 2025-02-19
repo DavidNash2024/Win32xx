@@ -15,8 +15,8 @@
 class CTextApp : public CWinApp
 {
 public:
-    CTextApp();
-    virtual ~CTextApp() override {}
+    CTextApp() = default;
+    virtual ~CTextApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

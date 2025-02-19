@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                  (Doc.cpp) *
+/* (22-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                  (Doc.cpp) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -63,9 +63,7 @@ AddRecord(const CStringW& entry)                                            /*
     BOOL CDoc::
 CloseDoc()                                                                  /*
 
-    Perform any cleanup necessary to close the document, except for
-    serialization chores, which are performed separately, in the
-    Serialize() member.
+    Perform any cleanup necessary to close the document.
 *-----------------------------------------------------------------------------*/
 {
     m_isOpen = FALSE;
@@ -179,8 +177,6 @@ IsOpen() const                                                              /*
 OpenDoc(LPCWSTR filename)                                                   /*
 
     Open the document from the given filename and populate the record array.
-    State parameters that were serialized in the prior execution will have
-    already been loaded.
 *-----------------------------------------------------------------------------*/
 {
     BOOL ok = FALSE; // declare default return value
@@ -222,7 +218,7 @@ OpenDoc(LPCWSTR filename)                                                   /*
           // resize the file buffer to fit content
         m_buffer.resize(doclen);
           // read the entire file contents into the buffer
-        UINT n = m_file.Read((void*)&m_buffer[0], doclen);
+        UINT n = m_file.Read(m_buffer.data(), doclen);
         if (n != doclen)
             throw CFileException(L"Reading the file failed.");
 

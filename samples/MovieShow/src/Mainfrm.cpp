@@ -92,13 +92,6 @@ CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_searchItem(nullptr), m_
                            m_pDockDialog(nullptr), m_isDirty(false), m_boxSetsItem(0),
                            m_dialogHeight(0), m_treeWidth(0)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_viewList);
-}
-
-// Destructor.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Clears the contents of the movie info dialog.
@@ -121,6 +114,9 @@ void CMainFrame::ClearList()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_viewList);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\MovieShow");
@@ -476,7 +472,7 @@ std::vector<CString> CMainFrame::GetBoxSets()
     HTREEITEM item = GetViewTree().GetChild(m_boxSetsItem);
     while (item != 0)
     {
-        boxSets.push_back(GetViewTree().GetItemText(item));
+        boxSets.emplace_back(GetViewTree().GetItemText(item));
         item = GetViewTree().GetNextSibling(item);
     };
 
@@ -583,18 +579,18 @@ void CMainFrame::LoadMovies()
 {
     // Information about MediaInfo.
     MediaInfo MI;
+    CString dataPath = GetDataPath();
+    CString dataFile = GetDataPath() + L"\\" + L"MovieData.bin";
+    SHCreateDirectoryEx(nullptr, dataPath.c_str(), nullptr);
+    CSplash* pSplash = m_splashThread.GetSplash();
 
-    CString DataPath = GetDataPath();
-    CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-    SHCreateDirectoryEx(nullptr, DataPath.c_str(), nullptr);
-
-    if (PathFileExists(DataFile))
+    if (PathFileExists(dataFile))
     {
         try
         {
             // Display the splash screen.
-            m_splashThread.GetSplash()->ShowText(L"", this);
-            m_splashThread.GetSplash()->ShowText(L"Loading Library", this);
+            pSplash->ShowText(L"", this);
+            pSplash->ShowText(L"Loading Library", this);
 
             // Lock this code for thread safety.
             CThreadLock lock(m_cs);
@@ -602,7 +598,7 @@ void CMainFrame::LoadMovies()
             m_moviesData.clear();
             TRACE("Loading Movies Data\n");
 
-            CArchive ar(DataFile, CArchive::load);
+            CArchive ar(dataFile, CArchive::load);
             UINT nBoxSets;
             ar >> nBoxSets;
             for (UINT i = 0; i < nBoxSets; ++i)
@@ -644,7 +640,7 @@ void CMainFrame::LoadMovies()
         }
         catch (const CFileException& e)
         {
-            m_splashThread.GetSplash()->Hide();
+            pSplash->Hide();
             Trace(e.GetErrorString()); Trace("\n");
             ::MessageBox(nullptr, L"Failed to load Movie Library", L"Error", MB_OK);
             m_moviesData.clear();
@@ -720,25 +716,19 @@ BOOL CMainFrame::OnAddFolder()
         fd.SetTitle(L"Choose a folder to add to the video library.");
         if (fd.DoModal(*this) == IDOK)
         {
-            CString DataPath = GetDataPath();
-            CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-            ::SHCreateDirectoryEx(nullptr, DataPath.c_str(), nullptr);
+            // Lock this code for thread safety.
+            CThreadLock lock(m_cs);
 
+            // Remove entries from the library if the file has been removed.
+            for (auto it = m_moviesData.begin(); it != m_moviesData.end();)
             {
-                // Lock this code for thread safety.
-                CThreadLock lock(m_cs);
-
-                // Remove entries from the library if the file has been removed.
-                for (auto it = m_moviesData.begin(); it != m_moviesData.end();)
+                if (!::PathFileExists((*it).fileName))
                 {
-                    if (!::PathFileExists((*it).fileName))
-                    {
-                        TRACE((*it).fileName); TRACE("  removed from library\n");
-                        it = m_moviesData.erase(it);
-                    }
-                    else
-                        ++it;
+                    TRACE((*it).fileName); TRACE("  removed from library\n");
+                    it = m_moviesData.erase(it);
                 }
+                else
+                    ++it;
             }
 
             CString searchString = fd.GetFolderPath() + L"\\*.m??";
@@ -847,13 +837,13 @@ void CMainFrame::OnClose()
         // The splash window is destroyed when splash goes out of scope.
         m_splashThread.GetSplash()->ShowText(L"Saving Library", this);
 
-        CString DataPath = GetDataPath();
-        CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-        ::SHCreateDirectoryEx(nullptr, DataPath.c_str(), nullptr);
+        CString dataPath = GetDataPath();
+        CString dataFile = GetDataPath() + L"\\" + L"MovieData.bin";
+        ::SHCreateDirectoryEx(nullptr, dataPath.c_str(), nullptr);
 
         try
         {
-            CArchive ar(DataFile, CArchive::store);
+            CArchive ar(dataFile, CArchive::store);
             std::vector<CString> boxSets = GetBoxSets();
             ar << UINT(boxSets.size());
             for (size_t i = 0; i < boxSets.size(); ++i)
@@ -1014,6 +1004,18 @@ void CMainFrame::OnFilesLoaded()
     HTREEITEM item = GetViewTree().GetSelection();
     GetViewTree().SelectItem(0);
     GetViewTree().SelectItem(item);
+}
+
+// Call when the Help button or F1 is pressed.
+BOOL CMainFrame::OnHelp()
+{
+    // Ensure only one dialog displayed even for multiple hits of the F1 button
+    if (!m_aboutDialog.IsWindow())
+    {
+        m_aboutDialog.DoModal(*this);
+    }
+
+    return TRUE;
 }
 
 // Called after the frame is created, but before it is displayed.
@@ -1240,7 +1242,7 @@ BOOL CMainFrame::OnRemoveFile()
                 break;
             }
             else
-                it++;
+                ++it;
         }
     }
 
@@ -1566,12 +1568,15 @@ void CMainFrame::SetCaptionColor(COLORREF color)
     HMODULE dwmapi = ::LoadLibrary(L"Dwmapi.dll");
     if (dwmapi != 0)
     {
-        typedef UINT WINAPI DWMSETWINDOWATTRIBUE(HWND, DWORD, LPCVOID, DWORD);
-        DWMSETWINDOWATTRIBUE* pDwmSetWindowAttribute = reinterpret_cast<DWMSETWINDOWATTRIBUE*>(
+        using PDWMSETWINDOWATTRIBUE = UINT (WINAPI*)(HWND, DWORD, LPCVOID, DWORD);
+        PDWMSETWINDOWATTRIBUE pDwmSetWindowAttribute = reinterpret_cast<PDWMSETWINDOWATTRIBUE>(
             reinterpret_cast<void*>(::GetProcAddress(dwmapi, "DwmSetWindowAttribute")));
 
-        const int DWMWA_CAPTION_COLOR = 35;
-        pDwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
+        if (pDwmSetWindowAttribute != nullptr)
+        {
+            const int DWMWA_CAPTION_COLOR = 35;
+            pDwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
+        }
         ::FreeLibrary(dwmapi);
     }
 }
@@ -1646,8 +1651,9 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
 
         pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, TRUE);
         splash->ShowText(L"Updating Library", pFrame);
-        splash->GetBar().ShowWindow(SW_SHOW);
-        splash->GetBar().SetRange(0, (short)pFrame->m_filesToAdd.size());
+        const CProgressBar& progressBar = splash->GetBar();
+        progressBar.ShowWindow(SW_SHOW);
+        progressBar.SetRange(0, (short)pFrame->m_filesToAdd.size());
 
         unsigned short barPos = 0;
         for (size_t i = 0; i < pFrame->m_filesToAdd.size(); i++)
@@ -1663,7 +1669,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             barPos++;
 
             // Update the splash screen's progress bar.
-            splash->GetBar().SetPos(barPos);
+            progressBar.SetPos(barPos);
 
             CString fullName = pFrame->m_filesToAdd[i].fileName;
             bool isFileInLibrary = false;
@@ -1714,8 +1720,6 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         // Report the error in a message  box.
         ::MessageBox(nullptr, MI.Inform().c_str(), L"Error", MB_OK);
     }
-
-
 
     pFrame->OnFilesLoaded();
     pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, FALSE);

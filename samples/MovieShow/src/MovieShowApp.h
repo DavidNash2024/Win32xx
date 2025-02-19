@@ -15,8 +15,8 @@
 class CMovieShowApp : public CWinApp
 {
 public:
-    CMovieShowApp();
-    virtual ~CMovieShowApp() override;
+    CMovieShowApp() = default;
+    virtual ~CMovieShowApp() override = default;
     CMovieShowApp(const CMovieShowApp&) = delete;
     CMovieShowApp& operator=(const CMovieShowApp&) = delete;
 

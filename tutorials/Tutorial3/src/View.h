@@ -17,8 +17,8 @@
 class CView : public CWnd
 {
 public:
-    CView();
-    virtual ~CView() override;
+    CView() = default;
+    virtual ~CView() override = default;
 
     void DrawLine(int x, int y);
 

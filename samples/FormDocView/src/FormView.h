@@ -15,7 +15,7 @@ class CFormView : public CDialog
 {
 public:
     CFormView(UINT resID);
-    virtual ~CFormView() override;
+    virtual ~CFormView() override = default;
     CFormDoc& GetDoc();
 
     // Command handlers

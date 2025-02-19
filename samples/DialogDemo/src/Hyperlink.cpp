@@ -15,15 +15,6 @@ CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false), m_crVisite
 {
     // Create the cursor
     m_cursor = ::LoadCursor(nullptr, IDC_HAND);
-
-    // IDC_HAND is not available on Win95, so load a reasonable alternative
-    if( !m_cursor )
-        m_cursor = ::LoadCursor(nullptr, IDC_ARROW);
-}
-
-// Destructor.
-CHyperlink::~CHyperlink()
-{
 }
 
 // Called when the left mouse button is clicked.

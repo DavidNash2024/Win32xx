@@ -1,7 +1,7 @@
 [Project]
 FileName=MakeDLL_RELEASE.dev
 Name=MyDLL
-UnitCount=8
+UnitCount=10
 Type=3
 Ver=2
 ObjFiles=
@@ -82,18 +82,18 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\src\Resource.rc
+FileName=..\src\StdAfx.cpp
 CompileCpp=1
-Folder=Resource
+Folder=Source
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\src\StdAfx.cpp
-Folder=Source
+FileName=..\src\StdAfx.h
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -102,11 +102,11 @@ BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=..\src\StdAfx.h
+FileName=..\src\ResourceDLL.rc
 CompileCpp=1
-Folder=Header
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -129,4 +129,24 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 SyncProduct=0
+
+[Unit9]
+FileName=..\src\MyWinThread.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
+FileName=..\src\MyWinThread.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

@@ -10,16 +10,6 @@
 // CEdit function definitions
 //
 
-// Constructor.
-CMyEdit::CMyEdit()
-{
-}
-
-// Destructor.
-CMyEdit::~CMyEdit()
-{
-}
-
 // Called when the edit control receives a character to process.
 LRESULT CMyEdit::OnChar(UINT msg, WPARAM wparam, LPARAM lparam)
 {

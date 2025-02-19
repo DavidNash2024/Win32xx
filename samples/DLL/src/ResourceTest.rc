@@ -27,7 +27,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN               ICON                    "../src/res/Dialog.ico"
+IDW_MAIN               ICON                    "../src/res/Simple.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -39,8 +39,25 @@ IDW_MAIN               ICON                    "../src/res/Dialog.ico"
 
 1                     RT_MANIFEST           "../src/res/PerMonitorV2.manifest"
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Show Dialog",                IDM_VIEW_DIALOG
+    END
+END
 
 #ifdef APSTUDIO_INVOKED
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXTINCLUDE
@@ -67,6 +84,15 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "DLL Test Application"
+END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

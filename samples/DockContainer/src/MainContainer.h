@@ -12,8 +12,8 @@
 class CMainContainer : public CDockContainer
 {
 public:
-    CMainContainer() {}
-    virtual ~CMainContainer() override {}
+    CMainContainer() = default;
+    virtual ~CMainContainer() override = default;
 
 protected:
     // Virtual functions that override base class functions.

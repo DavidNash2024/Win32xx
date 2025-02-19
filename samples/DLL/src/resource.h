@@ -25,6 +25,8 @@
 #define IDC_STATIC3                     152
 #define IDC_HOTKEY1                     160
 #define IDB_BITMAP1                     170
+#define IDM_FILE_EXIT                   180
+#define IDM_VIEW_DIALOG                 181
 
 // Next default values for new objects
 //

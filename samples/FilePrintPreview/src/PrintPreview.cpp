@@ -182,13 +182,13 @@ InitializeControls()                                                        /*
 {
       // load the directional button bitmaps
     m_firstPage.LoadBitmap(IDB_PREVIEW_FIRST);
-    m_buttonFirst.SetBitmap((HBITMAP)m_firstPage);
     m_prevPage.LoadBitmap(IDB_PREVIEW_PREV);
-    m_buttonPrev.SetBitmap((HBITMAP)m_prevPage);
     m_nextPage.LoadBitmap(IDB_PREVIEW_NEXT);
-    m_buttonNext.SetBitmap((HBITMAP)m_nextPage);
     m_lastPage.LoadBitmap(IDB_PREVIEW_LAST);
-    m_buttonLast.SetBitmap((HBITMAP)m_lastPage);
+    m_buttonFirst.SetBitmap(m_firstPage);
+    m_buttonPrev.SetBitmap(m_prevPage);
+    m_buttonNext.SetBitmap(m_nextPage);
+    m_buttonLast.SetBitmap(m_lastPage);
       // enable resizing the preview pane of the dialog
     m_resizer.Initialize(*this, CRect(0, 0, 0, 0));
     m_resizer.AddChild(m_previewPane, CResizer::topleft,
@@ -778,10 +778,9 @@ OnDraw(CDC& dc)                                                             /*
           // determine the size of the PreviewPane window with a border
           // around the area used to show the bitmap
         DSize zoom = GetZoom();
-        CSize
-            client = GetClientRect().Size(),
-            preview(client.cx - (2 * BORDER), client.cy - (2 * BORDER)),
-            bitmap(bm.bmWidth, bm.bmHeight);
+        CSize client = GetClientRect().Size();
+        CSize preview(client.cx - (2 * BORDER), client.cy - (2 * BORDER));
+        CSize bitmap(bm.bmWidth, bm.bmHeight);
           // compute the scroll position p for the page
         CPoint p(0, 0);
         if (m_zoomState != FIT_PAGE)

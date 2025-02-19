@@ -15,8 +15,8 @@
 class CThemesApp : public CWinApp
 {
 public:
-    CThemesApp();
-    virtual ~CThemesApp() override;
+    CThemesApp() = default;
+    virtual ~CThemesApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

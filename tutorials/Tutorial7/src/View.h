@@ -27,7 +27,7 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView() override;
+    virtual ~CView() override = default;
 
     COLORREF GetPenColor() { return m_penColor; }
     void SetPenColor(COLORREF color) { m_penColor = color; }

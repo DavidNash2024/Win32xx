@@ -18,7 +18,7 @@ class CLeftPane : public CDocker
 {
 public:
     CLeftPane();
-    virtual ~CLeftPane() override {}
+    virtual ~CLeftPane() override = default;
 
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

@@ -16,8 +16,8 @@
 class CMainFrame : public CFrame
 {
 public:
-    CMainFrame();
-    virtual ~CMainFrame() override;
+    CMainFrame() = default;
+    virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:

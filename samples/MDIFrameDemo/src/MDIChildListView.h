@@ -12,7 +12,7 @@
 class CViewList : public CListView
 {
 public:
-    CViewList();
+    CViewList() = default;
     virtual ~CViewList() override;
 
 protected:
@@ -36,7 +36,7 @@ class CMDIChildList : public CMDIChild
 {
 public:
     CMDIChildList();
-    virtual ~CMDIChildList() override;
+    virtual ~CMDIChildList() override = default;
 
 protected:
     // Virtual functions that override base class functions

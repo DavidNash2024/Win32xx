@@ -1,9 +1,23 @@
 DialogTemplate Sample
 =====================
+A dialog box template is the binary data that describes the dialog box.
+A dialog template can be used as an alternative to a resource script
+to define and create a dialog. The CDialog class can use the dialog
+template to create the dialog.
+
 This program identifies the dialogs within the selected exe or dll file
 and displays them in a tree view. When a dialog is selected in the 
 tree view, the dialog template is written to rich edit view in a form
 that can be copied to another program.
+
+The program will reconstruct the dialog template array from the text
+output in the rich edit view. It will then use this array with CDialog
+to display the dialog.
+
+The contents of the rich edit view can be saved to a header file.
+
+Note that this application will fail to display a dialog if it contains
+a custom control.
 
 Features demonstrated in this example
 =====================================
@@ -18,14 +32,3 @@ Features demonstrated in this example
 * How to use OnIdle to dynamically update the toolbar buttons.
 * How to use OnMenuUpdate to dynamically update enable state of the menu items.
  
-
-The program will reconstruct the dialog template array from the text
-output in the rich edit view. It will then use this array to display the
-dialog.
-
-The contents of the rich edit view can be saved to a header file.
-
-Note that the application will fail to display a dialog if it contains
-a custom control.
-
-

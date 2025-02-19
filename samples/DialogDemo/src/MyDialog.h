@@ -17,7 +17,7 @@ class CMyDialog : public CDialog
 public:
     CMyDialog(UINT resID);
     CMyDialog(LPCWSTR resName);
-    virtual ~CMyDialog() override;
+    virtual ~CMyDialog() override = default;
 
     void SetStatic(LPCWSTR text);
     void SetURLFont();

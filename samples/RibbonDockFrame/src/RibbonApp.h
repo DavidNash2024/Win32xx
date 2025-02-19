@@ -14,8 +14,8 @@
 class CRibbonFrameApp : public CWinApp
 {
 public:
-    CRibbonFrameApp();
-    virtual ~CRibbonFrameApp() override;
+    CRibbonFrameApp() = default;
+    virtual ~CRibbonFrameApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

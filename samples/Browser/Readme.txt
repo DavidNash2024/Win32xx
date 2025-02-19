@@ -15,7 +15,7 @@ Features demonstrated in this example
 * Use of CWebBrowser as a view window for the frame.
 * Use of an event sink to get notification of browser events.
 * Use of 32bit bitmaps for the toolbar.
-* Use of Hot and Disabled image lists for the toolbar.
+* Use of hot and disabled image lists for the toolbar.
 * Adding icons for popup menu items.
 * Use of a ComboBoxEx control in the rebar.
 * Printing the contents of a WebBrowser.

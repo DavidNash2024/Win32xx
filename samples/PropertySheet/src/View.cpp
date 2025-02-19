@@ -9,11 +9,6 @@
 // CView function definitions
 //
 
-// Constructor.
-CView::CView()
-{
-}
-
 // Called when part of the view window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {

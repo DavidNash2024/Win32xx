@@ -12,11 +12,6 @@
 // CViewFiles function definitions
 //
 
-// Constructor.
-CViewFiles::CViewFiles()
-{
-}
-
 // Destructor.
 CViewFiles::~CViewFiles()
 {

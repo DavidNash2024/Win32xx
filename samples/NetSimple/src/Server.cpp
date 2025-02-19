@@ -22,8 +22,8 @@ SOCKADDR g_saUDPClient;
 class CServerSocket : public CSocket
 {
 public:
-    CServerSocket() {}
-    virtual ~CServerSocket() {}
+    CServerSocket() = default;
+    virtual ~CServerSocket() = default;
     virtual void OnReceive()
     {
         // This function is called automatically when there is data to receive.

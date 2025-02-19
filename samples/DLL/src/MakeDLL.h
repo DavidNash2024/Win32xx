@@ -13,7 +13,7 @@ BOOL WINAPI DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserve
 extern "C"  // Required by MinGW compiler to avoid name mangling
 {
     // The list of exported dll functions go here
-    void __declspec(dllexport) ShowDialog();
+    __declspec(dllexport) void ShowDialog();
 }
 
 

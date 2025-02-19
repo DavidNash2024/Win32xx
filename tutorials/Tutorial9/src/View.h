@@ -22,7 +22,7 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView();
+    virtual ~CView() = default;
 
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();

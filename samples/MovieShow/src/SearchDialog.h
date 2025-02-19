@@ -13,7 +13,7 @@ class CSearchDialog : public CDialog
 {
 public:
     CSearchDialog(UINT resID);
-    virtual ~CSearchDialog() override;
+    virtual ~CSearchDialog() override = default;
     CSearchDialog(const CSearchDialog&) = delete;
     CSearchDialog& operator=(const CSearchDialog&) = delete;
 

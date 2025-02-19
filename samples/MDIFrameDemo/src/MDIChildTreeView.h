@@ -12,7 +12,7 @@
 class CViewTree : public CTreeView
 {
 public:
-    CViewTree();
+    CViewTree() = default;
     virtual ~CViewTree() override;
 
 protected:
@@ -33,7 +33,7 @@ class CMDIChildTree : public CMDIChild
 {
 public:
     CMDIChildTree();
-    virtual ~CMDIChildTree() override;
+    virtual ~CMDIChildTree() override = default;
 
 protected:
     // Virtual functions that override base class functions

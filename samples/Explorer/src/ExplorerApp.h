@@ -14,7 +14,7 @@
 class CExplorerApp : public CWinApp
 {
 public:
-    CExplorerApp();
+    CExplorerApp() = default;
     virtual ~CExplorerApp() override;
     CMainFrame& GetMainFrame() { return m_frame; }
 

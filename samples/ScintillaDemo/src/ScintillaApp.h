@@ -15,8 +15,8 @@
 class ScintillaApp : public CWinApp
 {
 public:
-    ScintillaApp();
-    virtual ~ScintillaApp();
+    ScintillaApp() = default;
+    virtual ~ScintillaApp() = default;
 
 protected:
     // Virtual functions that override base class functions.

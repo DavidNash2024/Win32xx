@@ -8,16 +8,6 @@
 // CFastGDIApp function definitions
 //
 
-// Constructor.
-CFastGDIApp::CFastGDIApp()
-{
-}
-
-// Destructor.
-CFastGDIApp::~CFastGDIApp()
-{
-}
-
 // Called when the application starts.
 BOOL CFastGDIApp::InitInstance()
 {

@@ -12,8 +12,8 @@
 class CDoc : public CObject
 {
 public:
-    CDoc() {}
-    virtual ~CDoc() override {}
+    CDoc() = default;
+    virtual ~CDoc() override = default;
     void FileLoad(LPCWSTR filename);
     void FileStore(LPCWSTR filename);
 

@@ -92,11 +92,6 @@ CSimpleMDIChild::CSimpleMDIChild()
     SetHandles(m_menu, nullptr);
 }
 
-// Destructor.
-CSimpleMDIChild::~CSimpleMDIChild()
-{
-}
-
 // Called when the window is created.
 int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 {

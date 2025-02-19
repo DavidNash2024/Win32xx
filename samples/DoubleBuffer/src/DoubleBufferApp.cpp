@@ -9,16 +9,6 @@
 // CDoubleBufferApp function definitions
 //
 
-// Constructor.
-CDoubleBufferApp::CDoubleBufferApp()
-{
-}
-
-// Destructor.
-CDoubleBufferApp::~CDoubleBufferApp()
-{
-}
-
 // Called after the window is created.
 BOOL CDoubleBufferApp::InitInstance()
 {

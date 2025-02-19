@@ -9,8 +9,7 @@ void CStaticImage::DpiScaleImage()
 {
     m_patternImage.LoadBitmap(IDB_BITMAP1);
     m_patternImage = DpiScaleUpBitmap(m_patternImage);
-    LPARAM lparam = reinterpret_cast<LPARAM>(m_patternImage.GetHandle());
-    SendMessage(STM_SETIMAGE, IMAGE_BITMAP, lparam);
+    SetBitmap(m_patternImage);
 }
 
 void CStaticImage::OnAttach()

@@ -21,7 +21,3 @@ BOOL CDialogApp::InitInstance()
     return TRUE;
 }
 
-CDialogApp::~CDialogApp()
-{
-}
-

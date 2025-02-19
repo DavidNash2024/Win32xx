@@ -30,7 +30,8 @@
 class CEventSink : public IDispatch
 {
 public:
-    virtual ~CEventSink() {}
+    CEventSink() = default;
+    virtual ~CEventSink() = default;
 
     // IUnknown Methods
     virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) override;

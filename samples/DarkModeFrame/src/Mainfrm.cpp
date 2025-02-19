@@ -18,18 +18,14 @@
 // Constructor.
 CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(true)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_view);
-}
-
-// Destructor.
-CMainFrame::~CMainFrame()
-{
 }
 
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\DarkFrame");
@@ -60,7 +56,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDM_FILE_OPEN:       return OnFileOpen();
     case IDM_FILE_SAVE:       return OnFileSave();
-    case IDM_FILE_SAVEAS:     return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
     case IDM_FILE_PREVIEW:    return OnFilePreview();
     case IDM_FILE_PRINT:      return OnFilePrint();
     case IDM_FILE_EXIT:       return OnFileExit();
@@ -127,8 +123,16 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
-// Create the File Save dialog to choose the file to save.
+// Save the file.
 BOOL CMainFrame::OnFileSave()
+{
+    // ToDo: Add code to save the file.
+
+    return TRUE;
+}
+
+// Create the File Save dialog to choose the file to save.
+BOOL CMainFrame::OnFileSaveAs()
 {
     CString filter = "Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*|";
     CFileDialog fileDlg(FALSE);    // FALSE for file save.
@@ -139,6 +143,8 @@ BOOL CMainFrame::OnFileSave()
     if (fileDlg.DoModal(*this) == IDOK)
     {
         GetDoc().FileStore(fileDlg.GetPathName());
+
+        // ToDo: Add code to save the file.
     }
 
     return TRUE;

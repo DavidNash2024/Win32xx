@@ -13,7 +13,7 @@
 class CViewClasses : public CTreeView
 {
 public:
-    CViewClasses();
+    CViewClasses() = default;
     virtual ~CViewClasses() override;
     void SetDPIImages();
 
@@ -39,7 +39,7 @@ private:
 class CViewFiles : public CListView
 {
 public:
-    CViewFiles();
+    CViewFiles() = default;
     virtual ~CViewFiles() override;
     void SetDPIColumnWidths();
     void SetDPIImages();
@@ -68,8 +68,8 @@ private:
 class CViewSimple : public CWnd
 {
 public:
-    CViewSimple() {}
-    virtual ~CViewSimple() override {}
+    CViewSimple() = default;
+    virtual ~CViewSimple() override = default;
 
 protected:
     // Virtual functions that override base class functions.
@@ -93,8 +93,8 @@ private:
 class CViewText : public CRichEdit
 {
 public:
-    CViewText() {}
-    virtual ~CViewText() override {}
+    CViewText() = default;
+    virtual ~CViewText() override = default;
     void SetDPIFont();
 
 protected:

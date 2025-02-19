@@ -9,11 +9,6 @@
 // CDockingApp function definitions
 //
 
-// Constructor.
-CDockingApp::CDockingApp()
-{
-}
-
 // Called when the applications starts.
 BOOL CDockingApp::InitInstance()
 {

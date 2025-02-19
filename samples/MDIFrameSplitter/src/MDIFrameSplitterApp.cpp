@@ -9,11 +9,6 @@
 // CMDIFrameSplitterApp function definitions
 //
 
-// Constructor.
-CMDIFrameSplitterApp::CMDIFrameSplitterApp()
-{
-}
-
 // Called when the application starts.
 BOOL CMDIFrameSplitterApp::InitInstance()
 {

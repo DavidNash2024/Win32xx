@@ -15,8 +15,8 @@
 class CTabbedMDIApp : public CWinApp
 {
 public:
-    CTabbedMDIApp();
-    virtual ~CTabbedMDIApp() override;
+    CTabbedMDIApp() = default;
+    virtual ~CTabbedMDIApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

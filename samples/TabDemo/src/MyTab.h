@@ -12,8 +12,8 @@
 class CMyTab : public CTab
 {
 public:
-    CMyTab() {}
-    virtual ~CMyTab() override {}
+    CMyTab() = default;
+    virtual ~CMyTab() override = default;
 
 protected:
     virtual void UpdateTabs() override;

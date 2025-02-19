@@ -10,13 +10,6 @@
 ///////////////////////////////////////
 // CTaskDialogApp function definitions.
 //
-CTaskDialogApp::CTaskDialogApp()
-{
-}
-
-CTaskDialogApp::~CTaskDialogApp()
-{
-}
 
 BOOL CTaskDialogApp::InitInstance()
 {

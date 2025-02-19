@@ -19,11 +19,6 @@ CMainMDIFrame::CMainMDIFrame() : m_pIUIRibbon(nullptr)
 {
 }
 
-// Destructor for CMainMDIFrame.
-CMainMDIFrame::~CMainMDIFrame()
-{
-}
-
 // Create the MDI frame window.
 HWND CMainMDIFrame::Create(HWND parent)
 {
@@ -264,6 +259,7 @@ STDMETHODIMP CMainMDIFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* 
             result = S_OK;
             break;
         case UI_VIEWVERB_DESTROY:   // The ribbon has been destroyed.
+            m_pIUIRibbon = nullptr;
             result = S_OK;
             break;
         case UI_VIEWVERB_ERROR:

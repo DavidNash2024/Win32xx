@@ -16,8 +16,8 @@
 class CTabDemoApp : public CWinApp
 {
 public:
-    CTabDemoApp();
-    virtual ~CTabDemoApp() override;
+    CTabDemoApp() = default;
+    virtual ~CTabDemoApp() override = default;
 
 protected:
     // Virtual functions that override base class functions

@@ -16,7 +16,7 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    virtual ~CMainFrame() override;
+    virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
     void DpiScaleToolBar();
@@ -45,7 +45,7 @@ private:
     BOOL OnFileMRU(WPARAM wparam);
     BOOL OnFileNew();
     BOOL OnFileOpen();
-    BOOL OnFileSaveAs();
+    BOOL OnFileSave();
 
     // Member variables
     CView m_view;

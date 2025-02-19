@@ -15,11 +15,6 @@ CDoc::CDoc() : m_isCheckA(false), m_isCheckB(false), m_isCheckC(false), m_radio(
 {
 }
 
-// Destructor.
-CDoc::~CDoc()
-{
-}
-
 // Load values from the registry.
 void CDoc::LoadSettings(LPCWSTR keyName)
 {

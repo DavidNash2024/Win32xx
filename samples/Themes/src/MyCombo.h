@@ -12,8 +12,8 @@
 class CMyCombo : public CComboBoxEx
 {
 public:
-    CMyCombo();
-    virtual ~CMyCombo() override;
+    CMyCombo() = default;
+    virtual ~CMyCombo() override = default;
     BOOL AddItems();
 
 protected:

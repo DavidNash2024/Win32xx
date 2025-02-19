@@ -12,7 +12,7 @@ class CAboutHelp : public CDialog
 {
 public:
     CAboutHelp();
-    virtual ~CAboutHelp() override {}
+    virtual ~CAboutHelp() override = default;
 
     const CString& GetCredits() const { return m_credits; }
     void SetCredits(LPCWSTR credits) { m_credits = credits; }

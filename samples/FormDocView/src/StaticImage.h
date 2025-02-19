@@ -13,8 +13,8 @@
 class CStaticImage : public CStatic
 {
 public:
-    CStaticImage() {}
-    virtual ~CStaticImage() override {}
+    CStaticImage() = default;
+    virtual ~CStaticImage() override = default;
 
 protected:
     virtual void OnAttach() override;

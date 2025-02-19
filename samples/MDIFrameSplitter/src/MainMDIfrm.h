@@ -12,8 +12,8 @@
 class CMainMDIFrame : public CMDIFrame
 {
 public:
-    CMainMDIFrame();
-    virtual ~CMainMDIFrame() override;
+    CMainMDIFrame() = default;
+    virtual ~CMainMDIFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
 

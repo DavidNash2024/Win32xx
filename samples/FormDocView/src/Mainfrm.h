@@ -18,7 +18,7 @@ public:
     CFormDoc& GetDoc()      { return m_formView.GetDoc(); }
 
     // Virtual functions that override public base class functions
-    virtual ~CMainFrame() override;
+    virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:

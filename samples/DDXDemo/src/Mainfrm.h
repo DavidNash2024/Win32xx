@@ -1,4 +1,4 @@
-/* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -34,7 +34,7 @@ CMainFrame : public CFrame                                                  /*
 {
     public:
         CMainFrame();
-        virtual ~CMainFrame() override {}
+        virtual ~CMainFrame() override = default;
         virtual HWND Create(HWND parent = nullptr) override;
 
         CDoc&   TheDoc()   { return m_view.TheDoc(); }
@@ -47,7 +47,6 @@ CMainFrame : public CFrame                                                  /*
        virtual int     OnCreate(CREATESTRUCT& cs) override;
        virtual void    OnInitialUpdate() override;
        virtual void    OnMenuUpdate(UINT id) override;
-       virtual void    PreCreate(CREATESTRUCT& cs) override;
        virtual void    SetupMenuIcons() override;
        virtual void    SetupToolBar() override;
        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -56,20 +55,17 @@ CMainFrame : public CFrame                                                  /*
         CMainFrame(const CMainFrame&) = delete;
         CMainFrame& operator=(const CMainFrame&) = delete;
 
-        void    FeatureNotImplemented();
+        BOOL    OnCheckButton(UINT id);
+        BOOL    OnEditCopy();
+        BOOL    OnEditCut();
+        BOOL    OnEditDelete();
+        BOOL    OnEditPaste();
+        BOOL    OnEditRedo();
+        BOOL    OnEditUndo();
         BOOL    OnFileExit();
-        BOOL    OnFileNew();
-        BOOL    OnFileOpen();
-        BOOL    OnFilePrint();
-        BOOL    OnFileSave();
-        BOOL    OnFileSaveAs();
-        void    SetReBarColors(COLORREF, COLORREF, COLORREF, COLORREF);
-        BOOL    SetThemeColors();
+        BOOL    OnRadioButton(UINT id);
 
-        CView             m_view;
-        std::vector<UINT> m_bandIDs;
-        std::vector<UINT> m_bandStyles;
-        std::vector<UINT> m_bandSizes;
+        CView   m_view;
 };
 /*----------------------------------------------------------------------------*/
 #endif //MAINFRM_H

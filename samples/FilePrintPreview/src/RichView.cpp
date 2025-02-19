@@ -222,22 +222,21 @@ ReadFile(LPCWSTR filePath)                                                  /*
 SetFontDefaults()                                                           /*
 
     If the displayfont has not been set, then set it to a default Courier New
-    16-pixel-height font.
+     size 10 font.
 *-----------------------------------------------------------------------------*/
 {
-      //Set font
-    if (m_font.GetHandle() == nullptr)
-        m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET,
-            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-            FF_MODERN, L"Courier New");
+      // Create a default font if required.
+        if (m_font.GetHandle() == nullptr)
+        {
+            constexpr int fontSize = 10;
+            constexpr int tenthsOfPoint = 10;
+            m_font.CreatePointFont(fontSize * tenthsOfPoint, L"Courier New");
+        }
+
+      // Set the font.
     SetFont(m_font, FALSE);
 
-// Required for Dev-C++
-#ifndef IMF_AUTOFONT
-  #define IMF_AUTOFONT          0x0002
-#endif
-
-      // Prevent Unicode characters from changing the font
+      // Prevent Unicode characters from changing the font.
     LRESULT options = SendMessage(EM_GETLANGOPTIONS, 0, 0);
     options &= ~IMF_AUTOFONT;
     SendMessage(EM_SETLANGOPTIONS, 0, options);

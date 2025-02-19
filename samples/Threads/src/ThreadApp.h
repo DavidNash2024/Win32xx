@@ -15,8 +15,8 @@
 class CThreadApp : public CWinApp
 {
 public:
-    CThreadApp();
-    virtual ~CThreadApp() override;
+    CThreadApp() = default;
+    virtual ~CThreadApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;

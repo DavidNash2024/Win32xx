@@ -26,4 +26,3 @@ Features demonstrated in this example
 * Responding to the MDI specific commands in CMDIFrame::OnCommand.
 * Using a splitter(docker) window as a MDI child.
 * Adding dock containers to the splitter window.
-* Use of dock styles to prevent undocking.

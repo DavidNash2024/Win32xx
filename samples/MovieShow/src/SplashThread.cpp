@@ -10,11 +10,6 @@
 // CSplashThread function definitions.
 //
 
-// Constructor.
-CSplashThread::CSplashThread()
-{
-}
-
 // Destructor.
 CSplashThread::~CSplashThread()
 {

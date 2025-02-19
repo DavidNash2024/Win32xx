@@ -15,7 +15,7 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView() override {}
+    virtual ~CView() override = default;
     void PositionWindow();
     void SetRoundRegion();
 

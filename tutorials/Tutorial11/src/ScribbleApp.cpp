@@ -5,10 +5,6 @@
 #include "ScribbleApp.h"
 
 
-CScribbleApp::CScribbleApp()
-{
-}
-
 BOOL CScribbleApp::InitInstance()
 {
     // Create the window.

@@ -10,16 +10,6 @@
 // CDockContainerApp function definitions
 //
 
-// Constructor.
-CDockContainerApp::CDockContainerApp()
-{
-}
-
-// Destructor.
-CDockContainerApp::~CDockContainerApp()
-{
-}
-
 // Called when the application starts.
 BOOL CDockContainerApp::InitInstance()
 {

@@ -1,4 +1,4 @@
-/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
+/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -35,8 +35,8 @@ CApp : public CWinApp                                                   /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CApp() {}
-        virtual ~CApp() override {}
+        CApp() = default;
+        virtual ~CApp() override = default;
 
     protected:
         virtual BOOL InitInstance() override;

@@ -1,4 +1,4 @@
-/* (06-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                 (View.cpp) *
+/* (20-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                 (View.cpp) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |
@@ -136,43 +136,6 @@ PreCreate(CREATESTRUCT &cs)                                                 /*
 
 /*============================================================================*/
     void CView::
-Serialize(CArchive& ar)                                                     /*
-
-    Called to serialize or deserialize the view to and  from the archive ar,
-    depending on the sense of IsStoring().
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-           // save m_hfFont
-        LOGFONT lf = m_font.GetLogFont();
-        ArchiveObject f(&lf, sizeof(LOGFONT));
-        ar << f;
-        // save m_rgbTxColor
-        ar << m_textColor;
-        // save m_rgbBkColor
-        ar << m_bkgndColor;
-    }
-    else    // recovering
-    {
-          // recover m_hfFont
-        LOGFONT lf{};
-        ArchiveObject f(&lf, sizeof(LOGFONT));
-        ar >> f;
-        // recover view colors
-        COLORREF rgbTxColor, rgbBkColor;
-        ar >> rgbTxColor;
-        ar >> rgbBkColor;
-        // no exception having been raised, set the view parameters
-        m_font.CreateFontIndirect(lf);
-        m_textColor = rgbTxColor;
-        m_bkgndColor = rgbBkColor;
-    }
-}
-
-/*============================================================================*/
-    void CView::
 SetAppSize(BOOL keepPos)                                                    /*
 
     Calculate the nominal numbers of horizontal characters and vertical
@@ -218,44 +181,6 @@ SetAppSize(BOOL keepPos)                                                    /*
 
 /*============================================================================*/
     void CView::
-SetDefaultFont()                                                            /*
-
-    Create the default app font.
-*-----------------------------------------------------------------------------*/
-{
-      // compute the logical font height for the nDefaultFontSize
-    CClientDC dc(HWND_DESKTOP);
-      // define default size and face
-    int nDefaultFontSize = 10;
-    wchar_t lpszFaceDefault[] = L"Courier New";
-      // compute the character height
-    long lfHeight = -MulDiv(nDefaultFontSize,
-        dc.GetDeviceCaps(LOGPIXELSY), POINTS_PER_INCH);
-      // set default font characteristics
-    int nHeight = lfHeight;         // logical height of font
-    int nWidth = 0;                 // logical average character width
-    int nEscapement = 0;            // angle of escapement
-    int nOrientation = 0;           // base-line orientation angle
-    int fnWeight = FW_REGULAR;      // font weight
-    DWORD fdwItalic = 0;            // italic attribute flag
-    DWORD fdwUnderline = 0;         // underline attribute flag
-    DWORD fdwStrikeOut = 0;         // strikeout attribute flag
-    DWORD fdwCharSet = 0;           // character set identifier
-    DWORD fdwOutputPrecision = 0;   // output precision
-    DWORD fdwClipPrecision = 0;     // clipping precision
-    DWORD fdwQuality = 0;           // output quality
-    DWORD fdwPitchAndFamily = 0;    // pitch and  family
-    LPCWSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
-
-      // create the default font
-    m_font.CreateFont(nHeight, nWidth, nEscapement, nOrientation,
-        fnWeight, fdwItalic, fdwUnderline, fdwStrikeOut, fdwCharSet,
-        fdwOutputPrecision, fdwClipPrecision, fdwQuality, fdwPitchAndFamily,
-        lpszFace);
-}
-
-/*============================================================================*/
-    void CView::
 SetDefaults()                                                               /*
 
     Sets the member variables to their default values.
@@ -266,7 +191,10 @@ SetDefaults()                                                               /*
     for (int i = 0; i < 16; i++)
         m_colors[i] = RGB(0, 0, 0);
 
-    SetDefaultFont();
+      // Create the default font.
+    constexpr int fontSize = 10;
+    constexpr int tenthsOfPoint = 10;
+    m_font.CreatePointFont(fontSize * tenthsOfPoint, L"Courier New");
 }
 
 /*============================================================================*/

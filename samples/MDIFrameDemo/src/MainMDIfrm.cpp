@@ -18,16 +18,6 @@ using namespace std;
 // CMainMDIFrame function definitions
 //
 
-// Constructor.
-CMainMDIFrame::CMainMDIFrame()
-{
-}
-
-// Destructor.
-CMainMDIFrame::~CMainMDIFrame()
-{
-}
-
 // Create the MDI frame window.
 HWND CMainMDIFrame::Create(HWND parent)
 {

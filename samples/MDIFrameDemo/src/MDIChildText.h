@@ -12,8 +12,8 @@
 class CViewText : public CRichEdit
 {
 public:
-    CViewText();
-    virtual ~CViewText() override;
+    CViewText() = default;
+    virtual ~CViewText() override = default;
 
 protected:
     virtual void OnAttach() override;
@@ -35,7 +35,7 @@ class CMDIChildText : public CMDIChild
 {
 public:
     CMDIChildText();
-    virtual ~CMDIChildText() override;
+    virtual ~CMDIChildText() override = default;
 
 protected:
     // Virtual functions that override base class functions

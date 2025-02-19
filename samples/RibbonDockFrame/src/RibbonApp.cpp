@@ -8,14 +8,6 @@
 ///////////////////////////////////////
 // CRibbonFrameApp function definitions
 //
-CRibbonFrameApp::CRibbonFrameApp()
-{
-    // Constructor for CRibbonFrameApp
-}
-
-CRibbonFrameApp::~CRibbonFrameApp()
-{
-}
 
 BOOL CRibbonFrameApp::InitInstance()
 {

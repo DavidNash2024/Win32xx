@@ -1,4 +1,4 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
+/* (21-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2024                |
@@ -196,32 +196,6 @@ OpenDoc(const CString &docFileName)                                         /*
       // register the open document
     m_docPath = docFileName;
     return true;
-}
-
-/*============================================================================*/
-    CString CApp::
-MakeAppDataPath(const CString & subpath)                                    /*
-
-        Return a string giving the path APPDATA environmental path, with the
-        given subpath appended.  Create this path if it does not exist. If
-        an error is encountered, throw a user exception.
-*-----------------------------------------------------------------------------*/
-{
-    CString appDataPath = GetAppDataPath();
-
-    if (!appDataPath.IsEmpty())
-    {
-        appDataPath += L"\\" + subpath;
-        ::SHCreateDirectory(nullptr, appDataPath);
-
-        DWORD attributes = GetFileAttributes(appDataPath);
-        if ((attributes == INVALID_FILE_ATTRIBUTES) || !(attributes & FILE_ATTRIBUTE_DIRECTORY))
-            throw CFileException(appDataPath, L"Failed to access app directory");
-    }
-    else
-        appDataPath = L".";
-
-    return appDataPath;
 }
 
 /*============================================================================*/

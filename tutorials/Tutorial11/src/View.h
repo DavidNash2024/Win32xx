@@ -22,7 +22,7 @@ class CView : public CWnd
 {
 public:
     CView();
-    virtual ~CView() override;
+    virtual ~CView() override = default;
 
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
