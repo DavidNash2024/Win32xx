@@ -21,17 +21,30 @@ Win32++ A Simple Alternativc to MFC</a></p>
 <div class="markdown-heading" dir="auto">
 	<h2 class="heading-element" dir="auto" tabindex="-1">Introduction</h2>
 </div>
-<p dir="auto">Win32++ is a simple and easy to understand library for creating Windows applications.
-It runs on the commonly available free C++ compilers.</p>
+<p dir="auto">Win32++ is an open-source C++ library designed to simplify 
+	the development of Windows API-based applications. It provides a modern 
+	C++ interface while staying lightweight and easy to use. Here are some key 
+	features:</p>
+	<ul>
+		<li>Modern C++ Interface: Win32++ leverages C++ features like classes, 
+		inheritance, and templates to provide a more intuitive and modern way of 
+		creating Windows applications.<br></li>
+		<li>Lightweight: Unlike larger frameworks such as MFC or Qt, Win32++ is 
+		designed to be lightweight and has minimal overhead. This makes it 
+		suitable for smaller applications or for developers who prefer to stay 
+		close to the Win32 API.<br></li>
+		<li>Ease of Use: The library simplifies many 
+		of the tasks associated with Win32 programming, such as creating 
+		windows, handling messages, and managing resources. It is implemented as 
+		a header-only library which simplifies the build process.<br></li>
+		<li>Extensibility: Win32++ allows developers to easily extend its 
+		functionality, making it adaptable to a wide range of application needs. 
+		Its modular design allows developers to include as much or as little of 
+		the library as they require.<br></li>
+		<li>Open Source: It is freely available under an open-source license, 
+		allowing developers to use and modify it as needed.</li>
+	</ul>
 
-<p dir="auto">Win32++ has been designed to make life a little easier for those learning to use C++ 
-to program using the Windows API directly. Win32++ wraps the Windows API in a convenient set of
-classes in a similar style to MFC.</p>
-
-<p dir="auto">The code has been designed to run on a wide range of free C++ compilers, including
-those from Microsoft, Embarcadero and the MinGW compiler from GNU. Win32++ supports all Windows
-operating systems, from Windows 95 through to Windows 11. It can be used to create both 32 bit and
-64 bit applications.</p>
 <p dir="auto">Win32++ can be used to build applications based simple windows, 
 dialogs, forms, and frames. The frames produced using Win32++ can have the following features.</p>
 <ul dir="auto">
