@@ -32,9 +32,9 @@ Win32++ A Simple Alternativc to MFC</a></p>
 		<li>Lightweight: Unlike larger frameworks such as MFC or Qt, Win32++ is 
 		designed to be lightweight and has minimal overhead. This makes it 
 		suitable for smaller applications or for developers who prefer to stay 
-		close to the Win32 API.<br></li>
+		close to the Windows API.<br></li>
 		<li>Ease of Use: The library simplifies many 
-		of the tasks associated with Win32 programming, such as creating 
+		of the tasks associated with Windows programming, such as creating 
 		windows, handling messages, and managing resources. It is implemented as 
 		a header-only library which simplifies the build process.<br></li>
 		<li>Extensibility: Win32++ allows developers to easily extend its 
