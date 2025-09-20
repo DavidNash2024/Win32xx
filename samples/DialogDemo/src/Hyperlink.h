@@ -23,7 +23,6 @@ public:
     void SetUrlFont(CFont urlFont) { m_urlFont = urlFont; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

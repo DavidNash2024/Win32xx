@@ -350,6 +350,7 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -682,7 +683,7 @@ OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)                               /*
       // Keep changes to the device context
     dcCtl.Detach();
       // return the brush handle
-    return (INT_PTR)(HBRUSH)br;
+    return (INT_PTR)br.GetHandle();
 }
 
 /*============================================================================*/

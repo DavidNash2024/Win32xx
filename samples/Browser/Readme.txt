@@ -20,3 +20,12 @@ Features demonstrated in this example
 * Use of a ComboBoxEx control in the rebar.
 * Printing the contents of a WebBrowser.
 * Print preview the contents of a WebBrowser.
+
+Note:
+The CWebBrowser used in this sample uses the IWebBrowser2 interface. The IWebBrowser2
+provides access to the same features as used by the Microsoft's Internet Explorer.
+Support for Internet Explorer ended on June 15, 2022, so this sample might not render
+web pages properly.
+
+Consider using using the EdgeBrowser and EdgeBrowserEx samples to display modern
+web pages instead.

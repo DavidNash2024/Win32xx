@@ -8,6 +8,8 @@
 
 using namespace std;
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -211,22 +213,22 @@ void CMainFrame::OnMenuUpdate(UINT id)
     switch(id)
     {
     case IDM_3DBORDER:
-        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_use3DBorder ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, m_use3DBorder ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_NO_UNDOCK:
-        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableUndocking ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, m_disableUndocking ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_NO_RESIZE:
-        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableResize ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, m_disableResize ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_NO_DOCK_LR:
-        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableDockLR ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, m_disableDockLR ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_NO_DOCK_CLOSE:
-        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableDockClose ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, m_disableDockClose ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_NO_DOCK_CAPTION:
-        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableDockCaption ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, m_disableDockCaption ? MF_CHECKED : MF_UNCHECKED);
         break;
     }
 
@@ -301,14 +303,10 @@ void CMainFrame::RecalcDockLayout()
 {
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
     {
-        if (GetDockAncestor()->IsWindow())
-        {
-            GetTopmostDocker()->LockWindowUpdate();
-            CRect rc = GetTopmostDocker()->GetViewRect();
-            GetTopmostDocker()->RecalcDockChildLayout(rc);
-            GetTopmostDocker()->UnlockWindowUpdate();
-            GetTopmostDocker()->UpdateWindow();
-        }
+        LockWindowUpdate();
+        CDocker::RecalcDockLayout();
+        UnlockWindowUpdate();
+        UpdateWindow();
     }
     else
         CDocker::RecalcDockLayout();
@@ -362,9 +360,9 @@ void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, lightgray, IDW_MAIN);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
 // Sets the Resource IDs for the toolbar buttons
@@ -402,10 +400,14 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // Catch all unhandled CException types.
     catch (const CException& e)
     {
-        // Display the exception.
-        CString str;
-        str << e.GetText() << L'\n' << e.GetErrorString();
-        ::MessageBox(nullptr, str, L"An exception occurred", MB_ICONERROR);
-        return 0;
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
+
+    return 0;
 }

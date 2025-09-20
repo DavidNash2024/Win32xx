@@ -24,3 +24,11 @@ there is data on the socket to be received.
 
 You can run multiple copies of the client to connect to the server.
 
+Instructions
+------------
+1) Run the server in a terminal window.
+2) Run the client in a different terminal window.
+3) Type some text on the client to establish a connection to the server.
+4) Once the connection has been established, text can be sent between the server and client.
+5) Type quit on the server and client to end the programs.
+

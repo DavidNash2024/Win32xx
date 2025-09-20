@@ -5,7 +5,7 @@
 #ifndef MINIFRAME_H
 #define MINIFRAME_H
 
-#include "view.h"
+#include "View.h"
 #include "resource.h"
 
 enum class TitlebarButton
@@ -42,10 +42,10 @@ struct TitlebarColors
 class CMiniFrame : public CWnd
 {
 public:
-    CMiniFrame() : m_hoveredButton(TitlebarButton::None),
-                   m_oldHoveredButton(TitlebarButton::None),
-                   m_aboutDialog(IDW_ABOUT),
-                   m_accel(0)
+    CMiniFrame() : m_aboutDialog(IDW_ABOUT),
+                   m_accel(0),
+                   m_hoveredButton(TitlebarButton::None),
+                   m_oldHoveredButton(TitlebarButton::None)
               {}
     virtual ~CMiniFrame() override = default;
 
@@ -59,7 +59,6 @@ public:
     bool     IsMaximized() const;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnDestroy() override;
@@ -97,7 +96,7 @@ private:
     LRESULT OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 

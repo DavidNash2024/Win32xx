@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\..\include\wxx_file.h" />
     <ClInclude Include="..\..\..\include\wxx_filefind.h" />
     <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
+    <ClInclude Include="..\..\..\include\wxx_folderdialogex.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
     <ClInclude Include="..\..\..\include\wxx_hglobal.h" />

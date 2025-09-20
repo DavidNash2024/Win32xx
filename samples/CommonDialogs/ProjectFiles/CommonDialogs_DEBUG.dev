@@ -1,7 +1,7 @@
 [Project]
 FileName=CommonDialogs_DEBUG.dev
 Name=CommonDialogs
-UnitCount=29
+UnitCount=31
 Type=0
 Ver=2
 ObjFiles=
@@ -181,7 +181,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=..\src\main.cpp
+FileName=..\src\MyFindReplaceDlg.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -291,9 +291,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit31]
-FileName=..\src\StdApp.h
+FileName=..\src\MyPrintDialog.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

@@ -19,7 +19,6 @@ public:
     virtual ~CSplitterApp() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
 
 private:

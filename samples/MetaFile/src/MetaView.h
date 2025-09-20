@@ -19,7 +19,6 @@ public:
     virtual ~CMetaView() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT&) override;
     virtual void OnDraw(CDC& dc) override;
     virtual void OnDestroy() override;

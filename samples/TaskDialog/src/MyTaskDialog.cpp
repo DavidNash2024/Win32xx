@@ -9,12 +9,62 @@
 // CMyTaskDialog function definitions.
 //
 
-// Called when the user selects a button or command link.
-BOOL CMyTaskDialog::OnTDButtonClicked(int)
+CMyTaskDialog::CMyTaskDialog()
 {
-    TRACE(L"Button or command link pressed\n");
+    SetOptions(TDF_ALLOW_DIALOG_CANCELLATION | TDF_USE_COMMAND_LINKS | TDF_EXPANDED_BY_DEFAULT | TDF_SHOW_PROGRESS_BAR | TDF_CALLBACK_TIMER);
 
-    // We could return TRUE to prevent the task dialog from closing.
+    // Add the command buttons.
+    AddCommandControl(CB_FIRST, MAKEINTRESOURCEW(IDS_CB_FIRST));
+    AddCommandControl(CB_SECOND, MAKEINTRESOURCEW(IDS_CB_SECOND));
+    AddCommandControl(CB_THIRD, MAKEINTRESOURCEW(IDS_CB_THIRD));
+
+    // Add the radio buttons.
+    AddRadioButton(RB_FIRST, MAKEINTRESOURCEW(IDS_RB_FIRST));
+    AddRadioButton(RB_SECOND, MAKEINTRESOURCEW(IDS_RB_SECOND));
+    AddRadioButton(RB_THIRD, MAKEINTRESOURCEW(IDS_RB_THIRD));
+    SetDefaultRadioButton(RB_FIRST);
+    SetCommonButtons(TDCBF_YES_BUTTON | TDCBF_NO_BUTTON | TDCBF_CANCEL_BUTTON);
+
+    // Add the Text.
+    SetWindowTitle(MAKEINTRESOURCEW(IDS_WINDOWTITLE));
+    SetMainInstruction(MAKEINTRESOURCEW(IDS_MAININSTRUCTION));
+    SetContent(MAKEINTRESOURCEW(IDS_CONTENT));
+    SetExpansionArea(MAKEINTRESOURCEW(IDS_EXPANDED), L"Hide the expanded information", L"Show the expanded information");
+    SetVerificationCheckboxText(MAKEINTRESOURCEW(IDS_VERIFICATIONTEXT));
+    SetFooterText(MAKEINTRESOURCEW(IDS_FOOTER));
+
+    // Set Icons
+    SetMainIcon(GetApp()->LoadIcon(IDW_MAIN));
+    SetFooterIcon(TD_INFORMATION_ICON);
+}
+
+// Called when the user selects a button or command link.
+BOOL CMyTaskDialog::OnTDButtonClicked(int buttonID)
+{
+    switch (buttonID)
+    {
+    case CB_FIRST:
+        TRACE(L"First command control selected\n");
+        return TRUE;
+    case CB_SECOND:
+        TRACE(L"Second command control selected\n");
+        return TRUE;
+    case CB_THIRD:
+        TRACE(L"Third command control selected\n");
+        return TRUE;
+    case IDYES:
+        TRACE(L"The 'Yes' button was pressed\n");
+        return FALSE;
+    case IDNO:
+        TRACE(L"The 'No' button was pressed\n");
+        return FALSE;
+    case IDCANCEL:
+        TRACE(L"The 'Cancel' button was pressed\n");
+        return FALSE;
+    }
+
+    // Return FALSE to close the dialog.
+    // Return TRUE to prevent the task dialog from closing.
     return FALSE;
 }
 
@@ -61,9 +111,21 @@ void CMyTaskDialog::OnTDNavigatePage()
 }
 
 // Called when a radio button. is selected.
-BOOL CMyTaskDialog::OnTDRadioButtonClicked(int)
+BOOL CMyTaskDialog::OnTDRadioButtonClicked(int buttonID)
 {
-    TRACE(L"Radio Button Selected\n");
+    switch (buttonID)
+    {
+    case RB_FIRST:
+        TRACE(L"First radio button selected\n");
+        break;
+    case RB_SECOND:
+        TRACE(L"Second radio button selected\n");
+        break;
+    case RB_THIRD:
+        TRACE(L"Third radio button selected\n");
+        break;
+    }
+
     return TRUE;
 }
 
@@ -78,9 +140,12 @@ BOOL CMyTaskDialog::OnTDTimer(DWORD)
 }
 
 // Called when the user clicks the Task Dialog verification check box.
-void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL)
+void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL isChecked)
 {
-    TRACE(L"Verification Checkbox Clicked\n");
+    UNREFERENCED_PARAMETER(isChecked);
+
+    CString text("Verification Checkbox is ");
+    TRACE(text << (isChecked ? "checked\n" : "unchecked\n"));
 }
 
 // Processes the task dialog's messages.
@@ -97,9 +162,10 @@ LRESULT CMyTaskDialog::TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
 
     // Catch all unhandled std::exception types.
@@ -107,7 +173,7 @@ LRESULT CMyTaskDialog::TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

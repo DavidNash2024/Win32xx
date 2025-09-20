@@ -19,10 +19,9 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame() override = default;
-    virtual HWND Create(HWND parent = nullptr);
+    virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    LoadRegistrySettings(LPCWSTR keyName) override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;

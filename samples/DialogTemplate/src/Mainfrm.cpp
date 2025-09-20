@@ -89,7 +89,7 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
 {
     // Required for StreamOut
     if (!cb)
-        return (1);
+        return 1;
 
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
@@ -503,6 +503,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

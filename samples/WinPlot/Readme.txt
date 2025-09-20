@@ -1,6 +1,9 @@
 WinPlot Example
 ===============
 This project plots a function that the user enters via the input menu.
+The size of the plot axis and plotted function are resized to fill the view
+window. 
+
 Examples of functions that can be entered are as follows:
 f(x) = x
 f(x) = x^2 - 3*x - 4
@@ -33,6 +36,7 @@ Features demonstrated in this example
 * Implementing a calculator in C++ code
 * Using CDC to perform GDI drawing
 * Using the GDI viewport to scale the plotted function
+* Resizing the viewport to fit the view window.
 
 
 

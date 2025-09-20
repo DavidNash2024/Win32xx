@@ -18,8 +18,8 @@ public:
     CMainFrame& GetMainFrame() { return m_frame; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
+    virtual BOOL OnIdle(LONG) override;
 
 private:
     CFastGDIApp(const CFastGDIApp&) = delete;
@@ -28,10 +28,4 @@ private:
     CMainFrame m_frame;
 };
 
-
-// returns a pointer to the CFastGDIApp object
-inline CFastGDIApp* GetFrameApp() { return static_cast<CFastGDIApp*>(GetApp()); }
-
-
 #endif // define FASTGDIAPP_H
-

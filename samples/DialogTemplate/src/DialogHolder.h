@@ -18,7 +18,6 @@ public:
     void ShowDialog(CWnd* pFrame, unsigned char* dlg);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void PreCreate(CREATESTRUCT& cs) override;
     LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

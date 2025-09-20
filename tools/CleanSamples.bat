@@ -8,8 +8,7 @@ pushd ..\Samples
 ::Remove directories
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Debug"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Debug_Build"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++\Debug"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++\Release"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\GNU"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Release"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Release_Build"
@@ -21,9 +20,10 @@ FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\GNU64"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\.vs
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Embarcadero"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__astcache"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__recovery"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\%%f"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\src\stdafx.h.gch"
-
-
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\src\__history"
 
 ::Remove files
 FOR /D %%f IN ("*.") DO DEL /Q /AH "%%f\ProjectFiles\*.suo"

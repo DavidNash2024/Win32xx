@@ -9,6 +9,10 @@ provide splitter windows. In this case the MDI Child's view window uses CDocker
 to create a splitter window. The splitter window has dock containers docked at 
 the left and the right.
 
+The menu for a MDI frame should have a popup menu item called "Window"
+positioned second from the right. An entry for each MDI child will be appended
+to this menu item. It a MDI child have a menu, this should have a popup menu
+item called "Window" positioned second from the right as well.
 
 Caveat
 ======

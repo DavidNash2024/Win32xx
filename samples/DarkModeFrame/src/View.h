@@ -21,7 +21,6 @@ public:
     void SetDarkMode(bool isDarkMode) { m_isDarkMode = isDarkMode; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual void    OnDraw(CDC& dc) override;
     virtual void    OnInitialUpdate() override;
     virtual void    PreRegisterClass(WNDCLASS& wc) override;

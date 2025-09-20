@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                 (StdApp.h) *
+/* (26-Mar-2025)                                                    (StdApp.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -15,7 +15,6 @@
 #ifndef STD_APP_H
 #define STD_APP_H
 
-/*============================================================================*/
 
 #include "resource.h"
 #include "ColorDefs.h"
@@ -32,5 +31,4 @@
 #include "Mainfrm.h"
 #include "App.h"
 
-/*----------------------------------------------------------------------------*/
 #endif // STD_APP_H

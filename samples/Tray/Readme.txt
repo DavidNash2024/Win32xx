@@ -15,3 +15,4 @@ Features demonstrated in this example
 * Adding a menu to a simple window
 * Using TRACE to output debug text
 * Use of Shell_NotifyIcon to add an icon to the system tray
+* Use of a TaskDialog as a replacement for a simple message box

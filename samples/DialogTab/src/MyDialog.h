@@ -16,7 +16,6 @@ public:
     virtual ~CButtonDialog() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual void OnOK() override {}      // suppress closing dialog with the enter key
@@ -50,7 +49,6 @@ public:
     virtual ~CComboBoxDialog() override = default;
 
 protected:
-    // Virtual functions overriding base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnInitDialog() override;
     virtual void OnOK() override {}      // supress closing dialog with the enter key
@@ -76,7 +74,6 @@ public:
     virtual ~CMyDialog() override = default;
 
 protected:
-    // Virtual functions overriding base class functions
     virtual void OnDestroy() override;
     virtual BOOL OnInitDialog() override;
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

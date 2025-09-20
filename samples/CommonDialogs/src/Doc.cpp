@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
+/* (26-Mar-2025)                                                     (Doc.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -17,48 +17,35 @@
     Internally, the document contents are managed (as well as viewed) by the
     RichEditView class.
 
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #include "stdafx.h"
 #include "StdApp.h"
 
-/*============================================================================*/
-    CDoc::
-CDoc()                                                                      /*
 
-*-----------------------------------------------------------------------------*/
-    : m_isOpen(FALSE), m_data(nullptr)
+ CDoc::CDoc() : m_isOpen(FALSE), m_data(nullptr)
 {
 }
 
-/*============================================================================*/
-    CHARRANGE CDoc::
-FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)                        /*
-
-    Find the next occurrence of the string returned by the find-replace
-    dialog box FR in the document starting with the given character range
-    and return the found character range, or an end-of-text range otherwise.
-*-----------------------------------------------------------------------------*/
+// Find the next occurrence of the string returned by the find - replace
+// dialog box FR in the document starting with the given character range
+// and return the found character range, or an end - of - text range otherwise.
+CHARRANGE CDoc::FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)
 {
-      // get find string that does not go out of scope
+    // Get the find string that does not go out of scope.
     m_findNext   = FR.GetFindString();
-      // set the search parameters
+
+    // Set the search parameters.
     BOOL match = FR.MatchCase();
     BOOL whole = FR.MatchWholeWord();
     BOOL down  = FR.SearchDown();
     DWORD dwFlags = (match ? FR_MATCHCASE : 0) |
             (whole ? FR_WHOLEWORD : 0)         |
             (down  ? FR_DOWN : 0);
-      // Perform the search per the dwFlags and the FINDTEXEX contents:
-      // search down: end of current selection to end of text, or
-      // search up:   beginning of current selection to beginning of text
     r.cpMin = (down ? r.cpMax : r.cpMin);
     r.cpMax = (down ? -1 : 0);
-      // get current location or selection
+
+   // Perform the search as per the dwFlags and the FINDTEXEX contents.
     FINDTEXTEX ftx;
     ftx.chrg = r;
     ftx.lpstrText = const_cast<LPWSTR>(m_findNext.c_str());
@@ -66,77 +53,53 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)                        /*
     return ftx.chrgText;
 }
 
-/*============================================================================*/
-    CString CDoc::
-GetDocDir() const                                                          /*
-
-    Returns the directory of the file associated with this object.
-*----------------------------------------------------------------------------*/
+// Returns the directory of the file associated with this object.
+CString CDoc::GetDocDir() const
 {
     CFile f; f.SetFilePath(m_docPath);
     return f.GetFileDirectory();
 }
 
-/*============================================================================*/
-    CRichEditView& CDoc::
-GetRichView() const                                                         /*
-
-    Return a reference to the document data repository object.
-*----------------------------------------------------------------------------*/
+// Return a reference to the document data repository object.
+CRichEditView& CDoc::GetRichView() const
 {
     return m_data->GetRichView();
 }
 
-/*============================================================================*/
-    BOOL CDoc::
-IsDirty() const                                                             /*
-
-    Indicate the modification state of the document text.
-*-----------------------------------------------------------------------------*/
+// Indicate the modification state of the document text.
+BOOL CDoc::IsDirty() const
 {
     return GetRichView().GetModify() && IsOpen();
 }
 
-/*============================================================================*/
-    BOOL CDoc::
-IsSelected() const                                                          /*
-
-    Returns TRUE if text is selected.
-*-----------------------------------------------------------------------------*/
+// Returns TRUE if text is selected.
+BOOL CDoc::IsSelected() const
 {
     CHARRANGE range;
     GetRichView().GetSel(range);
     return m_isOpen && (range.cpMin != range.cpMax);
 }
 
-/*============================================================================*/
-    BOOL CDoc::
-CanPaste() const                                                            /*
-
-    Returns TRUE if text can be pasted.
-*-----------------------------------------------------------------------------*/
+// Returns TRUE if text can be pasted.
+ BOOL CDoc::CanPaste() const
 {
     return m_isOpen && GetRichView().CanPaste(CF_TEXT);
 }
 
-/*============================================================================*/
-    BOOL CDoc::
-MakeNewDoc(LPCWSTR docPath)                                                 /*
-
-    Open a new document with the given filename; return TRUE if able to do
-    so, or FALSE otherwise.
-*-----------------------------------------------------------------------------*/
+// Open a new document with the given filename; return TRUE if able to do
+// so, or FALSE otherwise.
+BOOL CDoc::MakeNewDoc(LPCWSTR docPath)
 {
     SetDirty(FALSE);
     m_docPath.Empty();
     m_isOpen = FALSE;
-    try      // try to create a file with the given path
+    try
     {
-          // create the empty document file and close it
         CFile f(docPath, CREATE_NEW);
         f.Close();
     }
-    catch (...) // if there was an error in opening the file
+
+    catch (...)
     {
         CString msg = "Could not create document file:\n";
         msg += docPath;
@@ -144,16 +107,13 @@ MakeNewDoc(LPCWSTR docPath)                                                 /*
             MB_ICONINFORMATION | MB_TASKMODAL);
         return FALSE;
     }
+
     return TRUE;
 }
 
-/*============================================================================*/
-    void CDoc::
-NotFound(const MyFindReplaceDialog& FR)                                     /*
-
-    Post a message box relating that the current search did not find the
-    string sought for.
-*-----------------------------------------------------------------------------*/
+// Post a message box relating that the current search did not find the
+// string sought for.
+void CDoc::NotFound(const MyFindReplaceDialog& FR)
 {
     BOOL match = FR.MatchCase();
     BOOL whole = FR.MatchWholeWord();
@@ -166,17 +126,13 @@ NotFound(const MyFindReplaceDialog& FR)                                     /*
         MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
-/*============================================================================*/
-    void CDoc::
-OnCloseDoc()                                                                /*
-
-    Perform any cleanup necessary to close the document.
-*-----------------------------------------------------------------------------*/
+// Perform any cleanup necessary to close the document.
+void CDoc::OnCloseDoc()
 {
     if (!IsOpen())
         return;
 
-      //Check for unsaved text
+    // Check for unsaved text.
     CString msg;
     msg.Format(L"Save changes to this document?\n    %s",
         m_docPath.c_str());
@@ -186,25 +142,20 @@ OnCloseDoc()                                                                /*
         OnSaveDoc();
         return;
     }
-      // mark the document is not open, with zero length
+
+    // Mark the document is not open, with zero length.
     m_isOpen = FALSE;
     m_docPath.Empty();
 }
 
-/*============================================================================*/
-    void CDoc::
-OnFindReplace(UINT msg, WPARAM wparam, LPARAM lparam)                       /*
-
-    This method responds to the FINDMSGSTRING registered message sent by
-    the find/replace dialog box. This is the callback function response
-    method for all user interactions with the dialog boxes.
-*-----------------------------------------------------------------------------*/
+// This method responds to the FINDMSGSTRING registered message sent by
+// the find / replace dialog box. This is the callback function response
+// method for all user interactions with the dialog boxes.
+void CDoc::OnFindReplace(UINT, WPARAM, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-
     MyFindReplaceDialog* fr =
         (MyFindReplaceDialog*)MyFindReplaceDialog::GetNotifier(lparam);
+
     assert(fr != nullptr);
     if (fr != nullptr)
     {
@@ -219,21 +170,19 @@ OnFindReplace(UINT msg, WPARAM wparam, LPARAM lparam)                       /*
     }
 }
 
-/*============================================================================*/
-    void CDoc::
-OnFRFindNext(MyFindReplaceDialog* fr)                                      /*
-
-    Find the next occurrence of the string returned by the find dialog box
-    in the document.
-*-----------------------------------------------------------------------------*/
+// Find the next occurrence of the string returned by the find dialog box
+// in the document.
+void CDoc::OnFRFindNext(MyFindReplaceDialog* fr)
 {
-      // get current location or selection
+    // Get current location or selection.
     CHARRANGE r;
     GetRichView().GetSel(r);
-      // find the next occurrence
+
+    // Find the next occurrence.
     r = FindNext(*fr, r);
     if (r.cpMin >= 0)
-    {     // select the text and set the focus to show it
+    {
+        // Select the text and set the focus to show it.
         GetRichView().SetSel(r);
         GetRichView().SetFocus();
     }
@@ -241,61 +190,58 @@ OnFRFindNext(MyFindReplaceDialog* fr)                                      /*
         NotFound(*fr);
 }
 
-/*============================================================================*/
-    void CDoc::
-OnFRReplaceAll(MyFindReplaceDialog* fr)                                     /*
-
-    Replace all occurrences of the string returned by the replace dialog box
-    in the document by the string returned by that box.
-*-----------------------------------------------------------------------------*/
+// Replace all occurrences of the string returned by the replace dialog box
+// in the document by the string returned by that box.
+void CDoc::OnFRReplaceAll(MyFindReplaceDialog* fr)
 {
-      // get replacement string that does not go out of scope
+    // Get replacement string that does not go out of scope.
     m_replaceWith = fr->GetReplaceString();
-      // search the entire range, start at character 0
+
+    // Search the entire range, start at character 0.
     CHARRANGE r = { 0, 0 };
     CHARRANGE r0 = r;
     r = FindNext(*fr, r);
-      // if not found, say so
     if (r.cpMin < 0)
     {
         NotFound(*fr);
         return;
     }
-      // replace this occurrence, seek the next, and repeat until no more
+
+    // Replace this occurrence, seek the next, and repeat until no more.
     do
     {
         GetRichView().SetSel(r);
         GetRichView().ReplaceSel(m_replaceWith.c_str(), TRUE);
-          // save the last replacement site and reset the search
-          // beginning point for the next
+
+        // Save the last replacement site and reset the search beginning point
+        // for the next.
         r0 = r;
         r.cpMin = r.cpMax;
         r = FindNext(*fr, r);
     } while (r.cpMin >= 0);
-      // show the last replacement
+
+    // Show the last replacement.
     r0.cpMax = r0.cpMin + m_replaceWith.GetLength();
     GetRichView().SetSel(r0);
     GetRichView().SetFocus();
 }
 
-/*============================================================================*/
-    void CDoc::
-OnFRReplaceCurrent(MyFindReplaceDialog* fr)                                 /*
-
-    Replace the next occurrence of the string returned by the replace dialog
-    box in the document by the string returned by that box.
-*-----------------------------------------------------------------------------*/
+// Replace the next occurrence of the string returned by the replace dialog
+// box in the document by the string returned by that box.
+void CDoc::OnFRReplaceCurrent(MyFindReplaceDialog* fr)
 {
-      // get replacement string that does not go out of scope
+    // Get replacement string that does not go out of scope.
     m_replaceWith = fr->GetReplaceString();
-      // get current location or selection
+
+    // Get current location or selection.
     CHARRANGE r;
     GetRichView().GetSel(r);
-      // find the next occurrence
+
+    // Find the next occurrence.
     r = FindNext(*fr, r);
     if (r.cpMin >= 0)
-    {     // select the text, make the replacement, and set the
-          // focus to show it
+    {
+        // Select the text, make the replacement, and set the focus to show it.
         GetRichView().SetSel(r);
         GetRichView().ReplaceSel(m_replaceWith, TRUE);
         r.cpMax = r.cpMin + m_replaceWith.GetLength();
@@ -306,48 +252,30 @@ OnFRReplaceCurrent(MyFindReplaceDialog* fr)                                 /*
         NotFound(*fr);
 }
 
-/*============================================================================*/
-    void CDoc::
-OnFRTerminating(MyFindReplaceDialog* fr)                                   /*
-
-    Perform any actions necessary to terminate the FindReplaceDialog box.
-*-----------------------------------------------------------------------------*/
+// Perform any actions necessary to terminate the FindReplaceDialog box.
+void CDoc::OnFRTerminating(MyFindReplaceDialog*)
 {
-    UNREFERENCED_PARAMETER(fr);
 }
 
-/*============================================================================*/
-    BOOL CDoc::
-OnSaveDoc()                                                                 /*
-
-    Save current values of the document back into the currently named
-    source file. Return TRUE if the document was not open or not dirty, or
-    is saved properly, or FALSE otherwise.
-*-----------------------------------------------------------------------------*/
+// Save current values of the document back into the currently named source
+// file. Return TRUE if the document was not open or not dirty, or is saved
+// properly, or FALSE otherwise.
+BOOL CDoc::OnSaveDoc()
 {
-      // if no document is open or, if open, not dirty
+    assert(m_docPath.IsEmpty());
     if (!IsOpen() || !IsDirty())
         return TRUE;
 
-      // make sure the file is ok to save
-    if (m_docPath.IsEmpty())
-    {
-        CString msg = "Attempt to save an invalid file.";
-        ::MessageBox(nullptr, msg, L"Information",
-            MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-        m_isOpen = FALSE;
-        return FALSE;
-    }
-
     try
     {
-        CFile f(m_docPath, CREATE_ALWAYS);
-          // if there was no throw, the document opened
+        CFile f(m_docPath, CREATE_ALWAYS);  // Can throw.
+
         GetRichView().StreamOutFile(f);
         f.Close();
         m_isOpen = TRUE;
     }
-    catch (...) // if there was an error
+
+    catch (...)
     {
         CString msg = "Document file did not save.";
         msg += m_docPath;
@@ -357,18 +285,14 @@ OnSaveDoc()                                                                 /*
         m_docPath.Empty();
         return FALSE;
     }
-      // document will not be dirty on exit, whatever its current state
+
+    // The document will not be dirty on exit, whatever its current state.
     SetDirty(FALSE);
     return TRUE;
 }
 
-/*============================================================================*/
-    BOOL CDoc::
-OpenDoc(LPCWSTR docPath)                                                    /*
-
-    Open the document from the given path.
-    Return TRUE if file is open on return, FALSE if not.
-*-----------------------------------------------------------------------------*/
+// Open the document from the given path.
+BOOL CDoc::OpenDoc(LPCWSTR docPath)
 {
     CString msg;
     if (CString(docPath).CompareNoCase(m_docPath) == 0)
@@ -377,19 +301,20 @@ OpenDoc(LPCWSTR docPath)                                                    /*
             m_docPath.c_str());
         ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
-          // not deemed a failure, as the file is open, as specified
+
         return TRUE;
     }
-      // try to open (it should, as we know it exists, but still ...)
+
     try
     {
-        CFile f(docPath, OPEN_EXISTING);
+        CFile f(docPath, OPEN_EXISTING);  // Can throw
         GetRichView().StreamInFile(f);
         m_docPath = docPath;
         f.Close();
         m_isOpen = TRUE;
     }
-    catch (...) // if there was an error in opening the file
+
+    catch (...)
     {
         msg.Format(L"Document file\n    '%s'\ndid not open.", docPath);
         ::MessageBox(nullptr, msg, L"Information", MB_OK |
@@ -398,29 +323,22 @@ OpenDoc(LPCWSTR docPath)                                                    /*
         m_docPath.Empty();
         return FALSE;
     }
-      // regardless of whether it opens, it is not dirty
+
+    // Regardless of whether it opens, it is not dirty.
     SetDirty(FALSE);
     return TRUE;
 }
 
-/*============================================================================*/
-    void CDoc::
-SetDataPath(CView* path)                                                    /*
-
-    Register the path to the document data repository.
-*-----------------------------------------------------------------------------*/
+// Register the path to the document data repository.
+void CDoc::SetDataPath(CView* path)
 {
     m_data = path;
 }
 
-/*============================================================================*/
-    void CDoc::
-SetDirty(BOOL b)                                                            /*
-
-    Set the real edit window text modification state to b.
-*-----------------------------------------------------------------------------*/
+// Set the real edit window text modification state to b.
+void CDoc::SetDirty(BOOL b)
 {
     GetRichView().SetModify(b);
 }
-/*----------------------------------------------------------------------------*/
+
 

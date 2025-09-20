@@ -15,16 +15,6 @@
 // statusbar and view window.
 class CMainFrame : public CFrame
 {
-# if defined(__GNUC__)
-    // Required by some TDM GCC compilers.
-    enum CommandStateChangeConstants
-    {
-        CSC_UPDATECOMMANDS = (int)0xffffffff,
-        CSC_NAVIGATEFORWARD = 0x1,
-        CSC_NAVIGATEBACK = 0x2
-    }     CommandStateChangeConstants;
-#endif
-
 public:
     CMainFrame();
     virtual ~CMainFrame() override = default;
@@ -33,7 +23,6 @@ public:
     const CEdit* GetCBEdit() const { return m_combo.GetCBEdit(); }
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnClose() override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int  OnCreate(CREATESTRUCT& cs) override;

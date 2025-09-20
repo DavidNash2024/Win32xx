@@ -4,9 +4,9 @@
         <ProjectVersion>20.1</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
-        <TargetedPlatforms>3</TargetedPlatforms>
+        <Config Condition="'$(Config)'==''">Release</Config>
+        <Platform Condition="'$(Platform)'==''">Win64x</Platform>
+        <TargetedPlatforms>1048579</TargetedPlatforms>
         <AppType>Application</AppType>
         <ProjectName Condition="'$(ProjectName)'==''">TimeDemo</ProjectName>
     </PropertyGroup>
@@ -85,12 +85,13 @@
         <ProjectType>CppGuiApplication</ProjectType>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <Multithreaded>true</Multithreaded>
-        <_TCHARMapping>char</_TCHARMapping>
+        <_TCHARMapping>wchar_t</_TCHARMapping>
         <SanitizedProjectName>TimeDemo</SanitizedProjectName>
         <IncludePath>..\..\..\include\;..\src\;$(IncludePath)</IncludePath>
         <ILINK_LibraryPath>..\..\..\include\;..\src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <VerInfo_Locale>3081</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <BRCC_IncludePath>$(BDSINCLUDE)\windows\sdk;$(BRCC_IncludePath)</BRCC_IncludePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindcompvclsmp;bindcompvclwinx;bindengine;CloudService;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDAC;FireDACADSDriver;FireDACCommon;FireDACCommonDriver;FireDACCommonODBC;FireDACIBDriver;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;FireDACSqliteDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;vcl;vclactnband;vcldb;vcldsnap;vcledge;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -98,12 +99,11 @@
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <Manifest_File>(None)</Manifest_File>
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
         <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
-        <_TCHARMapping>wchar_t</_TCHARMapping>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindcompvclsmp;bindcompvclwinx;bindengine;CloudService;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDAC;FireDACADSDriver;FireDACCommon;FireDACCommonDriver;FireDACCommonODBC;FireDACIBDriver;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;FireDACSqliteDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;vcl;vclactnband;vcldb;vcldsnap;vcledge;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -113,9 +113,8 @@
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <Manifest_File>(None)</Manifest_File>
         <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
-        <_TCHARMapping>wchar_t</_TCHARMapping>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64x)'!=''">
@@ -123,7 +122,11 @@
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <Manifest_File>(None)</Manifest_File>
+        <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
+        <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
+        <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
@@ -151,15 +154,12 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <BCC_UseClassicCompiler>false</BCC_UseClassicCompiler>
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)$(CC_SUFFIX)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
-        <BCC_IncludePath>C:\Users\dnash\Documents\Visual Studio Projects\C++\Win32++\include;$(BCC_IncludePath)</BCC_IncludePath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <BRCC_IncludePath>C:\Users\dnash\Documents\Visual Studio Projects\C++\Win32++\include;C:\Program Files (x86)\Embarcadero\Studio\23.0\include\windows\sdk;$(BRCC_IncludePath)</BRCC_IncludePath>
         <Manifest_File>(None)</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
-        <BRCC_IncludePath>C:\Program Files (x86)\Embarcadero\Studio\23.0\include\windows\sdk;$(BRCC_IncludePath)</BRCC_IncludePath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(None)</Manifest_File>
@@ -167,6 +167,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64x)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Defines>NDEBUG;$(Defines)</Defines>
@@ -175,7 +177,6 @@
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <BCC_UseClassicCompiler>false</BCC_UseClassicCompiler>
-        <BRCC_IncludePath>C:\Program Files (x86)\Embarcadero\Studio\23.0\include\windows\sdk;$(BRCC_IncludePath)</BRCC_IncludePath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(None)</Manifest_File>
@@ -185,176 +186,174 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(None)</Manifest_File>
-        <BRCC_IncludePath>C:\Program Files (x86)\Embarcadero\Studio\23.0\include\windows\sdk;$(BRCC_IncludePath)</BRCC_IncludePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64x)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <ItemGroup>
         <None Include="..\..\..\include\default_resource.h">
-            <BuildOrder>18</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_appcore.h">
-            <BuildOrder>19</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_appcore0.h">
-            <BuildOrder>20</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_archive.h">
-            <BuildOrder>21</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_commondlg.h">
-            <BuildOrder>22</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_controls.h">
-            <BuildOrder>23</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_criticalsection.h">
-            <BuildOrder>24</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_cstring.h">
-            <BuildOrder>25</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_ddx.h">
-            <BuildOrder>26</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_dialog.h">
-            <BuildOrder>27</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_dockframe.h">
-            <BuildOrder>28</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_docking.h">
-            <BuildOrder>29</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_exception.h">
-            <BuildOrder>30</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_file.h">
-            <BuildOrder>31</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_filefind.h">
-            <BuildOrder>32</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_folderdialog.h">
-            <BuildOrder>33</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_frame.h">
-            <BuildOrder>34</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_gdi.h">
-            <BuildOrder>35</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_hglobal.h">
-            <BuildOrder>36</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_imagelist.h">
-            <BuildOrder>37</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_listview.h">
-            <BuildOrder>38</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_mdi.h">
-            <BuildOrder>39</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_menu.h">
-            <BuildOrder>40</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_menubar.h">
-            <BuildOrder>41</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_menumetrics.h">
-            <BuildOrder>42</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_messagepump.h">
-            <BuildOrder>43</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_messagepump0.h">
-            <BuildOrder>44</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_metafile.h">
-            <BuildOrder>45</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_mutex.h">
-            <BuildOrder>46</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_preview.h">
-            <BuildOrder>47</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_printdialogex.h">
-            <BuildOrder>48</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_printdialogs.h">
-            <BuildOrder>49</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_propertysheet.h">
-            <BuildOrder>50</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_rebar.h">
-            <BuildOrder>51</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_rect.h">
-            <BuildOrder>52</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_regkey.h">
-            <BuildOrder>53</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_ribbon.h">
-            <BuildOrder>54</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_richedit.h">
-            <BuildOrder>55</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_scrollview.h">
-            <BuildOrder>56</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_setup.h">
-            <BuildOrder>57</BuildOrder>
-        </None>
-        <None Include="..\..\..\include\wxx_shared_ptr.h">
-            <BuildOrder>58</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_socket.h">
-            <BuildOrder>59</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_statusbar.h">
-            <BuildOrder>60</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_stdcontrols.h">
-            <BuildOrder>61</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_tab.h">
-            <BuildOrder>62</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_taskdialog.h">
-            <BuildOrder>63</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_textconv.h">
-            <BuildOrder>64</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_themes.h">
-            <BuildOrder>65</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_thread.h">
-            <BuildOrder>66</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_time.h">
-            <BuildOrder>67</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_toolbar.h">
             <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_treeview.h">
-            <BuildOrder>69</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_webbrowser.h">
-            <BuildOrder>70</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_wincore.h">
-            <BuildOrder>71</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_wincore0.h">
-            <BuildOrder>72</BuildOrder>
+            <BuildOrder>68</BuildOrder>
         </None>
         <CppCompile Include="..\src\AboutBox.cpp">
             <BuildOrder>2</BuildOrder>
@@ -427,8 +426,8 @@
                     <ProjectProperties Name="IndexFiles">False</ProjectProperties>
                 </ProjectProperties>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k280.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp280.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k290.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp290.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                 </Excluded_Packages>
             </CPlusPlusBuilder.Personality>
             <Deployment Version="4">
@@ -482,6 +481,20 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png" Configuration="Debug" Class="UWP_CppLogo150">
+                    <Platform Name="Win64x">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo150x150.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png" Configuration="Debug" Class="UWP_CppLogo44">
+                    <Platform Name="Win64x">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo44x44.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile Condition="'$(UsingDelphiRTL)'=='true'" LocalName="$(BDS)\bin\borlndmm.dll" Class="DependencyModule">
                     <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
@@ -529,6 +542,12 @@
                 </DeployFile>
                 <DeployFile LocalName=".\Embarcadero\Win64\Debug\TimeDemo.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
+                        <RemoteName>TimeDemo.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\Embarcadero\Win64x\Release\TimeDemo.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64x">
                         <RemoteName>TimeDemo.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1507,7 +1526,7 @@
             <Platforms>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
-                <Platform value="Win64x">False</Platform>
+                <Platform value="Win64x">True</Platform>
             </Platforms>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

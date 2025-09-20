@@ -6,19 +6,19 @@
 
 #if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
 #pragma warning (disable : 4458) // disable warning: declaration hides class member.
-#endif
 
 // Declare min and max for older versions of Visual Studio.
-#if defined (_MSC_VER) && (_MSC_VER < 1920) // < VS2019
 using std::min;
 using std::max;
 #endif
 
 #include <gdiplus.h>
 
-#if defined(_MSC_VER) && (_MSC_VER == 1900)
+#if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
 #pragma warning (default : 4458) // return warning to default.
 #endif
+
+#include <shlwapi.h>
 
 #include "CoverImage.h"
 
@@ -63,30 +63,23 @@ CCoverImage::~CCoverImage()
 void CCoverImage::DrawImage(CDC& dc)
 {
     // Convert the image string to binary.
-    size_t  bufferSize = m_imageData.size();
+    UINT  bufferSize = static_cast<UINT>(m_imageData.size());
     if (bufferSize > 0)
     {
-        CHGlobal globalMemory(bufferSize);
-        if (globalMemory.Get() != nullptr)
+        IStream* stream = ::SHCreateMemStream(m_imageData.data(), bufferSize);
+        if (stream)
         {
-            CGlobalLock<CHGlobal> buffer(globalMemory);
-            if (buffer != nullptr)
-            {
-                memcpy(buffer, &m_imageData[0], bufferSize);
-                IStream* stream = nullptr;
-                VERIFY(S_OK == ::CreateStreamOnHGlobal(globalMemory, FALSE, &stream));
-                Image cover(stream);
+            Image cover(stream);
 
-                // Draw the image.
-                UINT width = GetClientRect().Width();
-                UINT height = GetClientRect().Height();
-                Rect destRect(0, 0, width, height);
-                Graphics graphics(dc);
-                graphics.DrawImage(&cover, destRect);
+            // Draw the image.
+            UINT width = GetClientRect().Width();
+            UINT height = GetClientRect().Height();
+            Rect destRect(0, 0, width, height);
+            Graphics graphics(dc);
+            graphics.DrawImage(&cover, destRect);
 
-                // Cleanup.
-                stream->Release();
-            }
+            // Cleanup.
+            stream->Release();
         }
     }
     else
@@ -133,6 +126,7 @@ LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -143,7 +137,7 @@ LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

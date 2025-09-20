@@ -19,7 +19,6 @@ public:
     virtual ~CDXApp() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
     virtual int MessageLoop() override;
 

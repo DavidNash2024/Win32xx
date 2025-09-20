@@ -22,7 +22,6 @@ public:
     const CString& GetInfoString() { return m_infoText; }
 
 protected:
-    // Virtual functions that override base class functions.
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnInitDialog() override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;

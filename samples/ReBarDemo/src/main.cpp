@@ -6,7 +6,7 @@
 #include "ReBarApp.h"
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
-#pragma warning( disable : 28251 )  // Ignore the annotation requirement for wWinMain.
+#pragma warning( suppress : 28251 )  // Ignore the annotation requirement for wWinMain.
 #endif
 
 int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
@@ -26,6 +26,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

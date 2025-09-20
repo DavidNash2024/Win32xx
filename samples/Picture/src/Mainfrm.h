@@ -5,7 +5,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "View.h"
+#include "MainView.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -20,14 +20,16 @@ public:
     virtual HWND Create(HWND parent = nullptr) override;
 
     void DpiScaleToolBar();
+    CImageView& GetImageView() { return m_mainView.m_imageView; }
+    LPPICTURE GetPicture() const { return m_mainView.m_imageView.GetPicture(); }
     void UpdateToolbar();
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void OnMenuUpdate(UINT id) override;
+    virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void SetupMenuIcons() override;
     virtual void SetupToolBar() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -37,8 +39,7 @@ private:
     CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Message handlers
-    LRESULT OnFileLoaded(LPCWSTR fileName);
-    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnImageLoaded(LPCWSTR fileName);
 
     // Command handlers
     BOOL OnFileExit();
@@ -48,10 +49,7 @@ private:
     BOOL OnFileSave();
 
     // Member variables
-    CView m_view;
-    CRect m_viewRect;
-    CPoint m_scrollPos;
-    bool m_isDPIChanging;
+    CMainView m_mainView;
 };
 
 #endif //MAINFRM_H

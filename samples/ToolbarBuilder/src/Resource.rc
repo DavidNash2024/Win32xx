@@ -1,0 +1,295 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "../src/res/PerMonitorV2.manifest"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New Toolbar\tCtrl+N",        IDM_FILE_NEW_TOOLBAR
+        MENUITEM "&Load Toolbar\tCtrl+L",       IDM_FILE_LOAD_TOOLBAR
+        MENUITEM "&Save Toolbar\tCtrl+S",       IDM_FILE_SAVE_TOOLBAR
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
+    END
+    POPUP "&Image"
+    BEGIN
+        MENUITEM "&Add Image",                  IDM_IMAGE_ADD
+        MENUITEM "Swap two images",             IDM_IMAGE_SWAP, GRAYED
+        MENUITEM "Delete image(s)",             IDM_IMAGE_DELETE, GRAYED
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Set Toolbar &Background",     IDM_VIEW_BACKGROUND
+        MENUITEM "Set &Mask Color",             IDM_VIEW_CHOOSEMASK
+        MENUITEM "Display with Mask",           IDM_VIEW_USEMASK
+        MENUITEM SEPARATOR
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "../src/res/Win32xx.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLBAR             BITMAP                  "../src/res/Toolbar.bmp"
+
+IDB_TOOLBAR32           BITMAP                  "../src/res/Toolbar_32.bmp"
+
+IDB_MENUICONS           BITMAP                  "../src/res/MenuIcons.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG2 DIALOGEX 0, 0, 166, 179
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Toolbar Bitmap"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,31,157,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,84,157,50,14
+    CONTROL         "16 x 16",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,18,27,40,10
+    CONTROL         "24 x 24",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,18,38,40,10
+    CONTROL         "32 x 32",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,18,49,40,10
+    CONTROL         "48 x 48",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,60,26,42,10
+    CONTROL         "64 x 64",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON,60,37,42,10
+    CONTROL         "96 x 96",IDC_RADIO6,"Button",BS_AUTORADIOBUTTON,60,48,42,10
+    CONTROL         "128 x 128",IDC_RADIO7,"Button",BS_AUTORADIOBUTTON,102,26,48,10
+    CONTROL         "196 x 196",IDC_RADIO8,"Button",BS_AUTORADIOBUTTON,102,37,48,10
+    CONTROL         "256 x 256",IDC_RADIO9,"Button",BS_AUTORADIOBUTTON,102,48,48,10
+    GROUPBOX        "Image Size",IDC_STATIC,13,18,138,45
+    GROUPBOX        "Color Format",IDC_STATIC,13,83,139,46
+    CONTROL         "RGB color with apha chanel (32 bit)",IDC_RADIO10,"Button",BS_AUTORADIOBUTTON,18,92,130,10
+    CONTROL         "RGB color (24 bit)",IDC_RADIO11,"Button",BS_AUTORADIOBUTTON,18,103,90,10
+    CONTROL         "256 color palette (8 bit)",IDC_RADIO12,"Button",BS_AUTORADIOBUTTON,18,114,90,10
+END
+
+IDW_ABOUT DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,52,50,14
+    CTEXT           "Toolbar Bitmap Builder",IDC_STATIC,50,20,85,9
+    ICON            IDW_MAIN,0,4,4,20,20
+    CTEXT           "X",IDC_STATIC1,50,29,85,9
+    CTEXT           "X",IDC_STATIC2,50,38,85,9
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDW_MAIN ACCELERATORS
+BEGIN
+    "N",            IDM_FILE_NEW_TOOLBAR,   VIRTKEY, CONTROL, NOINVERT
+    "L",            IDM_FILE_LOAD_TOOLBAR,  VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE_TOOLBAR,  VIRTKEY, CONTROL, NOINVERT
+    "A",            IDM_IMAGE_ADD,          VIRTKEY, CONTROL, NOINVERT
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG2, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "Toolbar Bitmap Builder"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"
+    IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_INDICATOR_SCRL      "SCRL"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_PREVIEWPRINT        "Print"
+    IDW_PREVIEWSETUP        "Print Setup"
+    IDW_PREVIEWPREV         "Prev Page"
+    IDW_PREVIEWNEXT         "Next Page"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_PREVIEWCLOSE        "Close"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW_TOOLBAR    "Create a New Toolbar Bitmap"
+    IDM_FILE_LOAD_TOOLBAR   "Load a Toolbar Bitmap from File"
+    IDM_FILE_SAVE_TOOLBAR   "Save the Toolbar Bitmap to File"
+    IDM_FILE_EXIT           "End the Program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_IMAGE_ADD           "Add an image to the current toolbar bitmap"
+    IDM_IMAGE_SWAP          "Swap two selected images in the toolbar bitmap"
+    IDM_IMAGE_DELETE        "Delete the selected image(s) in the toolbar bitmap"
+    IDM_VIEW_BACKGROUND     "Change the color of the background displayed behind the toolbar"
+    IDM_VIEW_CHOOSEMASK     "Change the color of the mask for toolbar transparency"
+    IDM_VIEW_USEMASK        "Display the toolbar bitmap using the mask as a transparent color"
+    IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    61536                   "Close the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61488                   "Maximize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61472                   "Minimize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61456                   "Move the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61504                   "Select Next Window"
+END
+
+STRINGTABLE
+BEGIN
+    61520                   "Select Previous Window"
+END
+
+STRINGTABLE
+BEGIN
+    61728                   "Restore the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61440                   "Resize the Window"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

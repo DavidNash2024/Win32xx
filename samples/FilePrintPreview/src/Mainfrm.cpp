@@ -316,7 +316,8 @@ OnFilePrint(HWND parent)                                                    /*
 *-----------------------------------------------------------------------------*/
 {
       // initialize the current print dialog
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC |
+        PD_ENABLEPRINTHOOK);
     PRINTDLG pd = printDlg.GetParameters();
     pd.nCopies   = 1;
     pd.nFromPage = 0xFFFF;
@@ -631,7 +632,7 @@ WriteFile(LPCWSTR filePath)                                                 /*
     LRESULT CMainFrame::
 WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
 
-    The mainframe message pocessing procedure.
+    The mainframe message processing procedure.
 *-----------------------------------------------------------------------------*/
 {
     try
@@ -648,16 +649,21 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
                 }
             }
         }
+
         return WndProcDefault(msg, wparam, lparam);
     }
       // Catch all CException types.
     catch (const CException& e)
     {
-          // Display the exception and continue.
-        CString str;
-        str << e.GetText() << L'\n' << e.GetErrorString();
-        ::MessageBox(nullptr, str, L"An exception occurred", MB_ICONERROR);
-        return 0;
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
+
+    return 0;
 }
 /*----------------------------------------------------------------------------*/

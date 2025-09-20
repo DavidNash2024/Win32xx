@@ -1,3 +1,5 @@
+#include "default_resource.h"
+
 // String resources
 #define IDS_WINDOWTITLE         120
 #define IDS_CONTENT             121

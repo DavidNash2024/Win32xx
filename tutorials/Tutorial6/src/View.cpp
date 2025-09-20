@@ -23,18 +23,18 @@ void CView::DrawLine(int x, int y)
 // Called when drawing to the window.
 void CView::OnDraw(CDC& dc)
 {
-    if (m_points.size() > 0)
-    {
-        bool isPenDown = false;  // Start with the pen up.
-        for (size_t i = 0 ; i < m_points.size(); i++)
-        {
-            if (isPenDown)
-                dc.LineTo(m_points[i].x, m_points[i].y);
-            else
-                dc.MoveTo(m_points[i].x, m_points[i].y);
+    // Start with the pen up.
+    bool isPenDown = false;
 
-            isPenDown = m_points[i].isPenDown;
-        }
+    // Draw the lines.
+    for (const PlotPoint& p : m_points)
+    {
+        if (isPenDown)
+            dc.LineTo(p.x, p.y);
+        else
+            dc.MoveTo(p.x, p.y);
+
+        isPenDown = p.isPenDown;
     }
 }
 

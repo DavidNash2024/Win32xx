@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]            (PrintInfo.cpp) *
+/* (26-Mar-2025)                                               (PrintInfo.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -37,36 +37,28 @@
     of CPrintInfo to FALSE; this informs the base class to stop the print
     loop.
 
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #include "stdafx.h"
 #include "PrintInfo.h"
 
-/*============================================================================*/
-    CPrintInfo::
-CPrintInfo()                                                            /*
-
-*-----------------------------------------------------------------------------*/
+CPrintInfo::CPrintInfo()
 {
     m_pPD = nullptr;
-    m_bPreview   = FALSE;       // initialize to not preview
-    m_bDirect    = FALSE;       // initialize to not direct
-    m_bDocObject = FALSE;       // initialize to not IPrint
+    m_bPreview   = FALSE;           // initialize to not preview
+    m_bDirect    = FALSE;           // initialize to not direct
+    m_bDocObject = FALSE;           // initialize to not IPrint
     m_bContinuePrinting = FALSE;    // Assume it is not yet OK to print
 
     m_dwFlags = 0;                  // not supported
     m_nOffsetPage = 0;              // not supported
 
-    m_nCopies    = 1;       // number of copies to print
-    m_nFromPage  = 1;       // first printed page, 1 based
-    m_nMaxPage   = 0xffff;  // maximum page limit
-    m_nMinPage   = 1;       // minimum page limit
-    m_nToPage    = 0xffff;  // last printed page
-    m_nCurPage   = 0;       // Current page
+    m_nCopies    = 1;               // number of copies to print
+    m_nFromPage  = 1;               // first printed page, 1 based
+    m_nMaxPage   = 0xffff;          // maximum page limit
+    m_nMinPage   = 1;               // minimum page limit
+    m_nToPage    = 0xffff;          // last printed page
+    m_nCurPage   = 0;               // Current page
 
     m_lpUserData = nullptr;         // pointer to user created struct
     m_nNumPreviewPages = 0;         // (not supported)
@@ -75,24 +67,18 @@ CPrintInfo()                                                            /*
     m_nMargin     = 0;              // page margin, in twips
 }
 
-/*============================================================================*/
-    void CPrintInfo::
-InitInfo(CPrintDialog* pPD, UINT fromPage, UINT toPage, UINT minPage,
-    UINT maxPage, UINT nCopies)                     /*
-
-        Set initial values for the CPrintInfo object. This member must be
-    invoked with a valid CPrintDialog pPD before a DoModal operation using
-    the object for other uses.
-*-----------------------------------------------------------------------------*/
+// Set initial values for the CPrintInfo object.
+void CPrintInfo::InitInfo(CPrintDialog* pPD, UINT fromPage, UINT toPage,
+    UINT minPage, UINT maxPage, UINT nCopies)
 {
     assert(pPD);
     m_pPD        = pPD;
     PRINTDLG pd  = m_pPD->GetParameters();
-    pd.nCopies   = (WORD)nCopies;
-    pd.nFromPage = (WORD)fromPage;
-    pd.nToPage   = (WORD)toPage;
-    pd.nMinPage  = (WORD)minPage;
-    pd.nMaxPage  = (WORD)maxPage;
+    pd.nCopies   = static_cast<WORD>(nCopies);
+    pd.nFromPage = static_cast<WORD>(fromPage);
+    pd.nToPage   = static_cast<WORD>(toPage);
+    pd.nMinPage  = static_cast<WORD>(minPage);
+    pd.nMaxPage  = static_cast<WORD>(maxPage);
     m_pPD->SetParameters(pd);
 }
-/*----------------------------------------------------------------------------*/
+

@@ -16,7 +16,8 @@ set in the same way as views for Frames and MDI children.  Containers
 additional docking features when used as the view window for a Docker.
 
 Classes titled CDockXXXX are inherited from CDocker. Classes titled CViewXXXX
-are the various view windows inherited from CWnd.
+are the various view windows inherited from CListView, CTreeView, CRichEdit or
+CWnd.
 
 CMainFrame inherits from CDockFrame. CDockFrame adds support for docking
 to CMainFrame.

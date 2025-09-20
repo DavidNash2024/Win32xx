@@ -7,6 +7,11 @@
 #include "resource.h"
 #include "UserMessages.h"
 
+constexpr COLORREF black     = RGB(0, 0, 0);
+constexpr COLORREF white     = RGB(255, 255, 255);
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+constexpr COLORREF magenta   = RGB(255, 0, 255);
+
 ///////////////////////////////////////
 // Definitions for the CMainFrame class
 //
@@ -185,7 +190,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
             // Set focus to web page
             LONG_PTR hWeb;
             GetIWebBrowser2()->get_HWND(&hWeb);
-            ::SetFocus((HWND)hWeb);
+            ::SetFocus(reinterpret_cast<HWND>(hWeb));
         }
         return TRUE;
         }
@@ -276,10 +281,6 @@ BOOL CMainFrame::OnEditPaste()
 // Called in response to the menu or accelerator key.
 BOOL CMainFrame::OnEditDelete()
 {
-#if defined(__GNUC__)
-    OLECMDID OLECMDID_DELETE = (OLECMDID)33;
-#endif
-
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Clear();
     else
@@ -572,9 +573,9 @@ void CMainFrame::SetupMenuIcons()
     iconData.push_back(IDM_HELP_ABOUT);
 
     if (GetMenuIconHeight() >= 24)
-        AddMenuIcons(iconData, RGB(192, 192, 192), IDB_MENUICONS24, 0);
+        AddMenuIcons(iconData, lightgray, IDB_MENUICONS24, 0);
     else
-        AddMenuIcons(iconData, RGB(192, 192, 192), IDB_MENUICONS16, 0);
+        AddMenuIcons(iconData, lightgray, IDB_MENUICONS16, 0);
 }
 
 // Set the Resource IDs for the toolbar buttons.
@@ -588,22 +589,12 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(0);                // Separator
     AddToolBarButton(IDM_HOME);
 
-    // Set the image lists for normal, hot and disabled buttons.
-    int bitsPerPixel = GetDesktopWindow().GetDC().GetDeviceCaps(BITSPIXEL);
-    if (GetWinVersion() >= 2501 && bitsPerPixel == 32)
-    {
-        // Load the 32bit bitmaps if we can, otherwise load 24bit ones.
-        CBitmap bm(IDB_TOOLBAR32_NORM);
-        if (bm.GetHandle())
-            SetToolBarImages(RGB(0, 0, 0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
-        else
-            SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
-    }
+    // Load the 32bit bitmaps if we can, otherwise load 24bit ones.
+    CBitmap bm(IDB_TOOLBAR32_NORM);
+    if (bm.GetHandle())
+        SetToolBarImages(black, IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
     else
-    {
-        // Use 24bit bitmaps for Win2000 and below.
-        SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
-    }
+        SetToolBarImages(magenta, IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 
     // Add the ComboBoxEx control.
     AddComboBoxBand();
@@ -637,7 +628,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << '\n' << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

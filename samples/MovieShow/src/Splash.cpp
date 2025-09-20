@@ -10,6 +10,8 @@
 // CSplash function definitions.
 //
 
+constexpr COLORREF green = RGB(0, 255, 0);
+
 // Constructor.
 CSplash::CSplash() : m_fontHandle(nullptr)
 {
@@ -31,8 +33,7 @@ int CSplash::OnCreate(CREATESTRUCT&)
 void CSplash::AddBar()
 {
     m_progress.Create(*this);
-    m_progress.SetWindowPos(0, 50, 200, 156, 10, 0);
-    m_progress.ShowWindow(SW_HIDE);
+    m_progress.SetWindowPos(0, 1, 1, 1, 1, SWP_HIDEWINDOW);
     m_progress.SetStep(1);
 }
 
@@ -69,7 +70,7 @@ void CSplash::LoadFont()
 
                 if (m_fontHandle == nullptr)
                 {
-                    MessageBox(L"Font add fails", L"Error", MB_OK);
+                    TaskDialogBox(nullptr, L"Font add fails", L"Error", TD_ERROR_ICON);
                 }
             }
         }
@@ -85,7 +86,7 @@ void CSplash::OnDraw(CDC& dc)
     dcMem.CreateCompatibleBitmap(dc, xImage, yImage);
     DrawIconEx(dcMem, 0, 0, m_hIcon, xImage, yImage, 0, 0, DI_NORMAL);
 
-    dcMem.SetTextColor(RGB(0, 255, 0));
+    dcMem.SetTextColor(green);
     dcMem.SetBkMode(TRANSPARENT);
     CRect rc = GetClientRect();
     rc.top += 40;
@@ -94,6 +95,16 @@ void CSplash::OnDraw(CDC& dc)
         CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, FF_MODERN, L"French Script MT");
 
     dcMem.DrawText(m_text.c_str(), m_text.GetLength(), rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+    // Reposition the progress window.
+    if (m_progress.IsWindowVisible())
+    {
+        int x = rc.Width() / 6;
+        int y = 3 * rc.Height() / 4;
+        int cx = 2 * rc.Width() / 3;
+        int cy = DpiScaleInt(10);
+        m_progress.SetWindowPos(0, x, y, cx, cy, 0);
+    }
 
     dc.BitBlt(0, 0, xImage, yImage, dcMem, 0, 0, SRCCOPY);
 }
@@ -112,7 +123,7 @@ void CSplash::PreCreate(CREATESTRUCT& cs)
 void CSplash::PreRegisterClass(WNDCLASS& wc)
 {
     wc.lpszClassName = L"Splash Screen";
-    wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
+    wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(NULL_BRUSH));
     wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
 }
 
@@ -158,6 +169,7 @@ LRESULT CSplash::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -168,7 +180,7 @@ LRESULT CSplash::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

@@ -7,6 +7,11 @@ types of view windows to be displayed simultaneously. The more common SDI
 
 CMainMDIFrame inherits from CMDIDockFrame to enable docking support.
 
+The menu for a MDI frame should have a popup menu item called "Window"
+positioned second from the right. An entry for each MDI child will be appended
+to this menu item. It a MDI child have a menu, this should have a popup menu
+item called "Window" positioned second from the right as well.
+
 Caveat
 ======
 Multiple-document interface (MDI) applications are officially discouraged

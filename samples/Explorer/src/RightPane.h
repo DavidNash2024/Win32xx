@@ -19,7 +19,6 @@ public:
     virtual ~CRightPane() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual DockPtr NewDockerFromID(int id) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]             (AboutBox.cpp) *
+/* (26-Mar-2025)                                                (AboutBox.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -9,24 +9,15 @@
     CommonDialogs sample application using the Win32++ Windows interface
     classes.
 
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #include "stdafx.h"
 #include "StdApp.h"
 
-/*============================================================================*/
-     BOOL AboutBox::
-OnInitDialog()                                                              /*
-
-    Called before the dialog is displayed to enter the AboutBox message.
-*-----------------------------------------------------------------------------*/
+// Called before the dialog is displayed to enter the AboutBox message.
+BOOL AboutBox::OnInitDialog()
 {
     SetDlgItemText(IDC_ABOUT_MSG, m_about);
     return TRUE;
 }
-/*----------------------------------------------------------------------------*/
 

@@ -55,21 +55,19 @@ CMemDC CView::Draw()
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
+    // Start with the pen up.
+    bool isDrawing = false;
+
     // Draw the lines on the memory DC.
-    if (GetAllPoints().size() > 0)
+    for (const PlotPoint& p : GetAllPoints())
     {
-        bool isDrawing = false;  // Start with the pen up.
-        for (size_t i = 0 ; i < GetAllPoints().size(); ++i)
-        {
-            memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].penColor);
+        memDC.CreatePen(PS_SOLID, 1, p.penColor);
+        if (isDrawing)
+            memDC.LineTo(p.x, p.y);
+        else
+            memDC.MoveTo(p.x, p.y);
 
-            if (isDrawing)
-                memDC.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
-            else
-                memDC.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
-
-            isDrawing = GetAllPoints()[i].isPenDown;
-        }
+        isDrawing = p.isPenDown;
     }
 
     return memDC;

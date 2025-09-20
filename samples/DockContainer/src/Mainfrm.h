@@ -28,22 +28,21 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame() = default;
-    virtual HWND Create(HWND parent = nullptr);
+    virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
-    // Virtual functions that override base class functions
-    virtual DockPtr NewDockerFromID(int id);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT id);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void RecalcDockLayout();
-    virtual BOOL SaveRegistrySettings();
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual void UndockContainerGroup();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual DockPtr NewDockerFromID(int id) override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnInitialUpdate() override;
+    virtual void OnMenuUpdate(UINT id) override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual void RecalcDockLayout() override;
+    virtual BOOL SaveRegistrySettings() override;
+    virtual void SetupMenuIcons() override;
+    virtual void SetupToolBar() override;
+    virtual void UndockContainerGroup() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CMainFrame(const CMainFrame&) = delete;
@@ -51,7 +50,6 @@ private:
 
     // Command handlers
     BOOL OnContainerTabsAtTop();
-    BOOL OnDockCloseAll();
     BOOL OnDockDefault();
     BOOL OnFileExit();
     BOOL OnHideSingleTab();

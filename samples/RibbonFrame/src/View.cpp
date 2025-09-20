@@ -49,20 +49,20 @@ void CView::OnDraw(CDC& dc)
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
-    if (GetAllPoints().size() > 0)
+    // Start with the pen up.
+    bool isDrawing = false;
+
+    // Draw the lines.
+    for (const PlotPoint& p : GetAllPoints())
     {
-        bool isDrawing = false;  // Start with the pen up.
-        for (size_t i = 0 ; i < GetAllPoints().size(); ++i)
-        {
-            memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].color);
+        memDC.CreatePen(PS_SOLID, 1, p.color);
 
-            if (isDrawing)
-                memDC.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
-            else
-                memDC.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
+        if (isDrawing)
+            memDC.LineTo(p.x, p.y);
+        else
+            memDC.MoveTo(p.x, p.y);
 
-            isDrawing = GetAllPoints()[i].isPenDown;
-        }
+        isDrawing = p.isPenDown;
     }
 
     // Copy from the memory DC to our painting dc.
@@ -232,9 +232,10 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
 
     // Catch all unhandled std::exception types.
@@ -242,7 +243,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

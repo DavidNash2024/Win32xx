@@ -34,7 +34,6 @@ public:
     void Render();
 
 protected:
-    // Virtual functions that override base class functions
     virtual HWND Create(HWND parent = nullptr) override;
     virtual int OnCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

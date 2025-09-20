@@ -44,19 +44,19 @@ int CView::OnCreate(CREATESTRUCT&)
 // Called when drawing to the window.
 void CView::OnDraw(CDC& dc)
 {
-    if (GetAllPoints().size() > 0)
-    {
-        bool isPenDown = false;  //Start with the pen up
-        for (size_t i = 0 ; i < GetAllPoints().size(); i++)
-        {
-            dc.CreatePen(PS_SOLID, 1, GetAllPoints()[i].penColor);
-            if (isPenDown)
-                dc.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
-            else
-                dc.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
+    //Start with the pen up.
+    bool isPenDown = false;
 
-            isPenDown = GetAllPoints()[i].isPenDown;
-        }
+    // Draw the lines.
+    for (const PlotPoint& p : GetAllPoints())
+    {
+        dc.CreatePen(PS_SOLID, 1, p.penColor);
+        if (isPenDown)
+            dc.LineTo(p.x, p.y);
+        else
+            dc.MoveTo(p.x, p.y);
+
+        isPenDown = p.isPenDown;
     }
 }
 

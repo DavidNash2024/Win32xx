@@ -28,7 +28,6 @@ public:
     void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
 
 protected:
-    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDestroy() override;
     virtual void OnInitialUpdate() override;

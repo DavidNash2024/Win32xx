@@ -20,7 +20,6 @@ public:
     void QuickPrint(LPCWSTR docName);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnDraw(CDC& dc) override;
     virtual void OnInitialUpdate() override;
     virtual void PreCreate(CREATESTRUCT& cs) override;

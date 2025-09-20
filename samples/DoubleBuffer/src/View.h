@@ -14,7 +14,6 @@ public:
     virtual ~CView() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnInitialUpdate() override;
     virtual void    PreRegisterClass(WNDCLASS& wc) override;

@@ -6,12 +6,18 @@
 #include "MDIChildSimple.h"
 #include "resource.h"
 
+constexpr COLORREF black = RGB(0, 0, 0);
+constexpr COLORREF white = RGB(255, 255, 255);
+constexpr COLORREF red   = RGB(255, 0, 0);
+constexpr COLORREF green = RGB(0, 255, 0);
+constexpr COLORREF blue  = RGB(0, 0, 255);
+
 ///////////////////////////////////
 // CViewSimple function definitions
 //
 
 // Constructor
-CViewSimple::CViewSimple() : m_color(RGB(0,0,255))
+CViewSimple::CViewSimple() : m_color(blue)
 {
 }
 
@@ -55,6 +61,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -110,23 +117,23 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM)
     switch (id)
     {
     case IDM_COLOR_BLACK:
-        m_view.SetColor(RGB(0,0,0));
+        m_view.SetColor(black);
         Invalidate();
         return TRUE;
     case IDM_COLOR_RED:
-        m_view.SetColor(RGB(255, 0, 0));
+        m_view.SetColor(red);
         Invalidate();
         return TRUE;
     case IDM_COLOR_GREEN:
-        m_view.SetColor(RGB(0, 255, 0));
+        m_view.SetColor(green);
         Invalidate();
         return TRUE;
     case IDM_COLOR_BLUE:
-        m_view.SetColor(RGB(0, 0, 255));
+        m_view.SetColor(blue);
         Invalidate();
         return TRUE;
     case IDM_COLOR_WHITE:
-        m_view.SetColor(RGB(255, 255, 255));
+        m_view.SetColor(white);
         Invalidate();
         return TRUE;
     }
@@ -155,6 +162,7 @@ LRESULT CMDIChildSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

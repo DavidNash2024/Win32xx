@@ -11,8 +11,6 @@ This project demonstrates the how do the following with a StatusBar
 When XP themes are enabled, the StatusBar color is set in 
 CMmainFrame::DrawStatusBarBkgnd. A color gradient is used as the StatusBar's
 background. XP themes are enabled by default for Windows XP and above. 
-For older systems without XP themes (windows 2000 and below), we set 
-a solid background color using the SB_SETBKCOLOR message.
 
 The status bar has 9 parts (0 through 8):
  * The frame's status is displayed in part 0
@@ -28,8 +26,8 @@ The status bar has 9 parts (0 through 8):
 
 Features demonstrated in this example
 =====================================
-* Positioning child windows such as a hyperlink control and 
-   progress bar on the StatusBar.
+* Positioning child windows such as a hyperlink control and progress bar on the
+   StatusBar
 * Displaying an icon in a StatusBar part
 * Performing owner drawing on a StatusBar part.
 * ExcludeClipRect is used to exclude the progress bar from the background's

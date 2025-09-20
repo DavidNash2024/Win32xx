@@ -5,8 +5,8 @@
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
-        <TargetedPlatforms>3</TargetedPlatforms>
+        <Platform Condition="'$(Platform)'==''">Win64x</Platform>
+        <TargetedPlatforms>1048579</TargetedPlatforms>
         <AppType>Console</AppType>
         <ProjectName Condition="'$(ProjectName)'==''">Console</ProjectName>
     </PropertyGroup>
@@ -127,7 +127,6 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <BCC_UseClassicCompiler>false</BCC_UseClassicCompiler>
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)$(CC_SUFFIX)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
-        <BCC_IncludePath>C:\Users\dnash\Documents\Visual Studio Projects\C++\Win32++\include;$(BCC_IncludePath)</BCC_IncludePath>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(None)</Manifest_File>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
@@ -147,169 +146,166 @@
     </PropertyGroup>
     <ItemGroup>
         <None Include="..\..\..\include\default_resource.h">
-            <BuildOrder>1</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_appcore.h">
-            <BuildOrder>2</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_appcore0.h">
-            <BuildOrder>3</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_archive.h">
-            <BuildOrder>4</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_commondlg.h">
-            <BuildOrder>5</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_controls.h">
-            <BuildOrder>6</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_criticalsection.h">
-            <BuildOrder>7</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_cstring.h">
-            <BuildOrder>8</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_ddx.h">
-            <BuildOrder>9</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_dialog.h">
-            <BuildOrder>10</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_dockframe.h">
-            <BuildOrder>11</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_docking.h">
-            <BuildOrder>12</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_exception.h">
-            <BuildOrder>13</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_file.h">
-            <BuildOrder>14</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_filefind.h">
-            <BuildOrder>15</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_folderdialog.h">
-            <BuildOrder>16</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_frame.h">
-            <BuildOrder>17</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_gdi.h">
-            <BuildOrder>18</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_hglobal.h">
-            <BuildOrder>19</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_imagelist.h">
-            <BuildOrder>20</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_listview.h">
-            <BuildOrder>21</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_mdi.h">
-            <BuildOrder>22</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_menu.h">
-            <BuildOrder>23</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_menubar.h">
-            <BuildOrder>24</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_menumetrics.h">
-            <BuildOrder>25</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_messagepump.h">
-            <BuildOrder>26</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_messagepump0.h">
-            <BuildOrder>27</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_metafile.h">
-            <BuildOrder>28</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_mutex.h">
-            <BuildOrder>29</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_preview.h">
-            <BuildOrder>30</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_printdialogex.h">
-            <BuildOrder>31</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_printdialogs.h">
-            <BuildOrder>32</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_propertysheet.h">
-            <BuildOrder>33</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_rebar.h">
-            <BuildOrder>34</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_rect.h">
-            <BuildOrder>35</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_regkey.h">
-            <BuildOrder>36</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_ribbon.h">
-            <BuildOrder>37</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_richedit.h">
-            <BuildOrder>38</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_scrollview.h">
-            <BuildOrder>39</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_setup.h">
-            <BuildOrder>40</BuildOrder>
-        </None>
-        <None Include="..\..\..\include\wxx_shared_ptr.h">
-            <BuildOrder>41</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_socket.h">
-            <BuildOrder>42</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_statusbar.h">
-            <BuildOrder>43</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_stdcontrols.h">
-            <BuildOrder>44</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_tab.h">
-            <BuildOrder>45</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_taskdialog.h">
-            <BuildOrder>46</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_textconv.h">
-            <BuildOrder>47</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_themes.h">
-            <BuildOrder>48</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_thread.h">
-            <BuildOrder>49</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_time.h">
-            <BuildOrder>50</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_toolbar.h">
-            <BuildOrder>51</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_treeview.h">
-            <BuildOrder>52</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_webbrowser.h">
-            <BuildOrder>53</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_wincore.h">
             <BuildOrder>54</BuildOrder>
         </None>
         <None Include="..\..\..\include\wxx_wincore0.h">
-            <BuildOrder>55</BuildOrder>
+            <BuildOrder>54</BuildOrder>
         </None>
         <CppCompile Include="..\src\main.cpp">
             <BuildOrder>0</BuildOrder>
@@ -440,6 +436,12 @@
                 </DeployFile>
                 <DeployFile LocalName=".\Embarcadero\Win64\Debug\Console.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
+                        <RemoteName>Console.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\Embarcadero\Win64x\Debug\Console.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64x">
                         <RemoteName>Console.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1319,7 +1321,7 @@
             <Platforms>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
-                <Platform value="Win64x">False</Platform>
+                <Platform value="Win64x">True</Platform>
             </Platforms>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

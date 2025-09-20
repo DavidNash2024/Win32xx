@@ -11,6 +11,12 @@
 #include "Resource.h"
 #include "UserMessages.h"
 
+constexpr COLORREF red   = RGB(255, 0, 0);
+constexpr COLORREF green = RGB(0, 196, 0);
+constexpr COLORREF blue  = RGB(0, 0, 255);
+constexpr COLORREF black = RGB(0, 0, 0);
+
+
 //////////////////////////////////
 // CMainFrame function definitions
 CMainFrame::CMainFrame() : m_pIUIRibbon(nullptr)
@@ -139,10 +145,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         return TRUE;
     }
 
-    case IDM_PEN_RED:   SetPenColor(RGB(255, 0, 0));    return TRUE;
-    case IDM_PEN_BLUE:  SetPenColor(RGB(0, 0, 255));    return TRUE;
-    case IDM_PEN_GREEN: SetPenColor(RGB(0, 196, 0));    return TRUE;
-    case IDM_PEN_BLACK: SetPenColor(RGB(0, 0, 0));      return TRUE;
+    case IDM_PEN_RED:   SetPenColor(red);    return TRUE;
+    case IDM_PEN_BLUE:  SetPenColor(blue);   return TRUE;
+    case IDM_PEN_GREEN: SetPenColor(green);  return TRUE;
+    case IDM_PEN_BLACK: SetPenColor(black);  return TRUE;
 
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -486,9 +492,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
 
     // Catch all unhandled std::exception types.

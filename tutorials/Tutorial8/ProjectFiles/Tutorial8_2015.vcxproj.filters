@@ -96,6 +96,9 @@
     <ClInclude Include="..\..\..\include\wxx_folderdialog.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_folderdialogex.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_hglobal.h">
       <Filter>Win32++</Filter>
     </ClInclude>

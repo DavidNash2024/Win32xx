@@ -39,7 +39,6 @@
 
 // Menu Resource
 #define IDM_DOCK_DEFAULT                160
-#define IDM_DOCK_CLOSEALL               161
 
 // Next default values for new objects
 //

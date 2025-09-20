@@ -62,6 +62,9 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
+		<Linker>
+			<Add option="-static" />
+		</Linker>
 		<Unit filename="../src/Client.cpp" />
 		<Extensions />
 	</Project>

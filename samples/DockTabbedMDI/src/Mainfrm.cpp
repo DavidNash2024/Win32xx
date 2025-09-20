@@ -15,6 +15,8 @@
 
 using namespace std;
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -350,8 +352,10 @@ void CMainFrame::OnInitialUpdate()
     if (!m_myTabbedMDI.LoadRegistrySettings(GetRegistryKeyName()))
         LoadDefaultMDIs();
 
-    // Hide the container's tab if it has just one tab
-    HideSingleContainerTab(m_isHideSingleTab);
+    // Set the various options.
+    HideSingleContainerTab(true);
+    SetContainerTabsAtTop(false);
+    SetMDITabsAtTop(true);
 
     // Get a copy of the Frame's menu
     CMenu frameMenu = GetFrameMenu();
@@ -441,14 +445,10 @@ void CMainFrame::RecalcDockLayout()
 {
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
     {
-        if (GetDockAncestor()->IsWindow())
-        {
-            GetTopmostDocker()->LockWindowUpdate();
-            CRect rc = GetTopmostDocker()->GetViewRect();
-            GetTopmostDocker()->RecalcDockChildLayout(rc);
-            GetTopmostDocker()->UnlockWindowUpdate();
-            GetTopmostDocker()->UpdateWindow();
-        }
+        LockWindowUpdate();
+        CDocker::RecalcDockLayout();
+        UnlockWindowUpdate();
+        UpdateWindow();
     }
     else
         CDocker::RecalcDockLayout();
@@ -497,9 +497,9 @@ void CMainFrame::SetupMenuIcons()
     // Load the default set of icons from the toolbar
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, lightgray, IDW_MAIN);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 
     // Add some extra icons for menu items
     AddMenuIcon(IDM_FILE_NEWBROWSER, IDI_GLOBE);
@@ -548,6 +548,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

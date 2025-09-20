@@ -39,7 +39,6 @@ public:
     void    UpdateItemImage(int item);
 
 protected:
-    // Virtual functions that override base class functions.
     virtual void    OnAttach() override;
     virtual void    OnInitialUpdate() override;
     virtual LRESULT OnNotify(WPARAM, LPARAM lparam) override;

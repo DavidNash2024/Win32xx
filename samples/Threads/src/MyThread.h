@@ -20,7 +20,6 @@ public:
     CTestWindow* GetTestWnd() { return &m_testWnd; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
 
 private:

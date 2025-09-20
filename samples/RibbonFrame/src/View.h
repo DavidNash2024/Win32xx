@@ -27,7 +27,6 @@ public:
     void SetPenColor(COLORREF color) { m_penColor = color; }
 
 protected:
-    // Virtual functions that override base class functions.
     virtual int OnCreate(CREATESTRUCT&) override;
     virtual void OnDraw(CDC& dc) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;

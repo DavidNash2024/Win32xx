@@ -22,7 +22,6 @@ public:
     void FillTree(const std::vector<ResourceInfo>& allInfo, LPCWSTR fileName);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void    OnAttach() override;
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;

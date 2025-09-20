@@ -56,7 +56,7 @@ BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
         return FALSE;
     }
 
-    // Suppress label editing
+    // Suppress label editing.
     return TRUE;
 }
 
@@ -78,7 +78,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 
     CString oldText = m_itemText;
 
-    // Use the new text unless the user cancelled the edit
+    // Use the new text unless the user cancelled the edit.
     LPWSTR text = pTVDispInfo->item.pszText;
     if ((text != nullptr) && (text[0] != L'\0'))
         m_itemText.GetWindowText(GetEditControl());
@@ -162,7 +162,7 @@ LRESULT CViewTree::OnRButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     return DefWindowProc(msg, wparam, lparam);
 }
 
-// Called when a treeview item is selected
+// Called when a treeview item is selected.
 BOOL CViewTree::OnSelChanged()
 {
     // Send the message to CMainFrame.
@@ -253,6 +253,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -263,7 +264,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;
@@ -296,6 +297,7 @@ LRESULT CDockTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -306,7 +308,7 @@ LRESULT CDockTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

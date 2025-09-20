@@ -21,12 +21,12 @@ public:
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    LoadRegistrySettings(LPCWSTR keyName) override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnInitialUpdate() override;
     virtual void    OnMenuUpdate(UINT id) override;
+    virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual BOOL    SaveRegistrySettings() override;
     virtual void    SetupMenuIcons() override;
@@ -53,7 +53,6 @@ private:
     // Message handlers
     LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
     CView       m_view;

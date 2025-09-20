@@ -13,7 +13,10 @@
     <ClCompile Include="..\src\StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\View.cpp">
+    <ClCompile Include="..\src\ImageView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MainView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -25,9 +28,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\View.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\default_resource.h">
@@ -49,6 +49,12 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_file.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_folderdialog.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_folderdialogex.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_frame.h">
@@ -85,9 +91,6 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_richedit.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_shared_ptr.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_socket.h">
@@ -197,6 +200,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_thread.h">
       <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_messagepump0.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ImageView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MainView.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

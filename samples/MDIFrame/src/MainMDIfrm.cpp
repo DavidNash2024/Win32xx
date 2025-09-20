@@ -7,6 +7,8 @@
 #include "SimpleMDIChild.h"
 #include "resource.h"
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+
 /////////////////////////////////////
 // CMainMDIFrame function definitions
 //
@@ -195,9 +197,9 @@ void CMainMDIFrame::SetupMenuIcons()
     // Set the bitmap used for menu icons
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, lightgray, IDW_MAIN);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
 // Assign resource IDs and images to toolbar buttons.
@@ -216,7 +218,7 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 
-    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_DIS, IDB_TOOLBAR24_HOT);
+    SetToolBarImages(lightgray, IDW_MAIN, IDB_TOOLBAR24_DIS, IDB_TOOLBAR24_HOT);
 }
 
 // Process the MDi frame's window messages.
@@ -239,6 +241,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

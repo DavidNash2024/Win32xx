@@ -16,3 +16,11 @@ Features demonstrated in this example
 * Using a static control as a hyperlink.
 * Use of OnMessageReflect to handle notifications in the object that
    generated them.
+
+About Dialogs
+=============
+Dialog applications are easy to create, provided we have access to a resource
+editor to build the resource script file for us (often called resource.rc).
+Commercial compilers usually include a resource editor for this purpose, but
+many free compilers don't. A resource editor is included with Microsoft's
+Visual Studio Studio Community.

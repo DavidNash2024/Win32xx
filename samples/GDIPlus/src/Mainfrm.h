@@ -17,7 +17,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame() = default;
     virtual ~CMainFrame() override = default;
-    virtual HWND Create(HWND parent = nullptr);
+    virtual HWND Create(HWND parent = nullptr) override;
 
     BOOL OnFileExit();
 

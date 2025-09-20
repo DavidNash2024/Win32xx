@@ -14,6 +14,8 @@
 
 using namespace std;
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+
 /////////////////////////////////////
 // CMainMDIFrame function definitions
 //
@@ -225,9 +227,9 @@ void CMainMDIFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_DIS);
+        SetMenuIcons(data, lightgray, IDW_MAIN, IDB_TOOLBAR24_DIS);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 
     // Add some extra icons for menu items
     AddMenuIcon(IDM_FILE_NEWVIEW, IDI_VIEW);
@@ -258,7 +260,7 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 
     // Use larger buttons with separate imagelists for normal, hot and disabled buttons.
-    SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
+    SetToolBarImages(lightgray, IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 
     // Configure the "New" toolbar button to bring up a menu.
     GetToolBar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
@@ -285,6 +287,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

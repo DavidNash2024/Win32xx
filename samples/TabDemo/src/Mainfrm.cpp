@@ -100,6 +100,10 @@ void CMainFrame::OnInitialUpdate()
     m_view.AddTabPage(make_unique<CViewDialog>(IDD_MYDIALOG), L"Dialog", IDI_DIALOGVIEW);
 
     m_view.SelectPage(0);
+    m_view.SetFixedWidth(true);
+    m_view.SetOwnerDraw(true);
+    m_view.SetShowButtons(true);
+    m_view.SetTabsAtTop(true);
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow();
@@ -153,21 +157,21 @@ void CMainFrame::OnMenuUpdate(UINT id)
 // Add a Files tab.
 BOOL CMainFrame::OnNewFilesTab()
 {
-    m_view.AddTabPage(new CViewFiles, L"Files", IDI_FILEVIEW);
+    m_view.AddTabPage(make_unique<CViewFiles>(), L"Files", IDI_FILEVIEW);
     return TRUE;
 }
 
 // Add a Classes tab.
 BOOL CMainFrame::OnNewClassesTab()
 {
-    m_view.AddTabPage(new CViewClasses, L"Classes", IDI_CLASSVIEW);
+    m_view.AddTabPage(make_unique<CViewClasses>(), L"Classes", IDI_CLASSVIEW);
     return TRUE;
 }
 
 // Add a Dialog tab.
 BOOL CMainFrame::OnNewDialogTab()
 {
-    m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), L"Dialog", IDI_DIALOGVIEW);
+    m_view.AddTabPage(make_unique<CViewDialog>(IDD_MYDIALOG), L"Dialog", IDI_DIALOGVIEW);
     return TRUE;
 }
 

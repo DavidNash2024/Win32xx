@@ -19,7 +19,6 @@ public:
     virtual ~CViewText() override = default;
 
 protected:
-    // Virtual functions that override base class functions.
     virtual void OnAttach() override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
@@ -49,7 +48,6 @@ public:
     virtual ~CContainText() override = default;
 
 protected:
-    // Virtual functions that override base class functions.
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:

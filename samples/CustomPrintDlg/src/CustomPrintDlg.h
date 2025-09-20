@@ -7,6 +7,10 @@
 
 #include "resource.h"
 
+////////////////////////////////////////////////////
+// CCustomPrintDlg manages the custom print dialog.
+// This dialog allows the user to choose the printer
+// and various print settings.
 class CCustomPrintDlg : public CDialog
 {
 public:
@@ -56,6 +60,7 @@ private:
 
     bool CreateGlobalHandles(LPCWSTR printerName, HGLOBAL* pHDevMode, HGLOBAL* pHDevNames);
     std::vector<CString> FindPrinters() const;
+    BOOL OnHelp();
     BOOL OnPrintProperties();
     BOOL OnComboSelection();
     BOOL OnRadioSelection(UINT id);

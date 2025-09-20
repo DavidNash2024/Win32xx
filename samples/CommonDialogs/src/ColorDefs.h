@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (ColorDefs.h) *
+/* (26-Mar-2025)                                                 (ColorDefs.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -12,8 +12,6 @@
 
 #ifndef COLORDEFS_IS_LOADED
 #define COLORDEFS_IS_LOADED
-
-/*============================================================================*/
 
 #define COLOR_BLACK     RGB(  0,   0,   0)
 #define COLOR_GRAY      RGB(100, 100, 100)
@@ -47,5 +45,5 @@
 #define COLOR_LT_RED    RGB(255, 128, 128)
 #define COLOR_DK_RED    RGB(128,   0,   0)
 
-/*----------------------------------------------------------------------------*/
+
 #endif /* COLORDEFS_IS_LOADED */

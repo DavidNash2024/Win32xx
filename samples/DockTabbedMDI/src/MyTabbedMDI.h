@@ -24,7 +24,6 @@ public:
     virtual ~CMyTabbedMDI() override = default;
 
 protected:
-    // Virtual functions that override base class functions.
     virtual WndPtr NewMDIChildFromID(int mdiChild) override;
     virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

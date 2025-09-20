@@ -41,7 +41,7 @@ void CView::OnDraw(CDC& dc)
     if (GetWinVersion() >= 2601)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = info.lfMessageFont;
+        LOGFONT lf = DpiScaleLogfont(info.lfMessageFont, 10);
         dc.CreateFontIndirect(lf);
     }
 

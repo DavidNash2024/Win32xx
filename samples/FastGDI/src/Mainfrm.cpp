@@ -3,16 +3,18 @@
 
 #include "stdafx.h"
 #include "Mainfrm.h"
-#include "ColourDialog.h"
+#include "ColourAdjust.h"
 #include "resource.h"
+#include "UserMessages.h"
+
+constexpr COLORREF lightGray = RGB(192, 192, 192);
 
 //////////////////////////////////
 // CMainFrame function definitions
 //
 
 // Constructor for CMainFrame.
-CMainFrame::CMainFrame() : m_preview(m_view), m_isDPIChanging(false),
-                           m_isToolbarShown(true)
+CMainFrame::CMainFrame() : m_preview(GetImageView()), m_isToolbarShown(true)
 {
 }
 
@@ -20,7 +22,7 @@ CMainFrame::CMainFrame() : m_preview(m_view), m_isDPIChanging(false),
 HWND CMainFrame::Create(HWND parent)
 {
     // Set m_view as the view window of the frame.
-    SetView(m_view);
+    SetView(m_mainView);
 
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
@@ -39,17 +41,17 @@ void CMainFrame::DpiScaleToolBar()
     if (GetToolBar().IsWindow())
     {
         // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
+        SetToolBarImages(lightGray, IDW_MAIN, 0, 0);
     }
 }
 
 // Displays the Color Adjust dialog to choose the red, blue and green adjustments.
 BOOL CMainFrame::OnAdjustImage()
 {
-    if (m_view.GetImage())
+    if (IsImageLoaded())
     {
         // Initiate the Choose Colour dialog
-        CColourDialog dlg(IDD_DIALOG1, m_view.GetImage());
+        CColorAdjust dlg(IDD_DIALOG1, GetImage());
         if (IDOK == dlg.DoModal())
             ModifyBitmap(dlg.GetRed(), dlg.GetGreen(), dlg.GetBlue(), dlg.IsGray());
     }
@@ -63,11 +65,11 @@ BOOL CMainFrame::OnAdjustImage()
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
 {
     if (isGray)
-        m_view.GetImage().GrayScaleBitmap();
+        GetImage().GrayScaleBitmap();
     else
-        m_view.GetImage().TintBitmap(cRed, cGreen, cBlue);
+        GetImage().TintBitmap(cRed, cGreen, cBlue);
 
-    m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+    m_mainView.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
 // Called when the frame window is closed.
@@ -135,12 +137,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     // Save the view's rectangle and disable scrolling.
-    m_scrollPos = m_view.GetScrollPosition();
-    m_view.SetScrollSizes();
-    m_viewRect = m_view.GetClientRect();
+    GetImageView().SetScrollSizes();
 
     // Update the frame.
-    m_isDPIChanging = true;
     ResetMenuMetrics();
     UpdateSettings();
     DpiScaleToolBar();
@@ -157,6 +156,18 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
+// Called when an image has been loaded from a file.
+LRESULT CMainFrame::OnImageLoaded(LPCWSTR fileName)
+{
+    SetWindowText(fileName);
+    CRect rcImage(CPoint(), GetImage().GetSize());
+    AdjustFrameRect(rcImage);
+    AddMRUEntry(fileName);
+    m_mainView.RecalcLayout();
+    return 0;
+}
+
+
 // Clears any selected image.
 BOOL CMainFrame::OnFileNew()
 {
@@ -164,46 +175,13 @@ BOOL CMainFrame::OnFileNew()
     TB.DisableButton(IDM_FILE_SAVEAS);
     TB.DisableButton(IDM_FILE_PRINT);
     TB.DisableButton(IDM_IMAGE_ADJUST);
-    m_view.LoadFileImage(0);
+    GetImageView().LoadFileImage(0);
+    m_mainView.RecalcLayout();
 
     // Set the caption
     SetWindowText(L"FastGDI");
 
     return TRUE;
-}
-
-// Load the bitmap from the specified file.
-BOOL CMainFrame::LoadFile(CString& fileName)
-{
-    BOOL IsFileLoaded = m_view.LoadFileImage(fileName);
-
-    if (IsFileLoaded)
-    {
-        // Save the filename
-        m_pathName = fileName;
-        AddMRUEntry(fileName);
-
-        // Turn on the ToolBar adjust button
-        CToolBar& tb = GetToolBar();
-        tb.EnableButton(IDM_FILE_SAVEAS);
-        tb.EnableButton(IDM_FILE_PRINT);
-        tb.EnableButton(IDM_IMAGE_ADJUST);
-
-        // Resize the frame to match the bitmap
-        if (m_view.GetImage())
-        {
-            CRect rcImage = m_view.GetImageRect();
-            AdjustFrameRect(rcImage);
-        }
-
-        m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
-
-        // Set the caption
-        CString str = L"FastGDI - " + m_pathName;
-        SetWindowText(str);
-    }
-
-    return IsFileLoaded;
 }
 
 // Displays the File Open dialog, to choose a file to load.
@@ -214,7 +192,8 @@ BOOL CMainFrame::OnFileOpen()
     if (fileDlg.DoModal(*this) == IDOK)
     {
         CString str = fileDlg.GetPathName();
-        LoadFile(str);
+        GetImageView().LoadFileImage(str);
+    //    m_mainView.RecalcLayout();
     }
 
     return TRUE;
@@ -225,38 +204,15 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM)
 {
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
-    CToolBar& tb = GetToolBar();
+    GetImageView().LoadFileImage(mruText);
+//    CToolBar& tb = GetToolBar();
 
-    if (m_view.LoadFileImage(mruText))
-    {
-        m_pathName = mruText;
-        tb.EnableButton(IDM_FILE_SAVEAS);
-        tb.EnableButton(IDM_FILE_PRINT);
-        tb.EnableButton(IDM_IMAGE_ADJUST);
-
-        // Adjust the window size
-        CRect rcImage = m_view.GetImageRect();
-        AdjustFrameRect(rcImage);
-    }
-    else
+/*    if (!LoadFile(mruText))
     {
         RemoveMRUEntry(mruText);
         tb.DisableButton(IDM_FILE_SAVEAS);
         tb.DisableButton(IDM_IMAGE_ADJUST);
-    }
-
-    // Resize the frame to match the bitmap
-    if (m_view.GetImage())
-    {
-        CRect rcImage = m_view.GetImageRect();
-        AdjustFrameRect(rcImage);
-    }
-
-    m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
-
-    // Set the caption
-    CString str = L"FastGDI - " + m_pathName;
-    SetWindowText(str);
+    } */
 
     return TRUE;
 }
@@ -295,7 +251,7 @@ BOOL CMainFrame::OnFilePreview()
     {
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
-        SetView(m_view);
+        SetView(m_mainView);
         ShowMenu(GetFrameMenu() != nullptr);
         ShowToolBar(m_isToolbarShown);
     }
@@ -308,7 +264,7 @@ BOOL CMainFrame::OnFilePrint()
 {
     try
     {
-        m_view.Print(m_pathName);
+        GetImageView().Print(m_pathName);
     }
 
     catch (const CException& e)
@@ -354,7 +310,7 @@ void CMainFrame::OnInitialUpdate()
 // Called when menu items are about to be displayed.
 inline void CMainFrame::OnMenuUpdate(UINT id)
 {
-    bool IsImageLoaded = (m_view.GetImage() != 0);
+    bool IsImageLoaded = (GetImage() != 0);
 
     switch(id)
     {
@@ -382,7 +338,7 @@ inline void CMainFrame::OnMenuUpdate(UINT id)
 LRESULT CMainFrame::OnPreviewClose()
 {
     // Swap the view
-    SetView(m_view);
+    SetView(m_mainView);
 
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != nullptr);
@@ -399,7 +355,7 @@ LRESULT CMainFrame::OnPreviewPrint()
 {
     try
     {
-        m_view.QuickPrint(m_pathName);
+        GetImageView().QuickPrint(m_pathName);
     }
 
     catch (const CUserException& e)
@@ -441,21 +397,11 @@ LRESULT CMainFrame::OnPreviewSetup()
 // Called when the frame's position has changed.
 LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // The DPI can change when the window is moved to a different monitor.
-    if (m_isDPIChanging)
+    if (IsImageLoaded())
     {
-        if (m_view.GetImage().GetHandle() != nullptr)
-        {
-            // Adjust the frame size to fit the view.
-            AdjustFrameRect(m_viewRect);
-
-            // Restore the scrollbars and scroll position.
-            CSize size = CSize(m_view.GetImageRect().Width(), m_view.GetImageRect().Height());
-            m_view.SetScrollSizes(size);
-            m_view.SetScrollPosition(m_scrollPos);
-        }
-
-        m_isDPIChanging = false;
+        // Restore the scrollbars and scroll position.
+        CSize size = GetImage().GetSize();
+        GetImageView().SetScrollSizes(size);
     }
 
     return FinalWindowProc(msg, wparam, lparam);
@@ -492,7 +438,7 @@ void CMainFrame::SaveFile(CString& fileName)
         SetWindowText(Title);
 
         // Save the file
-        m_view.SaveFileImage(fileName);
+        GetImageView().SaveFileImage(fileName);
         AddMRUEntry(fileName);
         TRACE("File Saved\n");
     }
@@ -503,9 +449,9 @@ void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, lightGray, IDW_MAIN);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightGray, IDB_TOOLBAR16);
 }
 
 // Set the resource IDs and images for the toolbar buttons.
@@ -523,6 +469,19 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Called by CPictureApp::OnIdle to update toolbar buttons
+void CMainFrame::UpdateToolbar() const
+{
+    // Enable the toolbar buttons if a picture is loaded.
+    BOOL enabled = IsImageLoaded();
+    CToolBar& tb = GetToolBar();
+
+    tb.EnableButton(IDM_FILE_SAVEAS, enabled);
+    tb.EnableButton(IDM_FILE_PRINT, enabled);
+    tb.EnableButton(IDM_IMAGE_ADJUST, enabled);
+
+}
+
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -530,6 +489,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case UWM_IMAGELOADED:      return OnImageLoaded((LPCWSTR)lparam);
         case UWM_PREVIEWCLOSE:    return OnPreviewClose();
         case UWM_PREVIEWPRINT:    return OnPreviewPrint();
         case UWM_PREVIEWSETUP:    return OnPreviewSetup();
@@ -546,6 +506,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

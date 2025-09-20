@@ -54,7 +54,6 @@ public:
     virtual ~CServerSocket() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnAccept() override;
     virtual void OnReceive() override;
 
@@ -75,7 +74,6 @@ public:
     virtual ~CWorkerSocket() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnDisconnect() override;
     virtual void OnReceive() override;
 

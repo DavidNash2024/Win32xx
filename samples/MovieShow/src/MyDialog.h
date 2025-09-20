@@ -29,7 +29,6 @@ public:
     CCoverImage& SetPicture() { return m_picture; }
 
 protected:
-    // Virtual functions that override base class functions.
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void    OnCancel() override {} // Suppress closing the dialog with esc key.
     virtual void    OnClose() override {}  // Suppress closing the dialog with return key on rich edit.

@@ -54,21 +54,18 @@ CMemDC CView::Draw()
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
+    bool isDrawing = false;  // Start with the pen up.
+
     // Draw the lines on the memory DC.
-    if (GetAllPoints().size() > 0)
+    for (const PlotPoint& i : GetAllPoints())
     {
-        bool isDrawing = false;  // Start with the pen up.
-        for (size_t i = 0 ; i < GetAllPoints().size(); ++i)
-        {
-            memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].penColor);
+        memDC.CreatePen(PS_SOLID, 1, i.penColor);
+        if (isDrawing)
+            memDC.LineTo(i.x, i.y);
+        else
+            memDC.MoveTo(i.x, i.y);
 
-            if (isDrawing)
-                memDC.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
-            else
-                memDC.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
-
-            isDrawing = GetAllPoints()[i].isPenDown;
-        }
+        isDrawing = i.isPenDown;
     }
 
     return memDC;
@@ -291,6 +288,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

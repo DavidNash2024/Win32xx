@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////
 // CScribbleApp manages the application. It initializes the Win32++
-// framework when it is constructed, and create the view window
+// framework when it is constructed, and creates the view window
 // when it runs.
 class CScribbleApp : public CWinApp
 {

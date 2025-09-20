@@ -22,7 +22,6 @@ public:
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*) override;
     virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUnknown*, UI_VIEWVERB, INT32) override;
     virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt  const PROPVARIANT*, __out PROPVARIANT*) override;

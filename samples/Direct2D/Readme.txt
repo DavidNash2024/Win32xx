@@ -9,8 +9,9 @@ provides high performance and high-quality rendering for 2-D geometry, bitmaps,
 and text. The Direct2D API is designed to interoperate with existing code that
 uses GDI, GDI+, or Direct3D.
 
-Direct2D is implemented in Windows Vista, Windows 7, Windows 8, and Windows 10.
-To compile this demo, use a Microsoft compiler with the Windows 7 SDK.
+Direct2D is implemented in Windows Vista, Windows 7, Windows 8, Windows 10
+and Windows 11. To compile this demo, use a Microsoft compiler with the
+Windows 7 SDK.
 
 
 

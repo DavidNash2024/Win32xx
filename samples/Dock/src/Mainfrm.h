@@ -31,7 +31,6 @@ public:
     virtual HWND Create(HWND parent = 0) override;
 
 protected:
-    // Virtual functions overriding base class functions.
     virtual DockPtr NewDockerFromID(int id) override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int  OnCreate(CREATESTRUCT& cs) override;

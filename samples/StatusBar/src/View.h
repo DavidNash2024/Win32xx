@@ -15,7 +15,6 @@ public:
     virtual ~CView() override = default;
 
 protected:
-    // Virtual functions overriding base class functions
     virtual void OnDraw(CDC& dc) override;
     virtual void OnInitialUpdate() override;
     virtual void PreCreate(CREATESTRUCT& cs) override;

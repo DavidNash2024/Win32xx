@@ -19,17 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ColourDialog.cpp" />
+    <ClCompile Include="..\src\ColourAdjust.cpp" />
     <ClCompile Include="..\src\FastGDIApp.cpp" />
+    <ClCompile Include="..\src\ImageView.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
+    <ClCompile Include="..\src\MainView.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\default_resource.h" />
@@ -48,6 +49,7 @@
     <ClInclude Include="..\..\..\include\wxx_file.h" />
     <ClInclude Include="..\..\..\include\wxx_filefind.h" />
     <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
+    <ClInclude Include="..\..\..\include\wxx_folderdialogex.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
     <ClInclude Include="..\..\..\include\wxx_hglobal.h" />
@@ -58,6 +60,7 @@
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
     <ClInclude Include="..\..\..\include\wxx_menumetrics.h" />
     <ClInclude Include="..\..\..\include\wxx_messagepump.h" />
+    <ClInclude Include="..\..\..\include\wxx_messagepump0.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
     <ClInclude Include="..\..\..\include\wxx_mutex.h" />
     <ClInclude Include="..\..\..\include\wxx_preview.h" />
@@ -71,7 +74,6 @@
     <ClInclude Include="..\..\..\include\wxx_richedit.h" />
     <ClInclude Include="..\..\..\include\wxx_scrollview.h" />
     <ClInclude Include="..\..\..\include\wxx_setup.h" />
-    <ClInclude Include="..\..\..\include\wxx_shared_ptr.h" />
     <ClInclude Include="..\..\..\include\wxx_socket.h" />
     <ClInclude Include="..\..\..\include\wxx_statusbar.h" />
     <ClInclude Include="..\..\..\include\wxx_stdcontrols.h" />
@@ -86,12 +88,14 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
-    <ClInclude Include="..\src\ColourDialog.h" />
+    <ClInclude Include="..\src\ColourAdjust.h" />
     <ClInclude Include="..\src\FastGDIApp.h" />
+    <ClInclude Include="..\src\ImageView.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
+    <ClInclude Include="..\src\MainView.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\View.h" />
+    <ClInclude Include="..\src\UserMessages.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\resource.rc" />

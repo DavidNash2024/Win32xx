@@ -6,9 +6,7 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
-#ifndef INVALID_FILE_ATTRIBUTES
-#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
-#endif
+constexpr COLORREF lightgray = RGB(192, 192, 192);
 
 //////////////////////////////////
 // CMainFrame function definitions
@@ -415,9 +413,9 @@ void CMainFrame::SetupMenuIcons()
     // Set the bitmap used for menu icons
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, lightgray, IDW_MAIN);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
+        SetMenuIcons(data, lightgray, IDB_MENUICONS);
 }
 
 // Set the resource IDs and images for the toolbar buttons.
@@ -460,6 +458,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

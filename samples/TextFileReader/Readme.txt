@@ -1,4 +1,4 @@
-ScrollWnd Demo Example
+TextFileReader
 ==============
 This project demonstrates how to use Win32++ to create a scrollable window to
 display the contents of a text file using a doc view architecture.  The CView

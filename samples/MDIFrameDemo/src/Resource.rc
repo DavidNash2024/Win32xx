@@ -61,6 +61,13 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
+        MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
+        MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
@@ -91,7 +98,7 @@ BEGIN
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "&Close this MDI",             IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -141,7 +148,7 @@ BEGIN
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "&Close this MDI",             IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -173,7 +180,7 @@ BEGIN
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "&Close this MDI",             IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -205,7 +212,7 @@ BEGIN
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "&Close this MDI",             IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -237,7 +244,7 @@ BEGIN
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "&Close this MDI",             IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -269,7 +276,7 @@ BEGIN
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
         MENUITEM "New ListView",                IDM_FILE_NEWLIST
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "&Close this MDI",             IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END

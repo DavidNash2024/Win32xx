@@ -12,6 +12,8 @@
 
 using namespace std;
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -121,7 +123,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_CONTAINER_TOP:     return OnContainerTabsAtTop();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDM_DOCK_DEFAULT:      return OnDockDefault();
-    case IDM_DOCK_CLOSEALL:     return OnDockCloseAll();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
@@ -175,13 +176,6 @@ BOOL CMainFrame::OnDockDefault()
     return TRUE;
 }
 
-// Close all the frame's dockers.
-BOOL CMainFrame::OnDockCloseAll()
-{
-    CloseAllDockers();
-    return TRUE;
-}
-
 // Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
@@ -213,8 +207,9 @@ void CMainFrame::OnInitialUpdate()
     if (!LoadDockRegistrySettings(GetRegistryKeyName()))
         LoadDefaultDockers();
 
-    // Hide the container's tab if it has just one tab
-    HideSingleContainerTab(m_hideSingleTab);
+    // Set the various options.
+    HideSingleContainerTab(true);
+    SetContainerTabsAtTop(false);
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow( GetInitValues().showCmd );
@@ -259,14 +254,10 @@ void CMainFrame::RecalcDockLayout()
 {
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
     {
-        if (GetDockAncestor()->IsWindow())
-        {
-            GetTopmostDocker()->LockWindowUpdate();
-            CRect rc = GetTopmostDocker()->GetViewRect();
-            GetTopmostDocker()->RecalcDockChildLayout(rc);
-            GetTopmostDocker()->UnlockWindowUpdate();
-            GetTopmostDocker()->UpdateWindow();
-        }
+        LockWindowUpdate();
+        CDocker::RecalcDockLayout();
+        UnlockWindowUpdate();
+        UpdateWindow();
     }
     else
         CDocker::RecalcDockLayout();
@@ -302,9 +293,9 @@ void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, lightgray, IDW_MAIN);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
 // Set the Resource IDs for the toolbar buttons
@@ -350,6 +341,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

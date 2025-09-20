@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (26-Mar-2025)                                                 (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -9,10 +9,6 @@
     CommonDialogs demonstration sample application using the Win32++ Windows
     interface classes.
 
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #include "stdafx.h"
@@ -20,44 +16,31 @@
 #include <io.h>
 
 
-/*============================================================================*/
-    CMainFrame::
-CMainFrame()                                                                /*
-
-    Construct and initialize the CMainFrame object from the IDD_MAIN_DIALOG
-    resource defined in resource.rc. Note that the initial window location and
-    size are set here.
-*-----------------------------------------------------------------------------*/
-    :   m_view(IDD_MAIN_DIALOG), m_isTextWrap(TRUE)
+// Construct and initialize the CMainFrame object from the IDD_MAIN_DIALOG
+// resource defined in resource.rc. Note that the initial window location and
+// size are set here.
+CMainFrame::CMainFrame() : m_view(IDD_MAIN_DIALOG), m_isTextWrap(TRUE)
 {
 }
 
-/*============================================================================*/
-    HWND CMainFrame::
-        Create(HWND parent)                                                 /*
-
-    Create the frame window.
-*-----------------------------------------------------------------------------*/
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
 {
-      // Set m_view as the view window of the frame.
+    // Set m_view as the view window of the frame.
     SetView(m_view);
 
-      // Set the registry key name, and load the initial window position.
-      // Use a registry key name like "CompanyName\\Application".
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\CommonDialogs Sample");
 
-      // Load the settings from the registry with 5 MRU entries.
+    // Load the settings from the registry with 5 MRU entries.
     LoadRegistryMRUSettings(5);
 
     return CFrame::Create(parent);
 }
 
-/*============================================================================*/
-    BOOL CMainFrame::
-DropFiles(LPARAM lparam)                                                    /*
-
-    Open the text document dragged and dropped in the rich edit window.
-*-----------------------------------------------------------------------------*/
+// Open the text document dragged and dropped in the rich edit window.
+BOOL CMainFrame::DropFiles(LPARAM lparam)
 {
     ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
     HDROP hDropinfo = (HDROP) ENDrop->hDrop;
@@ -68,60 +51,44 @@ DropFiles(LPARAM lparam)                                                    /*
     return TRUE;
 }
 
-/*============================================================================*/
-    void CMainFrame::
-InitCtlColors()                                                             /*
-
-    Populate the color table with the initial ctl_color triplets used in the
-    list box of the CColorDialog object. These values are displayed in the
-    controls on first execution of this program, and are overwritten by
-    deserialization in subsequent executions.
-*-----------------------------------------------------------------------------*/
+// Populate the color table with the initial ctl_color triplets used in the
+// list box of the CColorDialog object. These values are displayed in the
+// controls on first execution of this program, and are overwritten by
+// deserialization in subsequent executions.
+void CMainFrame::InitCtlColors()
 {
-    m_colorChoice.AddColorChoice(DlgBg,     L"o  Dialog background",
-        COLOR_LT_BLUE);
-      // richedit controls (these are set differently than the others)
-    m_colorChoice.AddColorChoice(REdTxFg,   L"o  RichEdit text foreground",
+    m_colorChoice.AddColorChoice(DlgBg,   L"o Dialog background",
+        COLOR_DK_BLUE);
+    m_colorChoice.AddColorChoice(REdTxFg, L"o RichEdit text foreground",
+        COLOR_BLACK);
+    m_colorChoice.AddColorChoice(REdTxBg, L"o RichEdit text background",
         COLOR_WHITE);
-    m_colorChoice.AddColorChoice(REdTxBg,   L"o  RichEdit text background",
-        COLOR_RED);
-    m_colorChoice.AddColorChoice(REdBg,     L"o  RichEdit background",
-        COLOR_LT_RED);
+    m_colorChoice.AddColorChoice(REdBg,   L"o RichEdit background",
+        COLOR_WHITE);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnCloseDoc()                                                                /*
-
-    Close the document and reset mainframe parameters accordingly.
-*-----------------------------------------------------------------------------*/
+void CMainFrame::OnCloseDoc()
 {
-    m_docDir = m_doc.GetDocDir(); // save for next file open/save
+    m_docDir = m_doc.GetDocDir();
     m_doc.OnCloseDoc();
     SetWindowTitle(L"");
     GetRichView().Clean();
     m_view.NoDocOpen();
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnColorChoice()                                                             /*
-
-    Show the CListBoxDlg color dialog box to select the color of a control's
-    text foreground, text background, or control background. NOTE: colors
-    selected for controls in the view are painted by the OnCtlColor()
-    method invoked in the WndProc() loop each time the control is redrawn.
-    The staus bar color has no message to redraw it, so it is set here.
-*-----------------------------------------------------------------------------*/
+// Show the CListBoxDlg color dialog box to select the color of a control's
+// text foreground, text background, or control background. NOTE: colors
+// selected for controls in the view are painted by the OnCtlColor()
+// method invoked in the WndProc() loop each time the control is redrawn.
+// The staus bar color has no message to redraw it, so it is set here.
+void CMainFrame::OnColorChoice()
 {
     if (m_colorChoice.DoModal(*this) != IDOK)
         return;
 
     UINT selection = m_colorChoice.GetSelectedColorID();
-      // reset the client background
     if (selection == DlgBg)
         SetViewBgColor();
-      // reset the rich edit control color
     if (selection == REdTxFg || selection == REdTxBg || selection == REdBg)
         SetRichEditColor();
 
@@ -129,17 +96,12 @@ OnColorChoice()                                                             /*
     UpdateWindow();
 }
 
-/*============================================================================*/
-    BOOL CMainFrame::
-OnCommand(WPARAM wparam, LPARAM)                                            /*
-
-    The framework calls this member method when the user selects an
-    item from a menu, when a child control sends a notification message,
-    or when an accelerator keystroke is translated. Here, we respond to
-    menu selections, toolbar events, scrollbar actions, and accelerator
-    keys. The method returns nonzero if it processes the message; otherwise it
-    returns zero.
-*-----------------------------------------------------------------------------*/
+// The framework calls this member method when the user selects an item from a
+// menu, when a child control sends a notification message, or when an
+// accelerator keystroke is translated. Here, we respond to menu selections,
+// toolbar events, scrollbar actions, and accelerator keys. The method returns
+// nonzero if it processes the message; otherwise it returns zero.
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     UINT id = LOWORD(wparam);
 
@@ -177,13 +139,8 @@ OnCommand(WPARAM wparam, LPARAM)                                            /*
     return FALSE;
 }
 
-/*============================================================================*/
-    int CMainFrame::
-OnCreate(CREATESTRUCT& rcs)                                                 /*
-
-    This member controls the way the frame is created. Overriding
-    it is optional.
-*-----------------------------------------------------------------------------*/
+// This member controls the way the frame is created.
+int CMainFrame::OnCreate(CREATESTRUCT& rcs)
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
@@ -201,71 +158,52 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
 
-      // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
-      // establish communications
     m_doc.SetDataPath(&m_view);
-      // populate the initial control colors
+
+    // Set the color choice parameters.
     InitCtlColors();
-      // and set the initial flags to show all colors
     CHOOSECOLOR cc = m_colorChoice.GetParameters();
     cc.Flags = CC_FULLOPEN;
     cc.Flags |= CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
-      // setup the CColorChoice object
     m_colorChoice.SetParameters(cc);
-      // set the initial flags to use the font style,
+
+    // Set the initial flags to use the font style,
     CHOOSEFONT cf = m_fontChoice.GetParameters();
     cf.Flags |= CF_USESTYLE;
     cf.lpszStyle = const_cast<LPWSTR>(L"Regular"); // initial font
     m_fontChoice.SetParameters(cf);
-      // set the default font
+
+    // Set the default font
     CFont f;
     f.CreatePointFont(100, L"Courier New");
     m_fontChoice.SetChoiceFont(f);
     m_fontChoice.SetColor(m_colorChoice.GetTableColor(REdTxFg));
     m_view.SetEditFont(f);
-      // set the view background color
+
     SetViewBgColor();
-      // set the edit box colors
     SetRichEditColor();
     return rtn;
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnEditFind()                                                                /*
-
-    Initiate the find non-modal dialog box and the messages sent to the
-    CDoc::OnFindReplace() method by the CMainFrame::WndProc() message loop.
-*-----------------------------------------------------------------------------*/
+// Initiate the find non-modal dialog box.
+void CMainFrame::OnEditFind()
 {
     m_findReplaceDlg.SetBoxTitle(L"Find a string...");
     m_findReplaceDlg.Create(TRUE, L"Initial Text", L"", FR_DOWN |
         FR_ENABLEHOOK, *this);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnEditReplace()                                                             /*
-
-    Invoke the find-replace dialog and initiate the find non-modal dialog
-    box and the messages sent to the CDoc::OnFindReplace() method by the
-    the CMainFrame::WndProc() message loop.  Note: the replace dialog box
-    does not have the direction up-down box that the find dialog box has.
-    This is "by design."
-*-----------------------------------------------------------------------------*/
+// Invoke the find-replace dialog.
+void CMainFrame::OnEditReplace()
 {
     m_findReplaceDlg.SetBoxTitle(L"Find, then Replace");
     m_findReplaceDlg.Create(FALSE, L"Initial Text", L"Replace Text",
         FR_DOWN | FR_ENABLEHOOK, *this);
 }
 
-/*============================================================================*/
-void CMainFrame::
-    OnExit()                                                                /*
-
-        Close the application.
-    *-----------------------------------------------------------------------------*/
+// Close the application.
+void CMainFrame::OnExit()
 {
     m_docDir = m_doc.GetDocDir(); // save for next file open/save
     m_doc.OnCloseDoc();
@@ -275,12 +213,8 @@ void CMainFrame::
     Close();
 }
 
-/*============================================================================*/
-    BOOL CMainFrame::
-OnFileMRU(WPARAM wparam)                                                    /*
-
-        Open a file from the Most Recently Used (MRU) list.
-*-----------------------------------------------------------------------------*/
+// Open a file from the Most Recently Used (MRU) list.
+BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
     UINT mruIndex = static_cast<UINT>(LOWORD(wparam)) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
@@ -291,15 +225,10 @@ OnFileMRU(WPARAM wparam)                                                    /*
     return TRUE;
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnFontChoice()                                                              /*
-
-        Select the view font typeface, characteristics, and color.
-*-----------------------------------------------------------------------------*/
+// Select the view font typeface, characteristics, and color.
+void CMainFrame::OnFontChoice()
 {
     HWND hOwnerWnd = GetApp()->GetMainWnd();
-      // open the dialog
     m_fontChoice.SetBoxTitle(L"Select font for rich edit box");
     LOGFONT lf;
     m_fontChoice.GetChoiceFont().GetObject(sizeof(LOGFONT), &lf);
@@ -308,54 +237,42 @@ OnFontChoice()                                                              /*
     cf.lpLogFont = &lf;
     cf.rgbColors = m_colorChoice.GetTableColor(REdTxFg);
     m_fontChoice.SetParameters(cf);
+
+    // Open the dialog.
     if(m_fontChoice.DoModal(hOwnerWnd))
     {
-          // bring choice elements into this view
         m_view.SetEditFont(m_fontChoice.GetChoiceFont());
         m_colorChoice.SetTableColor(REdTxFg, m_fontChoice.GetColor());
-          // reset the rich edit control color
         SetRichEditColor();
     }
+
     Invalidate();
     UpdateWindow();
 }
 
-/*============================================================================*/
-    BOOL CMainFrame::
-OnHelp()                                                                    /*
-
-    Overrides CFrame OnHelp(). Display a modeless dialog bearing the program's
-    application information.
-*-----------------------------------------------------------------------------*/
+// Overrides CFrame OnHelp() to display a dialog bearing the program's
+// application information.
+BOOL CMainFrame::OnHelp()
 {
-      // Ensure only one dialog displays even for multiple activation commands
+    // Ensure only one dialog displays even for multiple activation commands.
     if (!m_aboutBox.IsWindow())
-        m_aboutBox.Create(*this);  // make the AboutBox modeless
+        m_aboutBox.DoModal(*this);
 
     return TRUE;
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnInitialUpdate()                                                           /*
-
-    The frame has now been created. Provide any desired main frame
-    formatting.
-*-----------------------------------------------------------------------------*/
+// The frame has now been created. Provide any desired main frame formatting.
+void CMainFrame::OnInitialUpdate()
 {
-      // Unselect the text
+    // Unselect the text.
     GetRichView().SetSel(0, 0);
     GetRichView().SetFocus();
 
     TRACE("Frame created\n");
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnMenuUpdate(UINT id)                                                       /*
-
-    Update the enable and chack status of menu items.
-*-----------------------------------------------------------------------------*/
+// Update the enable and check status of menu items.
+void CMainFrame::OnMenuUpdate(UINT id)
 {
     UINT enabled;
     UINT checked;
@@ -379,14 +296,10 @@ OnMenuUpdate(UINT id)                                                       /*
     return CFrame::OnMenuUpdate(id);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnNewDoc()                                                                  /*
-
-    Prompt the user for a new document file name and, if valid, open a new
-    document. The open status and path name are available from the document
-    object.
-*-----------------------------------------------------------------------------*/
+// Prompt the user for a new document file name and, if valid, open a new
+// document.The open status and path name are available from the document
+// object.
+void CMainFrame::OnNewDoc()
 {
     MyFileDialog fd
     (   TRUE,
@@ -398,39 +311,34 @@ OnNewDoc()                                                                  /*
         OFN_ENABLESIZING,
         m_docFilter
     );
+
     fd.SetBoxTitle(L"New document file...");
     fd.SetDefExt(m_docFilter);
     CString msg;
-      // do not leave without a valid unused file name, unless cancelled
     while (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
     {
         CString selected = fd.GetPathName();
-          // new_path should not exist
         if (::_taccess(selected, 0x04) != 0)
         {
-              // make the selected document
             if (m_doc.MakeNewDoc(selected))
                 OpenDoc(selected);
             return;
         }
-          // prompt the user to try again
+
+        // Prompt the user to try again.
         msg.Format(L"That document file\n    '%s'\n"
             L"already exists.", selected.c_str());
-        ::MessageBox(nullptr, msg, L"Error", MB_OK |
-            MB_ICONERROR | MB_TASKMODAL);
+        ::MessageBox(nullptr, msg, L"Error", MB_OK | MB_ICONERROR |
+            MB_TASKMODAL);
     }
     msg = L"No name was entered, no action was taken.";
-    ::MessageBox(nullptr, msg, L"Information",
-        MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+    ::MessageBox(nullptr, msg, L"Information", MB_OK | MB_ICONINFORMATION |
+        MB_TASKMODAL);
     return;
 }
 
-/*============================================================================*/
-    LRESULT CMainFrame::
-OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
-
-    Process messages that controls send to the parent.
-*-----------------------------------------------------------------------------*/
+// Process messages that controls send to the parent.
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     NMHDR* pNMH = reinterpret_cast<LPNMHDR>(lparam);
     switch (pNMH->code)
@@ -442,14 +350,10 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
     return CFrame::OnNotify(wparam, lparam);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnOpenDoc()                                                            /*
-
-    Display the open file dialog to obtain the path of an existing document
-    file. If one is selected, open it. The open status and path name are
-    available from the document object.
-*-----------------------------------------------------------------------------*/
+// Display the open file dialog to obtain the path of an existing document
+// file.If one is selected, open it.The open status and path name are
+// available from the document object.
+void CMainFrame::OnOpenDoc()
 {
     MyFileDialog fd
     (   TRUE,                   // open file dialog
@@ -458,7 +362,7 @@ OnOpenDoc()                                                            /*
         OFN_HIDEREADONLY    |   // flags
         OFN_EXPLORER        |
         OFN_NONETWORKBUTTON |
-        OFN_FILEMUSTEXIST   |  // only existing files allowed
+        OFN_FILEMUSTEXIST   |   // only existing files allowed
         OFN_PATHMUSTEXIST   |
         OFN_ENABLEHOOK      |
         OFN_ENABLESIZING,
@@ -466,6 +370,7 @@ OnOpenDoc()                                                            /*
     );
     fd.SetBoxTitle(L"Open document file...");
     fd.SetDefExt(m_docExt);
+
     CString msg;
     if (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
     {
@@ -475,17 +380,13 @@ OnOpenDoc()                                                            /*
     }
 
     msg = "No valid name was entered, no action was taken.";
-    ::MessageBox(nullptr, msg, L"Information",
-        MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+    ::MessageBox(nullptr, msg, L"Information", MB_OK | MB_ICONINFORMATION |
+        MB_TASKMODAL);
     return;
 }
 
-/*============================================================================*/
-    BOOL CMainFrame::
-SetRichEditColor()                                                           /*
-
-    Set the rich edit control colors to those found in the color table.
-*-----------------------------------------------------------------------------*/
+// Set the rich edit control colors to those found in the color table.
+BOOL CMainFrame::SetRichEditColor()
 {
     COLORREF txfg = m_colorChoice.GetTableColor(REdTxFg);
     COLORREF txbg = m_colorChoice.GetTableColor(REdTxBg);
@@ -494,39 +395,27 @@ SetRichEditColor()                                                           /*
     return TRUE;
 }
 
-/*============================================================================*/
-void CMainFrame::
-    OnPrint()                                                                /*
-
-    Invoke a MyPrintDialog dialog to get printing parameters and then print
-    the contents of the rich view control.
-*-----------------------------------------------------------------------------*/
+// Invoke a MyPrintDialog dialog to get printing parameters and then print the
+// contents of the rich view control.
+void CMainFrame::OnPrint()
 {
     m_view.OnPrintDocument(m_doc.GetDocPath());
 }
 
-/*============================================================================*/
-void CMainFrame::
-    OnSave()                                                                  /*
-
-    Save the current document.
-*-----------------------------------------------------------------------------*/
+// Save the current document.
+void CMainFrame::OnSave()
 {
     m_doc.OnSaveDoc();
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnSaveAs()                                                                  /*
-
-    Save the current document into a file named in a file dialog and make
-    that file the current document.
-*-----------------------------------------------------------------------------*/
+// Save the current document into a file named in a file dialog and make that
+// file the current document.
+void CMainFrame::OnSaveAs()
 {
     if (!m_doc.IsOpen())
         return;
 
-      // declare the file dialog box
+    // Declare the file dialog box.
     MyFileDialog fd
     (   FALSE,
         m_docExt,               // extension defined by app
@@ -538,36 +427,30 @@ OnSaveAs()                                                                  /*
         OFN_NONETWORKBUTTON,
         m_docFilter             // filter defined by app
      );
+
     fd.SetBoxTitle(L"Save document file as");
     CString msg;
-      // query user for the save-as file path name
     if (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
-    {    // At this point, a file path has been chosen that is
-         // not empty and if it already exists has been approved by the
-         // user to be overwritten. Fetch the path from the dialog.
+    {
         CString selected = fd.GetPathName();
-          // check if the input path is the one already open
         if (selected.CompareNoCase(m_doc.GetDocPath()) == 0)
-        {     // the named paths are the same
+        {
             msg.Format(L"Document file\n    '%s'\n is already "
                 L"open. No action taken", m_doc.GetDocPath().c_str());
             ::MessageBox(nullptr, msg, L"Information",
                 MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
             return;
         }
-          // the selected path is ok: save and close the current document
+
         CString current_doc = m_doc.GetDocPath();
         OnCloseDoc();
-          // copy it to the selected path
         CopyFile(current_doc, selected, FALSE);
-          // open it for operations
         if (!OpenDoc(selected))
         {
             msg.Format(L"Saved document file\n    '%s'"
                 L" could not be reopened.", selected.c_str());
             ::MessageBox(nullptr, msg, L"Information",
                 MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-              // reopen the current file at entry
             OpenDoc(current_doc);
             return;
         }
@@ -577,24 +460,16 @@ OnSaveAs()                                                                  /*
         MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-OnWrapText()                                                                /*
-
-    Toggle the word wrapping mode in the rich edit control.
-*-----------------------------------------------------------------------------*/
+// Toggle the word wrapping mode in the rich edit control.
+void CMainFrame::OnWrapText()
 {
     m_isTextWrap = !m_isTextWrap;
     GetRichView().SetWrapping(m_isTextWrap);
 }
 
-/*============================================================================*/
-    BOOL CMainFrame::
-OpenDoc(LPCWSTR docPath)                                             /*
-
-    Open the document from the given path. Return TRUE if successful, FALSE
-    otherwise.
-*-----------------------------------------------------------------------------*/
+// Open the document from the given path.Return TRUE if successful, FALSE
+// otherwise.
+BOOL CMainFrame::OpenDoc(LPCWSTR docPath)
 {
    if (CString(docPath).CompareNoCase(m_doc.GetDocPath()) == 0)
     {
@@ -602,13 +477,12 @@ OpenDoc(LPCWSTR docPath)                                             /*
         msg.Format(L"Document file\n    '%s'\nis already open.", docPath);
         ::MessageBox(nullptr, msg, L"Information", MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
-          // not deemed a failure, as the file is open, as specified
         return TRUE;
     }
-        // if there is currently a document open, close it
+
     if (m_doc.IsOpen())
         OnCloseDoc();
-      // open the document based on this name
+
     if (m_doc.OpenDoc(docPath))
     {
         m_docDir = m_doc.GetDocPath();
@@ -619,13 +493,9 @@ OpenDoc(LPCWSTR docPath)                                             /*
     return FALSE;
 }
 
-/*============================================================================*/
-    void CMainFrame::
-SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
-    COLORREF clrBand2)                                                      /*
-
-    Set the colors to be used in the rebar theme.
-*-----------------------------------------------------------------------------*/
+// Set the colors to be used in the rebar theme.
+void CMainFrame::SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2,
+    COLORREF clrBand1, COLORREF clrBand2)
 {
     ReBarTheme rt{};
     rt.UseThemes    = TRUE;
@@ -643,17 +513,11 @@ SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
     SetReBarTheme(rt);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-SetupMenuIcons()                                                             /*
-
-    Assign icons to the dropdown menu items. In particular, add the AboutBox
-    identifier to the menu icon list.
-*-----------------------------------------------------------------------------*/
+// Assign icons to the dropdown menu items.In particular, add the AboutBox
+// identifier to the menu icon list.
+void CMainFrame::SetupMenuIcons()
 {
-     // Add IDW_ABOUT to the menu data
     std::vector<UINT> data = GetToolBarData();
-    data.push_back(IDW_ABOUT);
 
     // Specify the bitmap and mask for the menu icons.
     if (GetMenuIconHeight() >= 24)
@@ -662,19 +526,14 @@ SetupMenuIcons()                                                             /*
         SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-SetupToolBar()                                                              /*
-
-    Called from the CFrame::CreateToolBar() method to load the toolbar
-    bitmaps, to connect the tool bar buttons to resource IDs of the
-    toolbar buttons, and to define the order of appearance of the buttons
-    on the toolbar at runtime.
-*-----------------------------------------------------------------------------*/
+// Called from the CFrame::CreateToolBar() method to load the toolbar bitmaps,
+// to connect the tool bar buttons to resource IDs of the toolbar buttons, and
+// to define the order of appearance of the buttons on the toolbar at runtime.
+void CMainFrame::SetupToolBar()
 {
-      // Connect button IDs to button icons, show enabled status, and
-      // give the explicit image index iImage of each button in the bitmap.
-      // Add the toolbar buttons in the order they are to appear at runtime.
+    // Connect button IDs to button icons, show enabled status, and
+    // give the explicit image index iImage of each button in the bitmap.
+    // Add the toolbar buttons in the order they are to appear at runtime.
     AddToolBarButton(IDM_FILE_NEW,      TRUE, 0, 0);
     AddToolBarButton(IDM_FILE_OPEN,     TRUE, 0, 1);
     AddToolBarButton(IDM_FILE_SAVE,     TRUE, 0, 2);
@@ -690,27 +549,22 @@ SetupToolBar()                                                              /*
     AddToolBarButton(0);  // Separator
     AddToolBarButton(IDM_COLOR_CHOICE,  TRUE, 0, 9);
     AddToolBarButton(IDM_FONT_CHOICE,   TRUE, 0, 10);
-      // Set the toolbar image list: use defaults for hot and disabled
+    AddToolBarButton(0);  // Separator
+    AddToolBarButton(IDW_ABOUT,         TRUE, 0, 11);
+
+    // Set the toolbar image list: use defaults for hot and disabled
     SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
 }
 
-/*============================================================================*/
-void CMainFrame::
-    SetViewBgColor()                                                        /*
-
-    Sets the background color of the dialog used as the view window.
-*-----------------------------------------------------------------------------*/
+// Sets the background color of the dialog used as the view window.
+void CMainFrame::    SetViewBgColor()
 {
     m_view.SetBgColor(m_colorChoice.GetBrush(DlgBg));
 }
 
-/*============================================================================*/
-    void CMainFrame::
-SetWindowTitle(LPCWSTR path)                                                /*
-
-    Put the app title and docPath name in the main window text. Limit the
-    displayed text length to that of the frame.
-*-----------------------------------------------------------------------------*/
+// Put the app title and docPath name in the main window text. Limit the
+// displayed text length to that of the frame.
+void CMainFrame::SetWindowTitle(LPCWSTR path)
 {
     CString pathname = path;
     CString title = LoadString(IDW_MAIN);
@@ -721,12 +575,8 @@ SetWindowTitle(LPCWSTR path)                                                /*
     SetWindowText(title);
 }
 
-/*============================================================================*/
-    void CMainFrame::
-UpdateToolbar()                                                             /*
-
-Called by CApp::OnIdle to update toolbar buttons
-*-----------------------------------------------------------------------------*/
+// Called by CApp::OnIdle to update toolbar buttons.
+void CMainFrame::UpdateToolbar()
 {
     BOOL isSelected = m_doc.IsSelected();
     BOOL canPaste = m_doc.CanPaste();
@@ -738,50 +588,47 @@ Called by CApp::OnIdle to update toolbar buttons
     GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
 }
 
-/*============================================================================*/
-    LRESULT CMainFrame::
-WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
-
-    This is the main frame message loop. By default, it handles the
-    normal housekeeping functions (see Win32++\include\frame.h).
-*-----------------------------------------------------------------------------*/
+// This is the main frame message loop. It handles the frame's window messages.
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-          // can't use a case statement on this ::RegisterWindowMessage() value
+        // Can't use a case statement on this ::RegisterWindowMessage() value
         if (msg == UWM_FINDMSGSTRING)
         {
             m_doc.OnFindReplace(msg, wparam, lparam);
             return TRUE;
         }
 
-        //switch (msg)
-        //{
+        // switch (msg)
+        // {
         //    TODO: add message handlers here
-        //}
+        // }
 
-          // pass unhandled messages on for default processing
+        // Pass unhandled messages on for default processing.
         return WndProcDefault(msg, wparam, lparam);
     }
-      // Catch all CException types.
+
+    // Catch all CException types.
     catch (const CException& e)
     {
-          // Display the exception and continue.
+        // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
-      // Catch all unhandled std::exception types.
+    // Catch all unhandled std::exception types.
     catch (const std::exception& e)
     {
-          // Display the exception and continue.
+        // Display the exception and continue.
         CString str1 = e.what();
         ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
 }
-/*----------------------------------------------------------------------------*/
+

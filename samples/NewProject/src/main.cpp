@@ -6,10 +6,10 @@
 // 1) Add Win32++'s include directory to the project's additional include directories for C/C++
 // 2) Add Win32++'s include directory to the project's additional include directories for Resources
 
-// include the minimal core set of features for creating windows
+// Include the minimal core set of features for creating windows.
 #include "wxx_wincore.h"
 
-// alternatively include all library features
+// Alternatively, include all library features.
 // #include "stdafx.h"
 
 
@@ -25,9 +25,8 @@ public:
 };
 
 
-
 #if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
-#pragma warning( disable : 28251 )  // Ignore the annotation requirement for wWinMain.
+#pragma warning( suppress : 28251 )  // Ignore the annotation requirement for wWinMain.
 #endif
 
 int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)

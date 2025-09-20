@@ -23,19 +23,18 @@ void CView::OnDestroy()
 // Called when drawing to the window.
 void CView::OnDraw(CDC& dc)
 {
-    if (m_points.size() > 0)
+    // Start with the pen up.
+    bool isPenDown = false;
+
+    // Draw the lines.
+    for (const PlotPoint& p : m_points)
     {
-        bool isPenDown = false;  // Start with the pen up.
+        if (isPenDown)
+            dc.LineTo(p.x, p.y);
+        else
+            dc.MoveTo(p.x, p.y);
 
-        for (size_t i = 0 ; i < m_points.size(); i++)
-        {
-            if (isPenDown)
-                dc.LineTo(m_points[i].x, m_points[i].y);
-            else
-                dc.MoveTo(m_points[i].x, m_points[i].y);
-
-            isPenDown = m_points[i].isPenDown;
-        }
+        isPenDown = p.isPenDown;
     }
 }
 

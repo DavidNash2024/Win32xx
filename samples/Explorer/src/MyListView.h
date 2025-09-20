@@ -43,7 +43,6 @@ public:
     void ViewReport();
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnAttach() override;
     virtual void OnDestroy() override;
     virtual LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);

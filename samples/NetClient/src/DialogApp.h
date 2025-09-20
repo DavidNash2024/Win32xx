@@ -20,7 +20,6 @@ public:
     CClientDialog& GetDialog() { return m_clientDialog; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
 
 private:

@@ -7,11 +7,6 @@
 #include "MyListView.h"
 #include "resource.h"
 
-#ifndef HDF_SORTUP
-#define HDF_SORTUP              0x0400
-#define HDF_SORTDOWN            0x0200
-#endif
-
 
 //////////////////////////////////
 // CMyListView function definitions
@@ -401,7 +396,7 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
             pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
 
-            // Retrieve the file find handle for an existing file.
+            // Retrieve the search handle for an existing file.
             if (lstrcmp(fileName, L"") != 0)
             {
                 CFileFind file;
@@ -566,7 +561,7 @@ void CMyListView::OnAttach()
 // Called when the window is destroyed.
 void CMyListView::OnDestroy()
 {
-    // Cleanup required by Win2000
+    // Cleanup
     m_pItems.clear();
     m_csfCurFolder.Release();
 }
@@ -841,6 +836,7 @@ LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

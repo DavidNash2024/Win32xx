@@ -22,7 +22,6 @@ public:
     ID2D1Factory* GetD2DFactory() { return m_pDirect2dFactory; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
 
 private:

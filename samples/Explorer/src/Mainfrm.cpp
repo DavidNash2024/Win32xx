@@ -6,6 +6,8 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -361,9 +363,9 @@ void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_DIS);
+        SetMenuIcons(data, lightgray, IDW_MAIN, IDB_TOOLBAR_DIS);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
 // Define our toolbar.
@@ -386,7 +388,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT, TRUE,  L" About " );
 
     // Use larger buttons
-    SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+    SetToolBarImages(lightgray, IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
     // Configure the ViewMenu button to bring up a menu
     GetToolBar().SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
@@ -412,6 +414,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

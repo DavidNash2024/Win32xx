@@ -93,7 +93,7 @@ void CMainFrame::LoadFile(LPCWSTR fileName)
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        TaskDialogBox(nullptr, e.GetText(), L"Failed to Load File", TD_WARNING_ICON);
 
         m_pathName = L"";
         m_view.GetAllPoints().clear();
@@ -115,7 +115,7 @@ void CMainFrame::MRUFileOpen(UINT mruIndex)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        TaskDialogBox(nullptr, e.GetText(), L"Failed to Load File", TD_WARNING_ICON);
 
         RemoveMRUEntry(mruText);
         m_view.GetAllPoints().clear();
@@ -177,7 +177,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        TaskDialogBox(nullptr, e.GetText(), L"Failed to Load File", TD_WARNING_ICON);
 
         m_view.GetAllPoints().clear();
     }
@@ -221,7 +221,7 @@ BOOL CMainFrame::OnFileOpen()
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        TaskDialogBox(nullptr, e.GetText(), L"Failed to Load File", TD_WARNING_ICON);
 
         m_view.GetAllPoints().clear();
     }
@@ -243,7 +243,7 @@ BOOL CMainFrame::OnFilePrint()
         // Display a message box indicating why printing failed.
         CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
         CString type = CString(e.what());
-        ::MessageBox(nullptr, message, type, MB_ICONWARNING);
+        TaskDialogBox(nullptr, message, type, TD_WARNING_ICON);
     }
 
     return TRUE;
@@ -263,7 +263,7 @@ BOOL CMainFrame::OnFileSave()
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        TaskDialogBox(nullptr, e.GetText(), L"Failed to Save File", TD_WARNING_ICON);
 
         m_view.GetAllPoints().clear();
     }
@@ -294,7 +294,7 @@ BOOL CMainFrame::OnFileSaveAs()
     catch (const CFileException& e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        TaskDialogBox(nullptr, e.GetText(), L"Failed to Save File", TD_WARNING_ICON);
 
         m_view.GetAllPoints().clear();
     }
@@ -318,7 +318,7 @@ BOOL CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(nullptr, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        TaskDialogBox(nullptr, e.GetText(), L"Failed to Load File", TD_WARNING_ICON);
 
         m_view.GetAllPoints().clear();
     }
@@ -464,9 +464,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
 
     // Catch all unhandled std::exception types.
@@ -474,7 +475,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

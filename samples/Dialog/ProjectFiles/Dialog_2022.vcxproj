@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\..\include\wxx_file.h" />
     <ClInclude Include="..\..\..\include\wxx_filefind.h" />
     <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
+    <ClInclude Include="..\..\..\include\wxx_folderdialogex.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
     <ClInclude Include="..\..\..\include\wxx_hglobal.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
     <ClInclude Include="..\..\..\include\wxx_menumetrics.h" />
     <ClInclude Include="..\..\..\include\wxx_messagepump.h" />
+    <ClInclude Include="..\..\..\include\wxx_messagepump0.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
     <ClInclude Include="..\..\..\include\wxx_mutex.h" />
     <ClInclude Include="..\..\..\include\wxx_preview.h" />
@@ -69,7 +71,6 @@
     <ClInclude Include="..\..\..\include\wxx_richedit.h" />
     <ClInclude Include="..\..\..\include\wxx_scrollview.h" />
     <ClInclude Include="..\..\..\include\wxx_setup.h" />
-    <ClInclude Include="..\..\..\include\wxx_shared_ptr.h" />
     <ClInclude Include="..\..\..\include\wxx_socket.h" />
     <ClInclude Include="..\..\..\include\wxx_statusbar.h" />
     <ClInclude Include="..\..\..\include\wxx_stdcontrols.h" />
@@ -149,7 +150,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -188,7 +189,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>

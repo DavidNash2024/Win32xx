@@ -17,7 +17,6 @@ public:
     virtual ~CDockSimple() override = default;
 
 protected:
-    // Virtual functions overriding base class functions.
     virtual void RecalcDockLayout() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -39,7 +38,6 @@ public:
     virtual ~CDockClasses() override = default;
 
 protected:
-    // Virtual functions overriding base class functions.
     virtual void RecalcDockLayout() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -61,7 +59,6 @@ public:
     virtual ~CDockFiles() override = default;
 
 protected:
-    // Virtual functions overriding base class functions.
     virtual void RecalcDockLayout() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -83,7 +80,6 @@ public:
     virtual ~CDockText() override = default;
 
 protected:
-    // Virtual functions overriding base class functions.
     virtual void RecalcDockLayout() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

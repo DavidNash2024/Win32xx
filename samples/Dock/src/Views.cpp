@@ -6,6 +6,8 @@
 #include "Views.h"
 #include "resource.h"
 
+constexpr COLORREF red     = RGB(255, 0, 0);
+constexpr COLORREF magenta = RGB(255, 0, 255);
 
 /////////////////////////////////
 // CViewClasses function definitions
@@ -71,7 +73,7 @@ LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Set the CREATESTURCT parameters before the window is created.
 void CViewClasses::PreCreate(CREATESTRUCT& cs)
 {
-    // Call base clase to set defaults.
+    // Call base class to set defaults.
     CTreeView::PreCreate(cs);
 
     if (GetWinVersion() >= 3000)  // Windows 10 or later.
@@ -87,7 +89,7 @@ void CViewClasses::SetDPIImages()
     int scale = bmImage.GetSize().cy / 15;
     CImageList normalImages;
     normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    normalImages.Add(bmImage, RGB(255, 0, 0));
+    normalImages.Add(bmImage, red);
     SetImageList(normalImages, TVSIL_NORMAL);
 
     // Reset the item indentation.
@@ -224,7 +226,7 @@ void CViewFiles::SetDPIImages()
     int scale = bmImage.GetSize().cy / 15;
     CImageList smallImages;
     smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    smallImages.Add(bmImage, RGB(255, 0, 255));
+    smallImages.Add(bmImage, magenta);
     SetImageList(smallImages, LVSIL_SMALL);
 }
 

@@ -15,7 +15,6 @@ public:
     virtual ~CMyButton() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:

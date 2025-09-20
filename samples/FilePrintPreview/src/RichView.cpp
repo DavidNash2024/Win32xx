@@ -221,7 +221,7 @@ ReadFile(LPCWSTR filePath)                                                  /*
     void CRichView::
 SetFontDefaults()                                                           /*
 
-    If the displayfont has not been set, then set it to a default Courier New
+    If the display font has not been set, then set it to a default Courier New
      size 10 font.
 *-----------------------------------------------------------------------------*/
 {
@@ -322,10 +322,6 @@ RVStreamInCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *read)      /*
     On termination read contains the number actually entered.
 *-----------------------------------------------------------------------------*/
 {
-      // Required for StreamIn
-    if (!size)
-        return (1);
-
     *read = 0;
     if (!::ReadFile((HANDLE)(DWORD_PTR) handle, buffer, size, (LPDWORD)read, nullptr))
         ::MessageBox(0, L"ReadFile Failed", L"", MB_OK);
@@ -340,10 +336,6 @@ RVStreamOutCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *out)      /*
     termination out contains the number actually written.
 *-----------------------------------------------------------------------------*/
 {
-      // Required for StreamOut
-    if(!out)
-        return (1);
-
     *out = 0;
     if (!::WriteFile((HANDLE)(DWORD_PTR)handle, buffer, size, (LPDWORD)out, nullptr))
         ::MessageBox(nullptr, L"WriteFile Failed", L"", MB_OK);

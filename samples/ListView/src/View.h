@@ -47,7 +47,6 @@ public:
     void AddItem(CString subItem0, CString subItem1, CString subItem2);
 
 protected:
-    // Virtual functions that override base class functions.
     virtual void    OnAttach() override;
     virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;

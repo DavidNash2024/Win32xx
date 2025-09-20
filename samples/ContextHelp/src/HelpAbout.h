@@ -18,7 +18,6 @@ public:
     void SetCredits(LPCWSTR credits) { m_credits = credits; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnInitDialog() override;
 
 private:

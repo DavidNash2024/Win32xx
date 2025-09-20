@@ -31,7 +31,6 @@ public:
     virtual ~CD2DView() override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnDestroy() override;
     virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);

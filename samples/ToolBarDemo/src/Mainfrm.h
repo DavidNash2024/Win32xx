@@ -21,7 +21,6 @@ public:
     void SetImageListsForToolBars();
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;

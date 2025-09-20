@@ -83,22 +83,22 @@ OnCommand(WPARAM wparam, LPARAM)                                     /*
     returns zero.
 *-----------------------------------------------------------------------------*/
 {
-        UINT lowParam = LOWORD(wparam);
+    UINT lowParam = LOWORD(wparam);
 
-        switch (lowParam)
-        {
-            case IDM_FILE_NEW:       OnFileNew();       return TRUE;
-            case IDM_FILE_OPEN:      OnFileOpen();      return TRUE;
-            case IDM_FILE_SAVE:      OnFileSave();      return TRUE;
-            case IDM_FILE_SAVEAS:    OnFileSaveAs();    return TRUE;
-            case IDM_FILE_EXIT:      OnFileExit();      return TRUE;
-            case IDM_HELP_ABOUT:     OnHelpAbout();     return TRUE;
-            case IDM_COLOR_CHOICE:   OnColorChoice();   return TRUE;
-            case IDM_FONT_CHOICE:    OnFontChoice();    return TRUE;
-            case IDW_VIEW_TOOLBAR:   OnViewToolBar();   return TRUE;
-            case IDW_VIEW_STATUSBAR: OnViewStatusBar(); return TRUE;
-        }
-        return FALSE;
+    switch (lowParam)
+    {
+        case IDM_FILE_NEW:       OnFileNew();       return TRUE;
+        case IDM_FILE_OPEN:      OnFileOpen();      return TRUE;
+        case IDM_FILE_SAVE:      OnFileSave();      return TRUE;
+        case IDM_FILE_SAVEAS:    OnFileSaveAs();    return TRUE;
+        case IDM_FILE_EXIT:      OnFileExit();      return TRUE;
+        case IDM_HELP_ABOUT:     OnHelpAbout();     return TRUE;
+        case IDM_COLOR_CHOICE:   OnColorChoice();   return TRUE;
+        case IDM_FONT_CHOICE:    OnFontChoice();    return TRUE;
+        case IDW_VIEW_TOOLBAR:   OnViewToolBar();   return TRUE;
+        case IDW_VIEW_STATUSBAR: OnViewStatusBar(); return TRUE;
+    }
+    return FALSE;
 }
 
 
@@ -210,8 +210,8 @@ OnFileSaveAs()                                                              /*
     void CMainFrame::
 OnFontChoice()                                                              /*
 
-        Select the app font typeface, characteristics, and  color. The font
-        background color is always the same as the client area background.
+    Select the app font typeface, characteristics, and  color. The font
+    background color is always the same as the client area background.
 *-----------------------------------------------------------------------------*/
 {
     LOGFONT lf = m_view.GetTextFont().GetLogFont();
@@ -276,7 +276,7 @@ OnInitialUpdate()                                                           /*
     void CMainFrame::
 SetupMenuIcons()                                                            /*
 
-Called from the CFrame::OnCreate() function to load the menu icons.
+    Called from the CFrame::OnCreate() function to load the menu icons.
 *-----------------------------------------------------------------------------*/
 {
       // Specify the bitmap and mask for the menu icons.
@@ -343,7 +343,8 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << L"\n" << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

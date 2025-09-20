@@ -38,13 +38,19 @@ void CMainFrame::LoadDefaultWindowPanes()
     CRect viewRect = GetViewRect();
 
     // Add the bottom pane first. It is a child of the main pane.
-    m_pDockTree = static_cast<CDockTree*>(AddDockedChild(new CDockTree, style | DS_DOCKED_BOTTOM, viewRect.Height() / 2, ID_DOCK_TREE));
+    m_pDockTree = static_cast<CDockTree*>(AddDockedChild(
+        make_unique<CDockTree>(), style | DS_DOCKED_BOTTOM,
+        viewRect.Height() / 2, ID_DOCK_TREE));
 
     // Add the bottom right pane. It is a child of the bottom pane.
-    m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(new CDockList, style | DS_DOCKED_RIGHT, viewRect.Width() / 2, ID_DOCK_LIST));
+    m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(
+        make_unique<CDockList>(), style | DS_DOCKED_RIGHT,
+        viewRect.Width() / 2, ID_DOCK_LIST));
 
     // Add the top right pane. It is a child of the main pane.
-    m_pDockText = static_cast<CDockText*>(AddDockedChild(new CDockText, style | DS_DOCKED_RIGHT, viewRect.Width() / 2, ID_DOCK_TEXT));
+    m_pDockText = static_cast<CDockText*>(AddDockedChild(
+        make_unique<CDockText>(), style | DS_DOCKED_RIGHT,
+        viewRect.Width() / 2, ID_DOCK_TEXT));
 }
 
 // Adds a new docker. The id specifies the dock type.
@@ -134,6 +140,22 @@ void CMainFrame::OnInitialUpdate()
     ShowWindow(GetInitValues().showCmd);
 }
 
+// Called before a menu item is displayed.
+void CMainFrame::OnMenuUpdate(UINT id)
+{
+    switch (id)
+    {
+    case IDM_VIEW_LIST:
+        GetFrameMenu().CheckMenuItem(id, m_pDockList->IsWindowVisible() ?
+            MF_CHECKED : MF_UNCHECKED);
+        break;
+    case IDM_VIEW_TEXT:
+        GetFrameMenu().CheckMenuItem(id, m_pDockText->IsWindowVisible() ?
+            MF_CHECKED : MF_UNCHECKED);
+        break;
+    }
+}
+
 // Hides or shows the ListView window pane.
 BOOL CMainFrame::OnViewList()
 {
@@ -141,12 +163,10 @@ BOOL CMainFrame::OnViewList()
     if (m_pDockList->IsDocked())
     {
         m_pDockList->Hide();
-        GetFrameMenu().CheckMenuItem(IDM_VIEW_LIST, MF_UNCHECKED);
     }
     else
     {
         m_pDockTree->Dock(m_pDockList, style | DS_DOCKED_RIGHT);
-        GetFrameMenu().CheckMenuItem(IDM_VIEW_LIST, MF_CHECKED);
     }
 
     return TRUE;
@@ -160,12 +180,10 @@ BOOL CMainFrame::OnViewText()
     if (m_pDockText->IsDocked())
     {
         m_pDockText->Hide();
-        GetFrameMenu().CheckMenuItem(IDM_VIEW_TEXT, MF_UNCHECKED);
     }
     else
     {
         Dock(m_pDockText, style | DS_DOCKED_RIGHT);
-        GetFrameMenu().CheckMenuItem(IDM_VIEW_TEXT, MF_CHECKED);
     }
 
     return TRUE;
@@ -237,6 +255,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

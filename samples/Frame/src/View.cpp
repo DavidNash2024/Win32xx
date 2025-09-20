@@ -28,8 +28,7 @@ void CView::OnDraw(CDC& dc)
 
     // Centre some text in our view window.
     CRect rc = GetClientRect();
-    HBRUSH white = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
-    dc.FillRect(rc, white);
+    dc.SolidFill(RGB(255, 255, 255), rc);
     dc.DrawText(L"View Window", -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
@@ -177,6 +176,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

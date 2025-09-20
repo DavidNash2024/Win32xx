@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]               (AboutBox.h) *
+/* (26-Mar-2025)                                                  (AboutBox.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -9,34 +9,27 @@
     CommonDialogs sample application using the Win32++ Windows interface
     classes.
 
-    Programming Notes: The programming style roughly follows that
-    established by the 1995-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #ifndef ABOUTBOX_H
 #define ABOUTBOX_H
 
-/*============================================================================*/
-    class
-AboutBox : public CDialog                                                   /*
 
-*-----------------------------------------------------------------------------*/
+class AboutBox : public CDialog
 {
-    public:
-        AboutBox() : CDialog(IDW_ABOUT) {}
-        virtual ~AboutBox() override = default;
-        void SetStatus(const CString& about) { m_about = about; }
+public:
+    AboutBox() : CDialog(IDW_ABOUT) {}
+    virtual ~AboutBox() override = default;
+    void SetStatus(const CString& about) { m_about = about; }
 
-    protected:
-        virtual BOOL OnInitDialog() override;
+protected:
+    virtual BOOL OnInitDialog() override;
 
-    private:
-        AboutBox(const AboutBox&) = delete;
-        AboutBox& operator=(const AboutBox&) = delete;
+private:
+    AboutBox(const AboutBox&) = delete;
+    AboutBox& operator=(const AboutBox&) = delete;
 
-        CString m_about;
+    CString m_about;
 };
-/*----------------------------------------------------------------------------*/
+
 #endif  // ABOUTBOX_H

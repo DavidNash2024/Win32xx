@@ -15,7 +15,6 @@ public:
     virtual ~CMyDialog() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnDestroy() override;
     virtual BOOL OnInitDialog() override;
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

@@ -16,7 +16,6 @@ public:
     virtual ~CView() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnDestroy() override;
@@ -43,6 +42,7 @@ private:
     LRESULT OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
+    CTaskDialog m_dialog;
     CMenu m_menu;
     bool m_isMinimized;
 };

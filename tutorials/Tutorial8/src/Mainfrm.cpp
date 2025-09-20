@@ -151,7 +151,7 @@ BOOL CMainFrame::OnFilePrint()
     return TRUE;
 }
 
-// Save the Plotoint data to a file.
+// Save the PlotPoint data to a file.
 BOOL CMainFrame::OnFileSave()
 {
     try
@@ -171,7 +171,7 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
-// Save the Plotoint data to a specified file.
+// Save the PlotPoint data to a specified file.
 BOOL CMainFrame::OnFileSaveAs()
 {
     try

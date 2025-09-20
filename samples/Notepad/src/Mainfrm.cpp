@@ -6,13 +6,7 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
-#ifndef INVALID_FILE_ATTRIBUTES
-  #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
-#endif
-
-#ifndef SF_USECODEPAGE
-  #define SF_USECODEPAGE    0x0020
-#endif
+constexpr COLORREF lightgray = RGB(192, 192, 192);
 
 // Encoding IDs
 const int ANSI = 0;            // Default for plain text
@@ -25,9 +19,9 @@ const int UTF16LE = 2;
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_preview(m_richView),
-                           m_encoding(ANSI), m_isToolbarShown(true),
-                           m_isWrapped(false), m_isRTF(false), m_oldFocus(nullptr)
+CMainFrame::CMainFrame() : m_preview(m_richView), m_encoding(ANSI),
+                           m_isToolbarShown(true), m_isWrapped(false),
+                           m_isRTF(false), m_oldFocus(nullptr)
 
 {
 }
@@ -131,10 +125,6 @@ int CMainFrame::GetTextPartWidth(LPCWSTR text) const
 // The stream in callback function. Reads from the file.
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
-    // Required for StreamIn
-    if (!cb)
-        return (1);
-
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesRead = reinterpret_cast<LPDWORD>(pcb);
     *bytesRead = 0;
@@ -148,10 +138,6 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
 // The stream out callback function. Writes to the file.
 DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
-    // Required for StreamOut
-    if (!cb)
-        return (1);
-
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
     *bytesWritten = 0;
@@ -975,9 +961,9 @@ void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, lightgray, IDW_MAIN);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MENUICONS);
+        SetMenuIcons(data, lightgray, IDW_MENUICONS);
 }
 
 // Assigns images and command IDs to the toolbar buttons,
@@ -1048,6 +1034,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

@@ -39,12 +39,15 @@ INT_PTR CDarkAbout::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        CString str;
-        str << e.GetText() << L'\n' << e.GetErrorString();
-        ::MessageBox(nullptr, str, L"An exception occurred", MB_ICONERROR);
+        CString str1;
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
 
-        return 0;
+        CString str2;
+        str2 << "Error: " << e.what();
+        TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
+
+    return 0;
 }
 
 // Set the colors for the dialog and static controls.
@@ -52,7 +55,7 @@ LRESULT CDarkAbout::OnCtlColors(UINT, WPARAM wparam, LPARAM)
 {
     if (m_isDarkMode)
     {
-        HDC dc = (HDC)wparam;
+        HDC dc = reinterpret_cast<HDC>(wparam);
         ::SetBkMode(dc, TRANSPARENT);
         ::SetTextColor(dc, RGB(255, 255, 255));
 

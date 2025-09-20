@@ -14,7 +14,7 @@ void CView::DpiScaleToolBar()
 {
     // Create the ToolBar's image list from 4 icons
     int scale = 48 * (GetWindowDpi(*this) / USER_DEFAULT_SCREEN_DPI);
-    m_toolBarImages.DeleteImageList();
+    m_toolBarImages.Destroy();
     m_toolBarImages.Create(scale, scale, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
     m_toolBarImages.AddIcon(IDI_LEFT);
@@ -209,7 +209,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.lpszClassName = L"Win32++ View";
 
     // Set a background brush to white
-    wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+    wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
 
     // Set the default cursor
     wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
@@ -290,6 +290,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

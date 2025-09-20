@@ -1,4 +1,4 @@
-/* (20-Oct-2024)                                                 (MyFileDlg.h) *
+/* (26-Mar-2025)                                                 (MyFileDlg.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -9,44 +9,30 @@
     which is derived from the CFileDalog class found in the Win32++ Windows
     interface framework in order to add a title to the dialog.
 
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #ifndef MY_FILE_DLG_H
 #define MY_FILE_DLG_H
 
-/*============================================================================*/
-    class
-MyFileDialog : public CFileDialog
-
-/*----------------------------------------------------------------------------*/
+class MyFileDialog : public CFileDialog
 {
-    public:
-        MyFileDialog
-        (
-            BOOL bOpenFileDialog = TRUE,
-            LPCWSTR sDefExt      = nullptr,
-            LPCWSTR sFileName    = nullptr,
-            DWORD dwFlags        = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-            LPCWSTR  sFilter     = nullptr
-        )   : CFileDialog(bOpenFileDialog, sDefExt, sFileName,
-                dwFlags, sFilter) {}
+public:
+    MyFileDialog (
+        BOOL bOpenFileDialog = TRUE,
+        LPCWSTR sDefExt = nullptr,
+        LPCWSTR sFileName = nullptr,
+        DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+        LPCWSTR  sFilter     = nullptr
+    ) : CFileDialog(bOpenFileDialog, sDefExt, sFileName,  dwFlags, sFilter) {}
 
-        virtual ~MyFileDialog() override = default;
+    virtual ~MyFileDialog() override = default;
+    void SetBoxTitle(LPCWSTR title) { m_title = title; SetTitle(title);}
 
-          // Record the title of the read/saveas dialog box after an object
-          // of this class is constructed, but before DoModal() is invoked.
-        void SetBoxTitle(LPCWSTR title)
-                        { m_title = title; SetTitle(title);}
+private:
+    MyFileDialog(const MyFileDialog&) = delete;
+    MyFileDialog& operator=(const MyFileDialog&) = delete;
 
-    private:
-        MyFileDialog(const MyFileDialog&) = delete;
-        MyFileDialog& operator=(const MyFileDialog&) = delete;
-
-        CString m_title;       // persistent over object span
+    CString m_title;       // persistent over object span
 };
-/*----------------------------------------------------------------------------*/
+
 #endif // MY_FILE_DLG_H

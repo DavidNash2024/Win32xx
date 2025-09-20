@@ -5,17 +5,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-
-////////////////////////////////////////////////////////////
-// Declaration of the PlotPoint struct.
-// This struct holds the drawing information for each point.
-struct PlotPoint
-{
-    int x;
-    int y;
-    bool isPenDown;
-    COLORREF color;
-};
+#include "Doc.h"
 
 
 //////////////////////////////////////////
@@ -28,7 +18,6 @@ public:
     void SetPenColor(COLORREF Color) { m_penColor = Color; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT&) override;
     virtual void OnDraw(CDC& dc) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;

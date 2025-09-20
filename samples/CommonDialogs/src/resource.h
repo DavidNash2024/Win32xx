@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
+/* (26-Mar-2025)                                                  (resource.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -29,16 +29,15 @@
 #ifndef RESOURCE_H_DEFINED
 #define RESOURCE_H_DEFINED
 
-/*============================================================================*/
 
-  // Include the resource IDs defined by Win32++, numbered 51 - 99.
-  // These are prefixed by IDW_.
+// Include the resource IDs defined by Win32++, numbered 51 - 99.
+// These are prefixed by IDW_.
 #include "default_resource.h"
 
-  // resource id of the main frame dialog (see resource.rc)
+// resource id of the main frame dialog (see resource.rc)
 #define IDD_MAIN_DIALOG                 100
 
-  // resource IDs for Menu and ToolBar commands
+// resource IDs for Menu and ToolBar commands
 #define IDM_FILE_NEW                    101
 #define IDM_FILE_OPEN                   102
 #define IDM_FILE_SAVE                   103
@@ -61,14 +60,17 @@
 #define IDS_APP_VERSION                 140
 #define IDS_FILE_FILTER                 141
 #define IDS_DOC_DEFAULT_EXT             142
-  // resource IDs for client area controls (IDOK has its own, so not given here)
+
+// resource IDs for client area controls (IDOK has its own, so not given here)
 #define IDC_RICHEDITBOX                 150
 #define IDM_RICHEDWRAP                  151
-  // bitmap
+
+// bitmap
 #define IDB_MENUICONS                   160
-  // CListBoxDlg resources
+
+// CListBoxDlg resources
 #define IDD_CLISTVIEWBOX                200
 #define IDC_LIST_BOX                    201
 
-/*-----------------------------------------------------------------------------*/
+
 #endif // RESOURCE_H_DEFINED

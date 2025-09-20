@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\stdafx.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
+/* (26-Mar-2025)                                                 (Resource.rc) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -37,7 +37,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                      RT_MANIFEST            "../src/res/PerMonitorV2.manifest"
+1                 RT_MANIFEST            "../src/res/PerMonitorV2.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -277,7 +277,7 @@ END
 
 STRINGTABLE     // app-specific program values
 BEGIN
-    IDS_APP_VERSION         "Version 2.0 (2024)"
+    IDS_APP_VERSION         "Version 3.0 (2025)"
     IDS_DOC_DEFAULT_EXT     ".txt"
     IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
 END

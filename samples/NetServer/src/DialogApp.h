@@ -20,7 +20,6 @@ public:
     CSvrDialog& GetDialog() {return m_svrDialog;}
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
 
 private:

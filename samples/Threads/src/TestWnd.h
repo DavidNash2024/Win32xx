@@ -16,7 +16,6 @@ public:
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnClose() override;
     virtual void OnInitialUpdate() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

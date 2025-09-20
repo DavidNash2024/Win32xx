@@ -17,10 +17,9 @@ public:
     virtual ~CViewRect() override = default;
 
 protected:
-    // Virtual functions that override base class functions
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnDestroy() override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CViewRect(const CViewRect&) = delete;
@@ -46,7 +45,6 @@ public:
     virtual ~CMDIChildRect() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

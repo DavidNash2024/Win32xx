@@ -3,9 +3,12 @@
 //
 
 #include "stdafx.h"
+#include <shlwapi.h>
 #include "Mainfrm.h"
 #include "resource.h"
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+constexpr COLORREF magenta   = RGB(255, 0, 255);
 
 //////////////////////////////////
 // CMainFrame function definitions
@@ -299,21 +302,21 @@ BOOL CMainFrame::OnShiftF1()
 void CMainFrame::OnUpdateCheckA(UINT id)
 {
     BOOL checkA = GetDoc().GetCheckA();
-    GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkA ? MF_CHECKED : MF_UNCHECKED));
+    GetFrameMenu().CheckMenuItem(id, checkA ? MF_CHECKED : MF_UNCHECKED);
 }
 
 // Updates the menu when check box B is clicked.
 void CMainFrame::OnUpdateCheckB(UINT id)
 {
     BOOL checkB = GetDoc().GetCheckB();
-    GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkB ? MF_CHECKED : MF_UNCHECKED));
+    GetFrameMenu().CheckMenuItem(id, checkB ? MF_CHECKED : MF_UNCHECKED);
 }
 
 // Updates the menu when check box C is clicked.
 void CMainFrame::OnUpdateCheckC(UINT id)
 {
     BOOL checkC = GetDoc().GetCheckC();
-    GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkC ? MF_CHECKED : MF_UNCHECKED));
+    GetFrameMenu().CheckMenuItem(id, checkC ? MF_CHECKED : MF_UNCHECKED);
 }
 
 // Updates the menu when a radio button is selected.
@@ -350,9 +353,9 @@ void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        SetMenuIcons(data, RGB(255, 0, 255), IDB_TOOLBAR24);
+        SetMenuIcons(data, magenta, IDB_TOOLBAR24);
     else
-        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
 // Set the resource IDs and images for the toolbar buttons.
@@ -375,7 +378,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(0);  // Separator
 
     // Set the toolbar image list.
-    SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24);
+    SetToolBarImages(magenta, IDB_TOOLBAR24);
 }
 
 // Called for a System Command such as SC_CLOSE, SC_CONTEXTHELP etc.
@@ -416,7 +419,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << '\n' << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

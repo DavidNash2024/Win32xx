@@ -135,7 +135,7 @@ DoPreparePreview()                                                          /*
 
     Initialize the preview with values other than the defaults, if needed,
     and determine the page divisions and number of pages to be previewed.
-    This base class method prepares the preview of a RichEdit docuent.
+    This base class method prepares the preview of a RichEdit document.
     Override it to create a printer  device context and a set of preview
     particulars consistent with application needs.
 *-----------------------------------------------------------------------------*/
@@ -434,7 +434,7 @@ OnPreview(const CString &docPath)                                           /*
             L"No Printer found", MB_ICONWARNING);
         return FALSE;
     }
-      // save the doument path
+      // save the document path
     m_docPath = docPath;
       // set up device contexts, determine pagination, and number of pages
     OnPreparePrintPreview();
@@ -469,7 +469,7 @@ OnPreviewPage(UINT nPage)                                                   /*
     assert(nPage < m_numPreviewPages);
     // Fill the bitmap with a white background
     CRect rc(0, 0, m_printerDots.cx, m_printerDots.cy);
-    m_dcMem.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
+    m_dcMem.FillRect(rc, HBRUSH(::GetStockObject(WHITE_BRUSH)));
     // render the nPage of the document into dcMem
     DocPageToBmp(nPage);
     // transfer the bitmap from the memory DC to the preview pane
@@ -572,7 +572,7 @@ RegQueryStringValue(CRegKey &key, LPCWSTR name)                             /*
 SaveSizesRegistry()                                                         /*
 
     Write the current preview size value into the registry key
-    labeled PREVIEW_REGISTRY_KEY.
+    labelled PREVIEW_REGISTRY_KEY.
 *-----------------------------------------------------------------------------*/
 {
       // get the current preview size
@@ -656,7 +656,7 @@ CPreviewPaneEx()                                                            /*
         wc.lpszClassName = ClassName;
         wc.lpfnWndProc   = ::DefWindowProc;
         wc.hInstance     = TheApp()->GetInstanceHandle();
-        wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
+        wc.hbrBackground = HBRUSH(GetStockObject(GRAY_BRUSH));
         wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
         ::RegisterClass(&wc);
     }
@@ -801,8 +801,7 @@ OnDraw(CDC& dc)                                                             /*
           // Process the bitmap as a device-independent structure: first,
           // locate and access the bitmap information
         CBitmapInfoPtr pbmi(m_bitmap);
-        BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>
-            (pbmi.get());
+        BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
           // Extract the m_bitmap information into a device independent image
           // data format (DIB).
         CMemDC dcMem(dc);

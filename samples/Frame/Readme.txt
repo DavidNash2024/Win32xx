@@ -55,5 +55,6 @@ Features demonstrated in this example
 * Using the TRACE command to output debug text.
 * Saving the frame settings in the registry.
 * Support for print preview.
+* Adding a Version resource to Resource.rc.
 
 

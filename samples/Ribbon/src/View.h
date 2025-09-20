@@ -16,7 +16,6 @@ public:
     virtual ~CView() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*) override;
     virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUIApplication::IUnknown*, UI_VIEWVERB, INT32) override;
 

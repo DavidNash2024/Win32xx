@@ -22,7 +22,6 @@ public:
     BOOL SelectFromListView(Cpidl& cpidlFull);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void    OnAttach() override;
     virtual void    OnDestroy() override;
     virtual LRESULT OnNMRClick(LPNMHDR pNMHDR);

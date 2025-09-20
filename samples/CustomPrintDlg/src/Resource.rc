@@ -44,10 +44,10 @@ BEGIN
         MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "Printer Setup",               IDM_FILE_PRINTSETUP
+        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
         MENUITEM "Print Preview",               IDM_FILE_PREVIEW
         MENUITEM "Print Now",                   IDM_FILE_PRINTNOW
-        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
+        MENUITEM "Printer Setup",               IDM_FILE_PRINTSETUP
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR

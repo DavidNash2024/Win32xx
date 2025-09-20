@@ -30,7 +30,6 @@ public:
     INT_PTR OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 
 protected:
-    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void OnCancel() override;
     virtual void OnClose() override;

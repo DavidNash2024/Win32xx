@@ -1,39 +1,29 @@
-/* (20-Oct-2024)                                          (MyFindReplaceDlg.h) *
+/* (26-Mar-2025)                                          (MyFindReplaceDlg.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration and implementation of the MyFindREplaceDlg
+    Contents Description: Declaration and implementation of the MyFindReplaceDlg
     class. This class is derived from the CFindREplaceDalog class found in the
     Win32++ Windows interface framework in order to add a title to the dialog.
-
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
 #ifndef MY_FIND_REPLACE_DLG_H
 #define MY_FIND_REPLACE_DLG_H
 
-/*============================================================================*/
-    class
-MyFindReplaceDialog : public CFindReplaceDialog
-
-/*----------------------------------------------------------------------------*/
+class MyFindReplaceDialog : public CFindReplaceDialog
 {
     public:
         MyFindReplaceDialog() = default;
         virtual ~MyFindReplaceDialog() override = default;
 
-          // Record the title of the find/replace dialog box after an object
-          // of this class is constructed, but before DoModal() is invoked.
-        void SetBoxTitle(LPCWSTR title) {m_boxTitle = title; }
+        void SetBoxTitle(LPCWSTR title);
 
     protected:
-        virtual BOOL OnInitDialog() override { SetWindowText(m_boxTitle); return TRUE; }
+        virtual BOOL OnInitDialog() override;
 
     private:
         MyFindReplaceDialog(const MyFindReplaceDialog&) = delete;
@@ -41,5 +31,5 @@ MyFindReplaceDialog : public CFindReplaceDialog
 
         CString m_boxTitle;
 };
-/*----------------------------------------------------------------------------*/
+
 #endif // MY_FIND_REPLACE_DLG_H

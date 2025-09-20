@@ -19,6 +19,11 @@ CViewXXXX are the various view windows inherited from CWnd.
 The Simple view window will present a dialog box asking if it is OK to
 close the window, before it is destroyed.
 
+The menu for a MDI frame should have a popup menu item called "Window"
+positioned second from the right. An entry for each MDI child will be appended
+to this menu item. It a MDI child have a menu, this should have a popup menu
+item called "Window" positioned second from the right as well.
+
 
 Caveat
 ======

@@ -32,7 +32,6 @@ public:
     void StorePoint(int x, int y, bool isPenDown, COLORREF penColor);
 
 protected:
-    // Virtual functions that override base class functions.
     void Serialize(CArchive &ar) override;
 
 private:

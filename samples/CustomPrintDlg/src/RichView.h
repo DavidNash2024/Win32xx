@@ -26,7 +26,6 @@ public:
     std::vector<int> SetPagesToPrint(const CDC& printerDC);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnAttach() override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT, WPARAM, LPARAM) override;

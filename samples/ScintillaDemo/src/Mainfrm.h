@@ -16,16 +16,14 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-
-    // Virtual functions that override public base class functions
     virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
+
     CString GetFileName();
     void SetWindowTitle();
     void UpdateToolbar();
 
 protected:
-    // Virtual functions that override base class functions
     virtual void    OnClose() override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;

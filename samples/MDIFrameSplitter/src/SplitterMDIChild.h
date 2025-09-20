@@ -18,7 +18,6 @@ public:
     void SetColor(COLORREF color) { m_color = color; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnDraw(CDC& dc) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -69,7 +68,6 @@ public:
     virtual ~CSplitterMDIChild() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnInitialUpdate() override;

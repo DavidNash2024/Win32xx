@@ -1,13 +1,9 @@
 This folder contains the projects help and settings file.
 Run the Install.bat file to copy these files to the user's AppData folder.
 
-Notes:
-1) All operating systems Win2000 and above are able to store user files within
-the AppData folder. Earlier operating systems (Win98 for example) expect to
-have the user files in the same folder as the executable.
-
-2) Some .CHM files may not render properly on Windows XP, Windows Vista,
-Windows 7, Windows 8.1 and Windows 10
+Note:
+Some .CHM files may not render properly on Windows XP, Windows Vista,
+Windows 7, Windows 8.1, Windows 10 and Windows 11.
 
 When attempting to open a Compiled HTML Help (.CHM) file, the file may open
 but display one of the following messages instead of the expected content:

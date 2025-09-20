@@ -110,6 +110,9 @@
     <ClInclude Include="..\..\..\include\wxx_folderdialog.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_folderdialogex.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_frame.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -159,9 +162,6 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_scrollview.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_shared_ptr.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_socket.h">
@@ -228,6 +228,9 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_thread.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_messagepump0.h">
       <Filter>Win32++</Filter>
     </ClInclude>
   </ItemGroup>

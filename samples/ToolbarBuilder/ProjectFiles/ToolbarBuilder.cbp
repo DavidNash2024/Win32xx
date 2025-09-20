@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ToolbarBuilder" />
+		<Option pch_mode="0" />
+		<Option default_target="Release MinGW GNU compiler" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug MinGW GNU compiler">
+				<Option output="GNU/Debug/ToolbarBuilder.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Debug" />
+				<Option object_output="GNU/Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-g3" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-static" />
+					<Add option="-municode" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+					<Add library="Gdiplus" />
+				</Linker>
+			</Target>
+			<Target title="Release MinGW GNU compiler">
+				<Option output="GNU/Release/ToolbarBuilder.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Release" />
+				<Option object_output="GNU/Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static" />
+					<Add option="-municode" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+					<Add library="Gdiplus" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+		</VirtualTargets>
+		<Unit filename="../../../include/default_resource.h" />
+		<Unit filename="../../../include/wxx_appcore.h" />
+		<Unit filename="../../../include/wxx_appcore0.h" />
+		<Unit filename="../../../include/wxx_archive.h" />
+		<Unit filename="../../../include/wxx_commondlg.h" />
+		<Unit filename="../../../include/wxx_controls.h" />
+		<Unit filename="../../../include/wxx_criticalsection.h" />
+		<Unit filename="../../../include/wxx_cstring.h" />
+		<Unit filename="../../../include/wxx_ddx.h" />
+		<Unit filename="../../../include/wxx_dialog.h" />
+		<Unit filename="../../../include/wxx_dockframe.h" />
+		<Unit filename="../../../include/wxx_docking.h" />
+		<Unit filename="../../../include/wxx_exception.h" />
+		<Unit filename="../../../include/wxx_file.h" />
+		<Unit filename="../../../include/wxx_filefind.h" />
+		<Unit filename="../../../include/wxx_folderdialog.h" />
+		<Unit filename="../../../include/wxx_frame.h" />
+		<Unit filename="../../../include/wxx_gdi.h" />
+		<Unit filename="../../../include/wxx_hglobal.h" />
+		<Unit filename="../../../include/wxx_imagelist.h" />
+		<Unit filename="../../../include/wxx_listview.h" />
+		<Unit filename="../../../include/wxx_mdi.h" />
+		<Unit filename="../../../include/wxx_menu.h" />
+		<Unit filename="../../../include/wxx_menubar.h" />
+		<Unit filename="../../../include/wxx_menumetrics.h" />
+		<Unit filename="../../../include/wxx_messagepump.h" />
+		<Unit filename="../../../include/wxx_messagepump0.h" />
+		<Unit filename="../../../include/wxx_metafile.h" />
+		<Unit filename="../../../include/wxx_mutex.h" />
+		<Unit filename="../../../include/wxx_preview.h" />
+		<Unit filename="../../../include/wxx_printdialogex.h" />
+		<Unit filename="../../../include/wxx_printdialogs.h" />
+		<Unit filename="../../../include/wxx_propertysheet.h" />
+		<Unit filename="../../../include/wxx_rebar.h" />
+		<Unit filename="../../../include/wxx_rect.h" />
+		<Unit filename="../../../include/wxx_regkey.h" />
+		<Unit filename="../../../include/wxx_ribbon.h" />
+		<Unit filename="../../../include/wxx_richedit.h" />
+		<Unit filename="../../../include/wxx_scrollview.h" />
+		<Unit filename="../../../include/wxx_setup.h" />
+		<Unit filename="../../../include/wxx_socket.h" />
+		<Unit filename="../../../include/wxx_statusbar.h" />
+		<Unit filename="../../../include/wxx_stdcontrols.h" />
+		<Unit filename="../../../include/wxx_tab.h" />
+		<Unit filename="../../../include/wxx_taskdialog.h" />
+		<Unit filename="../../../include/wxx_textconv.h" />
+		<Unit filename="../../../include/wxx_themes.h" />
+		<Unit filename="../../../include/wxx_thread.h" />
+		<Unit filename="../../../include/wxx_time.h" />
+		<Unit filename="../../../include/wxx_toolbar.h" />
+		<Unit filename="../../../include/wxx_treeview.h" />
+		<Unit filename="../../../include/wxx_webbrowser.h" />
+		<Unit filename="../../../include/wxx_wincore.h" />
+		<Unit filename="../../../include/wxx_wincore0.h" />
+		<Unit filename="../src/AboutDialog.h" />
+		<Unit filename="../src/FrameApp.cpp" />
+		<Unit filename="../src/FrameApp.h" />
+		<Unit filename="../src/Mainfrm.cpp" />
+		<Unit filename="../src/Mainfrm.h" />
+		<Unit filename="../src/NewDialog.cpp" />
+		<Unit filename="../src/NewDialog.h" />
+		<Unit filename="../src/Resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../src/View.cpp" />
+		<Unit filename="../src/View.h" />
+		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/stdafx.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

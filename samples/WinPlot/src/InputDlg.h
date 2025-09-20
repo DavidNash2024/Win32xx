@@ -22,7 +22,6 @@ public:
     void SetFunction(const CString& function) { m_function = function; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void DoDataExchange(CDataExchange& DX) override;
     virtual BOOL OnInitDialog() override;

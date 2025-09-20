@@ -55,7 +55,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.lpszClassName = L"Win32++ View";
 
     // Set a background brush to white
-    wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+    wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
 
     // Set the default cursor
     wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
@@ -85,6 +85,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

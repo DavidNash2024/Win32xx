@@ -22,7 +22,6 @@ public:
     LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void    OnClose() override;
     virtual BOOL    OnInitDialog() override;
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

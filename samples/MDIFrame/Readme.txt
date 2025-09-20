@@ -5,6 +5,11 @@ window. MDI (Multiple Document Interface) frames allow different types of view
 windows to be displayed simultaneously. The more common SDI (Single Document 
 Interface) frames only display a single view.
 
+The menu for a MDI frame should have a popup menu item called "Window"
+positioned second from the right. An entry for each MDI child will be appended
+to this menu item. It a MDI child have a menu, this should have a popup menu
+item called "Window" positioned second from the right as well.
+
 This is a very simple project which could be used as a starting point for your
 own MDI frame based applications.
 

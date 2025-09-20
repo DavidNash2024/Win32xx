@@ -1,4 +1,4 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]          (CRichEditView.h) *
+/* (26-Mar-2025)                                             (CRichEditView.h) *
 ********************************************************************************
 |                                                                              |
 |                    Authors: Robert Tausworthe, David Nash                    |
@@ -11,10 +11,6 @@
     document repository and manager. In similarity to Microsoft Foundation
     Classes (MFC) architecture it also contains the print loop.
 
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #ifndef CRICHEDITVIEW_H
@@ -22,55 +18,51 @@
 
 #include "PrintInfo.h"
 
-/*============================================================================*/
-    class
-CRichEditView : public CRichEdit                                            /*
-
-*-----------------------------------------------------------------------------*/
+class CRichEditView : public CRichEdit
 {
-    public:
-        CRichEditView();
-        virtual ~CRichEditView() override = default;
+public:
+    CRichEditView();
+    virtual ~CRichEditView() override = default;
 
-        void    Clean();
-        void    DoPrintRichView(LPCWSTR);
-        void    DoPrintView();
-        BOOL    IsSelected();
-        void    SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg);
-        void    SetFont(HFONT hFont, BOOL bRedraw) const;
-        void    SetPrintPath(LPCWSTR s) { m_printPath = s;}
-        void    SetWrapping(int wrap);
-        BOOL    StreamInFile(const CFile& file);
-        BOOL    StreamOutFile(const CFile& file);
+    void    Clean();
+    void    DoPrintRichView(LPCWSTR);
+    void    DoPrintView();
+    BOOL    IsSelected();
+    void    SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg);
+    void    SetFont(HFONT hFont, BOOL bRedraw) const;
+    void    SetPrintPath(LPCWSTR s) { m_printPath = s;}
+    void    SetWrapping(int wrap);
+    BOOL    StreamInFile(const CFile& file);
+    BOOL    StreamOutFile(const CFile& file);
 
-    protected:
-        virtual void OnAttach() override;
+protected:
+    virtual void OnAttach() override;
 
-    private:
-        CRichEditView(const CRichEditView&) = delete;
-        CRichEditView& operator=(const CRichEditView&) = delete;
+private:
+    CRichEditView(const CRichEditView&) = delete;
+    CRichEditView& operator=(const CRichEditView&) = delete;
 
-        BOOL    DoPreparePrinting(CPrintInfo& info);
-        void    GetPageBreaks(CPrintInfo&);
-        void    OnBeginPrinting(CDC& DC, CPrintInfo& info);
-        void    OnEndPrinting(CDC& DC, CPrintInfo& info);
-        void    OnPrepareDC(CDC& DC, CPrintInfo& info);
-        BOOL    OnPreparePrinting(CPrintInfo& info);
-        void    OnPrint(CDC& DC, CPrintInfo& info);
-        void    SetAppBanding(BOOL b) { m_isAppBanded = b;}
+    BOOL    DoPreparePrinting(CPrintInfo& info);
+    void    GetPageBreaks(CPrintInfo&);
+    void    OnBeginPrinting(CDC& DC, CPrintInfo& info);
+    void    OnEndPrinting(CDC& DC, CPrintInfo& info);
+    void    OnPrepareDC(CDC& DC, CPrintInfo& info);
+    BOOL    OnPreparePrinting(CPrintInfo& info);
+    void    OnPrint(CDC& DC, CPrintInfo& info);
+    void    SetAppBanding(BOOL b) { m_isAppBanded = b;}
 
-        static  DWORD CALLBACK StreamInCallback(DWORD dwCookie,
-                        LPBYTE pbBuff, LONG cb, LONG *pcb);
-        static  DWORD CALLBACK StreamOutCallback(DWORD dwCookie,
-                        LPBYTE pbBuff, LONG cb, LONG *pcb);
+    static  DWORD CALLBACK StreamInCallback(DWORD dwCookie, LPBYTE pbBuff,
+        LONG cb, LONG *pcb);
+    static  DWORD CALLBACK StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff,
+        LONG cb, LONG *pcb);
 
-        long    m_textLength;
-        CString m_docPath;      // document path name
-        CString m_printPath;    // print-to-file path (not supported)
-        CString m_dataType;     // DOCINFO data type used to record print job
-        BOOL    m_isAppBanded;  // TRUE if app banding supported
-        FORMATRANGE m_fr;       // rich edit format range struct
-        std::vector<int> m_firstPageChar;   // first character of each page
+    long    m_textLength;
+    CString m_docPath;                // document path name
+    CString m_printPath;              // print-to-file path (not supported)
+    CString m_dataType;               // DOCINFO data type for the print job
+    BOOL    m_isAppBanded;            // TRUE if app banding supported
+    FORMATRANGE m_fr;                 // rich edit format range struct
+    std::vector<int> m_firstPageChar; // first character of each page
 };
-/*----------------------------------------------------------------------------*/
+
 #endif  // CRICHEDITVIEW_H

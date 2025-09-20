@@ -17,7 +17,7 @@ Features demonstrated in this example
 * Processing window messages in CView::WndProc
 * Overriding PreCreate to set the initial window creation parameters
 * Overriding PreRegister class to set the window class parameters
-* Using a circular region to define the shape of the window.
-* Creating a popup menu in response to a right mouse button click.
+* Using a circular region to define the shape of the window
+* Creating a popup menu in response to a right mouse button click
 * Overriding OnDraw to draw text on the window's device context
-* Using the ChooseColor dialog to set the window's background window.
+* Using the ChooseColor dialog to set the window's background window

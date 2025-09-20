@@ -17,12 +17,10 @@ public:
     CMainFrame();
     CFormDoc& GetDoc()      { return m_formView.GetDoc(); }
 
-    // Virtual functions that override public base class functions
     virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL LoadRegistrySettings(LPCWSTR keyName) override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int  OnCreate(CREATESTRUCT& cs) override;

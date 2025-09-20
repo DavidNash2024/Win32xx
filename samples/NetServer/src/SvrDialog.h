@@ -27,7 +27,6 @@ public:
     void Send();
 
 protected:
-    // Virtual functions that override base class functions.
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual void OnClose() override;
@@ -64,7 +63,6 @@ public:
     virtual ~CSvrDialog() override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void OnClose() override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;

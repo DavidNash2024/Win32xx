@@ -21,7 +21,6 @@ public:
     CDXView& GetDXView() { return m_DXView; }
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnDestroy() override;

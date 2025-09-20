@@ -5,13 +5,11 @@ in this example is based on DirectX version 9.
 
 Additional software is required to run this example.
 For MS compilers you will need the DirectX SDK v9
-For Dev-C++ you will need the DirecX v9.0c DevPak
 
 Microsoft makes the the DirectX Software Development Kit available for download
 without charge. The latest version is of the DirectX SDK was published in
-June 2010. This version supports Window OS versions 98 through to Windows 11.
-Users will need install the DirectX End-User Runtimes (June 2010 for Win2000
-and higher).
+June 2010. This version supports Window XP through to Windows 11. Users will
+need install the DirectX End-User Runtimes (June 2010 for Win2000 and higher).
 
 This example displays a rotating triangle using DirectX within the DXView window.
 - CDXView is the view window of CMainFrame. It runs in a separate thread.

@@ -518,7 +518,7 @@ BOOL CMainFrame::OnFilePreview()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), L"Print Preview Failed", MB_ICONWARNING);
+        TaskDialogBox(*this, e.GetText(), L"Print Preview Failed", TD_WARNING_ICON);
         SetView(m_view);
         ShowMenu(GetFrameMenu() != 0);
         ShowToolBar(m_isToolbarShown);
@@ -543,7 +543,7 @@ BOOL CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
+        TaskDialogBox(*this, e.GetText(), L"Print Failed", TD_WARNING_ICON);
     }
 
     return TRUE;
@@ -755,7 +755,7 @@ LRESULT CMainFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     int padding = ::GetSystemMetricsForDpi(SM_CXPADDEDBORDER, dpi);
     CPoint cursorPoint(lparam);
     ScreenToClient(cursorPoint);
-    if (cursorPoint.y > 0 && cursorPoint.y < frameY + padding)
+    if (!IsMaximized() && cursorPoint.y > 0 && cursorPoint.y < frameY + padding)
     {
         return HTTOP;
     }
@@ -895,7 +895,7 @@ LRESULT CMainFrame::OnPreviewSetup()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+        TaskDialogBox(*this, e.GetErrorString(), e.GetText(), TD_WARNING_ICON);
     }
 
     // Initiate the print preview.
@@ -977,9 +977,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
 
     // Catch all unhandled std::exception types.
@@ -987,7 +988,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

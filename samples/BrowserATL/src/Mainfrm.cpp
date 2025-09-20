@@ -3,6 +3,9 @@
 #include "Mainfrm.h"
 #include "UserMessages.h"
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+constexpr COLORREF magenta   = RGB(255, 0, 255);
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -104,7 +107,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     }
 
     // Handle notification WM_COMMAND from ComboboxEx.
-    if((HWND)lparam == m_combo.GetHwnd())
+    if(reinterpret_cast<HWND>(lparam) == m_combo.GetHwnd())
     {
         switch(HIWORD(wparam))
         {
@@ -119,7 +122,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
                 // Set focus to web page
                 LONG_PTR hWeb;
                 GetBrowser()->get_HWND(&hWeb);
-                ::SetFocus((HWND)hWeb);
+                ::SetFocus(reinterpret_cast<HWND>(hWeb));
             }
             return TRUE;
         }
@@ -501,9 +504,9 @@ void CMainFrame::SetupMenuIcons()
     iconData.push_back(IDM_HELP_ABOUT);
 
     if (GetMenuIconHeight() >= 24)
-        AddMenuIcons(iconData, RGB(192, 192, 192), IDB_MENUICONS24, 0);
+        AddMenuIcons(iconData, lightgray, IDB_MENUICONS24, 0);
     else
-        AddMenuIcons(iconData, RGB(192, 192, 192), IDB_MENUICONS16, 0);
+        AddMenuIcons(iconData, lightgray, IDB_MENUICONS16, 0);
 }
 
 // Set the Resource IDs for the toolbar buttons.
@@ -518,7 +521,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(IDM_HOME);
 
     // Set the image lists for normal, hot and disabled buttons.
-    SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
+    SetToolBarImages(magenta, IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
 
     // Add the ComboBoxEx control.
     AddComboBoxBand();
@@ -552,7 +555,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << '\n' << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

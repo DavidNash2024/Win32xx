@@ -16,7 +16,6 @@ public:
     virtual ~CMyPropertySheet() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnAttach() override;
     virtual void OnInitialUpdate() override;
     virtual LRESULT OnSetDefID(WPARAM wparam) override;
@@ -41,7 +40,6 @@ public:
     BOOL Validate();
 
 protected:
-    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnApply() override;
     virtual void OnCancel() override;
@@ -67,7 +65,6 @@ public:
     virtual ~CComboPage() override = default;
 
 protected:
-    // Virtual functions that override base class functions.
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnApply() override;
     virtual BOOL OnInitDialog() override;

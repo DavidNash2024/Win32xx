@@ -282,7 +282,7 @@ void CMyTreeView::OnAttach()
 // Called when the window is destroyed.
 void CMyTreeView::OnDestroy()
 {
-    // Cleanup required by Win2000
+    // Cleanup
     DeleteAllItems();
     m_pItems.clear();
 }
@@ -460,7 +460,8 @@ LRESULT CMyTreeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << L"\n" << e.GetErrorString();
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

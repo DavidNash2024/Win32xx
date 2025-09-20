@@ -16,7 +16,6 @@ public:
     virtual ~CViewDialog() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void OnCancel() override;
     virtual void OnClose() override;

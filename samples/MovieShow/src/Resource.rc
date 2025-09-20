@@ -49,7 +49,7 @@ BEGIN
         BEGIN
             MENUITEM "None",                    IDM_BOXSET_0
         END
-        MENUITEM "&Watch List"                  IDM_WATCHLIST
+        MENUITEM "&Watch List",                 IDM_WATCHLIST
         MENUITEM "&Remove File From Library",   IDM_REMOVE_FILE
     END
 END

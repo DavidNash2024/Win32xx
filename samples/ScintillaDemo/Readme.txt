@@ -20,13 +20,18 @@ program's executable file (ScintillaDemo.exe). The dlls are located in the DLL
 folder of this project. 32 bit programs requires the 32 bit scintilla.dll, and
 64 bit programs require the 64 bit scintilla.dll.
 
+The compiled scintilla dlls are ship as part of SciTE. The full 64-bit and
+32-bit downloads contain the scintilla.dll files. The can be downloaded from:
+https://www.scintilla.org/SciTEDownload.html
+
+
 Features demonstrated in this example
 =====================================
 * Using a Scintilla control as the view window for a frame.
 * Loading and saving text files for the Scintilla control.
 * Loading files with drag and drop.
 * Support for a Most Recently Used (MRU) list.
-* Printing and print preview the contents of the Scintilla control.
+* Printing and print previewing the contents of the Scintilla control.
 * Adding a header and footer to the printed output.
 * Selecting a font for use in the Scintilla control.
 * Changing the color of the text and background.

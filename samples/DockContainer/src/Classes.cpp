@@ -8,6 +8,8 @@
 #include "Classes.h"
 #include "resource.h"
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+constexpr COLORREF red = RGB(255, 0, 0);
 
 ////////////////////////////////////
 // CViewClasses function definitions
@@ -78,7 +80,7 @@ void CViewClasses::SetDPIImages()
     int scale = bmImage.GetSize().cy / 15;
     CImageList normalImages;
     normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    normalImages.Add(bmImage, RGB(255, 0, 0));
+    normalImages.Add(bmImage, red);
     SetImageList(normalImages, TVSIL_NORMAL);
 
     // Reset the item indentation.
@@ -116,6 +118,7 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -180,7 +183,7 @@ BOOL CContainClasses::OnHelpAbout()
 // Set the Bitmap resource for the toolbar
 void CContainClasses::SetupToolBar()
 {
-    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
+    SetToolBarImages(lightgray, IDW_MAIN, 0, 0);
 
     // Set the Resource IDs for the toolbar buttons
     AddToolBarButton(IDM_FILE_NEW);
@@ -216,6 +219,7 @@ LRESULT CContainClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -283,6 +287,7 @@ LRESULT CDockClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

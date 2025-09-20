@@ -5,7 +5,7 @@
 #include "Doc.h"
 
 
-// Loads the plotpoint data from the archive.
+// Loads the PlotPoint data from the archive.
 // Throws an exception if unable to read the file.
 void CDoc::FileOpen(LPCWSTR fileName)
 {
@@ -14,7 +14,7 @@ void CDoc::FileOpen(LPCWSTR fileName)
     ar >> *this;
 }
 
-// Stores the plotpoint data in the archive.
+// Stores the PlotPoint data in the archive.
 // Throws an exception if unable to save the file.
 void CDoc::FileSave(LPCWSTR fileName)
 {

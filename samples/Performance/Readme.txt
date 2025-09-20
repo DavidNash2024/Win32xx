@@ -10,3 +10,5 @@ Features demonstrated in this example
 * Use of a dialog to input data
 * Creating multiple windows
 * Using TRACE to display debug output
+* Use of QueryPerformanceCounter to retrieve the current value of the 
+  high-resolution performance counter

@@ -1,17 +1,17 @@
 DockContainer Example
 =====================
-This example demonstrates "container" docking. Dock containers are a specialised
-view window for dockers.  They are a tab control which provide support for
-tab undocking, and "container within container docking" where docking the
-container adds a tab to the container. They also provide an optional toolbar.
-Containers in turn have their own "view window"
+This example demonstrates "container" docking. Dock containers are a
+specialised view window for dockers.  They are a tab control which provide
+support for tab undocking, and "container within container docking" where
+docking the container adds a tab to the container. They also provide an
+optional toolbar. Containers in turn have their own "view window"
 
 The dock containers are the view window for dockers, allowing them to be
 undocked and docked as required.
 
 Classes titled CDockXXXX are inherited from CDocker. Classes titled
 CContainerXXXX are inherited from CDockContainer. Classes titled CViewXXXX
-are the various view windows inherited from CWnd.
+are the various view windows inherited from CListView, CTreeView, CRichEdit.
 
 CMainFrame inherits from CDockFrame.
 

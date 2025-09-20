@@ -22,7 +22,6 @@ public:
     void SetDarkMode(bool isDarkMode);
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnInitDialog() override;
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

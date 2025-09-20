@@ -22,7 +22,6 @@ public:
     void Swap(HTREEITEM item1, HTREEITEM item2);
 
 protected:
-    // Virtual functions that override base class functions.
     virtual void    OnInitialUpdate() override;
     virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;

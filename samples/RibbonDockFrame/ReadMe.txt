@@ -43,12 +43,8 @@ CMainFrame::OnInitialUpdate.
   
 Prerequisites:
 ==============
-1. Windows 7 operating system
-2. Microsoft Windows SDK v7.0 
-3. Visual Studio 2005, 2008 or 2010 (full or Express Edition)
-
-Note:
-Microsoft Visual Community 2013 and 2015 include the Windows 7 SDK.
+1. Windows 7 operating system or later
+2. Microsoft Windows SDK v7.0 (included with Visual Studio Community)
 
 Compiling Instructions
 ======================

@@ -21,7 +21,6 @@ public:
     void DpiScaleReBar();
 
 protected:
-    // Virtual functions that override base class functions
     virtual CRect   GetViewRect() const override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;

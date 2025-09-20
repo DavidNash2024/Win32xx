@@ -18,7 +18,6 @@ public:
     void SetPos(int pos);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnInitialUpdate() override;
 
 private:

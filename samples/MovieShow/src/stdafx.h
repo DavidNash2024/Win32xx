@@ -75,17 +75,16 @@
 // WIN32_LEAN_AND_MEAN can't be used with these
 #ifndef WIN32_LEAN_AND_MEAN
   #include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
+  #include <wxx_folderdialogex.h> // Add CFolderDialogEx
   #include <wxx_preview.h>        // Add CPrintPreview
   #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
   #include <wxx_printdialogex.h>  // Add CPrintDialogEx
-
-  // Visual Studio or Clang compiler
-  #if defined (_MSC_VER) || defined(__clang_major__)
-    #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
-  #endif
-
   #include <wxx_taskdialog.h>     // Add CTaskDialog
 
+  // Visual Studio
+  #if defined (_MSC_VER)
+    #include <wxx_ribbon.h>       // Add CRibbon, CRibbonFrame
+  #endif
 
 #endif  // define WIN32_LEAN_AND_MEAN
 

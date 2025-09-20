@@ -17,3 +17,10 @@ BOOL CFastGDIApp::InitInstance()
     return TRUE;
 }
 
+// Called when the message queue is empty.
+BOOL CFastGDIApp::OnIdle(LONG)
+{
+    m_frame.UpdateToolbar();
+
+    return FALSE;
+}

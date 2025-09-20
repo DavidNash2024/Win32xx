@@ -12,8 +12,8 @@
 // Called when the application starts.
 BOOL CMovieShowApp::InitInstance()
 {
-    // Create the frame window
-    m_frame.Create();   // throws a CWinException on failure
+    // Create the frame window.
+    m_frame.Create();   // throws a CWinException on failure.
 
     return TRUE;
 }

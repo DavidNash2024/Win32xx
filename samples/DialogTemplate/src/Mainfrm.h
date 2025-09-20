@@ -18,8 +18,6 @@ class CMainFrame : public CDockFrame
 {
 public:
     CMainFrame();
-
-    // Virtual functions that override public base class functions
     virtual ~CMainFrame() override = default;
     virtual HWND Create(HWND parent = nullptr) override;
 
@@ -30,7 +28,6 @@ public:
     void ShowTemplateText(HMODULE module, LPCWSTR dialogRes);
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnInitialUpdate() override;

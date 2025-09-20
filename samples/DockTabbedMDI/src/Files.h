@@ -19,7 +19,6 @@ public:
     void SetDPIImages();
 
 protected:
-    // Virtual functions that override base class functions.
     virtual void    OnAttach() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -46,7 +45,6 @@ public:
     virtual ~CContainFiles() override = default;
 
 protected:
-    // Virtual functions that override base class functions.
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:

@@ -17,7 +17,6 @@ public:
     BOOL AddItems();
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnAttach() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

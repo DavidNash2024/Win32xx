@@ -10,10 +10,6 @@
 
 #if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
 #pragma warning (disable : 4458) // disable warning: declaration hides class member.
-#endif
-
-// Declare min and max for older versions of Visual Studio.
-#if defined (_MSC_VER) && (_MSC_VER < 1920) // < VS2019
 using std::min;
 using std::max;
 #endif
@@ -40,6 +36,8 @@ using std::max;
 #pragma comment(lib, "shell32.lib")
 #endif
 
+#include <shlwapi.h>
+
 using namespace MediaInfoDLL;
 using namespace Gdiplus;
 
@@ -48,39 +46,31 @@ using namespace Gdiplus;
 //
 
 // Retrieves the class identifier for the given MIME type of an encoder.
-int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
+void GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 {
     UINT  num = 0;          // Number of image encoders.
     UINT  size = 0;         // Size of the image encoder array in bytes.
 
-    ImageCodecInfo* pImageCodecInfo = nullptr;
-
-    GetImageEncodersSize(&num, &size);
-    if (size == 0)
-        return -1;  // Failure
-
-    pImageCodecInfo = (ImageCodecInfo*)(malloc(size));
-    if (pImageCodecInfo == nullptr)
-        return -1;  // Failure
-
-    GetImageEncoders(num, size, pImageCodecInfo);
-
-    for (UINT j = 0; j < num; ++j)
+    Status status = ::GetImageEncodersSize(&num, &size);
+    if (status == Ok)
     {
-#pragma warning ( push )
-#pragma warning ( disable : 6385 )       // '208' bytes might be read.
-        // Correct code incorrectly flagged with a C6385 warning by the VS2019 analyser.
-        if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
+        // Retrieve the image codec information and store it in codecInfo.
+        std::vector<byte> codecInfo(size);
+        ImageCodecInfo* pCodecInfo = reinterpret_cast<ImageCodecInfo*>(codecInfo.data());
+        if (Gdiplus::Ok == ::GetImageEncoders(num, size, pCodecInfo))
         {
-            *pClsid = pImageCodecInfo[j].Clsid;
-            free(pImageCodecInfo);
-            return j;  // Success
+            // Search for the codec information matching the specified format.
+            for (UINT i = 0; i < num; i++)
+            {
+                if (::wcscmp(pCodecInfo[i].MimeType, format) == 0)
+                {
+                    // Retrieve the CLSID and store it in pClsid.
+                    *pClsid = pCodecInfo[i].Clsid;
+                    break;
+                }
+            }
         }
-#pragma warning ( pop )  // ( disable : 6385 )    '208' bytes might be read.
     }
-
-    free(pImageCodecInfo);
-    return -1;  // Failure
 }
 
 ///////////////////////////////////
@@ -88,10 +78,111 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_searchItem(nullptr), m_pDockTree(nullptr),
-                           m_pDockDialog(nullptr), m_isDirty(false), m_boxSetsItem(0),
+CMainFrame::CMainFrame() : m_addFilesThread(AddFilesProc, this), m_searchItem(nullptr), m_isAddPuttonPressed(FALSE),
+                           m_pDockTree(nullptr), m_pDockDialog(nullptr), m_isDirty(false), m_boxSetsItem(0),
                            m_dialogHeight(0), m_treeWidth(0)
 {
+}
+
+// This function is the thread procedure for m_addFilesThread.
+// This function runs in a separate thread because loading the meta data from
+// files can be time consuming. This thread modifies m_moviesData, so all
+// write access to m_moviesData should be protected by a CThreadLock.
+UINT WINAPI CMainFrame::AddFilesProc(void* pVoid)
+{
+    CMainFrame* pFrame = reinterpret_cast<CMainFrame*>(pVoid);
+
+    MediaInfo MI;
+    if (MI.IsReady())   // Is MediaInfo.dll loaded?
+    {
+        // Press the Add_Folder button. We use PostMessage for a different thread.
+        pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, TRUE);
+
+        CSplashThread splashThread;
+        splashThread.CreateThread();
+        CSplash* splash = splashThread.GetSplash();
+
+        // Wait for the splash window to be created.
+        ::WaitForSingleObject(splashThread.GetSplashCreated(), INFINITE);
+
+        splash->ShowText(L"Updating Library", pFrame);
+        const CProgressBar& progressBar = splash->GetBar();
+        progressBar.ShowWindow(SW_SHOW);
+        progressBar.SetRange(0, (short)pFrame->m_filesToAdd.size());
+
+        unsigned short barPos = 0;
+        for (size_t i = 0; i < pFrame->m_filesToAdd.size(); i++)
+        {
+            // The stop request is set if the app is trying to close,
+            // or when the 'Add Folder' button toggled.
+            if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
+            {
+                // Unpress the Add_Folder button. We use PostMessage for a different thread.
+                pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, FALSE);
+
+                // Break out of the loop and end the thread.
+                return 0;
+            }
+
+            barPos++;
+
+            // Update the splash screen's progress bar.
+            progressBar.SetPos(barPos);
+
+            CString fullName = pFrame->m_filesToAdd[i].fileName;
+            bool isFileInLibrary = false;
+            for (auto it = pFrame->m_moviesData.begin(); it != pFrame->m_moviesData.end();)
+            {
+                if ((*it).fileName == fullName)
+                {
+                    CFileFind ff;
+                    ff.FindFirstFile(fullName);
+                    CTime t1(ff.GetLastWriteTime());
+                    CTime t2((*it).lastModifiedTime);
+                    if (t1 != t2)
+                    {
+                        // Lock this code for thread safety.
+                        CThreadLock lock(pFrame->m_cs);
+
+                        // Remove the modified file from the library.
+                        TRACE(fullName); TRACE(" removed modified file from library\n");
+                        pFrame->m_moviesData.erase(it);
+                    }
+                    else
+                        isFileInLibrary = true;
+
+                    // No need to check further.
+                    break;
+                }
+
+                ++it;
+            }
+
+            // Only add files not already in the library.
+            if (!isFileInLibrary)
+            {
+                pFrame->m_isDirty = true;
+                MovieInfo mi{};
+                pFrame->LoadMovieInfoFromFile(pFrame->m_filesToAdd[i], mi);
+
+                // Lock this code for thread safety.
+                CThreadLock lock(pFrame->m_cs);
+                pFrame->m_moviesData.push_back(mi);
+
+                TRACE(fullName); TRACE(" added to library\n");
+            }
+        }
+    }
+    else
+    {
+        // Report the error in a message  box.
+        ::MessageBox(nullptr, MI.Inform().c_str(), L"Error", MB_OK);
+    }
+
+    pFrame->OnFilesLoaded();
+    pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, FALSE);
+
+    return 0;
 }
 
 // Clears the contents of the movie info dialog.
@@ -146,39 +237,33 @@ HWND CMainFrame::Create(HWND parent)
 void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 {
     DWORD bufferSize = 0;
-    if (::CryptStringToBinary(source.c_str(), source.GetLength(), CRYPT_STRING_BASE64, nullptr, &bufferSize, nullptr, nullptr))
+    if (::CryptStringToBinary(source.c_str(), source.GetLength(),
+        CRYPT_STRING_BASE64, nullptr, &bufferSize, nullptr, nullptr))
     {
         // Use a vector for an array of BYTE.
         std::vector<BYTE> sourceData(bufferSize, 0);
         BYTE* pSource = sourceData.data();
-        ::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, pSource, &bufferSize, nullptr, nullptr);
+        ::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(),
+            CRYPT_STRING_BASE64, pSource, &bufferSize, nullptr, nullptr);
 
-        // Convert the binary data to an IStream.
-        CHGlobal globalMemory(bufferSize);
-        if (globalMemory.Get() != nullptr)
+        // Create the IStream from the array of BYTE.
+        IStream* pStream = ::SHCreateMemStream(pSource, bufferSize);
+        if (pStream)
         {
-            CGlobalLock<CHGlobal> buffer(globalMemory);
-            if (buffer != nullptr)
+            // Acquire GDI+ Image from the IStream.
+            Image image(pStream);
+
+            // Create a smaller thumbnail Image.
+            using  BitmapPtr = std::unique_ptr<Bitmap>;
+            BitmapPtr img((Bitmap*)image.GetThumbnailImage(280, 420, nullptr, nullptr));
+
+            IStream* stream = SHCreateMemStream(nullptr, 0);
+            if (stream)
             {
-                memcpy(buffer, pSource, bufferSize);
-                IStream* pStream = nullptr;
-                if (S_OK == ::CreateStreamOnHGlobal(globalMemory, FALSE, &pStream))
+                CLSID gifClsid = {};
+                GetEncoderClsid(L"image/gif", &gifClsid);
+                if (Gdiplus::Ok == img->Save(stream, &gifClsid, nullptr))
                 {
-                    // Acquire GDI+ Image from the IStream.
-                    Image image(pStream);
-
-                    // Create a smaller thumbnail Image.
-                    Bitmap* img = (Bitmap*)image.GetThumbnailImage(280, 420, nullptr, nullptr);
-
-                    IStream* stream = nullptr;
-                    HRESULT hr = ::CreateStreamOnHGlobal(nullptr, TRUE, &stream);
-                    if (!SUCCEEDED(hr))
-                        return;
-
-                    CLSID gifClsid;
-                    GetEncoderClsid(L"image/gif", &gifClsid);
-                    VERIFY(Gdiplus::Ok == img->Save(stream, &gifClsid));
-
                     // Get the size of the stream.
                     ULARGE_INTEGER streamSize;
                     VERIFY(S_OK == IStream_Size(stream, &streamSize));
@@ -187,12 +272,13 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 
                     // Fill buffer from stream.
                     VERIFY(S_OK == IStream_Reset(stream));
-                    VERIFY(S_OK == IStream_Read(stream, &dest[0], len));
-
-                    // Cleanup.
-                    pStream->Release();
+                    VERIFY(S_OK == IStream_Read(stream, dest.data(), len));
                 }
+                // Cleanup.
+                stream->Release();
             }
+            // Cleanup.
+            pStream->Release();
         }
     }
 }
@@ -632,7 +718,7 @@ void CMainFrame::LoadMovies()
                 if (ImageDataSize > 0)
                 {
                     mi.imageData.resize(ImageDataSize);
-                    ar.Read(&mi.imageData[0], ImageDataSize);
+                    ar.Read(mi.imageData.data(), ImageDataSize);
                 }
 
                 m_moviesData.push_back(mi);
@@ -710,9 +796,9 @@ BOOL CMainFrame::OnAddBoxSet()
 // Called when the Add Folder toolbar button is pressed.
 BOOL CMainFrame::OnAddFolder()
 {
-    if (::WaitForSingleObject(m_thread, 0) != WAIT_TIMEOUT) // if thread is not running.
+    if (::WaitForSingleObject(m_addFilesThread, 0) != WAIT_TIMEOUT) // if thread is not running.
     {
-        CFolderDialog fd;
+        CFolderDialogEx fd;
         fd.SetTitle(L"Choose a folder to add to the video library.");
         if (fd.DoModal(*this) == IDOK)
         {
@@ -731,7 +817,7 @@ BOOL CMainFrame::OnAddFolder()
                     ++it;
             }
 
-            CString searchString = fd.GetFolderPath() + L"\\*.m??";
+            CString searchString = fd.GetFolderName() + L"\\*.m??";
             CFileFind fileFound;
 
             m_filesToAdd.clear();
@@ -753,7 +839,7 @@ BOOL CMainFrame::OnAddFolder()
             }
 
             // Create the thread and run ThreadProc.
-            m_thread.CreateThread(0, 0, nullptr);
+            m_addFilesThread.CreateThread(0, 0, nullptr);
         }
     }
     else
@@ -761,14 +847,8 @@ BOOL CMainFrame::OnAddFolder()
         m_stopRequest.SetEvent();
     }
 
+    GetToolBar().CheckButton(IDM_ADD_FOLDER, FALSE);
     return TRUE;
-}
-
-// Called when the box set name has changed.
-LRESULT CMainFrame::OnBoxSetChanged()
-{
-    m_isDirty = true;
-    return 0;
 }
 
 // Called when the splitter bar move has completed.
@@ -817,14 +897,21 @@ BOOL CMainFrame::OnBoxSet(UINT nID)
     return TRUE;
 }
 
+// Called when the box set name has changed.
+LRESULT CMainFrame::OnBoxSetChanged()
+{
+    m_isDirty = true;
+    return 0;
+}
+
 // Called when the frame application is closed (before the window is destroyed).
 // Stores the movie data in an archive if it has changed.
 void CMainFrame::OnClose()
 {
-    // Terminate the load files thread.
+    // Ask the add files thread to stop.
     m_stopRequest.SetEvent();
-    if (::WaitForSingleObject(m_thread, 1000) == WAIT_TIMEOUT)
-        Trace("Splash Thread failed to end cleanly\n");
+    if (::WaitForSingleObject(m_addFilesThread, 1000) == WAIT_TIMEOUT)
+        Trace("The add files thread failed to end cleanly\n");
 
     ShowWindow(SW_HIDE);
 
@@ -870,7 +957,7 @@ void CMainFrame::OnClose()
                 UINT ImageDataSize = UINT(i.imageData.size());
                 ar << ImageDataSize;
                 if (ImageDataSize > 0)
-                    ar.Write(&i.imageData[0], ImageDataSize);
+                    ar.Write(i.imageData.data(), ImageDataSize);
             }
             TRACE("\nSave Movies data complete \n ");
         }
@@ -886,7 +973,7 @@ void CMainFrame::OnClose()
     m_splashThread.PostThreadMessage(WM_QUIT, 0, 0);
 
     if (::WaitForSingleObject(m_splashThread, 1000) == WAIT_TIMEOUT)
-        Trace("Splash Thread failed to end cleanly\n");
+        Trace("Splash thread failed to end cleanly\n");
 
     CDockFrame::OnClose();
 }
@@ -963,6 +1050,17 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called after a DPI change is processed.
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Call base class function first.
+    CDockFrame::OnDpiChanged(msg, wparam, lparam);
+
+    // Restore the Add_Folder pressed state after the DPI change.
+    GetToolBar().PressButton(IDM_ADD_FOLDER, m_isAddPuttonPressed);
+    return 0;
+}
+
 // Called in response to favourites on the toolbar or the
 // list view popup menu. Sets the movie's favourite flag.
 BOOL CMainFrame::OnFavourite()
@@ -1006,10 +1104,18 @@ void CMainFrame::OnFilesLoaded()
     GetViewTree().SelectItem(item);
 }
 
+// Called before a DPI change is processed.
+LRESULT CMainFrame::OnGetDpiScaledSize(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Save the Add_Folder pressed state before the DPI change.
+    m_isAddPuttonPressed = GetToolBar().IsButtonPressed(IDM_ADD_FOLDER);
+    return CDockFrame::OnGetDpiScaledSize(msg, wparam, lparam);
+}
+
 // Call when the Help button or F1 is pressed.
 BOOL CMainFrame::OnHelp()
 {
-    // Ensure only one dialog displayed even for multiple hits of the F1 button
+    // Ensure only one dialog displayed even for multiple hits of the F1 button.
     if (!m_aboutDialog.IsWindow())
     {
         m_aboutDialog.DoModal(*this);
@@ -1486,6 +1592,13 @@ BOOL CMainFrame::OnWatchList()
     return TRUE;
 }
 
+// Called when the window's position is about to change.
+LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    GetViewList().SetLastColumnWidth();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
 // Plays the selected movie.
 LRESULT CMainFrame::PlayMovie(LPCWSTR path)
 {
@@ -1618,7 +1731,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(0);                        // Separator
     AddToolBarButton(IDM_HELP_ABOUT);
 
-    // Create the normal ImageList for the toolbar
+    // Create the normal ImageList for the toolbar.
     int size = DpiScaleInt(32);
     m_toolbarImages.Create(size, size, ILC_COLOR32, 0, 0);
     m_toolbarImages.AddIcon(IDI_ADDFOLDER);
@@ -1630,108 +1743,6 @@ void CMainFrame::SetupToolBar()
 
     // Assign the imagelist to the toolbar.
     GetToolBar().SetImageList(m_toolbarImages);
-}
-
-// This function runs in a separate thread because loading the meta data from
-// files can be time consuming. This thread modifies m_moviesData, so all
-// access to m_moviesData should be protected by a CThreadLock.
-UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
-{
-    CMainFrame* pFrame = reinterpret_cast<CMainFrame*>(pVoid);
-
-    MediaInfo MI;
-    if (MI.IsReady())   // Is MediaInfo.dll loaded?
-    {
-        CSplashThread splashThread;
-        splashThread.CreateThread();
-        CSplash* splash = splashThread.GetSplash();
-
-        // Wait for the splash window to be created.
-        ::WaitForSingleObject(splashThread.GetSplashCreated(), INFINITE);
-
-        pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, TRUE);
-        splash->ShowText(L"Updating Library", pFrame);
-        const CProgressBar& progressBar = splash->GetBar();
-        progressBar.ShowWindow(SW_SHOW);
-        progressBar.SetRange(0, (short)pFrame->m_filesToAdd.size());
-
-        unsigned short barPos = 0;
-        for (size_t i = 0; i < pFrame->m_filesToAdd.size(); i++)
-        {
-            // The stop request is set if the app is trying to close,
-            // or when the 'Add Folder' button toggled.
-            if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
-            {
-                // Break out of the loop and end the thread.
-                break;
-            }
-
-            barPos++;
-
-            // Update the splash screen's progress bar.
-            progressBar.SetPos(barPos);
-
-            CString fullName = pFrame->m_filesToAdd[i].fileName;
-            bool isFileInLibrary = false;
-            for ( auto it = pFrame->m_moviesData.begin(); it != pFrame->m_moviesData.end();)
-            {
-                if ((*it).fileName == fullName)
-                {
-                    CFileFind ff;
-                    ff.FindFirstFile(fullName);
-                    CTime t1(ff.GetLastWriteTime());
-                    CTime t2((*it).lastModifiedTime);
-                    if (t1 != t2)
-                    {
-                        // Lock this code for thread safety.
-                        CThreadLock lock(pFrame->m_cs);
-
-                        // Remove the modified file from the library.
-                        TRACE(fullName); TRACE(" removed modified file from library\n");
-                        pFrame->m_moviesData.erase(it);
-                    }
-                    else
-                        isFileInLibrary = true;
-
-                    // No need to check further.
-                    break;
-                }
-
-                ++it;
-            }
-
-            // Only add files not already in the library.
-            if (!isFileInLibrary)
-            {
-                pFrame->m_isDirty = true;
-                MovieInfo mi{};
-                pFrame->LoadMovieInfoFromFile(pFrame->m_filesToAdd[i], mi);
-
-                // Lock this code for thread safety.
-                CThreadLock lock(pFrame->m_cs);
-                pFrame->m_moviesData.push_back(mi);
-
-                TRACE(fullName); TRACE(" added to library\n");
-            }
-        }
-    }
-    else
-    {
-        // Report the error in a message  box.
-        ::MessageBox(nullptr, MI.Inform().c_str(), L"Error", MB_OK);
-    }
-
-    pFrame->OnFilesLoaded();
-    pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, FALSE);
-
-    return 0;
-}
-
-// Called when the window's position is about to change.
-LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    GetViewList().SetLastColumnWidth();
-    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Process the frame's window messages.
@@ -1766,6 +1777,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -1781,4 +1793,3 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     return 0;
 }
-

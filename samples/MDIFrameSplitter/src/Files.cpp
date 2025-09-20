@@ -6,6 +6,7 @@
 #include "Files.h"
 #include "resource.h"
 
+constexpr COLORREF magenta = RGB(255, 0, 255);
 
 //////////////////////////////////
 // CViewFiles function definitions
@@ -49,7 +50,7 @@ void CViewFiles::OnAttach()
     int scale = bmImage.GetSize().cy / 15;
     CImageList smallImages;
     smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    smallImages.Add(bmImage, RGB(255, 0, 255));
+    smallImages.Add(bmImage, magenta);
     SetImageList(smallImages, LVSIL_SMALL);
 
     // Set the report style.
@@ -99,6 +100,7 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -141,6 +143,7 @@ LRESULT CContainFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
@@ -188,6 +191,7 @@ LRESULT CDockFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

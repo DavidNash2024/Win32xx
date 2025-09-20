@@ -8,6 +8,8 @@
 
 using namespace std;
 
+constexpr COLORREF lightgray = RGB(192, 192, 192);
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -172,9 +174,9 @@ void CMainFrame::SetupMenuIcons()
     // Use the MenuIcons bitmap for images in menu items.
     std::vector<UINT> data = GetToolBarData();
     if (GetMenuIconHeight() >= 24)
-        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        AddMenuIcons(data, lightgray, IDW_MAIN);
     else
-        AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+        AddMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
 // Sets the resource IDs and images for the toolbar buttons.
@@ -218,6 +220,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);

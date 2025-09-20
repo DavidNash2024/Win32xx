@@ -16,7 +16,6 @@ public:
     virtual ~CViewTree() override;
 
 protected:
-    // Virtual functions that override base class functions
     virtual void OnAttach() override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -36,7 +35,6 @@ public:
     virtual ~CMDIChildTree() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

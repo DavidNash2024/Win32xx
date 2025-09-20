@@ -142,7 +142,8 @@ void CMiniFrame::DrawTitleText(CDC& dc) const
     titlebarTextRect.right = buttonRects.minimize.left;
 
     // Draw the title bar text.
-    DTTOPTS drawThemeOptions = { sizeof(drawThemeOptions) };
+    DTTOPTS drawThemeOptions = {};
+    drawThemeOptions.dwSize = sizeof(drawThemeOptions);
     drawThemeOptions.dwFlags = DTT_TEXTCOLOR;
     COLORREF itemColor = IsActive() ? m_colors.activeItem : m_colors.inactiveItem;
     drawThemeOptions.crText = itemColor;
@@ -164,7 +165,6 @@ void CMiniFrame::DrawTitleText(CDC& dc) const
 // Required on Windows 10. Not required on Windows 11.
 void CMiniFrame::DrawTopShadow(CDC& dc) const
 {
-    // Draw the top shadow. Original is missing because of the client rect extension.
     COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
     COLORREF shadowColor = m_colors.topShadow;
     COLORREF topShadowColor = IsActive() ? shadowColor : RGB(
@@ -292,7 +292,7 @@ CRect CMiniFrame::GetViewRect() const
 // Returns true of the window is maximized, false otherwise.
 bool CMiniFrame::IsMaximized() const
 {
-    WINDOWPLACEMENT placement = { 0 };
+    WINDOWPLACEMENT placement = {};
     placement.length = sizeof(WINDOWPLACEMENT);
     if (GetWindowPlacement(placement))
     {
@@ -316,11 +316,6 @@ BOOL CMiniFrame::OnCommand(WPARAM wparam, LPARAM)
     UINT id = LOWORD(wparam);
     switch (id)
     {
- //   case IDM_FILE_OPEN:       return OnFileOpen();
- //   case IDM_FILE_SAVE:       return OnFileSave();
- //   case IDM_FILE_SAVEAS:     return OnFileSave();
- //   case IDM_FILE_PREVIEW:    return OnFilePreview();
- //   case IDM_FILE_PRINT:      return OnFilePrint();
     case IDM_FILE_EXIT:       return OnFileExit();
     case IDM_HELP_ABOUT:      return OnHelp();
     }
@@ -481,7 +476,7 @@ LRESULT CMiniFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     int padding = ::GetSystemMetricsForDpi(SM_CXPADDEDBORDER, dpi);
     CPoint cursorPoint(lparam);
     ScreenToClient(cursorPoint);
-    if (cursorPoint.y > 0 && cursorPoint.y < frameY + padding)
+    if (!IsMaximized() && cursorPoint.y > 0 && cursorPoint.y < frameY + padding)
     {
         return HTTOP;
     }
@@ -654,7 +649,6 @@ LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window
-    cs.lpszClass = L"MiniFrame Window";     // Window Class
     cs.x = DpiScaleInt(50);                 // top x
     cs.y = DpiScaleInt(50);                 // top y
     cs.cx = DpiScaleInt(400);               // width
@@ -723,9 +717,10 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Display the exception and continue.
         CString str1;
         str1 << e.GetText() << L'\n' << e.GetErrorString();
+
         CString str2;
         str2 << "Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
 
     // Catch all unhandled std::exception types.
@@ -733,7 +728,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        TaskDialogBox(nullptr, str1, L"Error: std::exception", TD_ERROR_ICON);
     }
 
     return 0;

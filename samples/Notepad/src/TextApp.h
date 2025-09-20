@@ -19,7 +19,6 @@ public:
     virtual ~CTextApp() override = default;
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
     virtual BOOL OnIdle(LONG count) override;
 

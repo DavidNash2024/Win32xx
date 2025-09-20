@@ -23,7 +23,7 @@ using std::max;
 #pragma warning (default : 4458) // return warning to default
 #endif
 
-#include <memory>   // Required by VS2013 and VS2015 for unique_ptr
+#include <memory>   // Required by VS2015 for unique_ptr
 #include "View.h"
 
 using BitmapPtr = std::unique_ptr<Gdiplus::Bitmap>;
@@ -38,7 +38,6 @@ public:
     CMainFrame();
     CDoc& GetDoc()      { return m_view.GetDoc(); }
 
-    // Virtual functions that override public base class functions
     virtual ~CMainFrame() override;
     virtual HWND Create(HWND parent = nullptr) override;
 
@@ -47,7 +46,6 @@ public:
     BitmapPtr LoadPngResource(UINT id);
 
 protected:
-    // Virtual functions that override base class functions
     virtual void    OnClose() override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;

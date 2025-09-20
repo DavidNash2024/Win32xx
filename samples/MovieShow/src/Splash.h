@@ -25,7 +25,6 @@ public:
     void ShowText(LPCWSTR text, CWnd* parent);
 
 protected:
-    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDraw(CDC& dc) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;

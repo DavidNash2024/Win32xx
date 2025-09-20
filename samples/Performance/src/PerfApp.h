@@ -20,7 +20,6 @@ public:
     CMainWindow& GetMainWnd() {return m_mainWnd;}
 
 protected:
-    // Virtual functions that override base class functions
     virtual BOOL InitInstance() override;
 
 private:

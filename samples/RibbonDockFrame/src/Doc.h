@@ -5,7 +5,13 @@
 #ifndef WIN32XX_DOC_H
 #define WIN32XX_DOC_H
 
-struct PlotPoint;
+struct PlotPoint
+{
+    int x;
+    int y;
+    bool isPenDown;
+    COLORREF penColor;
+};
 
 
 //////////////////////////////////////////////////////////////
@@ -25,7 +31,6 @@ public:
     void StorePoint(PlotPoint& pp);
 
 protected:
-    // Virtual functions that override base class functions
     void Serialize(CArchive &ar) override;
 
 private:
