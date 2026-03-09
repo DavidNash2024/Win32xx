@@ -506,7 +506,8 @@ namespace Win32xx
     template <>
     inline BSTR CStringA::AllocSysString() const
     {
-        BSTR bstr = ::SysAllocStringLen(AtoW(m_str.c_str()), static_cast<UINT>(m_str.size()));
+        CStringW wide(AtoW(m_str.c_str()));
+        BSTR bstr = ::SysAllocStringLen(wide, wide.GetLength());
         if (bstr == 0)
             throw std::bad_alloc();
 
@@ -1206,8 +1207,8 @@ namespace Win32xx
     inline BSTR CStringA::SetSysString(BSTR* pBstr) const
     {
         assert(pBstr);
-
-        if ( !::SysReAllocStringLen(pBstr, AtoW(m_str.c_str()), static_cast<UINT>(m_str.length())) )
+        CStringW wide(AtoW(m_str.c_str()));
+        if ( !::SysReAllocStringLen(pBstr, wide, wide.GetLength()) )
             throw std::bad_alloc();
 
         return pBstr? *pBstr : nullptr;

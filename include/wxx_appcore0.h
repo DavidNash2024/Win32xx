@@ -52,6 +52,7 @@
 #include "wxx_criticalsection.h"
 #include "wxx_hglobal.h"
 #include "wxx_messagepump0.h"
+#include <unordered_map>
 
 namespace Win32xx
 {
@@ -272,11 +273,11 @@ namespace Win32xx
 
         static CWinApp* SetnGetThis(CWinApp* pThis = nullptr, bool reset = false);
 
-        std::map<HDC, std::weak_ptr<CDC_Data>> m_mapCDCData;
-        std::map<HGDIOBJ, std::weak_ptr<CGDI_Data>> m_mapCGDIData;
-        std::map<HIMAGELIST, std::weak_ptr<CIml_Data>> m_mapCImlData;
-        std::map<HMENU, std::weak_ptr<CMenu_Data>> m_mapCMenuData;
-        std::map<HWND, CWnd*> m_mapHWND;       // maps window handles to CWnd objects
+        std::unordered_map<HDC, std::weak_ptr<CDC_Data>> m_mapCDCData;
+        std::unordered_map<HGDIOBJ, std::weak_ptr<CGDI_Data>> m_mapCGDIData;
+        std::unordered_map<HIMAGELIST, std::weak_ptr<CIml_Data>> m_mapCImlData;
+        std::unordered_map<HMENU, std::weak_ptr<CMenu_Data>> m_mapCMenuData;
+        std::unordered_map<HWND, CWnd*> m_mapHWND;  // maps window handles to CWnd objects
         std::vector<TLSDataPtr> m_allTLSData;  // vector of TLSData smart pointers, one for each thread
         CCriticalSection m_appLock;   // thread synchronization for CWinApp and TLS
         CCriticalSection m_gdiLock;   // thread synchronization for m_mapCDCData and m_mapCGDIData

@@ -80,7 +80,7 @@ namespace Win32xx
 
         virtual INT_PTR DoModal(HWND hParent = nullptr);
 
-        const CString& GetFolderName() const;
+        const CStringW& GetFolderName() const;
         void SetInitialFolder(const CStringW& initialFolder);
         void SetTitle(const CStringW& title);
 
@@ -88,9 +88,9 @@ namespace Win32xx
         CFolderDialogEx(const CFolderDialogEx&) = delete;
         CFolderDialogEx& operator=(const CFolderDialogEx&) = delete;
 
-        CString m_folderName;
-        CString m_initialFolderName;
-        CString m_title;
+        CStringW m_folderName;
+        CStringW m_initialFolderName;
+        CStringW m_title;
     };
 }
 
@@ -178,7 +178,7 @@ namespace Win32xx
 
     // Retrieves a const reference to a CString containing the name of the
     // folder selected by the user when the modal dialog is displayed.
-    inline const CString& CFolderDialogEx::GetFolderName() const
+    inline const CStringW& CFolderDialogEx::GetFolderName() const
     {
         return m_folderName;
     }

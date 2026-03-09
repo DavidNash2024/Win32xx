@@ -155,7 +155,6 @@ namespace Win32xx
 
     inline CImageList::CImageList(HIMAGELIST images) : m_pData(std::make_shared<CIml_Data>())
     {
-        m_pData = std::make_shared<CIml_Data>();
         Attach(images);
     }
 
@@ -210,8 +209,8 @@ namespace Win32xx
     inline int CImageList::Add(HBITMAP bitmap, HBITMAP mask) const
     {
         assert(m_pData);
-        assert (m_pData->images);
-        return ::ImageList_Add(m_pData->images, bitmap, mask );
+        assert(m_pData->images);
+        return ::ImageList_Add(m_pData->images, bitmap, mask);
     }
 
     // Adds an image or images to an image list, using the specified color as the mask.
@@ -219,7 +218,7 @@ namespace Win32xx
     inline int CImageList::Add(HBITMAP bitmap, COLORREF mask) const
     {
         assert(m_pData);
-        assert (m_pData->images);
+        assert(m_pData->images);
         return ::ImageList_AddMasked(m_pData->images, bitmap, mask);
     }
 
@@ -228,7 +227,7 @@ namespace Win32xx
     inline int CImageList::Add(HICON icon) const
     {
         assert(m_pData);
-        assert (m_pData->images);
+        assert(m_pData->images);
 
         // Append the icon to the image list
         return ::ImageList_ReplaceIcon(m_pData->images, -1, icon);
@@ -340,7 +339,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        LPCTSTR bitmapName = MAKEINTRESOURCE (bitmapID);
+        LPCTSTR bitmapName = MAKEINTRESOURCE(bitmapID);
         Create(bitmapName, cx, grow, mask);
     }
 
@@ -538,7 +537,7 @@ namespace Win32xx
     inline BOOL CImageList::Draw(HDC dc, int image, POINT point, UINT style) const
     {
         assert(m_pData->images);
-        return ::ImageList_Draw(m_pData->images, image, dc , point.x, point.y, style);
+        return ::ImageList_Draw(m_pData->images, image, dc, point.x, point.y, style);
     }
 
     // Draws an image list item in the specified device context. The function
@@ -657,7 +656,7 @@ namespace Win32xx
     // Refer to ImageList_Read in the Windows API documentation for more information.
     inline void CImageList::Read(LPSTREAM pStream)
     {
-        HIMAGELIST images =  ::ImageList_Read(pStream);
+        HIMAGELIST images = ::ImageList_Read(pStream);
         if (images)
         {
             Assign(images);
@@ -687,7 +686,7 @@ namespace Win32xx
     // Refer to ImageList_Replace in the Windows API documentation for more information.
     inline BOOL CImageList::Replace(int image, HBITMAP bitmap, HBITMAP mask) const
     {
-        assert (m_pData->images);
+        assert(m_pData->images);
         return ::ImageList_Replace(m_pData->images, image, bitmap, mask);
     }
 
@@ -695,7 +694,7 @@ namespace Win32xx
     // Refer to ImageList_ReplaceIcon in the Windows API documentation for more information.
     inline int CImageList::Replace(int image, HICON icon) const
     {
-        assert (m_pData->images);
+        assert(m_pData->images);
         return ::ImageList_ReplaceIcon(m_pData->images, image, icon);
     }
 

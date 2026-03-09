@@ -1,4 +1,4 @@
-REM: A batch program to rebuild the .. samples using Code::Blocks.
+REM: A batch program to rebuild the Win32++ samples using Code::Blocks.
 REM: The contents of the log file is erased 
 
 

@@ -49,6 +49,7 @@
 //  Task dialogs are only supported on Windows Vista and above.
 //  Task dialogs require XP themes enabled (use version 6 of Common Controls)
 //  Task dialogs are always modal.
+//  Task dialogs require Unicode. There is no ANSI version of the TaskDialogIndirect function.
 
 
 #ifndef _WIN32XX_TASKDIALOG_H_

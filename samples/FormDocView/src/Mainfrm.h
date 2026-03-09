@@ -47,6 +47,7 @@ private:
     // Member variables
     CAboutDialog m_aboutDialog;
     CFormView m_formView;
+    static constexpr COLORREF lightgray = RGB(192, 192, 192);
 };
 
 

@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="MakeDLL_2026.vcxproj" Id="d3d8893d-dcaa-4540-8e75-0e87eef0f529" />
+</Solution>

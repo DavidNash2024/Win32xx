@@ -5,7 +5,6 @@
 #include "resource.h"
 #include "Mainfrm.h"
 
-constexpr COLORREF lightgray = RGB(192, 192, 192);
 
 //////////////////////////////////
 // CMainFrame function definitions
