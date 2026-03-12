@@ -5,14 +5,7 @@
 #include "stdafx.h"
 #include "IFileDialogApp.h"
 
-
-#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
-#pragma warning( suppress : 28251 )  // Ignore the annotation requirement for wWinMain.
-#endif
-
-//#include "C:\Program Files (x86)\Visual Leak Detector\include\vld.h"
-
-int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
+int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 {
     try
     {

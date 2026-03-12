@@ -366,6 +366,14 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
+LRESULT CMainFrame::OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Check the current color scheme radio button in the menu.
+    GetFrameMenu().CheckMenuRadioItem(IDM_WIN11, IDM_BLACK, m_color, MF_BYCOMMAND);
+
+    return CFrame::OnInitMenuPopup(msg, wparam, lparam);
+}
+
 // Toggles the positioning of bands left.
 BOOL CMainFrame::OnLeftBands()
 {
@@ -398,7 +406,7 @@ BOOL CMainFrame::OnLockMenuBar()
 
 // Called just before the menu is displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
-{
+{  
     // Update the check buttons before displaying the menu.
     switch (id)
     {
@@ -433,9 +441,6 @@ void CMainFrame::OnMenuUpdate(UINT id)
         GetFrameMenu().CheckMenuItem(id, m_showCards ? MF_CHECKED : MF_UNCHECKED);
         break;
     }
-
-    // Check the color menu item and make it a radio item.
-    GetFrameMenu().CheckMenuRadioItem(IDM_WIN11, IDM_BLACK, m_color, MF_BYCOMMAND);
 
     // Call the base class member function.
     CFrame::OnMenuUpdate(id);
@@ -752,6 +757,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case UWM_ADDCOMBO:         return AddCombo();
         case WM_GETMINMAXINFO:     return OnGetMinMaxInfo(msg, wparam, lparam);
+        case WM_INITMENUPOPUP:     return OnInitMenuPopup(msg, wparam, lparam);
         }
 
         //  pass unhandled messages on for default processing

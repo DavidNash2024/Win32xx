@@ -19,7 +19,7 @@ public:
 
 
 // WinMain is the program's entry point. The program starts here.
-int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
+int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 {
     // Start Win32++.
     CWinApp theApp;
