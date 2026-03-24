@@ -103,7 +103,7 @@ private:
 
     // Member variables
     CServerSocket m_mainSocket;
-    std::map<ServerSocketPtr, TCPClientDlgPtr> m_connectedClients;// Stores TCP client sockets and TCP client dialogs
+    std::unordered_map<ServerSocketPtr, TCPClientDlgPtr> m_connectedClients;// Stores TCP client sockets and TCP client dialogs
     bool m_isServerStarted;
     int  m_socketType;              // either SOCK_STREAM or SOCK_DGRAM
     sockaddr_in6  m_saUDPClient;    // connected UPD client's sockaddr

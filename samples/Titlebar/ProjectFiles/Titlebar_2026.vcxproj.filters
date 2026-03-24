@@ -212,10 +212,19 @@
     <ClInclude Include="..\..\..\include\wxx_messagepump0.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\AboutDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="..\src\res\PerMonitorV2.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\src\res\Bulb.ico" />
   </ItemGroup>
 </Project>

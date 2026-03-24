@@ -61,7 +61,7 @@ private:
 
     // Member variables
     CString m_helpFilePath;                 // Help file path
-    std::map<UINT, CString> m_helpTopics;   // Map of help topics
+    std::unordered_map<UINT, CString> m_helpTopics;   // Map of help topics
 };
 
 #endif // CONTEXTHELP_H

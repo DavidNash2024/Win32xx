@@ -19,13 +19,14 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
 
-1                     RT_MANIFEST           "../src/res/PerMonitorV2.manifest"
+1                       RT_MANIFEST             "../src/res/PerMonitorV2.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -71,7 +72,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                 ICON                    "../src/res/Bulb.ico"
+IDW_MAIN                ICON                    "../src/res/Bulb.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -79,14 +80,16 @@ IDW_MAIN                 ICON                    "../src/res/Bulb.ico"
 // Dialog
 //
 
-IDW_ABOUT DIALOGEX 0, 0, 186, 90
+IDW_ABOUT DIALOGEX 0, 0, 186, 109
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "About"
-FONT 8, "MS Shell Dlg", 400, 0
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Titlebar Sample",IDC_STATIC,60,22,64,11
+    DEFPUSHBUTTON   "OK",IDOK,68,60,50,14
+    CTEXT           "Titlebar Sample",IDC_STATIC,36,22,114,8
     ICON            IDW_MAIN,0,4,4,20,20
+    CTEXT           "",IDC_STATIC1,53,32,80,8
+    CTEXT           "",IDC_STATIC2,53,42,80,8
 END
 
 
@@ -107,8 +110,6 @@ BEGIN
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
     "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT
 END
-
-
 
 
 #ifdef APSTUDIO_INVOKED
@@ -141,13 +142,42 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDW_ABOUT, DIALOG
+    BEGIN
+        VERTGUIDE, 68
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                 "TitleBar Sample"
+    IDW_MAIN                "TitleBar Sample"
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

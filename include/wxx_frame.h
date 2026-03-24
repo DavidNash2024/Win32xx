@@ -1978,7 +1978,7 @@ namespace Win32xx
     {
         SaveRegistrySettings();
         T::ShowWindow(SW_HIDE);
-        T::Destroy();
+        this->Destroy();
     }
 
     // This is called when the frame window is being created.
@@ -2260,6 +2260,10 @@ namespace Win32xx
                 mii.dwTypeData = itemDataPtr->itemText.GetBuffer(WXX_MAX_STRING_SIZE);
                 mii.cch = WXX_MAX_STRING_SIZE;
 
+                // Update the state of menu items.
+                UINT menuItem = menu.GetMenuItemID(i);
+                OnMenuUpdate(menuItem);
+
                 // Specify owner-draw for the menu item type.
                 UINT position = static_cast<UINT>(i);
                 if (menu.GetMenuItemInfo(position, mii, TRUE))
@@ -2300,7 +2304,7 @@ namespace Win32xx
                 m_menusData.push_back(std::move(menuData));
         }
 
-        return CWnd::WndProcDefault(msg, wparam, lparam);
+        return 0;
     }
 
     // Called by the keyboard hook procedure whenever a key is pressed.

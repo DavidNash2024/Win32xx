@@ -64,6 +64,7 @@
 #include "wxx_themes.h"
 #include "default_resource.h"
 #include <deque>
+#include <list>
 
 
 namespace Win32xx
@@ -2904,7 +2905,7 @@ namespace Win32xx
         if (registryKeyName)
         {
             isLoaded = TRUE;
-            std::deque<DockInfo> dockList;
+            std::list<DockInfo> dockList;
             const CString dockSettings = _T("\\Dock Settings");
             const CString dockKeyName = _T("Software\\") + CString(registryKeyName) + dockSettings;
             CRegKey settingsKey;

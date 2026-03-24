@@ -386,7 +386,7 @@ BOOL CSvrDialog::OnSocketAccept()
     pDialog->ShowWindow();
 
     // Add the socket and dialog to the map.
-    m_connectedClients.insert(std::make_pair(pClient, pDialog));
+    m_connectedClients.emplace(std::make_pair(pClient, pDialog));
 
     // Update the dialog.
     AppendText(m_editStatus, L"Client Connected");

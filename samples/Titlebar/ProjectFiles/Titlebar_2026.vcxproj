@@ -86,6 +86,7 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
+    <ClInclude Include="..\src\AboutDialog.h" />
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\MiniFrame.h" />
     <ClInclude Include="..\src\resource.h" />
@@ -94,6 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="..\src\res\PerMonitorV2.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\src\res\Bulb.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

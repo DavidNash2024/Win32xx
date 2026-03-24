@@ -5,6 +5,7 @@
 #ifndef MINIFRAME_H
 #define MINIFRAME_H
 
+#include "AboutDialog.h"
 #include "View.h"
 #include "resource.h"
 
@@ -42,8 +43,7 @@ struct TitlebarColors
 class CMiniFrame : public CWnd
 {
 public:
-    CMiniFrame() : m_aboutDialog(IDW_ABOUT),
-                   m_accel(0),
+    CMiniFrame() : m_accel(0),
                    m_hoveredButton(TitlebarButton::None),
                    m_oldHoveredButton(TitlebarButton::None)
               {}
@@ -101,7 +101,7 @@ private:
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
-    CDialog m_aboutDialog;              // Help about dialog.
+    CAboutDialog m_aboutDialog;         // Help about dialog.
     CMenuBar m_menubar;                 // Displays the menu in the titlebar.
     CView m_view;                       // View window.
     CMenu m_menu;                       // The application's menu.

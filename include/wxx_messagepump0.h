@@ -39,41 +39,9 @@
 #ifndef _WIN32XX_MESSAGEPUMP0_H_
 #define _WIN32XX_MESSAGEPUMP0_H_
 
-#include "wxx_textconv.h"
 
 namespace Win32xx
 {
-
-    class CArchive;
-
-    ////////////////////////////////////////////////////////////////////
-    // The CObject class provides support for serialization by CArchive.
-    // Any class that uses CArchive to serialize data can inherit from
-    // CObject.
-
-    class CObject
-    {
-    public:
-        CObject() = default;
-        virtual ~CObject() = default;
-
-        virtual void Serialize(CArchive& /*ar*/)
-        {
-            //  Override Serialize in the class inherited from CObject like this.
-
-            //  if (ar.IsStoring())
-            //  {
-            //      // Store a member variable in the archive
-            //      ar << m_someValue;
-            //  }
-            //  else
-            //  {
-            //      // Load a member variable from the archive
-            //      ar >> m_someValue;
-            //  }
-        }
-    };
-
     class CMessagePump : public CObject
     {
     public:

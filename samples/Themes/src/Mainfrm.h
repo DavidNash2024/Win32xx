@@ -29,7 +29,6 @@ protected:
     virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL    OnHelp() override;
     virtual void    OnInitialUpdate() override;
-    virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void    OnMenuUpdate(UINT id) override;
     virtual BOOL    SaveRegistrySettings() override;
     virtual void    SetupMenuIcons() override;

@@ -52,7 +52,6 @@
 #include "wxx_criticalsection.h"
 #include "wxx_hglobal.h"
 #include "wxx_messagepump0.h"
-#include <unordered_map>
 
 namespace Win32xx
 {

@@ -22,6 +22,10 @@
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
 
+// Resource IDs for the about dialog
+#define IDC_STATIC1                     160
+#define IDC_STATIC2                     161
+
 //#define IDW_ABOUT                       150
 
 

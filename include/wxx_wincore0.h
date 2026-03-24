@@ -154,10 +154,10 @@ namespace Win32xx
         virtual void CenterWindow() const;
         virtual HWND Create(HWND parent = nullptr);
         virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
-                              DWORD style, int x, int y, int width, int height, HWND parent,
-                              HMENU idOrMenu, LPVOID lparam = nullptr);
+            DWORD style, int x, int y, int width, int height, HWND parent,
+            HMENU idOrMenu, LPVOID lparam = nullptr);
         virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
-                              DWORD style, RECT rectc, HWND parent, UINT id, LPVOID lparam = nullptr);
+            DWORD style, RECT rectc, HWND parent, UINT id, LPVOID lparam = nullptr);
         virtual void Destroy();
         virtual HWND Detach();
         static  CWnd* GetCWndPtr(HWND wnd);

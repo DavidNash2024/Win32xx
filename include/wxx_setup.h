@@ -39,12 +39,27 @@
 //////////////////////////////////////////////////////////
 // This file defines the set of version macros for windows
 // and includes the header files required by Win32++. It
-// also contains many of the global functions used by
-// Win32++.
+// also defines CObject and many of the global functions
+// used by Win32++.
 
 
 #ifndef _WIN32XX_SETUP_H_
 #define _WIN32XX_SETUP_H_
+
+// Include the C++ headers.
+#include <algorithm>
+#include <cassert>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+#include <process.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <tchar.h>
 
 // Set the windows version macros. These must be defined before including
 // windows.h. These values are suitable for Windows 10 and Windows 11.
@@ -61,7 +76,7 @@
 #define NOMINMAX
 #endif
 
-// Include window.h.
+// Include the Windows API headers.
 #include <winsock2.h>   // Must include before windows.h.
 #include <windows.h>
 #include <shlwapi.h>
@@ -76,25 +91,12 @@
 #pragma warning( pop )
 #endif
 
-#include <cassert>
-#include <vector>
-#include <algorithm>
-#include <memory>
-#include <string>
-#include <map>
-#include <sstream>
-#include <stdio.h>
-#include <stdarg.h>
-#include <tchar.h>
-#include <process.h>
-
 // Automatically include the Win32xx namespace.
 // define NO_USING_NAMESPACE to skip this step.
 namespace Win32xx {}
 #ifndef NO_USING_NAMESPACE
 using namespace Win32xx;
 #endif
-
 
 // Define our own MIN and MAX macros.
 // This avoids inconsistencies with MinGW and other compilers, and
@@ -138,6 +140,36 @@ using namespace Win32xx;
 
 namespace Win32xx
 {
+    class CArchive;
+
+    ////////////////////////////////////////////////////////////////////
+    // The CObject class provides support for serialization by CArchive.
+    // Any class that uses CArchive to serialize data can inherit from
+    // CObject.
+
+    class CObject
+    {
+    public:
+        CObject() = default;
+        virtual ~CObject() = default;
+
+        virtual void Serialize(CArchive& /*ar*/)
+        {
+            //  Override Serialize in the class inherited from CObject like this.
+
+            //  if (ar.IsStoring())
+            //  {
+            //      // Store a member variable in the archive
+            //      ar << m_someValue;
+            //  }
+            //  else
+            //  {
+            //      // Load a member variable from the archive
+            //      ar >> m_someValue;
+            //  }
+        }
+    };
+
     // tString is a TCHAR std::string.
     // tStringStream is a TCHAR std::stringstream.
     using tString = std::basic_string<TCHAR>;
@@ -161,7 +193,7 @@ namespace Win32xx
         // Declare a pointer to the RtlGetVersion function.
         using RTLGETVERSION = void (WINAPI*)(PRTL_OSVERSIONINFOW);
 
-        HMODULE module = ::GetModuleHandleW(L"ntdll.dll");
+        HMODULE module = ::GetModuleHandle(_T("ntdll.dll"));
         RTL_OSVERSIONINFOW osvi = {};
         if (module)
         {

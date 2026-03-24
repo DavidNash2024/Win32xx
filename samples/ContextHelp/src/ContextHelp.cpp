@@ -53,7 +53,7 @@ void CContextHelp::AddHelpTopic(UINT id, LPCWSTR topic)
     assert(m_helpTopics.find(id) == m_helpTopics.end());
 
     // Add the topic to the map
-    m_helpTopics.insert(std::make_pair(id, topic));
+    m_helpTopics.emplace(std::make_pair(id, topic));
 }
 
 // Creates the HtmlHelp window, and binds this object to its HWND.
