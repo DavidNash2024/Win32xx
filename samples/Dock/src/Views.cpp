@@ -295,7 +295,7 @@ LRESULT CViewSimple::OnSize(UINT, WPARAM, LPARAM)
 // Set the CREATESTURCT parameters before the window is created.
 void CViewSimple::PreCreate(CREATESTRUCT& cs)
 {
-    // Call base clase to set defaults.
+    // Call base class to set defaults.
     CWnd::PreCreate(cs);
 
     if (GetWinVersion() >= 3000)  // Windows 10 or later.

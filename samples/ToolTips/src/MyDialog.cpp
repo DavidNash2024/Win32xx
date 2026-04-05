@@ -176,7 +176,7 @@ BOOL CMyDialog::OnInitDialog()
     m_toolTip.SetWindowTheme(L" ", L" ");    // Turn XP themes off
     m_toolTip.SetTipBkColor(RGB(255, 255, 125));
 
-    // Add controls to the standard Tooltip.
+    // Add controls to the standard tooltip.
     // The tooltip will request the text to display via a TTN_GETDISPINFO notification
     m_toolTip.AddTool(m_edit, LPSTR_TEXTCALLBACK);
     m_toolTip.AddTool(m_richEdit, LPSTR_TEXTCALLBACK);
@@ -201,7 +201,7 @@ BOOL CMyDialog::OnInitDialog()
     m_bubbleTT.AddTool(*this, leftRect,  1, L"Client area, left side");
     m_bubbleTT.AddTool(*this, rightRect, 2, L"Client area, right side");
 
-    // Ajust the pattern image size.
+    // Adjust the pattern image size.
     m_patternImage.LoadBitmap(IDB_BITMAP1);
     m_patternImage = DpiScaleUpBitmap(m_patternImage);
     LPARAM lparam = reinterpret_cast<LPARAM>(m_patternImage.GetHandle());

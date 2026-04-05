@@ -21,7 +21,7 @@ BOOL CDXThread::InitInstance()
     CMainFrame& frame = GetDXApp()->GetMainFrame();
     CDXView& view = frame.GetDXView();
 
-    // Set thist thread's priority lower than the frame's thread.
+    // Set this thread's priority lower than the frame's thread.
     SetThreadPriority(THREAD_PRIORITY_BELOW_NORMAL);
 
     // Set CDXView as this thread's window.

@@ -88,7 +88,7 @@ LRESULT CView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
     SetWindowPos(HWND_TOP, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
     SetRoundRegion();
 
-    // Update the grap point for the new DPI.
+    // Update the grab point for the new DPI.
     int newDPI = GetWindowDpi(*this);
     m_grabPoint.x = m_grabPoint.x * newDPI / m_oldDPI;
     m_grabPoint.y = m_grabPoint.y * newDPI / m_oldDPI;

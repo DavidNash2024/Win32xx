@@ -1454,7 +1454,7 @@ LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     dialog.GetTitle().SetWindowText(pmi->movieName);
     dialog.GetYear().SetWindowText(pmi->releaseDate);
 
-    // Replace " / " with cariage return, line feed to put each actor on a new line.
+    // Replace " / " with carriage return, line feed to put each actor on a new line.
     CString actors = pmi->actors;
     actors.Replace(L" / ", L"\r\n");
     dialog.GetActors().SetWindowText(actors);
@@ -1713,7 +1713,7 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_REMOVE_BOXSET, IDI_REMOVE);
     AddMenuIcon(IDM_RENAME_BOXSET, IDI_EDITBOXSET);
 
-    // Accomodate up to 64 boxsets
+    // Accommodate up to 64 boxsets
     for (int i = IDM_BOXSET_1; i < IDM_BOXSET_1 + 64; i++)
         AddMenuIcon(i, IDI_BOXSET);
 }

@@ -178,6 +178,7 @@ LRESULT CMainFrame::OnImageLoaded(LPCWSTR fileName)
     CRect rcImage(CPoint(), GetImageView().GetImageSize());
     AdjustFrameRect(rcImage);
     AddMRUEntry(fileName);
+    m_mainView.RecalcLayout();
     return 0;
 }
 

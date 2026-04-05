@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Ackowledgement:
+// Acknowledgement:
 // This sample uses the 'JSON for Modern C++' library, version 3.11.2
 // by Niels Lohmann <https://nlohmann.me>
 // https://github.com/nlohmann/json

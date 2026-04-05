@@ -8,7 +8,7 @@
 
 
 /////////////////////////////////////
-// CServerSocket funtion definitions
+// CServerSocket function definitions
 //
 
 // Called when the socket accepts a connection.

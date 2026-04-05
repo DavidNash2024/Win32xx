@@ -326,7 +326,7 @@ BOOL CMainFrame::OnTBCustomize()
     return TRUE;
 }
 
-// Set the Toolbar back to its intial settings.
+// Set the Toolbar back to its initial settings.
 BOOL CMainFrame::OnTBDefault()
 {
     // Remove all current buttons

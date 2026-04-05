@@ -1558,8 +1558,9 @@ namespace Win32xx
         if (GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(
             MENU_POPUPITEM, stateID))
         {
+            CRect selRect = GetMenuMetrics().GetSelectionRect(pDrawItem->rcItem);
             GetMenuMetrics().DrawThemeBackground(pDrawItem->hDC,
-                MENU_POPUPBACKGROUND, 0, &pDrawItem->rcItem, nullptr);
+                MENU_POPUPBACKGROUND, 0, &selRect, nullptr);
         }
 
         // Draw the gutter.

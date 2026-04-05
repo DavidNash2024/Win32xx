@@ -122,7 +122,7 @@ CDockOutput::CDockOutput()
     SetBarWidth(8);
 }
 
-// This function overrides CDocker::RecalcDockLayout to elimate jitter
+// This function overrides CDocker::RecalcDockLayout to eliminate jitter
 // when the dockers are resized. The technique used here is is most
 // appropriate for a complex arrangement of dockers.  It might not suite
 // other docking applications. To support this technique the

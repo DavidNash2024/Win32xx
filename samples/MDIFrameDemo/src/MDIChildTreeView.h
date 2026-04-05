@@ -6,8 +6,8 @@
 #define MDICHILDTREEVIEW_H
 
 
-//////////////////////////////////////////////////////
-// CViewTree manages a tre view control. It is used as
+///////////////////////////////////////////////////////
+// CViewTree manages a tree view control. It is used as
 // the view window for CMDIChildTree.
 class CViewTree : public CTreeView
 {

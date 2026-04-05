@@ -318,7 +318,7 @@ WriteFile(LPCWSTR filePath)                                                 /*
     DWORD CALLBACK CRichView::
 RVStreamInCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *read)      /*
 
-    Stream siaze bytes from the file handle into memory located by buffer.
+    Stream size bytes from the file handle into memory located by buffer.
     On termination read contains the number actually entered.
 *-----------------------------------------------------------------------------*/
 {

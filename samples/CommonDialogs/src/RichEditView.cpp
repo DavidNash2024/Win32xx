@@ -126,8 +126,8 @@ DWORD CALLBACK CRichEditView::StreamInCallback(DWORD dwCookie, LPBYTE pbBuff,
 }
 
 // Transfer data out of the rich edit view window. The dwCookie parameter holds
-// the file handle. The pbuff parameter points to the stream's buffer. The
-// number of bytes streamed in is stored in pch.
+// the file handle. The pbBuff parameter points to the stream's buffer. The
+// number of bytes streamed in is stored in pcb.
 DWORD CALLBACK CRichEditView::StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff,
     LONG cb, LONG *pcb)
 {

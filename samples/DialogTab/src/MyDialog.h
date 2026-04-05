@@ -51,8 +51,8 @@ public:
 protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnInitDialog() override;
-    virtual void OnOK() override {}      // supress closing dialog with the enter key
-    virtual void OnCancel() override {}  // supress closing dialog with the esc key
+    virtual void OnOK() override {}      // suppress closing dialog with the enter key
+    virtual void OnCancel() override {}  // suppress closing dialog with the esc key
 
 private:
     CComboBoxDialog(const CComboBoxDialog&);                // Disable copy construction

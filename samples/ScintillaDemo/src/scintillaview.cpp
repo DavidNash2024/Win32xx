@@ -107,7 +107,7 @@ Sci_Rectangle ScintillaView::GetPrintRect(const CDC& dc) const
     int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
     Sci_Rectangle printMargins = { dpiX / 6, dpiY / 6, dpiX / 6, dpiY / 6 };
 
-    // Adjust the page margins to accomodate the header and footer.
+    // Adjust the page margins to accommodate the header and footer.
     printMargins.top += dpiY / 4;
     printMargins.bottom += dpiY / 4;
 

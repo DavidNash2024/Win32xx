@@ -168,7 +168,7 @@ RegQueryStringValue(CRegKey &key, LPCWSTR pName)                            /*
     void CDoc::
 SaveDocRegistry(LPCWSTR keyName)                                          /*
 
-    Write document value parameters into the registry key labeled
+    Write document value parameters into the registry key labelled
     'HKEY_CURRENT_USER\Software\keyName\Document Settings'.
 *-----------------------------------------------------------------------------*/
 {

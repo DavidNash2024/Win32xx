@@ -470,7 +470,7 @@ BOOL CMainFrame::OnShortBands()
     return TRUE;
 }
 
-// Toggles the display of lines betweeen rebar rows.
+// Toggles the display of lines between rebar rows.
 BOOL CMainFrame::OnUseLines()
 {
     m_useLines = !m_useLines;

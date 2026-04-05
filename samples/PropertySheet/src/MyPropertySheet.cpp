@@ -61,7 +61,7 @@ INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to the apply button.
 BOOL CButtonPage::OnApply()
 {
-    TRACE ("CButton Appy button pressed\n");
+    TRACE ("CButton Apply button pressed\n");
 
     SetModified(FALSE);
     return Validate();

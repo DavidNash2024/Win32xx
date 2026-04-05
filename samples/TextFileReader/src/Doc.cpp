@@ -41,7 +41,7 @@ CDoc()                                                                      /*
 AddRecord(const CStringW& entry)                                            /*
 
     Enter the entry record into the m_doclines list. Expand tab characters
-    with spaces to conform with tabwidth spacing.
+    with spaces to conform with the tab width spacing.
 *-----------------------------------------------------------------------------*/
 {
     int tabwidth    = 8;

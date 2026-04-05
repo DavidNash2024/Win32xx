@@ -210,7 +210,7 @@ OnFileSaveAs()                                                              /*
     void CMainFrame::
 OnFontChoice()                                                              /*
 
-    Select the app font typeface, characteristics, and  color. The font
+    Select the app font typeface, characteristics, and color. The font
     background color is always the same as the client area background.
 *-----------------------------------------------------------------------------*/
 {

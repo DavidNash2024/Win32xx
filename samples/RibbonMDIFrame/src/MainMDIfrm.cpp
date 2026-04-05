@@ -85,7 +85,7 @@ COLORREF CMainMDIFrame::GetColorFromPicker() const
     return color;
 }
 
-// The IUIRibbon interface provides the ability to specify settings and properties for thr ribbon.
+// The IUIRibbon interface provides the ability to specify settings and properties for the ribbon.
 IUIRibbon* CMainMDIFrame::GetIUIRibbon() const
 {
     return m_pIUIRibbon;
@@ -283,7 +283,7 @@ STDMETHODIMP CMainMDIFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* 
     return result;
 }
 
-// Set the Pen Color when a color toolbar button is pressed.
+// Set the pen's color when a color toolbar button is pressed.
 // Called by OnCommand when there isn't a ribbon.
 void CMainMDIFrame::SetPenColor(COLORREF clr)
 {

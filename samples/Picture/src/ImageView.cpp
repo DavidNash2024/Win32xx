@@ -18,9 +18,6 @@ constexpr COLORREF black = RGB(0, 0, 0);
 // Constructor.
 CImageView::CImageView() : m_pPicture(nullptr)
 {
-    // Initializes the COM library on the current thread.
-    if FAILED(::CoInitialize(nullptr))
-        throw CWinException(L"Failed to initialize COM");
 }
 
 // Destructor.
@@ -28,8 +25,6 @@ CImageView::~CImageView()
 {
     if (m_pPicture)
         m_pPicture->Release();
-
-    ::CoUninitialize();
 }
 
 // Retrieves the width and height of picture.
@@ -44,7 +39,7 @@ CSize CImageView::GetImageSize() const
         m_pPicture->get_Height(&height);
     }
 
-    // convert himetric to pixels
+    // Convert himetric to pixels
     CClientDC dc(*this);
     int widthInPixels  = MulDiv(width, dc.GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
     int heightInPixels = MulDiv(height, dc.GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);

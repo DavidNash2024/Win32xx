@@ -13,23 +13,13 @@
 // Destructor.
 CExplorerApp::~CExplorerApp()
 {
-    ::CoUninitialize(); // Shut down COM
 }
 
 // Called when the application starts.
 BOOL CExplorerApp::InitInstance()
 {
-    // Initialize COM
-    if (SUCCEEDED(CoInitialize(nullptr)))
-    {
-        // Create the frame window.
-        m_frame.Create();   // throws a CWinException on failure
-    }
-    else
-    {
-        ::MessageBox(nullptr, L"Failed to initialize COM", L"ERROR", MB_ICONERROR);
-        return FALSE;
-    }
+    // Create the frame window.
+    m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;
 }

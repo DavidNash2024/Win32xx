@@ -160,7 +160,7 @@ void CDXView::SetupMatrices()
     m_pd3dDevice->SetTransform( D3DTS_WORLD, &matWorld );
 
     // Set up our view matrix. A view matrix can be defined given an eye point,
-    // a point to lookat, and a direction for which way is up. Here, we set the
+    // a point to look at, and a direction for which way is up. Here, we set the
     // eye five units back along the z-axis and up three units, look at the
     // origin, and define "up" to be in the y-direction.
     D3DXVECTOR3 vEyePt( 0.0f, 3.0f,-5.0f );

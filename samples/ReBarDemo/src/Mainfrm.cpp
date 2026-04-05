@@ -173,7 +173,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 //  - The DPI of the monitor hosting the window changes.
 LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Turn redrawing off to make the tansition smoother.
+    // Turn redrawing off to make the transition smoother.
     SetRedraw(FALSE);
 
     // Perform the DPI rescaling.

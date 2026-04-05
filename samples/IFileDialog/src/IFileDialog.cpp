@@ -193,13 +193,13 @@ HRESULT ChooseFolder()
                 hr = psi->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &pszFilePath);
                 if (SUCCEEDED(hr))
                 {
-                    TaskDialog(nullptr, nullptr, L"Choosen Folder:", pszFilePath, 0,
+                    TaskDialog(nullptr, nullptr, L"Chosen Folder:", pszFilePath, 0,
                         TDCBF_OK_BUTTON, TD_INFORMATION_ICON, nullptr);
 
                     CoTaskMemFree(pszFilePath);
                 }
                 else
-                    TaskDialog(nullptr, nullptr, L"Choosen Folder:", L"GetDisplayName failed", 0,
+                    TaskDialog(nullptr, nullptr, L"Chosen Folder:", L"GetDisplayName failed", 0,
                         TDCBF_OK_BUTTON, TD_ERROR_ICON, nullptr);
             }
         }
@@ -509,7 +509,7 @@ HRESULT WritePropertiesUsingHandlers()
                             // Now apply the properties.
                             //
                             // Get the property store first by calling GetPropertyStore and pass it on to ApplyProperties.
-                            // This will make the registered propety handler for the specified file type (jpg)
+                            // This will make the registered property handler for the specified file type (jpg)
                             // do all the work of writing the properties for you.
                             //
                             // Property handlers for the specified file type should be registered for this

@@ -418,13 +418,17 @@ namespace Win32xx
         // Allow the CREATESTRUCT parameters to be modified.
         PreCreate(cs);
 
+        // Prefer the classname specified in PreRegisterClass over the one
+        // specified in PreCreate. The class name will default to "Win32++ Window"
+        // if neither PreRegisterClass nor PreCreate specify a class name.
+        LPCTSTR className = wc.lpszClassName ? wc.lpszClassName : cs.lpszClass;
+
         DWORD style = static_cast<DWORD>(cs.style & ~WS_VISIBLE);
         HWND wnd;
 
         // Create the window.
-        wnd = CreateEx(cs.dwExStyle, wc.lpszClassName, cs.lpszName, style,
-                cs.x, cs.y, cs.cx, cs.cy, cs.hwndParent, cs.hMenu,
-                cs.lpCreateParams);
+        wnd = CreateEx(cs.dwExStyle, className, cs.lpszName, style, cs.x, cs.y,
+            cs.cx, cs.cy, cs.hwndParent, cs.hMenu, cs.lpCreateParams);
 
         // Show the window maximized, minimized, or normal.
         if (cs.style & WS_VISIBLE)

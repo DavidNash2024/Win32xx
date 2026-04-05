@@ -41,7 +41,7 @@ bool CMainFrame::OnChooseBackground()
     return false;
 }
 
-// Choose the color of the transparancy mask.
+// Choose the color of the transparency mask.
 bool CMainFrame::OnChooseMask()
 {
     if (IDOK == m_colorDialog.DoModal(*this))

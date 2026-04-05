@@ -100,7 +100,7 @@ BOOL CMyDialog::OnInitDialog()
     // Select the first radio button
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
 
-    // Ajust the pattern image size.
+    // Adjust the pattern image size.
     m_patternImage.LoadBitmap(IDB_BITMAP1);
     m_patternImage = DpiScaleUpBitmap(m_patternImage);
     LPARAM lparam = reinterpret_cast<LPARAM>(m_patternImage.GetHandle());

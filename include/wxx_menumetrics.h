@@ -304,7 +304,7 @@ namespace Win32xx
 
     inline CRect CMenuMetrics::GetSelectionRect(const CRect& item) const
     {
-        int x = item.left + m_marItem.cxLeftWidth;
+        int x = m_marItem.cxLeftWidth;
         int y = item.top;
 
         return CRect(x, y, item.right - m_marItem.cxRightWidth, y + item.Height());
