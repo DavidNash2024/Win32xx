@@ -155,7 +155,7 @@ namespace Win32xx
                     IShellItem* pShellItem;
                     if (SUCCEEDED(pFileDialog->GetResult(&pShellItem)))
                     {
-                        PWSTR pFilePath = 0;
+                        PWSTR pFilePath = nullptr;
                         if (SUCCEEDED(pShellItem->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &pFilePath)))
                         {
                             m_folderName = pFilePath;

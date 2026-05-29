@@ -571,7 +571,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
-        str2 << "Error: " << e.what();
+        str2 << L"Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 

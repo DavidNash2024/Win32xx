@@ -1,27 +1,8 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                 (View.cpp) *
-********************************************************************************
-|                                                                              |
-|                      Author: Robert C. Tausworthe, 2020                      |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// View.cpp
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: The DDXDemo CView class implementation. This class
-    controls the appearance and view-related actions of the DDX/DDV test
-    program. This class is a modified version of that found in the
-    FormDocView sample distributed with the Win32++ Windows interface classes.
-    The modified sample program was based on code provided by LynnAllan. This
-    program extends the given sample by application of Dialog Data Exchange
-    and Validation (DDX/DDV).
-
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-    Acknowledgement: The author would like to thank and acknowledge the advice,
-    critical review, insight, and assistance provided by David Nash in the
-    development of this work.
-
-*******************************************************************************/
 
 #include "stdafx.h"
 #include "Doc.h"
@@ -29,16 +10,9 @@
 #include "App.h"
 #include "resource.h"
 
-#ifndef CFM_BACKCOLOR
-#define CFM_BACKCOLOR       0x04000000
-#endif // CFM_BACKCOLOR
-
 static const  CString unit[] = {L'A', L'B', L'C'};
 
-/*=============================================================================*
-
-    Define the color palette                                                */
-
+// Define the color palette.
 #define COLOR_BLACK     RGB(  0,   0,   0)
 #define COLOR_GRAY      RGB(100, 100, 100)
 #define COLOR_LT_GRAY   RGB(200, 200, 200)
@@ -72,23 +46,14 @@ static const  CString unit[] = {L'A', L'B', L'C'};
 #define COLOR_LT_RED    RGB(255, 200, 200)
 #define COLOR_DK_RED    RGB(128,   0,   0)
 
-/*============================================================================*/
-    CView::
-CView(UINT nResID)                                                          /*
+//////////////////////////////
+// CView function definitions.
+//
 
-    Construct the dialog view based on the resource.rc defined by the
-    resource identifier nResID.  Set the initial text foreground and
-    background display color and the form background brush for each
-    control type, and set the view background color. The frame colors
-    are set separately, in CMainFrame::SetThemeColors().
-*-----------------------------------------------------------------------------*/
-    : CDialog(nResID), m_focusID(0)
+// Construct the dialog view based on the resource.rc defined by the
+// resource identifier nResID.
+CView::CView(UINT nResID) : CDialog(nResID), m_focusID(0)
 {
-      // These initial values for the dialog controls that use DDX/DDV
-      // validation will be overwritten in OnInitDialog() by the
-      // GetDocumentValues() method before they are ever used.  However, it is
-      // good practice for constructors to initialize all its essential
-      // parameters.
     m_byteVal       = 10;
     m_shortVal      = 0;
     m_intVal        = 0;
@@ -114,54 +79,53 @@ CView(UINT nResID)                                                          /*
     CTime t = CTime::GetCurrentTime();
     t.GetAsSystemTime(m_dateSysTime);
     m_calDateSysTime = m_dateSysTime;
-      // buttons
+
+    // Buttons.
     m_buttonFgClr   = COLOR_BLACK;
     m_buttonBgClr   = COLOR_CYAN;
     m_buttonBgBrush.CreateSolidBrush(COLOR_LT_CYAN);
-      // edit boxes
+
+    // Edit boxes.
     m_editFgClr     = COLOR_WHITE;
     m_editBgClr     = COLOR_RED;
     m_editBgBrush.CreateSolidBrush(COLOR_LT_RED);
-      // the dialog box
+
+     // The dialog box colors.
     m_dialogFgClr   = COLOR_WHITE;
     m_dialogBgClr   = COLOR_BLUE;
     m_dialogBgBrush.CreateSolidBrush(COLOR_LILAC);
-      // list boxes
+
+    // The list box colors.
     m_listBoxFgClr  = COLOR_BLACK;
     m_listBoxBgClr  = COLOR_GREEN;
     m_listBoxBgBrush.CreateSolidBrush(COLOR_LT_GREEN);
-      // scroll bars (when used)
+
+    // The scroll bar colors.
     m_scrollFgClr   = COLOR_WHITE;
     m_scrollBgClr   = COLOR_MAGENTA;
     m_scrollBgBrush.CreateSolidBrush(COLOR_LT_MAGENTA);
-      // static boxes
+
+    // The static box colors.
     m_staticBoxFgClr = COLOR_BLACK;
     m_staticBoxBgClr = COLOR_YELLOW;
     m_staticBoxBgBrush.CreateSolidBrush(COLOR_LT_YELLOW);
-      // richedit controls (these are set differently than the others)
+
+    // The Richedit colors.
     m_richEditFgClr = COLOR_WHITE;
     m_richEditBgClr = COLOR_RED;
     m_richEditClientBgClr = COLOR_LT_RED;
 }
 
-/*============================================================================*/
-    BOOL CView::
-AddToolTip(UINT id)                                                         /*
-
-    Add the string with the resource id to the control whose resource
-    identifier is also id. Return TRUE on success, FALSE otherwise.
-*-----------------------------------------------------------------------------*/
+// Add the string with the resource id to the control whose resource
+// identifier is also id. Return TRUE on success, FALSE otherwise.
+BOOL CView::AddToolTip(UINT id)
 {
     return AddToolTip(id, LoadString(id));
 }
 
-/*============================================================================*/
-    BOOL CView::
-AddToolTip(UINT id, const CString & sToolTip)                               /*
-
-    Add the sToolTip string to the control whose resource identifier is
-    id. Return TRUE on success, FALSE otherwise.
-*-----------------------------------------------------------------------------*/
+// Add the sToolTip string to the control whose resource identifier is
+// id. Return TRUE on success, FALSE otherwise.
+BOOL CView::AddToolTip(UINT id, const CString & sToolTip)
 {
     HWND ctl = ::GetDlgItem(*this, id);
     if (ctl == nullptr)
@@ -177,24 +141,21 @@ AddToolTip(UINT id, const CString & sToolTip)                               /*
     return TRUE;
 }
 
-/*============================================================================*/
-    void CView::
-AdjustStatus()                                                              /*
-
-    Set the status control to reflect the values of variable controls on the
-    dialog.
-*-----------------------------------------------------------------------------*/
+// Set the status control to reflect the values of variable controls on the
+// dialog.
+void CView::AdjustStatus()
 {
     LPCWSTR TorF[]   = {L"OFF", L"ON"};
 
-      // display the DateTime control content
+    // Display the DateTime control content.
     CTime t(m_dateSysTime);
     CString dt = t.Format(L"%d-%b-%Y %H:%M:%S");
-      // display the MonthCalendar control content
+
+    // Display the MonthCalendar control content.
     t = m_calDateSysTime;
     CString mc = t.Format(L"%d-%b-%Y");
 
-      // set m_statusBoxVal to display values of all controls
+    // Set m_statusBoxVal to display values of all controls.
     LPCWSTR fmt = L"STATUS Button Pressed.\nStatus is:\n\n"
         L"ID of focus is %d\n"
         L"BYTE        is %hu\n"
@@ -247,12 +208,9 @@ AdjustStatus()                                                              /*
         );
 }
 
-/*============================================================================*/
-    void CView::
-AssignToolTips()                                                            /*
 
-    Assign tool tips to all controls in the client area.
-*-----------------------------------------------------------------------------*/
+// Assign tool tips to all controls in the client area.
+void CView::AssignToolTips()
 {
     HWND hParent = *this;
     if (!m_toolTip.Create(hParent))
@@ -293,12 +251,8 @@ AssignToolTips()                                                            /*
     m_toolTip.Activate(TRUE);
 }
 
-/*============================================================================*/
-    INT_PTR CView::
-DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
-
-    Process the view messages: control colors and owner-drawn buttons.
-*-----------------------------------------------------------------------------*/
+// Process the view messages: control colors and owner-drawn buttons.
+INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
@@ -307,12 +261,12 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
         {
         case WM_CTLCOLORBTN:
         case WM_CTLCOLOREDIT:
-        case WM_CTLCOLORDLG:  // sent to dialog boxes directly, not here!
+        case WM_CTLCOLORDLG:  // Sent to dialog boxes directly, not here!
         case WM_CTLCOLORLISTBOX:
         case WM_CTLCOLORSCROLLBAR:
         case WM_CTLCOLORSTATIC:
-            // for these messages, wparam has the control's hdc and
-            // lparam has the control's hwnd
+            // For these messages, wparam has the control's hdc and
+            // lparam has the control's hwnd.
             return OnCtlColor(reinterpret_cast<HDC>(wparam),
                 reinterpret_cast<HWND>(lparam), msg);
 
@@ -341,6 +295,7 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
         }
 
         }
+
         // Pass unhandled messages on to parent DialogProc
         return DialogProcDefault(msg, wparam, lparam);
     }
@@ -352,7 +307,7 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
         str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
-        str2 << "Error: " << e.what();
+        str2 << L"Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
@@ -367,15 +322,11 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
     return 0;
 }
 
-/*============================================================================*/
-    void  CView::
-DoDataExchange(CDataExchange& dx)                                           /*
-
-    Specify the controls used for Dialog Data Exchange (DDX) and Dialog Data
-    Verification (DDV). This function is invoked each time UpdateData is called.
-*-----------------------------------------------------------------------------*/
+// Specify the controls used for Dialog Data Exchange(DDX) and Dialog Data
+// Verification(DDV).This function is invoked each time UpdateData is called.
+void CView::DoDataExchange(CDataExchange& dx)
 {
-      // DDX_Control is used to attach controls to the numeric ID
+    // DDX_Control is used to attach controls to the numeric ID.
     dx.DDX_Control(IDC_COMBOBOX,        m_comboBox);
     dx.DDX_Control(IDC_LISTBOX,         m_listBox);
     dx.DDX_Control(IDC_EDIT_RICHEDIT,   m_richEdit);
@@ -391,69 +342,85 @@ DoDataExchange(CDataExchange& dx)                                           /*
     //  the specified variable.
     // The DDV functions specify the range of valid data for the control.
 
-      // connect byte box to m_byteVal and specify limits
+    // Connect byte box to m_byteVal and specify limits.
     dx.DDX_Text(IDC_EDIT_BYTE,      m_byteVal);
     dx.DDV_MinMaxByte(              m_byteVal, 10, 200);
-      // connect short box to m_shortVal and specify limits
+
+    // Connect short box to m_shortVal and specify limits.
     dx.DDX_Text(IDC_EDIT_SHORT,     m_shortVal);
     dx.DDV_MinMaxShort(             m_shortVal, -1000, 1000);
-      // connect int box to m_intVal and specify limits
+
+    // Connect int box to m_intVal and specify limits.
     dx.DDX_Text(IDC_EDIT_INT,       m_intVal);
     dx.DDV_MinMaxInt(               m_intVal, -10000, 10000);
-      // connect UINT box to m_UINTVal and specify limits
+
+    // Connect UINT box to m_UINTVal and specify limits.
     dx.DDX_Text(IDC_EDIT_UINT,      m_UINTVal);
     dx.DDV_MinMaxUInt(              m_UINTVal, 10, 10000);
-      // connect long box to m_longVal and specify limits
+
+    // Connect long box to m_longVal and specify limits.
     dx.DDX_Text(IDC_EDIT_LONG,      m_longVal);
     dx.DDV_MinMaxLong(              m_longVal, -100000, 100000);
-    // connect ULONG box to m_ULongVal and specify limits
+
+    // Connect ULONG box to m_ULongVal and specify limits.
     dx.DDX_Text(IDC_EDIT_DWORD,     m_ULongVal);
     dx.DDV_MinMaxULong(             m_ULongVal, 10, 100000);
-      // connect float box to m_floatVal and specify limits
+
+    // Connect float box to m_floatVal and specify limits.
     dx.DDX_Text(IDC_EDIT_FLOAT,     m_floatVal);
     dx.DDV_MinMaxFloat(             m_floatVal, -10.0, 100000.0);
-      // connect double box to m_doubleVal and specify limits
+
+    // Connect double box to m_doubleVal and specify limits.
     dx.DDX_Text(IDC_EDIT_DOUBLE,    m_doubleVal);
     dx.DDV_MinMaxDouble(            m_doubleVal, -10.0, 100000.);
-      // connect the LPWSTR box and specify length
+
+    // Connect the LPWSTR box and specify length.
     dx.DDX_Text(IDC_EDIT_LPWSTR,    m_LPWSTRVal, 255);
     dx.DDV_MaxChars(                m_LPWSTRVal, 25);
-      // connect the regular edit box to m_editVal and specify length
+
+    // Connect the regular edit box to m_editVal and specify length.
     dx.DDX_Text(IDC_EDIT_CSTRING,   m_editVal);
     dx.DDV_MaxChars(                m_editVal, 25);
-      // connect the rich edit box to m_richEditVal for string operations
+
+    // Connect the rich edit box to m_richEditVal for string operations.
     dx.DDX_Text(IDC_EDIT_RICHEDIT,  m_richEditVal);
-    dx.DDV_MaxChars(                m_richEditVal, 25); // limit length
-      // connect the slider control to m_sliderVal and specify limits
+    dx.DDV_MaxChars(                m_richEditVal, 25); // Limit length.
+
+    // Connect the slider control to m_sliderVal and specify limits.
     dx.DDX_Slider(IDC_SLIDER,       m_sliderVal);
     dx.DDV_MinMaxSlider(            m_sliderVal, 0, 1000);
-      // connect the progress bar to m_progressVal
+
+    // Connect the progress bar to m_progressVal.
     dx.DDX_Progress(IDC_PROGRESSBAR, m_progressVal);
-      // connect scroll bar to m_scrollBarVal
+
+    // Connect scroll bar to m_scrollBarVal.
     dx.DDX_Scroll(IDC_SCROLLBAR,    m_scrollBarVal);
-      // connect the radio boxes
+
+    // Connect the radio boxes.
     dx.DDX_Radio( IDC_RADIO_A,      m_radioA);
-      // connect check boxes
+
+    // Connect the check boxes.
     dx.DDX_Check(IDC_CHECK_A,       m_checkVal[0]);
     dx.DDX_Check(IDC_CHECK_B,       m_checkVal[1]);
     dx.DDX_Check(IDC_CHECK_C,       m_checkVal[2]);
-      // Note: Data in a combo box may be accessed two ways: by string or by
-      // index. Only one of these two methods should be used.  Comment the
-      // other out below.
-    dx.DDX_CBString(IDC_COMBOBOX,   m_comboBoxVal); // use string method
-//  dx.DDX_CBIndex(IDC_COMBOBOX,    m_comboBoxIndx); // use index method
+
+    // Note: Data in a combo box may be accessed two ways: by string or by
+    // index. Only one of these two methods should be used.  Comment the
+    // other out below.
+    dx.DDX_CBString(IDC_COMBOBOX,   m_comboBoxVal);  // Use string method.
+//  dx.DDX_CBIndex(IDC_COMBOBOX,    m_comboBoxIndx); // Use index method.
 //  m_comboBox.GetLBText(m_comboBoxIndx, m_comboBoxVal.GetBuffer(256));
 //  m_comboBoxVal.ReleaseBuffer();
 
-      // Note: Data in a list box may be accessed two ways: by string or by
-      // index. Only one of these two methods should be used.  Comment the
-      // other out below.
-    dx.DDX_LBString(IDC_LISTBOX,    m_listBoxVal);  // use string method
-//  dx.DDX_LBIndex(IDC_LISTBOX,     m_listBoxIndx);  // use index method
+    // Note: Data in a list box may be accessed two ways: by string or by
+    // index. Only one of these two methods should be used.  Comment the
+    // other out below.
+    dx.DDX_LBString(IDC_LISTBOX,    m_listBoxVal);   // Use string method.
+//  dx.DDX_LBIndex(IDC_LISTBOX,     m_listBoxIndx);  // Use index method.
 //  m_listBox.GetText(m_listBoxIndx, m_listBoxVal.GetBuffer(256));
 //  m_listBoxVal.ReleaseBuffer();
 
-      // engage the DateTime control and specify +/-30 days
+    // Engage the DateTime control and specify +/-30 days.
     CTime tnow = CTime::GetCurrentTime();
     CTimeSpan tmo  = 30 * 86400;
     CTime     tMin = tnow - tmo,
@@ -470,12 +437,8 @@ DoDataExchange(CDataExchange& dx)                                           /*
     dx.DDX_Text(IDC_EDIT_STATUS,    m_statusBoxVal);
 }
 
-/*============================================================================*/
-    void CView::
-GetDocumentValues()                                                         /*
-
-    Load those things from the document that it saves.
-*-----------------------------------------------------------------------------*/
+// Load those things from the document that it saves.
+void CView::GetDocumentValues()
 {
     m_byteVal       = m_doc.GetByte();
     m_shortVal      = m_doc.GetShort();
@@ -501,49 +464,41 @@ GetDocumentValues()                                                         /*
     StrCopy(m_LPWSTRVal, m_doc.GetLPWSTR(), 256);
 }
 
-/*============================================================================*/
-    void CView::
-OnBitmap()                                                                  /*
-
-    Activate the DDX/DDV mechanism to read current values from the dialog
-    form and to set the status box to indicate this button was pressed.
-*-----------------------------------------------------------------------------*/
+//Activate the DDX / DDV mechanism to read current values from the dialog
+// form and to set the status box to indicate this button was pressed.
+void CView::OnBitmap()
 {
-      // save current contents of controls
+    // Save current contents of controls.
     UpdateData(m_dx, READFROMCONTROL);
-      // reset status to just this message:
+
+    // Reset status to just this message:
     m_statusBoxVal = L"The moondance rose.";
-      // post the message
+
+    // Post the message.
     UpdateData(m_dx, SENDTOCONTROL);
     TRACE("Bitmap Pressed\n");
 }
 
-/*============================================================================*/
-    void CView::
-OnButton()                                                                  /*
-
-    Activate the DDX/DDV mechanism to read current values from the dialog
-    form and to set the status box to indicate this button was pressed.
-*-----------------------------------------------------------------------------*/
+// Activate the DDX / DDV mechanism to read current values from the dialog
+// form and to set the status box to indicate this button was pressed.
+void CView::OnButton()
 {
-      // read current contents of controls to memory
+    // Read current contents of controls to memory.
     UpdateData(m_dx, READFROMCONTROL);
-      // reset the status message to just this:
+
+    // Reset the status message to just this:
     m_statusBoxVal = L"PUSH ME button Pressed";
-      // send this status message (and also the other values) back into
-      // the control
+
+    // Send this status message (and also the other values) back into
+    // the control.
     UpdateData(m_dx, SENDTOCONTROL);
     TRACE("PUSH ME button Pressed\n");
 }
 
-/*============================================================================*/
-    BOOL CView::
-OnCommand(WPARAM wparam, LPARAM)                                  /*
-
-    The framework calls this member function when the user selects an item
-    from a menu, when a child control sends a notification message, or when
-    an accelerator keystroke is translated.
-*-----------------------------------------------------------------------------*/
+// The framework calls this member function when the user selects an item
+// from a menu, when a child control sends a notification message, or when
+// an accelerator keystroke is translated.
+BOOL CView::OnCommand(WPARAM wparam, LPARAM)
 {
     WORD id  = LOWORD(wparam);
     WORD ctl = HIWORD(wparam);
@@ -563,7 +518,6 @@ OnCommand(WPARAM wparam, LPARAM)                                  /*
         m_focusID = id;
         return TRUE;
 
-
     case IDC_RADIO_A:
     case IDC_RADIO_B:
     case IDC_RADIO_C:
@@ -582,8 +536,9 @@ OnCommand(WPARAM wparam, LPARAM)                                  /*
         SetCheckCStatus();
         return TRUE;
     }
-      // deal with setting the focus for edit controls, combo boxes,
-      // list boxes, radio buttons, and check boxes
+
+    // Deal with setting the focus for edit controls, combo boxes,
+    // list boxes, radio buttons, and check boxes.
     if (ctl == EN_SETFOCUS || ctl == CBN_SETFOCUS || ctl == LBN_SETFOCUS
         || (ctl == BN_SETFOCUS && IDC_RADIO_A <= id && id <= IDC_CHECK_C))
     {
@@ -593,30 +548,24 @@ OnCommand(WPARAM wparam, LPARAM)                                  /*
     return FALSE;
 }
 
-/*============================================================================*/
-    INT_PTR  CView::
-OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)                               /*
-
-    This member function is invoked when a child control is about to be
-    drawn. It can be used to prepare the display context dc for drawing
-    the control using user-selected colors.
-*-----------------------------------------------------------------------------*/
+// This member function is invoked when a child control is about to be
+// drawn.It can be used to prepare the display context dc for drawing
+// the control using user - selected colors.
+INT_PTR CView::OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)
 {
-      // get the control numeric ID, when needed
+    // Get the control numeric ID.
     UINT id = ::GetDlgCtrlID(hWnd);
-      // get the display context
+
+    // Get the display context.
     CDC dcCtl(dc);
-      // to avoid compiler warnings, declare control colors and
-      // assign them arbitrary (because unused) values
+
     COLORREF fg = COLOR_BLACK;
     COLORREF bk = COLOR_BLACK;
-    CBrush   br = CBrush(COLOR_BLACK);
-      // handle each color message separately
+    CBrush   br;
+
     switch (nCtlColor)
     {
         case WM_CTLCOLORBTN:
-              // handle each button separately (but here, they have the
-              // same colors)
             if (id == IDOK)
             {
                 fg = m_buttonFgClr;
@@ -656,12 +605,12 @@ OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)                               /*
             break;
 
         case WM_CTLCOLORSTATIC:
-              // change caption color of group box
+            // Change caption color of group box.
             if (id == IDC_STATUS_GROUP)
             {
                 fg = m_dialogFgClr;
                 bk = m_dialogBgClr;
-                br = m_dialogBgBrush; // doesn't do anything
+                br = m_dialogBgBrush;
             }
             else if (IDC_RADIO_A <= id && id <= IDC_CHECK_C)
             {
@@ -677,34 +626,36 @@ OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)                               /*
             }
             break;
     }
-      // set the foreground and background device contexts
+
+    // Set the foreground and background device contexts.
     dcCtl.SetTextColor(fg);
     dcCtl.SetBkColor(bk);
-      // Keep changes to the device context
+
+    // Keep changes to the device context
     dcCtl.Detach();
-      // return the brush handle
+
+    // Return the brush handle
     return (INT_PTR)br.GetHandle();
 }
 
-/*============================================================================*/
-    BOOL CView::
-OnInitDialog()                                                              /*
-
-    This method is activated before the dialog box just before is displayed.
-    Insert instructions that are needed to perform special processing when the
-    dialog box is initialized.  The return value is always TRUE.
-*-----------------------------------------------------------------------------*/
+// This method is activated before the dialog box just before is displayed.
+// Insert instructions that are needed to perform special processing when the
+// dialog box is initialized.The return value is always TRUE.
+BOOL CView::OnInitDialog()
 {
-      // Set the Icon
+    // Set the Icon.
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
-      // add tool tips to controls in client area
+
+    // Add tool tips to controls in client area.
     AssignToolTips();
-      // Connect controls to IDs and read default data values into them.
+
+    // Connect controls to IDs and read default data values into them.
     UpdateData(m_dx, SENDTOCONTROL);
-      // Set the rich edit control text foreground and background colors
-      // and the control background color.  This is needed only once (not
-      // like other controls set in OnCtlColor()).
+
+    // Set the rich edit control text foreground and background colors
+    // and the control background color.  This is needed only once (not
+    // like other controls set in OnCtlColor).
     CHARFORMAT2 chf;
     chf.cbSize = sizeof(chf);
     chf.dwMask = CFM_COLOR | CFM_BACKCOLOR;
@@ -713,11 +664,12 @@ OnInitDialog()                                                              /*
     chf.crBackColor = m_richEditBgClr;
     m_richEdit.SetDefaultCharFormat(chf);
     m_richEdit.SetBackgroundColor(FALSE, m_richEditClientBgClr);
-      // initialize some of the subclassed controls for this test:
-      // list box, combo box, slider, progress bar, and scroll bar:
-      // put some text in the list box (normally, entries might be
-      // retrieved from the document, saved in the registry, but here,
-      // for simplicity, we just enter some sample values)
+
+    // Initialize some of the subclassed controls for this test:
+    // list box, combo box, slider, progress bar, and scroll bar:
+    // put some text in the list box (normally, entries might be
+    // retrieved from the document, saved in the registry, but here,
+    // for simplicity, we just enter some sample values).
     m_listBox.ResetContent();
     for (int i = 0 ; i < 10 ; i++)
     {
@@ -725,7 +677,8 @@ OnInitDialog()                                                              /*
         s.Format(L"List Box%d", i);
         m_listBox.AddString(s);
     }
-      // ditto for the combo box
+
+    // Ditto for the combo box.
     m_comboBox.ResetContent();
     for (int j = 0 ; j < 8 ; j++)
     {
@@ -733,32 +686,34 @@ OnInitDialog()                                                              /*
         s.Format(L"Combo Box%d", j);
         m_comboBox.AddString(s);
     }
-      // set the slider, progress, and scroll bar ranges
+
+    // Set the slider, progress, and scroll bar ranges.
     int lo = 0;
     int page = 20;
     int hi   = 50 * page;
     m_scrollBar.SetScrollInfo(lo, hi, 0, page);
-      // set slider range and page size
+
+    // Set slider range and page size.
     m_slider.SetRangeMin(lo);
     m_slider.SetRangeMax(hi);
     m_slider.SetPageSize(page);
     m_progressBar.SetRange((short)lo, (short)hi);
-      // set Date-Time display format
+
+    // Set Date-Time display format.
     m_dateTime.SetFormat(L"dd'-'MMM'-'yyyy' 'HH':'mm':'ss");
-      // retrieve values from the document
+
+    // Retrieve values from the document.
     GetDocumentValues();
-      // gang together progress, scroll bar, and slider
-    m_progressVal = m_scrollBarVal = m_sliderVal;
+
+    // Gang together progress, scroll bar, and slider.
+    m_progressVal = m_sliderVal;
+    m_scrollBarVal = m_sliderVal;
     return TRUE;
 }
 
-/*============================================================================*/
-    void CView::
-OnOK()                                                                      /*
-
-    Called when the user clicks the button with an ID of IDOK.  Display the
-    contents of all controls and save those that are part of the document.
-*-----------------------------------------------------------------------------*/
+// Called when the user clicks the button with an ID of IDOK.  Display the
+// contents of all controls and save those that are part of the document.
+void CView::OnOK()
 {
     UpdateData(m_dx, READFROMCONTROL);
     AdjustStatus();
@@ -767,13 +722,9 @@ OnOK()                                                                      /*
     TRACE("STATUS Button Pressed.\n\n");
 }
 
-/*============================================================================*/
-    LRESULT CView::
-OnNotify(WPARAM wparam, LPARAM lparam)                                  /*
-
-    Respond to WM_NOTIFY messages received from child windows. Here, typical
-    notifications from the data-time and month calendar controls are identified.
-*-----------------------------------------------------------------------------*/
+// Respond to WM_NOTIFY messages received from child windows.Here, typical
+// notifications from the data - time and month calendar controls are identified.
+LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     NMHDR *pNMHdr = reinterpret_cast<LPNMHDR>(lparam);
     switch (pNMHdr->code)
@@ -789,106 +740,76 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                  /*
     return FALSE;
 }
 
-/*============================================================================*/
-    void    CView::
-SetCheck(UINT check)                                                        /*
-
-    Toggle the check box control whose ID is (IDC_CHECK_A + check).
-*-----------------------------------------------------------------------------*/
+// Toggle the check box control whose ID is(IDC_CHECK_A + check).
+void CView::SetCheck(UINT check)
 {
-      // toggle the check control
+    // Toggle the check control.
     m_checkVal[check] = (m_checkVal[check]? FALSE : TRUE);
-      // set the status
+
+    // Set the status.
     m_statusBoxVal = "Check " + unit[check] + " set " +
         (m_checkVal[check] ? "ON." : "OFF.");
+
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
-/*============================================================================*/
-    void    CView::
-SetCheckAStatus()                                                           /*
-
-    Show the status of the A check control.
-*-----------------------------------------------------------------------------*/
+// Show the status of the A check control.
+void CView::SetCheckAStatus()
 {
     UpdateData(m_dx, READFROMCONTROL);
     m_statusBoxVal << "Check A set " << (m_checkVal[0] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
-/*============================================================================*/
-    void    CView::
-SetCheckBStatus()                                                           /*
-
-    Show the status of the B check control.
-
-*-----------------------------------------------------------------------------*/
+// Show the status of the B check control.
+void CView::SetCheckBStatus()
 {
     UpdateData(m_dx, READFROMCONTROL);
     m_statusBoxVal << "Check B set " << (m_checkVal[1] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
-/*============================================================================*/
-    void    CView::
-SetCheckCStatus()                                                           /*
-
-    Show the status of the C check control.
-*-----------------------------------------------------------------------------*/
+// Show the status of the C check control.
+void CView::SetCheckCStatus()
 {
     UpdateData(m_dx, READFROMCONTROL);
     m_statusBoxVal << "Check C set " << (m_checkVal[2] ? "ON." : "OFF.");
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
-/*============================================================================*/
-    void   CView::
-SetRadio(UINT id)                                                           /*
-
-    Set the radio control to select that whose ID is (IDC_RADIO_A + id), and
-    set the status box radio value accordingly.
-*-----------------------------------------------------------------------------*/
+// Set the radio control to select that whose ID is(IDC_RADIO_A + id), and
+// set the status box radio value accordingly.
+void CView::SetRadio(UINT id)
 {
     m_radioA = id;
     m_statusBoxVal = CString("Radio button set to ") + unit[m_radioA];
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
-/*============================================================================*/
-    void    CView::
-SetRadioAStatus()                                                           /*
 
-    Set the status box radio button value to that in the DDX specification.
-*-----------------------------------------------------------------------------*/
+// Set the status box radio button value to that in the DDX specification.
+void CView::SetRadioAStatus()
 {
     UpdateData(m_dx, READFROMCONTROL);
     m_statusBoxVal = CString("Radio button set to ") + unit[m_radioA];
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
-/*============================================================================*/
-    void    CView::
-SetControlPositions(int pos)                                                /*
-
-    Set the slider, scroll, and progress bars to the given pos.
-*-----------------------------------------------------------------------------*/
+// Set the slider, scroll, and progress bars to the given pos.
+void CView::SetControlPositions(int pos)
 {
     SetSlider(pos);
     SetScrollBar(pos);
     SetProgress(pos);
     AdjustStatus();
 
-      // Update the slider, scrollbar, progressbar and status windows.
+    // Update the slider, scrollbar, progressbar and status windows.
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
-/*============================================================================*/
-    void CView::
-UpdateDocument()                                                            /*
-
-    Save the pertinent members of the view that are also members of the
-    document.
-*-----------------------------------------------------------------------------*/
+// Save the pertinent members of the view that are also members of the
+// document.
+void CView::UpdateDocument()
 {
     m_doc.SetByte(m_byteVal);
     m_doc.SetShort(m_shortVal);
@@ -914,13 +835,9 @@ UpdateDocument()                                                            /*
     m_doc.SetMoCalendar(m_calDateSysTime);
 }
 
-/*============================================================================*/
-    BOOL CView::
-UpdateDialog(BOOL bReadFromControl)                                         /*
-
-    Update the DDX controls according to bReadFromControl and save document
-    values if successful. Return TRUE on success, FALSE on failure.
-*-----------------------------------------------------------------------------*/
+// Update the DDX controls according to bReadFromControl and save document
+// values if successful.Return TRUE on success, FALSE on failure.
+BOOL CView::UpdateDialog(BOOL bReadFromControl)
 {
     if (bReadFromControl == SENDTOCONTROL)
         AdjustStatus();
@@ -931,9 +848,8 @@ UpdateDialog(BOOL bReadFromControl)                                         /*
         UpdateDocument();
     }
     else
-    {     // oops! there is a problem with some of the control data
+    {
         TRACE("*** Verification failed ***\n");
     }
     return ok;
 }
-/*----------------------------------------------------------------------------*/

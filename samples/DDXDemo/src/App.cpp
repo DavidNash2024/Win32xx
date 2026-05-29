@@ -1,51 +1,21 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (App.cpp) *
-********************************************************************************
-|                                                                              |
-|                      Author: Robert C. Tausworthe, 2020                      |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// App.cpp
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: The DDXDemo CApp class implementation. This class
-    governs the overall actions of the DDX/DDV Demonstration program. This
-    class is a modified version of that found in the FormDocView sample
-    distributed with the Win32++ Windows interface classes. The modified sample
-    program was based on code provided by Lynn Allan. This demo extends the
-    given sample by application of Dialog Data Exchange and Validation (DDX/DDV).
-
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-    Acknowledgement: The author would like to thank and acknowledge the advice,
-    critical review, insight, and assistance provided by David Nash in the
-    development of this work.
-
-*******************************************************************************/
 
 #include "stdafx.h"
 #include "App.h"
 
-/******************************************************************************
-
-        The WINAPI entry point for a graphical Windows-based application.
-
-*============================================================================*/
-
-    int WINAPI
-wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)                             /*
-
-    This function is called by the system as the initial entry point for
-    a WinApi-based application. None of the passed parameters are used by
-    this application, and are thus not named in the calling sequence above
-    in order to suppress compiler messages.
-*-----------------------------------------------------------------------------*/
+// The WINAPI entry point for a graphical Windows-based application.
+int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 {
     try
     {
-          // declare the application object
+        // Declare the application object.
         CApp theApp;
 
-          // run the application
+        // Run the application.
         return theApp.Run();
     }
 
@@ -57,7 +27,7 @@ wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)             
         str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
-        str2 << "Error: " << e.what();
+        str2 << L"Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
@@ -72,20 +42,15 @@ wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)             
     return -1;
 }
 
-/*******************************************************************************
+/////////////////////////////
+// CApp function definitions.
+//
 
-        CApp Methods
-
-*============================================================================*/
-    BOOL CApp::
-InitInstance()                                                          /*
-
-    Called by theApp.Run() execution in WinMain to create the application
-    frame, which controls the program.
-*-----------------------------------------------------------------------------*/
+// Called by theApp.Run() execution in WinMain to create the application
+// frame, which controls the program.
+BOOL CApp::InitInstance()
 {
-      // Create the Frame Window
-    m_frame.Create();   // throws a CWinException on failure
+    // Create the frame window.
+    m_frame.Create();   // Throws a CWinException on failure.
     return TRUE;
 }
-

@@ -18,9 +18,6 @@
     <ClCompile Include="..\src\BrowserApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\EventSink.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,12 +30,12 @@
     <ClCompile Include="..\src\StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\EdgeView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BrowserApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\EventSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Mainfrm.h">
@@ -224,6 +221,9 @@
     <ClInclude Include="..\src\AboutDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\EdgeView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc">
@@ -231,17 +231,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="..\src\res\SystemDPI.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\src\res\Globe.ico" />
-    <Image Include="..\src\res\MenuIcons16.bmp" />
-    <Image Include="..\src\res\MenuIcons24.bmp" />
-    <Image Include="..\src\res\Internet24_n.bmp" />
-    <Image Include="..\src\res\Internet24_h.bmp" />
-    <Image Include="..\src\res\Internet24_d.bmp" />
-    <Image Include="..\src\res\Browser_n.bmp" />
-    <Image Include="..\src\res\Browser_h.bmp" />
-    <Image Include="..\src\res\Browser_d.bmp" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

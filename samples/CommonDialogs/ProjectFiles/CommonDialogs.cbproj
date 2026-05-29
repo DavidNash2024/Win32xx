@@ -441,9 +441,6 @@
             <BuildOrder>26</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
-        <None Include="..\src\StdApp.h">
-            <BuildOrder>27</BuildOrder>
-        </None>
         <CppCompile Include="..\src\View.cpp">
             <BuildOrder>29</BuildOrder>
         </CppCompile>

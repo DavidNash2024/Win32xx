@@ -75,7 +75,6 @@
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\AboutDialog.h" />
-    <ClInclude Include="..\src\Browser.h" />
     <ClInclude Include="..\src\Classes.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
@@ -92,7 +91,6 @@
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Browser.cpp" />
     <ClCompile Include="..\src\Classes.cpp" />
     <ClCompile Include="..\src\Files.cpp" />
     <ClCompile Include="..\src\main.cpp" />

@@ -55,8 +55,8 @@ protected:
     virtual void OnOK() override;
 
 private:
-    CCustomPrintDlg(const CCustomPrintDlg&);
-    CCustomPrintDlg& operator=(const CCustomPrintDlg&);
+    CCustomPrintDlg(const CCustomPrintDlg&) = delete;
+    CCustomPrintDlg& operator=(const CCustomPrintDlg&) = delete;
 
     bool CreateGlobalHandles(LPCWSTR printerName, HGLOBAL* pHDevMode, HGLOBAL* pHDevNames);
     std::vector<CString> FindPrinters() const;

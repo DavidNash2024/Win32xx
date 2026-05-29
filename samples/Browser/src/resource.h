@@ -8,21 +8,14 @@
 
 
 //Resource IDs for menu items and ToolBar items
-#define IDM_FILE_NEW                    121
-#define IDM_FILE_OPEN                   122
-#define IDM_FILE_SAVE                   123
-#define IDM_FILE_SAVEAS                 124
-#define IDM_FILE_PREVIEW                125
-#define IDM_FILE_PRINT                  126
-#define IDM_FILE_CLOSE                  127
-#define IDM_FILE_EXIT                   128
-#define IDM_EDIT_UNDO                   130
-#define IDM_EDIT_REDO                   131
-#define IDM_EDIT_CUT                    132
-#define IDM_EDIT_COPY                   133
-#define IDM_EDIT_PASTE                  134
-#define IDM_EDIT_DELETE                 135
-#define IDM_HELP_ABOUT                  140
+#define IDM_FILE_EXIT                   130
+#define IDM_EDIT_UNDO                   131
+#define IDM_EDIT_REDO                   132
+#define IDM_EDIT_CUT                    133
+#define IDM_EDIT_COPY                   134
+#define IDM_EDIT_PASTE                  135
+#define IDM_EDIT_DELETE                 136
+#define IDM_HELP_ABOUT                  137
 
 #define IDM_BACK                        141
 #define IDM_FORWARD                     142
@@ -30,19 +23,15 @@
 #define IDM_STOP                        144
 #define IDM_HOME                        145
 
-#define IDB_TOOLBAR24_NORM              150
-#define IDB_TOOLBAR24_HOT               151
-#define IDB_TOOLBAR24_DIS               152
-#define IDB_TOOLBAR32_NORM              153
-#define IDB_TOOLBAR32_HOT               154
-#define IDB_TOOLBAR32_DIS               155
-#define IDB_MENUICONS16                 156
-#define IDB_MENUICONS24                 157
+#define IDB_TOOLBAR32_NORM              150
+#define IDB_TOOLBAR32_HOT               151
+#define IDB_TOOLBAR32_DIS               152
+#define IDB_MENUICONS16                 153
+#define IDB_MENUICONS24                 154
 
 #define IDC_COMBOBOXEX                  160
-
-#define IDC_STATIC1                     180
-#define IDC_STATIC2                     181
+#define IDC_STATIC1                     161
+#define IDC_STATIC2                     162
 
 // Next default values for new objects
 //

@@ -1,32 +1,28 @@
- /* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
-********************************************************************************
-|                                                                              |
-|                    Authors: Robert Tausworthe, David Nash                    |
-|                                                                              |
-===============================================================================*
-
-    Program resource definitions for the FilePrintPreview sample program.
-
-*******************************************************************************/
+// Microsoft Visual C++ generated resource script.
+//
 
 #include "resource.h"
 #include "windows.h"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
 
-  // English (United States) resources
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
 
-  // RT_MANIFEST
 1       RT_MANIFEST                     "../src/res/SystemDPI.manifest"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
 
-  // Main Menu
 IDW_MAIN MENU
 {
     POPUP "&File"
@@ -73,10 +69,13 @@ IDW_MAIN MENU
     }
 }
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
 
-  // Icons: The icon with lowest ID value is placed first to ensure the
-  // application icon remains consistent on all systems.
+// Icons: The icon with lowest ID value is placed first to ensure the
+// application icon remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/PrintPreview.ico"
 IDI_PRINTPREVIEW        ICON                    "../src/res/Print Preview.ico"
 IDI_QUICKPRINT          ICON                    "../src/res/Quick Print.ico"
@@ -84,18 +83,22 @@ IDI_PRINT               ICON                    "../src/res/Print.ico"
 IDI_FONT_OPTION         ICON                    "../src/res/FontsS.ico"
 IDI_CHECKBOX_OFF        ICON                    "../src/res/CheckBoxOff.ico"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
 
-  // Bitmaps
 IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
 IDB_PREVIEW_FIRST       BITMAP                  "../src/res/recfirst.bmp"
 IDB_PREVIEW_PREV        BITMAP                  "../src/res/recprev.bmp"
 IDB_PREVIEW_NEXT        BITMAP                  "../src/res/recnext.bmp"
 IDB_PREVIEW_LAST        BITMAP                  "../src/res/reclast.bmp"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
 
-  // About Dialog
 IDW_ABOUT DIALOGEX 0, 0, 186, 109
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
@@ -109,9 +112,6 @@ BEGIN
     CTEXT           "",IDC_STATIC2,53,42,80,8
 END
 
-/*============================================================================*/
-
-  // PrintPreview dialog
 IDD_PRINTPREVIEW DIALOGEX 0, 0, PVW_DLG_WIDTH, PVW_DLG_HEIGHT
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_POPUP
      | DS_MODALFRAME | WS_CLIPCHILDREN
@@ -144,9 +144,11 @@ FONT 8, "MS Shell Dlg", 400, 0
                                     (PVW_DLG_HEIGHT - PVW_TB_HEIGHT)
 }
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
 
-  // Accelerator Keys
 IDW_MAIN ACCELERATORS
 {
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
@@ -161,9 +163,11 @@ IDW_MAIN ACCELERATORS
     "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT
 }
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
 
-  // String Tables
 STRINGTABLE
 {
     IDW_MAIN                "File Print Preview Program"
@@ -248,7 +252,6 @@ STRINGTABLE
     IDM_WRAP_WINDOW          "Wrap lines longer than the window width."
     IDM_WRAP_PRINTER         "Wrap lines longer than the printer width."
 }
-/*----------------------------------------------------------------------------*/
+
 #endif    // English (United States) resources
-
-
+/////////////////////////////////////////////////////////////////////////////

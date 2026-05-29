@@ -232,7 +232,7 @@ BOOL CMainFrame::OnBandColors()
 }
 
 // OnCommand responds to menu and and toolbar input.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UINT id = LOWORD(wparam);
 
@@ -262,6 +262,16 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
     case IDM_HELP_ABOUT:     return OnHelp();
+    }
+
+    // Handle WM_COMMAND from ComboboxEx.
+    if (reinterpret_cast<HWND>(lparam) == m_comboBoxEx.GetHwnd())
+    {
+        if (HIWORD(wparam) == CBN_SELCHANGE)   // User made selection from list.
+        {
+            ::SetFocus(0);  // Remove focus from the ComboBoxEx to hide the selection rectangle.
+            return TRUE;
+        }
     }
 
     return FALSE;
@@ -767,7 +777,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
-        str2 << "Error: " << e.what();
+        str2 << L"Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 

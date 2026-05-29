@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BrowserApp.cpp" />
-    <ClCompile Include="..\src\EventSink.cpp" />
+    <ClCompile Include="..\src\EdgeView.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MyCombo.cpp" />
@@ -89,7 +89,7 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\AboutDialog.h" />
     <ClInclude Include="..\src\BrowserApp.h" />
-    <ClInclude Include="..\src\EventSink.h" />
+    <ClInclude Include="..\src\EdgeView.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MyCombo.h" />
     <ClInclude Include="..\src\resource.h" />
@@ -100,18 +100,7 @@
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="..\src\res\SystemDPI.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\src\res\Browser_d.bmp" />
-    <Image Include="..\src\res\Browser_h.bmp" />
-    <Image Include="..\src\res\Browser_n.bmp" />
-    <Image Include="..\src\res\Globe.ico" />
-    <Image Include="..\src\res\Internet24_d.bmp" />
-    <Image Include="..\src\res\Internet24_h.bmp" />
-    <Image Include="..\src\res\Internet24_n.bmp" />
-    <Image Include="..\src\res\MenuIcons16.bmp" />
-    <Image Include="..\src\res\MenuIcons24.bmp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>
@@ -251,5 +240,14 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.Web.WebView2.1.0.3912.50\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.3912.50\build\native\Microsoft.Web.WebView2.targets')" />
+    <Import Project="packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets" Condition="Exists('packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Web.WebView2.1.0.3912.50\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Web.WebView2.1.0.3912.50\build\native\Microsoft.Web.WebView2.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
+  </Target>
 </Project>

@@ -1,42 +1,19 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
-********************************************************************************
-|                                                                              |
-|                      Author: Robert C. Tausworthe, 2020                      |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// Doc.cpp
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: The DDXDemo CDoc class implementation. This class
-    interfaces the document, held in the registry, with the remainder of the
-    DDX/DDV Demonstration program. This class is a modified version of that
-    found in the FormDocView sample distributed with the Win32++ Windows
-    interface classes. The modified sample program was based on code provided
-    by Lynn Allan. This demo extends the given sample by application of
-    Dialog Data Exchange and Validation (DDX/DDV).
-
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-    Acknowledgement: The author would like to thank and acknowledge the advice,
-    critical review, insight, and assistance provided by David Nash in the
-    development of this work.
-
-*******************************************************************************/
 
 #include "stdafx.h"
 #include "Doc.h"
 
-/*============================================================================*/
-    CDoc::
-CDoc()                                                                  /*
+/////////////////////////////
+// CDoc function definitions.
+//
 
-    Construct the basic document object.
-*-----------------------------------------------------------------------------*/
+// Construct the basic document object.
+CDoc::CDoc()
 {
-      //Initialize the values of ALL controls using DDX/DDV.  These are
-      // overwritten by saved values from the registry after initial
-      // startup, but it is important to have valid values for the
-      // initial startup.
     m_byteVal       = 10;
     m_shortVal      = 0;
     m_intVal        = 0;
@@ -58,13 +35,9 @@ CDoc()                                                                  /*
     m_calDateSysTime = m_dateSysTime;
 }
 
-/*============================================================================*/
-    void CDoc::
-LoadDocRegistry(LPCWSTR keyName)                                            /*
-
-    Load the saved document value parameters from the registry from the
-    'HKEY_CURRENT_USER\Software\keyName\Document Settings' key.
-*-----------------------------------------------------------------------------*/
+// Load the saved document value parameters from the registry from the
+// 'HKEY_CURRENT_USER\Software\keyName\Document Settings' key.
+void CDoc::LoadDocRegistry(LPCWSTR keyName)
 {
     CRegKey key;
     CString strKey;
@@ -100,25 +73,17 @@ LoadDocRegistry(LPCWSTR keyName)                                            /*
     }
 }
 
-/*============================================================================*/
-    BOOL CDoc::
-RegQueryBOOLValue(CRegKey& key, LPCWSTR pName)                              /*
-
-    Return the BOOL value of a specified value pName found in the
-    currently open registry key. Here, the boolean value is stored in a
-    DWORD slot, rather than a bool-sized slot.
-*-----------------------------------------------------------------------------*/
+// Return the BOOL value of a specified value pName found in the
+// currently open registry key.Here, the boolean value is stored in a
+// DWORD slot, rather than a bool - sized slot.
+BOOL CDoc::RegQueryBOOLValue(CRegKey& key, LPCWSTR pName)
 {
     return RegQueryDWORDValue(key, pName) & 1;
 }
 
-/*============================================================================*/
-    DWORD CDoc::
-RegQueryDWORDValue(CRegKey& key, LPCWSTR pName)                             /*
-
-    Return the DWORD value of a specified value pName found in the
-    currently open registry key.
-*-----------------------------------------------------------------------------*/
+// Return the DWORD value of a specified value pName found in the
+// currently open registry key.
+DWORD CDoc::RegQueryDWORDValue(CRegKey& key, LPCWSTR pName)
 {
     DWORD dw;
     if (ERROR_SUCCESS == key.QueryDWORDValue(pName, dw))
@@ -127,13 +92,9 @@ RegQueryDWORDValue(CRegKey& key, LPCWSTR pName)                             /*
         return 0;
 }
 
-/*============================================================================*/
-    SYSTEMTIME CDoc::
-RegQuerySYSTEMTIMEValue(CRegKey& key, LPCWSTR pName)                        /*
-
-    Return the SYSTEMTIME value of a specified value pName found in the
-    currently open registry key.
-*-----------------------------------------------------------------------------*/
+// Return the SYSTEMTIME value of a specified value pName found in the
+// currently open registry key.
+SYSTEMTIME CDoc::RegQuerySYSTEMTIMEValue(CRegKey& key, LPCWSTR pName)
 {
     SYSTEMTIME value;
     ULONG size = sizeof(SYSTEMTIME);
@@ -145,13 +106,9 @@ RegQuerySYSTEMTIMEValue(CRegKey& key, LPCWSTR pName)                        /*
     return value;
 }
 
-/*============================================================================*/
-    CString CDoc::
-RegQueryStringValue(CRegKey &key, LPCWSTR pName)                            /*
-
-    Return the CString value of a specified value pName found in the
-    currently open registry key.
-*-----------------------------------------------------------------------------*/
+// Return the CString value of a specified value pName found in the
+// currently open registry key.
+CString CDoc::RegQueryStringValue(CRegKey &key, LPCWSTR pName)
 {
     ULONG len = 256;
     CString sValue;
@@ -164,13 +121,9 @@ RegQueryStringValue(CRegKey &key, LPCWSTR pName)                            /*
         return L"";
 }
 
-/*============================================================================*/
-    void CDoc::
-SaveDocRegistry(LPCWSTR keyName)                                          /*
-
-    Write document value parameters into the registry key labelled
-    'HKEY_CURRENT_USER\Software\keyName\Document Settings'.
-*-----------------------------------------------------------------------------*/
+// Write document value parameters into the registry key labelled
+// 'HKEY_CURRENT_USER\Software\keyName\Document Settings'.
+void CDoc::SaveDocRegistry(LPCWSTR keyName)
 {
     CString strKey;
     strKey << L"Software\\" << keyName << L"\\Document Settings";
@@ -209,5 +162,4 @@ SaveDocRegistry(LPCWSTR keyName)                                          /*
         key.SetBinaryValue(L"MoCalendar1", static_cast<void*>(&m_calDateSysTime),
             size);
     }
-}/*---------------------------------------------------------------------------*/
-
+}

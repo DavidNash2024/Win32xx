@@ -108,7 +108,7 @@ namespace Win32xx
         virtual void OnPrint(){}              // Print button pressed.
 
         // Operations
-        INT_PTR DoModal(HWND owner /* = nullptr */) override;
+        INT_PTR DoModal(HWND owner = nullptr ) override;
         int GetCopies() const;
         CDevMode GetCurrentDevMode();
         CStringW GetCurrentPortName() const;

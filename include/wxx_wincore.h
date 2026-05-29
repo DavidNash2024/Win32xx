@@ -396,7 +396,7 @@ namespace Win32xx
         // Allow the WNDCLASS parameters to be modified.
         PreRegisterClass(wc);
 
-        // Register the window class if the class name is specified.
+        // Register the window class (if not already registered and the class name is specified).
         if (wc.lpszClassName)
             VERIFY(RegisterClass(wc));
 
@@ -422,6 +422,8 @@ namespace Win32xx
         // specified in PreCreate. The class name will default to "Win32++ Window"
         // if neither PreRegisterClass nor PreCreate specify a class name.
         LPCTSTR className = wc.lpszClassName ? wc.lpszClassName : cs.lpszClass;
+		if (cs.lpszClass != nullptr && cs.lpszClass != className)
+			TRACE("*** Warning: The class name specified in PreCreate is being ignored. The class name specified in PreRegisterClass will be used instead. ***\n");
 
         DWORD style = static_cast<DWORD>(cs.style & ~WS_VISIBLE);
         HWND wnd;
@@ -481,12 +483,11 @@ namespace Win32xx
         else
             classString = className;
 
+        // Register the window class with default settings (if not already registered).
         WNDCLASS wc = {};
         wc.lpszClassName = classString;
         wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
         wc.hCursor       = ::LoadCursor(nullptr, IDC_ARROW);
-
-        // Register the window class (if not already registered).
         VERIFY(RegisterClass(wc));
 
         // Retrieve this thread's TLS data.

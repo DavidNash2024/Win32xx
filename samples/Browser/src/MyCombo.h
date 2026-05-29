@@ -13,10 +13,13 @@ class CMyCombo : public CComboBoxEx
 public:
     CMyCombo() = default;
     virtual ~CMyCombo() override = default;
-    const CEdit* GetCBEdit() const { return &m_edit; }
+
+    // Return by reference to avoid invoking the (inaccessible) copy constructor.
+    const CEdit& GetCBEdit() const { return m_edit; }
 
 protected:
     virtual void OnAttach() override;
+    virtual void OnDestroy() override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
 
 private:

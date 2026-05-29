@@ -1,34 +1,26 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
-********************************************************************************
-|                                                                              |
-|               Authors: Robert C. Tausworthe, David Nash, 2020                |
-|                                                                              |
-===============================================================================*
-
-    Contents Description: Application resources file for this application.
-    Adapted to use Win32++ framework.
-
-/******************************************************************************/
-
 // Microsoft Visual C++ generated resource script (originally).
 
 #include "Resource.h"
 #include "windows.h"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
 
-  // English (United States) resources
-  #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
 
-  // RT_MANIFEST
 1           RT_MANIFEST                  "../src/res/SystemDPI.manifest"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
 
-  // Main Menu
 IDW_MAIN MENU
 {
     POPUP "&File"
@@ -56,21 +48,28 @@ IDW_MAIN MENU
     }
 }
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
 
-  // Icons:  The icon with the lowest ID value is placed first to ensure that
-  // the application icon remains consistent on all systems.
+// Icons:  The icon with the lowest ID value is placed first to ensure that
+// the application icon remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/Time.ico"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
 
-  // Bitmaps
 IDW_MAIN                 BITMAP                   "../src/res/Toolbar24.bmp"
 IDB_MENUICONS            BITMAP                   "../src/res/Toolbar16.bmp"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
 
-  // About Dialog: triggered by CFrame::OnHelp()
 IDW_ABOUT DIALOGEX 200, 200, 200, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
@@ -82,9 +81,11 @@ FONT 8, "MS Shell Dlg", 400, 0
     ICON    IDW_MAIN, 0, 4, 4, 20, 20
 }
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
 
-  // Accelerators
 IDW_MAIN ACCELERATORS
 {
     "N",            IDM_FILE_NEW,    VIRTKEY, CONTROL, NOINVERT
@@ -96,9 +97,11 @@ IDW_MAIN ACCELERATORS
     "Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
 }
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
 
-  // String Tables
 STRINGTABLE
 {
     IDW_MAIN                "TimeDemo Application"
@@ -137,6 +140,6 @@ STRINGTABLE
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 }
-/*----------------------------------------------------------------------------*/
-#endif    // English (U.S.) resources
 
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////

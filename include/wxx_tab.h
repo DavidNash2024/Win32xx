@@ -1289,7 +1289,7 @@ namespace Win32xx
             RemoveImage(image);
 
         if (pView == m_pActiveView)
-            m_pActiveView = 0;
+            m_pActiveView = nullptr;
 
         (*itTPI).pView->Destroy();
         m_allTabPageInfo.erase(itTPI);
@@ -2032,7 +2032,7 @@ namespace Win32xx
                 {
                     tabKeyName.Format(_T("Text%d"), i);
                     DWORD dwBufferSize = 0;
-                    if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(tabKeyName, 0, &dwBufferSize))
+                    if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(tabKeyName, nullptr, &dwBufferSize))
                     {
                         int bufferSize = static_cast<int>(dwBufferSize);
                         mdiChildKey.QueryStringValue(tabKeyName, TabText.GetBuffer(bufferSize), &dwBufferSize);

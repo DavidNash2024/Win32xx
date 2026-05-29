@@ -121,8 +121,6 @@
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/AboutDialog.h" />
-		<Unit filename="../src/Browser.cpp" />
-		<Unit filename="../src/Browser.h" />
 		<Unit filename="../src/Classes.cpp" />
 		<Unit filename="../src/Classes.h" />
 		<Unit filename="../src/Files.cpp" />

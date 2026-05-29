@@ -1,47 +1,29 @@
-/* (21-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
-********************************************************************************
-|                                                                              |
-|               Authors: Robert C. Tausworthe, David Nash, 2024                |
-|                                                                              |
-===============================================================================*
-
-    Contents Description:  Implementation of the CDoc class for this application
-    using the Win32++ framework. This particular formulation of the document
-    class presumes that the document source is a series of textual lines that
-    are accessed and formatted by the methods of this class and passed to the
-    CView object for display. In the present usage of this skeleton implementation,
-    a document is simulated as the results of computations illustrating the
-    capabilities of the CTime class, the numeric version information of the
-    Windows system, and the command line parameters.
-
-    Programming Notes: The programming style roughly follows that established
-    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-*******************************************************************************/
+/////////////////////////////////////////
+// Doc.h
+// Authors: Robert Tausworthe, David Nash
+//
 
 #include "stdafx.h"
 #include "App.h"
 
-  // local formats for displaying CTime values as strings
+// Local formats for displaying CTime values as strings.
 static const CString longDateFmt = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %Z");
 static const CString shortDateFmt = TEXT("%d-%b-%Y");
 static const CString simpleHMSFmt = TEXT("%I:%M:%S %p");
 
-  // static constant initialization: latest CDoc.cpp file compilation date
+// Latest CDoc.cpp file compilation date.
 const CString CDoc::m_compiledOn = __DATE__;
 
-/*============================================================================*/
-    CDoc::
-CDoc()                                                                      /*
+/////////////////////////////
+// CDoc function definitions.
+//
 
-    Construct the document object and load the document to be initially
-    displayed at the start of operations.
-*-----------------------------------------------------------------------------*/
+// Construct the document object and load the document to be initially
+// displayed at the start of operations.
+CDoc::CDoc()
 {
-      // create the document object, set default values, and set the
-      // initial document state
-
+    // Create the document object, set default values, and set the
+    // initial document state.
     m_fileDlgFilter =
         L"Time Demo Files (*.arc)\0"
         L"*.arc\0"
@@ -52,30 +34,23 @@ CDoc()                                                                      /*
     m_docPath.Empty();
     m_docWidth   = 0;
     m_docContent.clear();
-      // show initial document content for display
+
+    // Show initial document content for display
     NewDocument();
 }
 
-/*============================================================================*/
-    int CDoc::
-GetDocLength() const                                                        /*
-
-    Return the document length, in records.
-*----------------------------------------------------------------------------*/
+// Return the document length, in records.
+int CDoc::GetDocLength() const
 {
     return static_cast<int>(m_docContent.size());
 }
 
-/*============================================================================*/
-    CString CDoc::
-GetDocOpenFileName(const CString &title) const                              /*
-
-    Bring up the open file dialog and get the path of the file to open.
-    If none is given, return an empty path. Use the title as the dialog
-    window title.
-*-----------------------------------------------------------------------------*/
+// Bring up the open file dialog and get the path of the file to open.
+// If none is given, return an empty path. Use the title as the dialog
+// window title.
+CString CDoc::GetDocOpenFileName(const CString &title) const
 {
-    // Bring up the dialog, and  open the file
+    // Bring up the dialog, and  open the file.
     CString str;
     DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
     CFileDialog FileDlg(TRUE, nullptr, nullptr, dwFlags, m_fileDlgFilter);
@@ -90,35 +65,29 @@ GetDocOpenFileName(const CString &title) const                              /*
     return str;
 }
 
-/*============================================================================*/
-    CString CDoc::
-GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const      /*
-
-    Return a CString containing the document rcd record, starting at
-    the left position and continuing for length characters.
-*----------------------------------------------------------------------------*/
+// Return a CString containing the document rcd record, starting at
+// the left position and continuing for length characters.
+CString CDoc::GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const
 {
     int size = GetDocLength();
     if (size == 0 || rcd >= size || rcd < 0)
         return L"";
 
     CString s  = m_docContent[rcd];
-      // compute length of text to extract
+
+    // Compute length of text to extract.
     if (length < 0)
         length = s.GetLength();
     length = std::max(0, length - left);
-      // extract length chars after left position using base class
+
+    // Extract length chars after left position using base class.
     return s.Mid(left, length);
 }
 
-/*============================================================================*/
-    CString CDoc::
-GetDocSaveFileName(const CString &title) const                              /*
-
-    Bring up the file save dialog and get the path of file to save the
-    document in. If none is selected, return an empty path.  Use the title
-    as the window title.
-*-----------------------------------------------------------------------------*/
+// Bring up the file save dialog and get the path of file to save the
+// document in. If none is selected, return an empty path. Use the title
+// as the window title.
+CString CDoc::GetDocSaveFileName(const CString &title) const
 {
     CString str;
     TCHAR extbuff[10];
@@ -135,27 +104,19 @@ GetDocSaveFileName(const CString &title) const                              /*
     return str;
 }
 
-/*============================================================================*/
-    int CDoc::
-GetDocWidth() const                                                         /*
-
-    Return the document width, in characters.
-*----------------------------------------------------------------------------*/
+// Return the document width, in characters.
+int CDoc::GetDocWidth() const
 {
     return m_docWidth;
 }
 
-/*============================================================================*/
-    bool CDoc::
-OpenDoc(const CString &docFileName)                                         /*
-
-    Open the document having the given doc_file_name and load its contents
-    into the internal CString array.  Return true if the document was
-    opened, or false if not.
-*-----------------------------------------------------------------------------*/
+// Open the document having the given doc_file_name and load its contents
+// into the internal CString array. Return true if the document was
+// opened, or false if not.
+bool CDoc::OpenDoc(const CString &docFileName)
 {
-      // if there is a document already open with this file name,
-      // say so, and return
+    // If there is a document already open with this file name,
+    // say so, and return.
     if (!m_docPath.IsEmpty() && m_docPath.CompareNoCase(docFileName) == 0)
     {
         CString s;
@@ -166,7 +127,7 @@ OpenDoc(const CString &docFileName)                                         /*
         return true;
     }
 
-      // if the name does not exist, return
+    // If the name does not exist, return.
     if (docFileName.IsEmpty())
         return false;
 
@@ -176,8 +137,8 @@ OpenDoc(const CString &docFileName)                                         /*
         CArchive ar(docFileName, CArchive::load);
         ar >> *this;
     }
-    catch (const CException &e)  // catch CException events
-    {     // Process the exception and  quit
+    catch (const CException &e)
+    {
         CString msg;
         CString what(e.what());
         msg.Format(L"Error restoring the document.\n%s\n%s",
@@ -186,25 +147,22 @@ OpenDoc(const CString &docFileName)                                         /*
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
-    catch(...) // catch everything else
+    catch(...)
     {
         CString msg = L"Error restoring the document.\n";
         ::MessageBox(nullptr, msg.c_str(), L"Exception",
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
-      // register the open document
+
+    // Register the open document.
     m_docPath = docFileName;
     return true;
 }
 
-/*============================================================================*/
-    void CDoc::
-NewDocument()                                                               /*
-
-    For this TimeDemo, develop the ad hoc array of strings that contain the
-    results of various tests of the CTime class and Win32++ functions.
-*-----------------------------------------------------------------------------*/
+// For this TimeDemo, develop the ad hoc array of strings that contain the
+// results of various tests of the CTime class and Win32++ functions.
+void CDoc::NewDocument()
 {
     m_docContent.clear();
     m_docWidth = 0;
@@ -378,12 +336,13 @@ NewDocument()                                                               /*
     PushContent(s);
     PushContent(L"");
 
-      // Here we process the Win32++ access to command line arguments, and
-      // display them among the other tests in this demo. GetCommandLineArgs
-      // retrieves our command line arguments and stores them in a vector
-      // of CString.
+    // Here we process the Win32++ access to command line arguments, and
+    // display them among the other tests in this demo. GetCommandLineArgs
+    // retrieves our command line arguments and stores them in a vector
+    // of CString.
     std::vector<CString> args = GetCommandLineArgs();
-      // The second argument (if any) contains this app file name.
+
+    // The second argument (if any) contains this app file name.
     for (size_t i = 0; i < args.size(); i++)
     {
         s.Format(L"  argv(%d) = %s", i, args[i].c_str());
@@ -428,34 +387,29 @@ NewDocument()                                                               /*
     m_docPath.Empty();
 }
 
-/*============================================================================*/
-    CTime CDoc::
-GetTimeFromStr(LPCWSTR szTime, int nDST /* = -1 */) const                   /*
+// Construct a CTime as directed by the formatting CString timestr, whose
+// specifications appear below.Any nonconformity between timestr and
+// these expected format standards will result in throwing an exception.
+// Acceptable formats are :
+//
+// "yyyy/mo/da H:M:S"
+// "da-Mon-yyyy H:M:S"
+// "Month da, yyyy H:M:S"
+// "yyyy+doy H:M:S"
 
-    Construct a CTime as directed by the formatting CString timestr, whose
-    specifications appear below. Any nonconformity between timestr  and
-    these expected format standards will result in throwing an exception.
-    Acceptable formats are:
-
-        "yyyy/mo/da H:M:S"
-        "da-Mon-yyyy H:M:S"
-        "Month da, yyyy H:M:S"
-        "yyyy+doy H:M:S"
-
-    The year, month, day, hour, minute, and  second values must be consistent
-    with the requirements given in the description of the constructor of
-    CTime(year, month, day, hour, minute, second).  The date and  time
-    specifications are presumed to apply to the local zone. If H:M:S is not
-    present, then midnight is presumed, and  if just S is absent, zero
-    seconds is the default. The first form is assumed when the given date
-    string contains "/"; the second, when "-" appears; the third, when ","
-    is present; and  the fourth, when "+" is found.
-
-*---------------------------------------------------------------------------- - */
+// The year, month, day, hour, minute, and second values must be consistent
+// with the requirements given in the description of the constructor of
+// CTime(year, month, day, hour, minute, second). The date and time
+// specifications are presumed to apply to the local zone. If H : M:S is not
+// present, then midnight is presumed, and if just S is absent, zero
+// seconds is the default. The first form is assumed when the given date
+// string contains "/"; the second, when "-" appears; the third, when ","
+// is present; and the fourth, when "+" is found.
+CTime CDoc::GetTimeFromStr(LPCWSTR szTime, int nDST /* = -1 */) const
 {
     assert(szTime);
     CString timestr(szTime);
-    int  p1, p2, p3; // position indexes into timestr
+    int  p1, p2, p3; // Position indexes into timestr.
     int len = timestr.GetLength();
     int yyyy;   // year, 4 digits
     int mo;     // month 1 - 12
@@ -475,10 +429,11 @@ GetTimeFromStr(LPCWSTR szTime, int nDST /* = -1 */) const                   /*
                   L"Jul", L"Aug", L"Sep",
                   L"Oct", L"Nov", L"Dec"};
 
-    // find  H:M:S values
+    // Find  H:M:S values.
     p1 = std::min(timestr.Find(L':'), len);
     if (p1 >= 0)
-    {     // the time of day is present
+    {
+        // The time of day is present
         p2 = timestr.ReverseFind(L':');
         CString timestrLeft = timestr.Left(p1);
 
@@ -503,7 +458,7 @@ GetTimeFromStr(LPCWSTR szTime, int nDST /* = -1 */) const                   /*
     else // no ":" present
         H = M = S = 0;
 
-    // now handle the year, month and  day formats
+    // Now handle the year, month and  day formats.
     p1 = timestr.Find(L'/');
     if (p1 >= 0) // "yyyy/mo/da H:M:S"
     {
@@ -571,29 +526,21 @@ GetTimeFromStr(LPCWSTR szTime, int nDST /* = -1 */) const                   /*
     return CTime(0);
 }
 
-/*============================================================================*/
-    void  CDoc::
-PushContent(const CString &s)                                               /*
-
-    Insert the CString s at the bottom of the document content list  and
-    adjust the document maximum width indicator to accommodate s, if
-    necessary.
-*-----------------------------------------------------------------------------*/
+// Insert the CString s at the bottom of the document content list and
+// adjust the document maximum width indicator to accommodate s, if
+// necessary.
+void  CDoc::PushContent(const CString &s)
 {
     m_docContent.push_back(s);
     m_docWidth = std::max(m_docWidth, s.GetLength());
 }
 
-/*============================================================================*/
-    bool CDoc::
-SaveDoc()                                                                   /*
-
-    Save current CString array of the document into the currently named
-    source file path. Return true if able to do so, or false otherwise.
-*-----------------------------------------------------------------------------*/
+// Save current CString array of the document into the currently named
+// source file path. Return true if able to do so, or false otherwise.
+bool CDoc::SaveDoc()
 {
-      // if the current document was created as a new document that has
-      // not yet been saved, give it a name and then save it.
+    // If the current document was created as a new document that has
+    // not yet been saved, give it a name and then save it.
     if (m_docPath.IsEmpty())
     {
         m_docPath =
@@ -609,7 +556,7 @@ SaveDoc()                                                                   /*
     }
 
     catch (const CException& e)
-    {     // Process the exception and  quit
+    {
         CString msg;
         CString what(e.what());
         msg.Format(L"Error while saving document:\n%s\n%s",
@@ -625,53 +572,50 @@ SaveDoc()                                                                   /*
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
+
     return true;
 }
 
-/*============================================================================*/
-    bool CDoc::
-SaveDocAs()                                                                 /*
-
-    Get a new name for the document file and replace the old one with
-    this.  Save the newly named document and retain it as the current
-    document in memory. Return true if able to do so, false otherwise.
-*-----------------------------------------------------------------------------*/
+// Get a new name for the document file and replace the old one with
+// this.  Save the newly named document and retain it as the current
+// document in memory. Return true if able to do so, false otherwise.
+bool CDoc::SaveDocAs()
 {
     CString str = GetDocSaveFileName(L"Save file as...");
-      // check for user bail-out
+
+    // Check for user bail-out
     if (str.IsEmpty())
         return false;
 
-      // register the new name and save the document under its new name
+    // Register the new name and save the document under its new name.
     m_docPath = str;
     return SaveDoc();
 }
 
-/*============================================================================*/
-    void CDoc::
-Serialize(CArchive &ar)                                                     /*
-
-        Serialize or deserialize the CDoc document from the archive ar,
-    depending on the sense of ar.IsStoring().  Throw exceptions during
-    reading or writing if the process fails at any point.  Return true
-    if all goes well, or false if it didn't.
-*-----------------------------------------------------------------------------*/
+// Serialize or deserialize the CDoc document from the archive ar,
+// depending on the sense of ar.IsStoring().Throw exceptions during
+// reading or writing if the process fails at any point.Return true
+// if all goes well, or false if it didn't.
+void CDoc::Serialize(CArchive &ar)
 {
-        if (ar.IsStoring())
-        {     // storing the document
+    if (ar.IsStoring()) // Storing the document.
+    {
         UINT n = static_cast<UINT>(m_docContent.size());
-          // record the number of records to save
+
+        // Store the number of records to save.
         ar << n;
-          // save the records
+
+        // Store the records.
         for (UINT i = 0; i < n; i++)
             ar << m_docContent[i];
     }
-        else // recovering
-        {
-          // recover the number of records
+    else // Loading the document.
+    {
+        // Load the number of records.
         UINT n;
         ar >> n;
-          // read in the individual records
+
+        // Load the individual records.
         CString s;
         for (UINT i = 0; i < n; i++)
         {
@@ -680,4 +624,3 @@ Serialize(CArchive &ar)                                                     /*
         }
     }
 }
-/*----------------------------------------------------------------------------*/

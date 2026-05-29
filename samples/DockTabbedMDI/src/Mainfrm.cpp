@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "Mainfrm.h"
-#include "Browser.h"
 #include "Classes.h"
 #include "Files.h"
 #include "MyDialog.h"
@@ -82,7 +81,6 @@ void CMainFrame::LoadDefaultDockers()
 void CMainFrame::LoadDefaultMDIs()
 {
     // Add some MDI tabs
-    m_myTabbedMDI.AddMDIChild(make_unique<CViewWeb>(), L"Browser", ID_MDI_WEB);
     m_myTabbedMDI.AddMDIChild(make_unique<CViewRect>(), L"Rectangles", ID_MDI_RECT);
     m_myTabbedMDI.AddMDIChild(make_unique<CViewText>(), L"TextView", ID_MDI_TEXT);
     m_myTabbedMDI.AddMDIChild(make_unique<CViewClasses>(), L"Classes", ID_MDI_CLASSES);
@@ -165,7 +163,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_CONTAINER_TOP:     return OnContainerTabsAtTop();
     case IDM_DEFAULT_LAYOUT:    return OnDefaultLayout();
     case IDM_FILE_NEW:          return OnFileNew();
-    case IDM_FILE_NEWBROWSER:   return OnFileNewBrowser();
     case IDM_FILE_NEWRECT:      return OnFileNewRect();
     case IDM_FILE_NEWTEXT:      return OnFileNewText();
     case IDM_FILE_NEWTREE:      return OnFileNewTree();
@@ -300,13 +297,6 @@ BOOL CMainFrame::OnFileNewList()
 BOOL CMainFrame::OnFileNewRect()
 {
     m_myTabbedMDI.AddMDIChild(make_unique<CViewRect>(), L"Rectangles", ID_MDI_RECT);
-    return TRUE;
-}
-
-// Adds a MDI with a Browser view.
-BOOL CMainFrame::OnFileNewBrowser()
-{
-    m_myTabbedMDI.AddMDIChild(make_unique<CViewWeb>(), L"Browser", ID_MDI_WEB);
     return TRUE;
 }
 
@@ -562,7 +552,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
-        str2 << "Error: " << e.what();
+        str2 << L"Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 

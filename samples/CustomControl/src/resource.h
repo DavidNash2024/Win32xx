@@ -10,6 +10,7 @@
 //Resource IDs for the dialog
 #define IDD_DIALOG1                     121
 #define IDC_CUSTOMWEB                   122
+#define IDS_APP_TITLE                   123
 
 // Next default values for new objects
 //

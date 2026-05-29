@@ -16,6 +16,11 @@ void CMyCombo::OnAttach()
     m_edit.Attach(GetEditCtrl());
 }
 
+void CMyCombo::OnDestroy()
+{
+    m_edit.Detach();
+}
+
 // Set the CREATESTRUCT parameters before the window is created.
 void CMyCombo::PreCreate(CREATESTRUCT& cs)
 {

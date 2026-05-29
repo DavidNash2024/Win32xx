@@ -239,7 +239,7 @@ namespace Win32xx
         CString searchName = m_root + m_findData.cFileName;
         CString filePath;
 
-        int buffSize = static_cast<int>(::GetFullPathName(searchName, 0, 0, 0));
+        int buffSize = static_cast<int>(::GetFullPathName(searchName, 0, nullptr, nullptr));
         if (buffSize > 0)
         {
             ::GetFullPathName(searchName, static_cast<DWORD>(buffSize), filePath.GetBuffer(buffSize), nullptr);

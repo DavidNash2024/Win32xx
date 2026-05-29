@@ -1,7 +1,7 @@
 [Project]
 FileName=TabbedMDI_RELEASE.dev
 Name=TabbedMDI
-UnitCount=26
+UnitCount=24
 Type=0
 Ver=2
 ObjFiles=
@@ -32,26 +32,6 @@ LogOutput=
 LogOutputEnabled=0
 
 [Unit3]
-FileName=..\src\Classes.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit4]
-FileName=..\src\Classes.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
 FileName=..\src\Files.cpp
 CompileCpp=1
 Folder=Source
@@ -61,7 +41,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit4]
 FileName=..\src\Files.h
 CompileCpp=1
 Folder=Header
@@ -71,17 +51,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit5]
 FileName=..\src\main.cpp
+CompileCpp=1
 Folder=Source
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-CompileCpp=1
 
-[Unit8]
+[Unit6]
 FileName=..\src\Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -91,17 +71,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=..\src\Mainfrm.h
-CompileCpp=1
 Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit10]
+[Unit8]
 FileName=..\src\MyDialog.cpp
 CompileCpp=1
 Folder=Source
@@ -111,7 +91,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit9]
 FileName=..\src\MyDialog.h
 CompileCpp=1
 Folder=Header
@@ -121,7 +101,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit10]
 FileName=..\src\MyTabbedMDI.cpp
 CompileCpp=1
 Folder=Source
@@ -131,7 +111,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit11]
 FileName=..\src\MyTabbedMDI.h
 CompileCpp=1
 Folder=Header
@@ -141,7 +121,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit12]
 FileName=..\src\Output.cpp
 CompileCpp=1
 Folder=Source
@@ -151,8 +131,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit13]
 FileName=..\src\Output.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\Rect.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=..\src\Rect.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -181,26 +181,6 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit16]
-FileName=..\src\Rect.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
-FileName=..\src\Rect.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit18]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -210,27 +190,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit1]
-FileName=..\src\Browser.cpp
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-CompileCpp=1
-
-[Unit2]
-FileName=..\src\Browser.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit19]
+[Unit17]
 FileName=..\src\Resource.rc
 CompileCpp=1
 Folder=Resource
@@ -240,7 +200,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit18]
 FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -250,7 +210,27 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit1]
+FileName=..\src\Classes.cpp
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit2]
+FileName=..\src\Classes.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
@@ -260,7 +240,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit20]
 FileName=..\src\TabbedMDIApp.cpp
 CompileCpp=1
 Folder=Source
@@ -270,7 +250,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit21]
 FileName=..\src\TabbedMDIApp.h
 CompileCpp=1
 Folder=Header
@@ -280,10 +260,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit22]
 FileName=..\src\Text.cpp
 CompileCpp=1
 Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=..\src\Text.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit24]
+FileName=..\src\AboutDialog.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

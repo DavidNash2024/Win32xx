@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "MyTabbedMDI.h"
-#include "Browser.h"
 #include "Classes.h"
 #include "Files.h"
 #include "Output.h"
@@ -37,9 +36,6 @@ WndPtr CMyTabbedMDI::NewMDIChildFromID(int mdiChild)
         break;
     case ID_MDI_RECT:
         view = make_unique<CViewRect>();
-        break;
-    case ID_MDI_WEB:
-        view = make_unique<CViewWeb>();
         break;
     default:
         TRACE("Unknown TabbedMDI id\n");
@@ -76,7 +72,7 @@ LRESULT CMyTabbedMDI::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
-        str2 << "Error: " << e.what();
+        str2 << L"Error: " << e.what();
         ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 

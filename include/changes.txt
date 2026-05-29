@@ -1,3 +1,14 @@
+Version 10.2.1
+==============
+This version updates the samples shipped with Win32++.
+
+New Features and Enhancements
+-----------------------------
+* Added project files for Visual Studio 2026.
+* Updated the Help About Dialog to display the Win32++ version.
+* Updated the Browser sample to use Microsoft's WebView2 control.
+* Updated the CustomControl sample to use Microsoft's WebView2 control.
+
 Version 10.2
 ============
 This version adds the CFolderDialogEx class, the CPager class, the
@@ -656,7 +667,7 @@ This version adds print preview support to the framework, and support for
 Microsoft Visual Studio Community 2019.
 
 The following classes have been added:
-* CPrintPage
+* CPrintPreview
 * CHGlobal
 * CGlobalLock
 

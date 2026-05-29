@@ -1,44 +1,32 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                (AboutBox.h) *
-********************************************************************************
-|                                                                              |
-|               Authors: Robert C. Tausworthe, David Nash, 2020                |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// AboutBox.h
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: Declaration of the AboutBox dialog for this
-    application using the Win32++ framework.
-
-    Programming Notes: The programming style roughly follows that established
-    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-*******************************************************************************/
 
 #ifndef ABOUT_BOX_H_DEFINED
 #define ABOUT_BOX_H_DEFINED
 
-/*============================================================================*/
-    class
-AboutBox        : public CDialog                                        /*
-
-*-----------------------------------------------------------------------------*/
+///////////////////////////////////////////////////////////////////////////////
+// The about dialog box. It is responsible for displaying the about information
+// about the application. It is derived from CDialog, which provides the basic
+// dialog functionality for the about box.
+class AboutBox : public CDialog
 {
-    public:
-        AboutBox();
-        virtual ~AboutBox() override = default;
+public:
+    AboutBox();
+    virtual ~AboutBox() override = default;
 
-        void SetStatus(const CString& status) { m_status = status; }
+    void SetStatus(const CString& status) { m_status = status; }
 
-    protected:
-        virtual BOOL OnInitDialog() override;
+protected:
+    virtual BOOL OnInitDialog() override;
 
-    private:
-        AboutBox(const AboutBox&) = delete;
-        AboutBox& operator=(const AboutBox&) = delete;
+private:
+    AboutBox(const AboutBox&) = delete;
+    AboutBox& operator=(const AboutBox&) = delete;
 
-        CString m_status;
-
+    CString m_status;
 };
-/*----------------------------------------------------------------------------*/
-#endif // ABOUT_BOX_H_DEFINED
 
+#endif // ABOUT_BOX_H_DEFINED

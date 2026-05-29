@@ -63,7 +63,6 @@ private:
     BOOL OnDefaultLayout();
     BOOL OnFileNew();
     BOOL OnFileExit();
-    BOOL OnFileNewBrowser();
     BOOL OnFileNewRect();
     BOOL OnFileNewList();
     BOOL OnFileNewText();

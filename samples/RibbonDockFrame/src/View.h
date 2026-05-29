@@ -25,8 +25,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CView(const CView&);               // Disable copy construction
-    CView& operator=(const CView&);    // Disable assignment operator
+    CView(const CView&) = delete;
+    CView& operator=(const CView&) = delete;
 
     // Message handlers
     LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);

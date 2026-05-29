@@ -69,7 +69,6 @@
 #include <wxx_time.h>           // Add CTime
 #include <wxx_toolbar.h>        // Add CToolBar
 #include <wxx_treeview.h>       // Add CTreeView
-#include <wxx_webbrowser.h>     // Add CWebBrowser, CAXHost
 #include <wxx_wincore.h>        // Add CWnd
 
 // WIN32_LEAN_AND_MEAN can't be used with these
@@ -78,11 +77,10 @@
   #include <wxx_folderdialogex.h> // Add CFolderDialogEx
   #include <wxx_preview.h>        // Add CPrintPreview
   #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
-  #include <wxx_printdialogex.h>  // Add CPrintDialogEx
   #include <wxx_taskdialog.h>     // Add CTaskDialog
 
   // Visual Studio
-  #if defined (_MSC_VER)
+  #if defined (_MSC_VER) && (_MSC_VER >= 1930)  // >= VS2022
     #include <wxx_ribbon.h>       // Add CRibbon, CRibbonFrame
   #endif
 

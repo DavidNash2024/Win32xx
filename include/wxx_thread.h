@@ -135,7 +135,7 @@ namespace Win32xx
     // CThreadT constructor.
     template <class T>
     inline CThreadT<T>::CThreadT(PTHREADPROC pThreadProc, LPVOID pParam) :
-        m_pThreadProc(0), m_pThreadParams(0), m_thread(0), m_threadID(0)
+        m_pThreadProc(nullptr), m_pThreadParams(nullptr), m_thread(0), m_threadID(0)
     {
         m_pThreadProc = pThreadProc;
         m_pThreadParams = pParam;

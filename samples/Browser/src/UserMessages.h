@@ -7,17 +7,27 @@
 
 
 // User defined messages used in this application.
-#define UWM_BEFORENAVIGATE        (WM_APP + 0x0001)
-#define UWM_COMMANDSTATECHANGE    (WM_APP + 0x0002)
-#define UWM_DOCUMENTCOMPLETE      (WM_APP + 0x0003)
-#define UWM_DOWNLOADBEGIN         (WM_APP + 0x0004)
-#define UWM_DOWNLOADCOMPLETE      (WM_APP + 0x0005)
-#define UWM_NAVIGATECOMPLETE2     (WM_APP + 0x0006)
-#define UWM_NEWWINDOW2            (WM_APP + 0x0007)
-#define UWM_PROGRESSCHANGE        (WM_APP + 0x0008)
-#define UWM_PROPERTYCHANGE        (WM_APP + 0x0009)
-#define UWM_STATUSTEXTCHANGE      (WM_APP + 0x000A)
-#define UWM_TITLECHANGE           (WM_APP + 0x000B)
+#define UWM_HISTORYCHANGED        (WM_APP + 0x0001)
+#define UWM_NAVIGATIONCOMPLETED   (WM_APP + 0x0002)
+#define UWM_NAVIGATIONSTARTED     (WM_APP + 0x0003)
+#define UWM_SOURCECHANGED         (WM_APP + 0x0004)
+
+
+// UWM_HISTORYCHANGED parameters
+//   wparam - This parameter is not used.
+//   lparam - This parameter is not used.
+
+// UWM_NAVIGATIONCOMPLETED parameters
+//   wparam - is a BOOL value, TRUE for navigation success, FALSE otherwise.
+//   lparam - This parameter is not used.
+
+// UWM_NAVIGATIONSTARTED parameters
+//   wparam - This parameter is not used.
+//   lparam - This parameter is not used.
+
+// UWM_SOURCECHANGED parameters
+//   wparam - This parameter is not used.
+//   lparam - Pointer to a null-terminated string that is webview's source URI.
 
 
 #endif // _USER_MESSAGES_H_

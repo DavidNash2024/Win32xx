@@ -2621,7 +2621,7 @@ namespace Win32xx
     inline void CDC::SolidFill(COLORREF color, RECT rc) const
     {
         COLORREF oldColor = SetBkColor(color);
-        VERIFY(ExtTextOut(0, 0, ETO_OPAQUE, rc, nullptr, 0, 0));
+        VERIFY(ExtTextOut(0, 0, ETO_OPAQUE, rc, nullptr, 0, nullptr));
         SetBkColor(oldColor);
     }
 
@@ -2697,7 +2697,7 @@ namespace Win32xx
 
         // Create a stock bitmap to replace the current one.
         CBitmap bitmap;
-        bitmap.CreateBitmap(1, 1, 1, 1, 0);
+        bitmap.CreateBitmap(1, 1, 1, 1, nullptr);
 
         return SelectObject(bitmap);
     }

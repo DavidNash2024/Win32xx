@@ -1,54 +1,40 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]             (MyButton.cpp) *
-********************************************************************************
-|                                                                              |
-|                      Author: Robert C. Tausworthe, 2020                      |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// MyButton.cpp
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: The CMyButton class implementation. This class is
-    derived from the CButton class found in the Win32++ Windows interface
-    classes. It permits individual settings of the parameters of owner-drawn
-    button controls on dialog forms.
-
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-    Acknowledgement: The author would like to thank and acknowledge the advice,
-    critical review, insight, and assistance provided by David Nash in the
-    development of this work.
-
-*******************************************************************************/
 
 #include "stdafx.h"
 #include "MyButton.h"
 
-/*============================================================================*/
-    void CMyButton::
-DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)                     /*
+//////////////////////////////////
+// CMyButton function definitions.
+//
 
-    Custom draw the item specified in lpDrawItemStruct: here a button.
-    Invoked by the view for the owner-drawn button in response to the
-    WM_DRAWITEM system message. An owner-drawn button has the BS_OWNERDRAW
-    style set. Also see the BS_ style values.
-*-----------------------------------------------------------------------------*/
+// Custom draw the button. This function is called in response to the
+// WM_DRAWITEM system message. An owner drawn button has the BS_OWNERDRAW
+// style set.
+void CMyButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
-      // get the device context and attach the button handle to it
-    CDC dc;
-    dc.Attach(lpDrawItemStruct->hDC);
-      // determine the button rectangle
+    // Retrieve the device context.
+    CDC dc(lpDrawItemStruct->hDC);
+
+    // Determine the button rectangle.
     CRect rect = lpDrawItemStruct->rcItem;
-      // draw in the button text
+
+    // Draw in the button text.
     dc.DrawText(GetWindowText(), -1, rect, DT_CENTER | DT_VCENTER |
         DT_SINGLELINE);
-      // get the current state of the button
+
+    // Get the current state of the button.
     UINT state = lpDrawItemStruct->itemState;
-    if ( (state & ODS_SELECTED) )   // if it is pressed
-        dc.DrawEdge(rect, EDGE_SUNKEN, BF_RECT); // draw a sunken face
+    if ( (state & ODS_SELECTED) )   // If it is pressed.
+        dc.DrawEdge(rect, EDGE_SUNKEN, BF_RECT); // Draw a sunken face.
     else
-        dc.DrawEdge(rect, EDGE_RAISED, BF_RECT); // draw a raised face
-      // draw the focus rectangle, a dotted rectangle just inside the
-      // button rectangle when the button has the focus.
+        dc.DrawEdge(rect, EDGE_RAISED, BF_RECT); // Draw a raised face.
+
+    // Draw the focus rectangle, a dotted rectangle just inside the
+    // button rectangle when the button has the focus.
     if (lpDrawItemStruct->itemAction & ODA_FOCUS)
     {
         int iChange = 3;
@@ -59,4 +45,3 @@ DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)                     /*
         dc.DrawFocusRect(rect);
     }
 }
-/*----------------------------------------------------------------------------*/

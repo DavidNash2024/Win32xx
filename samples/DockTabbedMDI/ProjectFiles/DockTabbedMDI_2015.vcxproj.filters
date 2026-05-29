@@ -34,9 +34,6 @@
     <ClCompile Include="..\src\Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Browser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Classes.h">
@@ -74,9 +71,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\default_resource.h">
       <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Browser.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_archive.h">
       <Filter>Win32++</Filter>

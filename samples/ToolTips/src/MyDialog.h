@@ -20,8 +20,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CBalloonToolTip(const CBalloonToolTip&);               // Disable copy construction
-    CBalloonToolTip& operator=(const CBalloonToolTip&);    // Disable assignment operator
+    CBalloonToolTip(const CBalloonToolTip&) = delete;
+    CBalloonToolTip& operator=(const CBalloonToolTip&) = delete;
 };
 
 
@@ -42,8 +42,8 @@ protected:
     virtual void OnOK() override;
 
 private:
-    CMyDialog(const CMyDialog&);                // Disable copy construction
-    CMyDialog& operator=(const CMyDialog&);   // Disable assignment operator
+    CMyDialog(const CMyDialog&) = delete;
+    CMyDialog& operator=(const CMyDialog&) = delete;
 
     // Command handlers
     BOOL OnButton();

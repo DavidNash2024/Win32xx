@@ -1,7 +1,7 @@
 [Project]
 FileName=CommonDialogs_RELEASE.dev
 Name=CommonDialogs
-UnitCount=31
+UnitCount=30
 Type=0
 Ver=2
 ObjFiles=
@@ -71,9 +71,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=..\src\View.h
+FileName=..\src\main.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -171,9 +171,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=..\src\View.cpp
+FileName=..\src\View.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -181,7 +181,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=..\src\MyFindReplaceDlg.cpp
+FileName=..\src\MyPrintDialog.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -271,7 +271,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=..\src\main.cpp
+FileName=..\src\MyFindReplaceDlg.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -491,9 +491,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
-FileName=..\src\StdApp.h
+FileName=..\src\View.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

@@ -98,7 +98,7 @@ namespace Win32xx
         CString tabText;
         int tabImage;
         CDockContainer* pContainer;
-        ContainerInfo() : tabImage(0), pContainer(0) {}
+        ContainerInfo() : tabImage(0), pContainer(nullptr) {}
     };
 
     //////////////////////////////////////////////////////////////////////
@@ -1223,7 +1223,7 @@ namespace Win32xx
     inline LRESULT CDocker::CDockClient::OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         m_isTracking = FALSE;
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION | DS_NO_CLOSE)) && m_pDocker->IsUndockable())
+        if ((m_pDocker != nullptr) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION | DS_NO_CLOSE)) && m_pDocker->IsUndockable())
         {
             CWindowDC dc(*this);
             DrawCloseButton(dc);
@@ -1693,7 +1693,7 @@ namespace Win32xx
 
     // Constructor.
     inline CDocker::CTargetCentre::CTargetCentre() : m_isOverContainer(FALSE),
-        m_pOldDockTarget(0)
+        m_pOldDockTarget(nullptr)
     {
         m_image.LoadBitmap(IDW_SDCENTER);
     }
@@ -2271,7 +2271,7 @@ namespace Win32xx
             GetDockBar().ShowWindow(SW_HIDE);
 
         VERIFY(SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_NOSENDCHANGING | SWP_HIDEWINDOW | SWP_NOREDRAW));
-        m_pDockParent = 0;
+        m_pDockParent = nullptr;
         SetParent(0);
 
         DWORD styleShow = showUndocked ? SWP_SHOWWINDOW : 0U;
@@ -2567,7 +2567,7 @@ namespace Win32xx
             }
         }
 
-        return 0;
+        return nullptr;
     }
 
     // Returns the child docker that has the specified view.
@@ -2697,7 +2697,7 @@ namespace Win32xx
     // Could be the dock ancestor or an undocked docker.
     inline CDocker* CDocker::GetTopmostDocker() const
     {
-        CDocker* pDockTopLevel = (CDocker* const)this;
+        CDocker* pDockTopLevel = const_cast<CDocker*>(this);
 
         while (pDockTopLevel->GetDockParent())
         {
@@ -3538,13 +3538,13 @@ namespace Win32xx
                 VERIFY(::SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &isEnabled, 0));
 
                 // Turn on DragFullWindows for this move.
-                VERIFY(::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0));
+                VERIFY(::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, nullptr, 0));
 
                 // Process this message.
                 DefWindowProc(WM_SYSCOMMAND, wparam, lparam);
 
                 // Return DragFullWindows to its previous state.
-                VERIFY(::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, isEnabled, 0, 0));
+                VERIFY(::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, isEnabled, nullptr, 0));
                 return 0;
             }
         default:
@@ -4701,7 +4701,7 @@ namespace Win32xx
             return m_pContainerParent->m_allInfo[index].pContainer;
         }
         else
-            return 0;
+            return nullptr;
     }
 
     // Returns a pointer to the active view window, or nullptr if there is no active view.
@@ -4710,7 +4710,7 @@ namespace Win32xx
         if (GetActiveContainer())
             return GetActiveContainer()->GetView();
         else
-            return 0;
+            return nullptr;
     }
 
     // Returns a reference to the vector of container information

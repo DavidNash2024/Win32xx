@@ -1,60 +1,50 @@
-/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (Doc.h) *
-********************************************************************************
-|                                                                              |
-|               Authors: Robert C. Tausworthe, David Nash, 2020                |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// Doc.h
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: Declaration of the the CDoc class for this application
-    using the Win32++ framework, Copyright (c) 2005-2020 David Nash, under
-    permissions granted therein.
-
-    Programming Notes: The programming style roughly follows that established
-    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-*******************************************************************************/
 
 #ifndef SDI_DOC_H
 #define SDI_DOC_H
 
-/*============================================================================*/
-    class
-CDoc : public CObject                           /*
-    Application document interface class
-*-----------------------------------------------------------------------------*/
+///////////////////////////////////////////////////////////////////////////////
+// The document class. It is responsible for maintaining the document content,
+// and for handling the file operations, such as opening and saving the
+// document. It is derived from CObject, which provides the basic serialization
+// functionality for the document.
+class CDoc : public CObject
 {
-    public:
+public:
 
-        CDoc();
-        virtual ~CDoc() override = default;
+    CDoc();
+    virtual ~CDoc() override = default;
 
-        int     GetDocLength() const;
-        CString GetDocOpenFileName(const CString&) const;
-        const CString&
-                GetDocPath() const      { return m_docPath; }
-        CString GetDocRecord(int, int left = 0, int length = -1) const;
-        CString GetDocSaveFileName(const CString&) const;
-        int     GetDocWidth() const;
-        CTime   GetTimeFromStr(LPCWSTR szTime, int nDST = -1 ) const;
-        bool    OpenDoc(const CString &);
-        void    NewDocument();
-        void    PushContent(const CString&);
-        bool    SaveDoc();
-        bool    SaveDocAs();
-        CString Truth(bool b)           {return b ? L"true" : L"false";}
+    int     GetDocLength() const;
+    CString GetDocOpenFileName(const CString&) const;
+    const CString&
+            GetDocPath() const      { return m_docPath; }
+    CString GetDocRecord(int, int left = 0, int length = -1) const;
+    CString GetDocSaveFileName(const CString&) const;
+    int     GetDocWidth() const;
+    CTime   GetTimeFromStr(LPCWSTR szTime, int nDST = -1 ) const;
+    bool    OpenDoc(const CString &);
+    void    NewDocument();
+    void    PushContent(const CString&);
+    bool    SaveDoc();
+    bool    SaveDocAs();
+    CString Truth(bool b)           {return b ? L"true" : L"false";}
 
-      // public data members
-        static const    CString m_compiledOn;  // date, mmm dd yyyy
+    // Public data members.
+    static const    CString m_compiledOn;  // date, mmm dd yyyy
 
-    protected:
-        virtual void    Serialize(CArchive& ar) override;
+protected:
+    virtual void    Serialize(CArchive& ar) override;
 
-    private:
-        CString     m_docPath;
-        int         m_docWidth;             // length, in characters
-        LPCWSTR     m_fileDlgFilter;        // file dialog filter
-        std::vector<CString> m_docContent;  // array of document lines
+private:
+    CString     m_docPath;
+    int         m_docWidth;             // Length, in characters.
+    LPCWSTR     m_fileDlgFilter;        // File dialog filter.
+    std::vector<CString> m_docContent;  // Array of document lines.
 };
-/*----------------------------------------------------------------------------*/
-#endif //SDI_DOC_H
+
+#endif // SDI_DOC_H

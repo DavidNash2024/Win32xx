@@ -477,7 +477,7 @@ namespace Win32xx
     {
         LPTSTR pShortFileName = nullptr;
 
-        DWORD buffSize = ::GetFullPathName(fileName, 0, 0, 0);
+        DWORD buffSize = ::GetFullPathName(fileName, 0, nullptr, nullptr);
         int buffer = static_cast<int>(buffSize);
         if (buffer > 0)
         {

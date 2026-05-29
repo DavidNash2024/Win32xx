@@ -30,7 +30,7 @@ namespace Calc
         virtual double Calc() const = 0;
         virtual ~Node() {}
     private:
-        Node& operator=(const Node&);       // Disable copy constructor
+        Node& operator=(const Node&) = delete;
     };
 
 

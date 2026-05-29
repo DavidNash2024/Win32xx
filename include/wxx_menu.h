@@ -121,7 +121,7 @@ namespace Win32xx
         BOOL LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate);
 
         // Menu Operations
-        BOOL TrackPopupMenu(UINT flags, int x, int y, HWND wnd, LPCRECT pRect = 0) const;
+        BOOL TrackPopupMenu(UINT flags, int x, int y, HWND wnd, LPCRECT pRect = nullptr) const;
         BOOL TrackPopupMenuEx(UINT flags, int x, int y, HWND wnd, LPTPMPARAMS pTPMP) const;
 
         // Menu Item Operations

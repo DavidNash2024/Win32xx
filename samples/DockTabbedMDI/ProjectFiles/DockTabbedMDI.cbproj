@@ -358,12 +358,6 @@
         <None Include="..\src\AboutDialog.h">
             <BuildOrder>79</BuildOrder>
         </None>
-        <CppCompile Include="..\src\Browser.cpp">
-            <BuildOrder>0</BuildOrder>
-        </CppCompile>
-        <None Include="..\src\Browser.h">
-            <BuildOrder>1</BuildOrder>
-        </None>
         <CppCompile Include="..\src\Classes.cpp">
             <BuildOrder>2</BuildOrder>
         </CppCompile>

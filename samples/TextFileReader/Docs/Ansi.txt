@@ -1,3 +1,0 @@
-This is some "Ansi" text.
-
-Notepad++ reports this as : UTF-8

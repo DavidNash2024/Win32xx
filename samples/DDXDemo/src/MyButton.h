@@ -1,45 +1,27 @@
-/* (20-Oct-2024) [Tab/Indent: 8/8][Line/Box: 80/74]               (MyButton.h) *
-********************************************************************************
-|                                                                              |
-|                      Author: Robert C. Tausworthe, 2020                      |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// MyButton.h
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: The CMyButton class declaration. This class is
-    derived from the CButton class found in the Win32++ Windows interface
-    classes. It permits individual settings of the parameters of owner-drawn
-    button controls on dialog forms.
-
-    Programming Notes: The programming style roughly follows that established
-    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-    Acknowledgement: The author would like to thank and acknowledge the advice,
-    critical review, insight, and assistance provided by David Nash in the
-    development of this work.
-
-*******************************************************************************/
 
 #ifndef CMyButton_H
 #define CMyButton_H
 
-/******************************************************************************/
-    class
-CMyButton : public CButton                                                  /*
 
-    This class extends the CButton class to permit owner-drawn buttons.
-*-----------------------------------------------------------------------------*/
+////////////////////////////////////////////////////////
+// The CMyButton class manages the owner-drawn button controls
+// on dialog forms.
+class CMyButton : public CButton
 {
-    public:
-        CMyButton() = default;
-        virtual ~CMyButton() override = default;
+public:
+    CMyButton() = default;
+    virtual ~CMyButton() override = default;
 
-        void DrawItem(LPDRAWITEMSTRUCT);
+    void DrawItem(LPDRAWITEMSTRUCT);
 
-    private:
-        CMyButton(const CMyButton&) = delete;
-        CMyButton& operator=(const CMyButton&) = delete;
+private:
+    CMyButton(const CMyButton&) = delete;
+    CMyButton& operator=(const CMyButton&) = delete;
 };
 
-/*----------------------------------------------------------------------------*/
 #endif  // CMyButton_H

@@ -1,28 +1,24 @@
-/* (12-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
-********************************************************************************
-|                                                                              |
-|                    Authors: Robert Tausworthe, David Nash                    |
-|                                                                              |
-===============================================================================*
+/////////////////////////////////////////
+// resource.h
+// Authors: Robert Tausworthe, David Nash
+//
 
-    Contents Description: Definitions of this application's resource identifiers.
+// The specification of IDs for resource objects generally adhere to prefixes
+// as shown in the following table.
+//
+// Entity id   Object
+// IDP_        Message-box prompt
+// IDD_        Dialog-box id
+// ID_         Standard MFC toolbar and menu command
+// IDT_        Toolbar command
+// IDM_        Menu command
+// IDR_        Frame-related resource
+// IDC_        Control resource
+// IDW_        Win32++ default resources
 
-    Special Conventions:  The specification of IDs for resource objects
-    generally adhere to prefixes as shown in the following table. Note
-    that different kinds of resource objects have different prefixes to
-    distinguish the types of entities they belong to:
 
-        Entity id   Object
-        IDP_        Message-box prompt
-        IDD_        Dialog-box id
-        ID_         Standard MFC toolbar and menu command
-        IDT_        Toolbar command
-        IDM_        Menu command
-        IDR_        Frame-related resource
-        IDC_        Control resource
-        IDW_        Win32++ default resources.
-
-*******************************************************************************/
+#ifndef RESOURCE_H_DEFINED
+#define RESOURCE_H_DEFINED
 
   // Include the Resource IDs defined by Win32++, numbered 51 - 99.
   // These are prefixed by IDW_.
@@ -88,4 +84,5 @@
 #define IDC_STATIC1                     200
 #define IDC_STATIC2                     201
 
-/*----------------------------------------------------------------------------*/
+
+#endif // RESOURCE_H_DEFINED

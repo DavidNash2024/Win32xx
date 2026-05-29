@@ -1,5 +1,7 @@
-/////////////////////////////////////////////
-// AboutDialog.h
+/////////////////////////////////////////
+// AboutBox.h
+// Authors: Robert Tausworthe, David Nash
+//
 
 #ifndef _ABOUTDIALOG_H_
 #define _ABOUTDIALOG_H_

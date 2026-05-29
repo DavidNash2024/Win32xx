@@ -20,14 +20,14 @@ void CBrowserWindow::CheckFailure(HRESULT hr, LPCWSTR errorMessage)
 {
     if (FAILED(hr))
     {
-        std::wstring message;
+        CString message;
         if (!errorMessage || !errorMessage[0])
         {
-            message = std::wstring(L"Something went wrong.");
+            message = L"Something went wrong.";
         }
         else
         {
-            message = std::wstring(errorMessage);
+            message = errorMessage;
         }
 
         ::MessageBoxW(nullptr, message.c_str(), nullptr, MB_OK);
@@ -879,7 +879,7 @@ LRESULT CBrowserWindow::WndProc(UINT message, WPARAM wparam, LPARAM lparam)
         str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
-        str2 << "Error: " << e.what();
+        str2 << L"Error: " << e.what();
         TaskDialogBox(nullptr, str1, str2, TD_ERROR_ICON);
     }
 

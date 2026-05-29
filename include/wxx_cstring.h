@@ -508,7 +508,7 @@ namespace Win32xx
     {
         CStringW wide(AtoW(m_str.c_str()));
         BSTR bstr = ::SysAllocStringLen(wide, wide.GetLength());
-        if (bstr == 0)
+        if (bstr == nullptr)
             throw std::bad_alloc();
 
         return bstr;
@@ -778,13 +778,13 @@ namespace Win32xx
     template <>
     inline void CStringA::FormatMessageV(const CHAR* format, va_list args)
     {
-        LPSTR temp = 0;
+        LPSTR temp = nullptr;
         if (format)
         {
             DWORD result = ::FormatMessageA(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER,
                                    format, 0, 0, reinterpret_cast<LPSTR>(&temp), 0, &args);
 
-            if ( result == 0 || temp == 0 )
+            if ( result == 0 || temp == nullptr )
                 throw std::bad_alloc();
 
             m_str = temp;

@@ -1,37 +1,26 @@
-/* (20-Oct-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                   (View.h) *
-********************************************************************************
-|                                                                              |
-|               Authors: Robert C. Tausworthe, David Nash, 2020                |
-|                                                                              |
-===============================================================================*
-
-    Contents Description: Declaration of the CView class derived from the
-    CScrollView base class for this application using the Win32++ Windows
-    framework.
-
-    Programming Notes: The programming style roughly follows that established
-    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-    Preparation Subsystem project for C++ programming.
-
-*******************************************************************************/
+/////////////////////////////////////////
+// View.h
+// Authors: Robert Tausworthe, David Nash
+//
 
 #ifndef CAPP_VIEW_H
 #define CAPP_VIEW_H
 
 #include "Doc.h"
 
-/*============================================================================*/
-    class
-CView   : public CScrollView                                            /*
-
-    The application scrolling window serializable class.
-*-----------------------------------------------------------------------------*/
+///////////////////////////////////////////////////////////////////////////////
+// The view class. It is responsible for displaying the document content, and
+// for handling the user interactions with the view. It is also responsible for
+// maintaining the view's display attributes, such as the background color,
+// the text color, and the font. It is derived from CScrollView, which provides
+// the scrolling functionality for the view.
+class CView : public CScrollView
 {
 public:
     CView();
     virtual ~CView() override = default;
 
-    // Attributes
+    // Attributes.
     COLORREF  GetBkgndColor() const      { return m_bkgndColor; }
     COLORREF* GetColorsArray()           { return m_colors; }
     COLORREF  GetTextColor()  const      { return m_textColor; }
@@ -41,14 +30,14 @@ public:
     void      SetTextColor(COLORREF col) { m_textColor = col; }
     CDoc&     TheDoc()                   { return m_doc; }
 
-    // Operations
+    // Operations.
     CSize   GetFontSize() const;
     void    SetAppSize(BOOL keepPos = FALSE);
     void    SetDefaults();
     void    TextLineOut(CDC&, UINT, UINT, LPCWSTR) const;
 
-    // public data members
-    static const CString m_compiledOn;  // compilation date
+    // Member variables.
+    static const CString m_compiledOn;  // Compilation date.
 
 protected:
     virtual void    OnDraw(CDC& dc) override;
@@ -60,12 +49,12 @@ private:
     CView(const CView&) = delete;
     CView& operator=(const CView&) = delete;
 
-    // data members
-    COLORREF    m_bkgndColor;   // background color
-    CDoc        m_doc;          // the document
-    CFont       m_font;         // the font used to display view
-    COLORREF    m_colors[16];   // custom colors defined
-    COLORREF    m_textColor;    // text foreground color
+    // Member variables.
+    COLORREF    m_bkgndColor;   // Background color.
+    CDoc        m_doc;          // The document.
+    CFont       m_font;         // The font used to display view.
+    COLORREF    m_colors[16];   // Custom colors defined.
+    COLORREF    m_textColor;    // Text foreground color.
 };
-/*----------------------------------------------------------------------------*/
+
 #endif  //CAPP_VIEW_H

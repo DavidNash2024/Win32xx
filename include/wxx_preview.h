@@ -353,7 +353,7 @@ namespace Win32xx
     template <typename T>
     inline CPrintPreview<T>::CPrintPreview(T& source)
         : CDialog(reinterpret_cast<LPCDLGTEMPLATE>(previewTemplate)),
-        m_pSource(0), m_currentPage(0), m_maxPage(1), m_ownerWindow(0)
+        m_pSource(nullptr), m_currentPage(0), m_maxPage(1), m_ownerWindow(0)
     {
         m_pPreviewPane = &m_previewPane;
         SetSource(source);

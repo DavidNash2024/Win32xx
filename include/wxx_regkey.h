@@ -196,7 +196,7 @@ namespace Win32xx
     inline LONG CRegKey::EnumKey(DWORD index, LPTSTR name, LPDWORD nameLength, FILETIME* lastWriteTime) const
     {
         assert(m_key);
-        return ::RegEnumKeyEx(m_key, index, name, nameLength, 0, 0, 0, lastWriteTime);
+        return ::RegEnumKeyEx(m_key, index, name, nameLength, nullptr, nullptr, nullptr, lastWriteTime);
     }
 
     // Writes all the attributes of the specified open registry key into the registry.
@@ -227,10 +227,10 @@ namespace Win32xx
         assert(m_key);
         LONG result = ERROR_CANTREAD;
         DWORD type = 0;
-        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, 0, &type, nullptr, nullptr))
+        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, nullptr, &type, nullptr, nullptr))
         {
             if (type == REG_BINARY)
-                result = ::RegQueryValueEx(m_key, valueName, 0, &type, static_cast<LPBYTE>(value), bytes);
+                result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, static_cast<LPBYTE>(value), bytes);
         }
 
         return result;
@@ -251,10 +251,10 @@ namespace Win32xx
         LONG result = ERROR_CANTREAD;
         DWORD type = 0;
         DWORD bytes = sizeof(DWORD);
-        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, 0, &type, nullptr, nullptr))
+        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, nullptr, &type, nullptr, nullptr))
         {
             if (type == REG_DWORD)
-                result = ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
+                result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
         }
 
         return result;
@@ -287,10 +287,10 @@ namespace Win32xx
         assert(m_key);
         LONG result = ERROR_CANTREAD;
         DWORD type = 0;
-        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, 0, &type, nullptr, nullptr))
+        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, nullptr, &type, nullptr, nullptr))
         {
             if (type == REG_MULTI_SZ)
-                result = ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(value), chars);
+                result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, reinterpret_cast<LPBYTE>(value), chars);
         }
 
         return result;
@@ -303,10 +303,10 @@ namespace Win32xx
         DWORD bytes = sizeof(ULONGLONG);
         LONG result = ERROR_CANTREAD;
         DWORD type = 0;
-        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, 0, &type, nullptr, nullptr))
+        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, nullptr, &type, nullptr, nullptr))
         {
             if (type == REG_QWORD)
-                result = ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
+                result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
         }
 
         return result;
@@ -318,10 +318,10 @@ namespace Win32xx
         assert(m_key);
         LONG result = ERROR_CANTREAD;
         DWORD type = 0;
-        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, 0, &type, nullptr, nullptr))
+        if (ERROR_SUCCESS == ::RegQueryValueEx(m_key, valueName, nullptr, &type, nullptr, nullptr))
         {
             if (type == REG_SZ)
-                result = ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(value), chars);
+                result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, reinterpret_cast<LPBYTE>(value), chars);
         }
 
         return result;
@@ -331,7 +331,7 @@ namespace Win32xx
     inline LONG CRegKey::QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const
     {
         assert(m_key);
-        return ::RegQueryValueEx(m_key, valueName, 0, type, static_cast<LPBYTE>(data), bytes);
+        return ::RegQueryValueEx(m_key, valueName, nullptr, type, static_cast<LPBYTE>(data), bytes);
     }
 
     // Private recursive function called by RecurseDeleteKey.
