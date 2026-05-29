@@ -1,0 +1,163 @@
+/////////////////////////////////////////
+// CommonDialogs.cpp
+// Authors: Robert Tausworthe, David Nash
+//
+
+
+#include "stdafx.h"
+#include "ColorChoice.h"
+#include "ColorDefs.h"
+
+////////////////////////////////////
+// ColorChoice function definitions.
+//
+
+// Construct a color choice object.
+CColorChoice::CColorChoice() : m_selection(0)
+{
+    ClearColorTable();
+    InitCustomColors();
+    SetBoxTitle(L"Color");
+    m_LBDlg.SetBoxTitle(L"Choose color to change.");
+}
+
+// Add the(id, name, color) tuple to the color table, return TRUE on success,
+// FALSE otherwise.
+void CColorChoice::AddColorChoice(UINT id, LPCWSTR usage, COLORREF color)
+{
+    ctl_color triplet;
+    triplet.id = id;
+    triplet.usage = usage;
+    triplet.color = color;
+    m_colorTable.push_back(triplet);
+}
+
+// Show the CListBoxDlg dialog box with the list of candidate control
+// categories and, if a one is selected, show the CColorDialog box to select a
+// color for that control category.
+INT_PTR CColorChoice::DoModal(HWND owner /* = nullptr */)
+{
+    // Determine a common owner for the two dialog boxes.
+    if (owner == nullptr)
+        owner = GetParameters().hwndOwner;
+    if (owner == nullptr)
+        owner = GetApp()->GetMainWnd();
+
+    // Prepare the list box dialog.
+    m_LBDlg.ClearList();
+    for (UINT i = 0; i < static_cast<UINT>(m_colorTable.size()); i++)
+    {
+        m_LBDlg.AddListItem(m_colorTable[i].usage);
+    }
+
+    m_selection = UINT(-1);
+    INT_PTR selection = m_LBDlg.DoModal(owner);
+    if (selection != INT_MAX)
+    {
+        SetColor(m_colorTable[selection].color);
+        if(CColorDialog::DoModal(owner) ==  IDOK)
+        {
+            m_colorTable[selection].color = CColorDialog::GetColor();
+            m_selection = m_colorTable[selection].id;
+        }
+    }
+    return (m_selection == INT_MAX ? IDCANCEL : IDOK);
+}
+
+// Return the color found in the color table having the given id identifier.
+COLORREF CColorChoice::GetTableColor(UINT id) const
+{
+    UINT idx = GetTableIndex(id);
+    if (idx == UINT(-1))
+        return RGB(0, 0, 0);
+
+    return m_colorTable[idx].color;
+}
+
+// Return a solid brush with the color found in the color table at the given id
+// identifier. If the table has not yet been populated, return a black brush.
+CBrush CColorChoice::GetBrush(UINT id) const
+{
+    UINT idx = GetTableIndex(id);
+    COLORREF color = (idx == UINT(-1) ? RGB(0, 0, 0) : m_colorTable[idx].color);
+    CBrush br;
+    br.CreateSolidBrush(color);
+        return br;
+}
+
+// Return the color table index of the entry having the given id.
+UINT CColorChoice::GetTableIndex(UINT id) const
+{
+    // Ignore the invocation if the table is empty.
+    UINT n = static_cast<UINT>(m_colorTable.size());
+    for (UINT idx = 0; idx < n; ++idx)
+    {
+        if (m_colorTable[idx].id == id)
+            return idx;
+    }
+
+    return UINT(-1); // default value
+}
+
+// Return the usage field of the ctl_color triplet corresponding having the
+// given id.
+CString CColorChoice::GetTableUsage(UINT id) const
+{
+    UINT idx = GetTableIndex(id);
+    CString usage = (idx == UINT(-1) ? L"" : m_colorTable[idx].usage.c_str());
+    return  usage;
+}
+
+// Initialize the custom color table entries to default values.Override this
+// member to provide an application - dependent array.
+void CColorChoice::InitCustomColors()
+{
+    COLORREF* colors = GetCustomColors();
+    colors[0]  = COLOR_LT_GRAY;
+    colors[1]  = COLOR_GRAY;
+    colors[2]  = COLOR_LT_BLUE;
+    colors[3]  = COLOR_DK_BLUE;
+    colors[4]  = COLOR_BROWN;
+    colors[5]  = COLOR_DK_BROWN;
+    colors[6]  = COLOR_LT_YELLOW;
+    colors[7]  = COLOR_YELLOW;
+    colors[8]  = COLOR_DK_YELLOW;
+    colors[9]  = COLOR_LT_CYAN;
+    colors[10] = COLOR_DK_CYAN;
+    colors[11] = COLOR_LT_GREEN;
+    colors[12] = COLOR_DK_GREEN;
+    colors[13] = COLOR_LT_RED;
+    colors[14] = COLOR_LT_MAGENTA;
+    colors[15] = COLOR_DK_MAGENTA;
+}
+
+// Perform any actions required for initialization of this object when the
+// color choice is being initialized.
+BOOL CColorChoice::OnInitDialog()
+{
+    SetWindowText(m_boxTitle);
+    return TRUE;
+}
+
+// Set the color entry of the color table entry with the given id to
+// the specified rgb color.
+void CColorChoice::SetTableColor(UINT id, COLORREF rgb)
+{
+    UINT idx = GetTableIndex(id);
+    if (idx == UINT(-1))
+        return;
+
+    m_colorTable[idx].color = rgb;
+}
+
+// Set the usage entry of the color table entry with the given id to the
+// specified string.
+void CColorChoice::SetTableUsage(UINT id, LPCWSTR s)
+{
+    UINT idx = GetTableIndex(id);
+    if (idx == UINT(-1))
+        return;
+
+    m_colorTable[idx].usage = s;
+}
+
