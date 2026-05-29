@@ -15,9 +15,9 @@
 </div>
 <p dir="auto">SourceForge:
 <a href="https://sourceforge.net/projects/win32-framework/">Win32++</a></p>
-<p dir="auto">Code Project:
-<a href="https://www.codeproject.com/Articles/9739/Win32-A-Simple-Alternative-to-MFC">
-Win32++ A Simple Alternativc to MFC</a></p>
+<p dir="auto">Win32++ Web Site:
+<a href="https://win32-framework.sourceforge.net/">
+Win32++</a></p>
 <div class="markdown-heading" dir="auto">
 	<h2 class="heading-element" dir="auto" tabindex="-1">Introduction</h2>
 </div>
