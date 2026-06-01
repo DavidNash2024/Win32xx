@@ -16,7 +16,7 @@
     <ClCompile Include="..\src\MDIChildRect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StdAfx.cpp">
+    <ClCompile Include="..\src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\MDIChildSimple.cpp">

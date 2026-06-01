@@ -24,7 +24,7 @@
     <ClCompile Include="..\src\IFileDialogApp.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MyTaskDialog.cpp" />
-    <ClCompile Include="..\src\stdAfx.cpp" />
+    <ClCompile Include="..\src\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\default_resource.h" />

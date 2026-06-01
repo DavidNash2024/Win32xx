@@ -4,7 +4,6 @@
 
 // This file is used for precompiled headers.
 // Rarely modified header files should be included.
-// Based on code provided by Lynn Allan.
 
 
 #ifndef STDAFX_H
@@ -80,7 +79,7 @@
 
   // Visual Studio
   #if defined (_MSC_VER) && (_MSC_VER >= 1930)  // >= VS2022
-    #include <wxx_ribbon.h>       // Add CRibbon, CRibbonFrame
+    #include <wxx_ribbon.h>       // Add CRibbonT, CRibbonFrame, CRibbonDockFrame, CRibbonMDIFrame, CRibbonMDIDockFrame
   #endif
 
 #endif  // define WIN32_LEAN_AND_MEAN

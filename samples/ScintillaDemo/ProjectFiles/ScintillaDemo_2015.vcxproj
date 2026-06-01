@@ -23,7 +23,7 @@
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\ScintillaApp.cpp" />
     <ClCompile Include="..\src\scintillaview.cpp" />
-    <ClCompile Include="..\src\StdAfx.cpp" />
+    <ClCompile Include="..\src\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

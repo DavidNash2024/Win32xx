@@ -72,7 +72,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -82,7 +82,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\src\StdAfx.h
+FileName=..\src\stdafx.h
 Folder=Header
 Compile=1
 Link=1
@@ -142,7 +142,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=StdAfx.cpp
+FileName=stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -152,7 +152,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=StdAfx.h
+FileName=stdafx.h
 CompileCpp=1
 Folder=Header
 Compile=1

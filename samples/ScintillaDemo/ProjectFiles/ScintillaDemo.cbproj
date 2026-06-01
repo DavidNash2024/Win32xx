@@ -391,7 +391,7 @@
         <None Include="..\src\Sci_Position.h">
             <BuildOrder>5</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>11</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

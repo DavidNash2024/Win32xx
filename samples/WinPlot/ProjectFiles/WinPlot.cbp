@@ -133,7 +133,7 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/Table.cpp" />
 		<Unit filename="../src/Table.h" />
 		<Unit filename="../src/View.cpp" />

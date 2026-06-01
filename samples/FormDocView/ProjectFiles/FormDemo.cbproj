@@ -395,7 +395,7 @@
         <None Include="..\src\StaticImage.h">
             <BuildOrder>12</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>13</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

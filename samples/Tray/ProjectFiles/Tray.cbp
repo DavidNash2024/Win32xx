@@ -123,7 +123,7 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/TrayApp.cpp" />
 		<Unit filename="../src/TrayApp.h" />
 		<Unit filename="../src/View.cpp" />

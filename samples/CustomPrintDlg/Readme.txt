@@ -1,16 +1,10 @@
 CustomPrintDlg Sample
 =====================
-The print dialog has changed since the 22H2 update to Windows 10/11. The
-new print dialog ignores the hDevMode and hDevNames supplied to it. The new
-print dialog also displays a print preview we can't use, which is rather
-unfortunate.
-
-This project provides an alternative to the current print dialog. The 
-CustomPrintDlg class emulates the print dialog from earlier versions of
-Windows. It can be used as a replacement for CPrintDialog in the Notepad
-sample as shown here. Unlike the PrintDlg and PrintDlgEx, the CustomPrintDlg
-can be easily be customized to add or remove features appropriate to your
-application.
+This project demonstrates how to customize the print dialog used to select
+the printer to print to and set options like the paper size and print
+orientation. CustomPrintDlg class emulates the print dialog from earlier
+versions of Windows. It can be used as a replacement for CPrintDialog in the
+Notepad sample as shown here.
 
 This sample demonstrates how to manually create the hDevMode and hDevNames
 global memory for a specified printer. This global memory is used by the

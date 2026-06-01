@@ -142,7 +142,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit12]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

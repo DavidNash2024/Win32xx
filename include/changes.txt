@@ -1,13 +1,47 @@
-Version 10.2.1
-==============
-This version updates the samples shipped with Win32++.
+Version 10.3
+============
+This version provides minor updates to the Win32++ framework and updates the
+samples shipped with Win32++.
 
 New Features and Enhancements
 -----------------------------
-* Added project files for Visual Studio 2026.
-* Updated the Help About Dialog to display the Win32++ version.
-* Updated the Browser sample to use Microsoft's WebView2 control.
-* Updated the CustomControl sample to use Microsoft's WebView2 control.
+* Updated support for the Windows Ribbon Framework.
+  The CRibbon class had been replaced by the CRibbonT class template. The code
+  now uses the ComPtr included in the Windows Runtime C++ Template Library.
+  The new code is backwards compatible with code that inherits from
+  CRibbonFrame, CRibbonDockFrame, CRibbonMDIFrame and CRibbonMDIDOckFrame.
+  
+* Updated the samples.
+  Project files for Visual Studio 2026 have been added to each sample. The
+  Help About dialog has been updated to display the version of Win32++ used.  
+
+* CWebBrower has been deprecated.
+  For modern applications, using IWebBrowser2 is heavily discouraged due to
+  obsolete security parameters and lack of HTML5/CSS3 compatibility. The
+  following samples demonstrate how to implement a Microsoft Edge Browser
+  using the Chromium-powered WebView2 control:
+   * Browser
+   * CustomControl
+   * EdgeBrowser
+   * EdgeBrowserEx
+
+* CPrintDialogEx has been deprecated.
+  In Windows 11 22H2, Microsoft replaced the legacy print dialog for PrintDlgEx
+  with a new dialog which is unsuitable for C++ Windows API applications.
+  CPrintDialog can be used instead as it displays the legacy print dialog that
+  is suitable for Windows API applications.
+
+  Note that the CustomPrintDlg sample demonstrates how we can create our
+  own customized print dialog.
+
+Changes in detail
+-----------------
+Added CRibbonT                    - class template
+Removed CRibbon                   - class
+Deprecated CPrintDialogEx         - class
+Deprecated CWebBrowser            - class
+Removed BrowserATL                - sample
+
 
 Version 10.2
 ============

@@ -2,7 +2,7 @@
 // main.cpp
 //
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "TestWindow.h"
 #include "TestApp.h"
 

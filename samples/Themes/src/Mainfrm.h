@@ -40,7 +40,7 @@ private:
     CMainFrame(const CMainFrame&) = delete;
     CMainFrame& operator=(const CMainFrame&) = delete;
 
-    LRESULT AddCombo();
+    LRESULT AddComboBand();
     BOOL ChooseColor(UINT color);
     void SetCaptionColor(COLORREF color);
     void SetCaptionTextColor(COLORREF color);

@@ -6,7 +6,7 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
-#define UWM_ADDCOMBO        (WM_APP + 0x0001)
+#define UWM_ADDCOMBOBAND    (WM_APP + 0x0001)
 #define UWM_ARRANGEBANDS    (WM_APP + 0x0002)
 
 
@@ -23,7 +23,7 @@ CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(true), m_useBandColors
 }
 
 // Adds a comboBoxEx to the toolbar.
-LRESULT CMainFrame::AddCombo()
+LRESULT CMainFrame::AddComboBand()
 {
     CToolBar& tb = GetToolBar();
 
@@ -733,7 +733,7 @@ void CMainFrame::SetupToolBar()
 
     // Use PostMessage to add the combo late to fix drawing issues
     // that arise when the display scale is changed.
-    PostMessage(UWM_ADDCOMBO);
+    PostMessage(UWM_ADDCOMBOBAND);
 }
 
 // Displays or hides the arrows toolbar.
@@ -761,7 +761,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_ADDCOMBO:         return AddCombo();
+        case UWM_ADDCOMBOBAND:     return AddComboBand();
         case WM_GETMINMAXINFO:     return OnGetMinMaxInfo(msg, wparam, lparam);
         }
 

@@ -364,7 +364,7 @@
             <Form>Resource.res</Form>
             <BuildOrder>2</BuildOrder>
         </ResourceCompile>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>3</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

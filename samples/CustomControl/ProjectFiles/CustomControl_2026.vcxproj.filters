@@ -27,7 +27,7 @@
     <ClCompile Include="..\src\MyWebControl.cpp">
       <Filter>Source FIles</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StdAfx.cpp">
+    <ClCompile Include="..\src\stdafx.cpp">
       <Filter>Source FIles</Filter>
     </ClCompile>
   </ItemGroup>
@@ -220,5 +220,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natstepfilter" />
   </ItemGroup>
 </Project>

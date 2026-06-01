@@ -134,8 +134,8 @@
 		<Unit filename="../src/ResourceDLL.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/StdAfx.cpp" />
-		<Unit filename="../src/StdAfx.h">
+		<Unit filename="../src/stdafx.cpp" />
+		<Unit filename="../src/stdafx.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

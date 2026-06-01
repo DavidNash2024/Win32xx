@@ -140,7 +140,7 @@
 		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/stdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/stdafx.h">
 			<Option compile="1" />
 		</Unit>

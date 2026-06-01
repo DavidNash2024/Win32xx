@@ -11,6 +11,13 @@
 // CView function definitions.
 //
 
+// The constructor.
+CView::CView() : m_pIUIRibbon(nullptr)
+{
+    // Set the ribbon's window pointer to this view.
+    m_ribbon.SetWindow(this);
+}
+
 // Executes commands in response the the ribbon's buttons.
 STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*)
 {
@@ -78,7 +85,7 @@ int CView::OnCreate(CREATESTRUCT&)
 
     if (GetWinVersion() >= 2601)        // Ribbon is only supported on Windows 7 and above.
     {
-        if (SUCCEEDED(CreateRibbon(*this)))
+        if (SUCCEEDED(m_ribbon.CreateRibbon(*this)))
             TRACE(L"Ribbon Created Successfully\n");
         else
             TRACE(L"Failed to create ribbon\n");
@@ -87,16 +94,34 @@ int CView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
+// Called for each Command specified in the Windows Ribbon framework markup to
+// bind the Command to an IUICommandHandler.
+inline STDMETHODIMP CView::OnCreateUICommand(UINT32,
+    __in UI_COMMANDTYPE, __deref_out IUICommandHandler** ppCommandHandler)
+{
+    // By default we use the single command handler provided as part of CRibbon.
+    // Override this function to account for multiple command handlers.
+
+    return m_ribbon.QueryInterface(IID_PPV_ARGS(ppCommandHandler));
+}
+
 // OnDestroy is called when the view window is destroyed.
 void CView::OnDestroy()
 {
     if (GetWinVersion() >= 2601)        // Ribbon only supported on Windows 7 and above
     {
-        DestroyRibbon();
+        m_ribbon.DestroyRibbon();
     }
 
     // End the application when the window is destroyed
     ::PostQuitMessage(0);
+}
+
+// Called for each Command specified in the Windows Ribbon framework markup
+// when the application window is destroyed.
+STDMETHODIMP CView::OnDestroyUICommand(UINT32, __in UI_COMMANDTYPE, __in_opt IUICommandHandler*)
+{
+    return E_NOTIMPL;
 }
 
 // Called when the effective dots per inch (dpi) for a window has changed.
@@ -127,7 +152,7 @@ void CView::OnDraw(CDC& dc)
 
     // Centre some text in our view window
     CRect r = GetClientRect();
-    r.top += GetRibbonHeight();
+    r.top += m_ribbon.GetRibbonHeight();
     dc.DrawText(L"Simple Ribbon Demo", -1, r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
@@ -198,9 +223,19 @@ void CView::PreCreate(CREATESTRUCT& cs)
 // Recalculate the position of the child windows.
 void CView::RecalcLayout()
 {
-    CRect r = GetClientRect();
-    r.top += GetRibbonHeight();
-    InvalidateRect(r);
+    if (IsWindow())
+    {
+        CRect r = GetClientRect();
+        r.top += m_ribbon.GetRibbonHeight();
+        InvalidateRect(r);
+    }
+}
+
+// Called by the Ribbon framework when a command property (PKEY) needs to
+// be updated.
+STDMETHODIMP CView::UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*)
+{
+    return E_NOTIMPL;
 }
 
 // The view's window procedure handles the window's messages.

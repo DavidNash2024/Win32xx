@@ -73,7 +73,7 @@
 		</Unit>
 		<Unit filename="../src/ScribbleApp.cpp" />
 		<Unit filename="../src/ScribbleApp.h" />
-		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />

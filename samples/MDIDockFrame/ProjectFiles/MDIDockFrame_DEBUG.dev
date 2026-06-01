@@ -81,7 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -110,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\..\DockContainer\src\StdAfx.cpp
+FileName=..\..\DockContainer\src\stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

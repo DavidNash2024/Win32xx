@@ -43,6 +43,10 @@ CView::~CView()
 // Create the image list and store the colorBits information.
 void CView::CreateImageList(int imageWidth, int imageHeight, int colorBits)
 {
+    // The imagelists don't preserve the palette when 8 bit bitmaps are added.
+    // We convert 4 and 8 bit images to 24 bit to avoid palette issues by
+    // adding them to a 24bit image list.
+    if (colorBits <= 8) colorBits = 24;
     m_toolbarImages.Create(imageWidth, imageHeight, colorBits, 1, 1);
     m_colorBits = colorBits;
 }
@@ -85,6 +89,10 @@ CBitmap CView::GetBitmapFromImageList() const
         dcHorizontal.CreateDIBSection(dcHorizontal, pbmiHorizontal, DIB_RGB_COLORS,
             nullptr, nullptr, 0);
 
+        /*
+        // No longer required, but the code is preserved in case we need to copy
+        // the color table in the future.
+
         // Copy the color table from the vertical to the horizontal DIB.
         if (bm.bmBitsPixel <= 8)
         {
@@ -94,6 +102,7 @@ CBitmap CView::GetBitmapFromImageList() const
             ::GetDIBColorTable(dcVertical, 0, numColors, colorTable);
             ::SetDIBColorTable(dcHorizontal, 0, numColors, colorTable);
         }
+        */
 
         // Copy each image from the vertical to the horizontal DIB.
         for (int i = 0; i < imageCount; i++)

@@ -1,4 +1,4 @@
-// Win32++   Version 10.2.1
+// Win32++   Version 10.3
 // Release Date: TBA
 //
 //      David Nash
@@ -106,7 +106,7 @@ using namespace Win32xx;
 #define MIN(a,b)        (((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0A21     // Win32++ version 10.2.1
+#define _WIN32XX_VER 0x0A30     // Win32++ version 10.3.0
 
 // Define the TRACE Macro.
 // In debug mode, TRACE send text to the debug/output pane, or an external

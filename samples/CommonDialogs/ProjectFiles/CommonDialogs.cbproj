@@ -434,7 +434,7 @@
         <None Include="..\src\RichEditView.h">
             <BuildOrder>24</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>25</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

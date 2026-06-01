@@ -6,19 +6,25 @@
 #define VIEW_H
 
 
-//////////////////////////////////////////
+//////////////////////////////////////////////////
 // CView manages the main window. It uses a Ribbon
 // in place of a menu and toolbar.
-class CView : public CWnd, public CRibbon
+class CView : public CWnd
 {
 public:
-    CView() : m_pIUIRibbon(nullptr) {}
+    CView();
     virtual ~CView() override = default;
 
-protected:
-    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*) override;
-    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUIApplication::IUnknown*, UI_VIEWVERB, INT32) override;
+    // IUIApplication methods.
+    STDMETHODIMP OnCreateUICommand(UINT32, __in UI_COMMANDTYPE, __deref_out IUICommandHandler**);
+    STDMETHODIMP OnDestroyUICommand(UINT32, __in UI_COMMANDTYPE, __in_opt IUICommandHandler*);
+    STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUIApplication::IUnknown*, UI_VIEWVERB, INT32);
 
+    // IUICommandHandler methods.
+    STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
+    STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*);
+
+protected:
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDestroy() override;
     virtual void OnDraw(CDC& dc) override;
@@ -37,6 +43,7 @@ private:
 
     // Member variables
     IUIRibbon* m_pIUIRibbon;
+    CRibbonT<CView> m_ribbon;
 };
 
 

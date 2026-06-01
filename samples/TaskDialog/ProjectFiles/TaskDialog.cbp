@@ -122,7 +122,7 @@
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/MyTaskDialog.cpp" />
 		<Unit filename="../src/MyTaskDialog.h" />
-		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/TaskDialog.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

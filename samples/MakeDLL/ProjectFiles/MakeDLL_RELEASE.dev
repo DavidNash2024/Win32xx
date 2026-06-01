@@ -82,7 +82,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -92,7 +92,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\src\StdAfx.h
+FileName=..\src\stdafx.h
 Folder=Header
 Compile=1
 Link=1

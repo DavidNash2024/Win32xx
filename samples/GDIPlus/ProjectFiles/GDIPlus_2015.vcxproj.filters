@@ -13,7 +13,7 @@
     <ClCompile Include="..\src\Mainfrm.cpp">
       <Filter>Source FIles</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StdAfx.cpp">
+    <ClCompile Include="..\src\stdafx.cpp">
       <Filter>Source FIles</Filter>
     </ClCompile>
   </ItemGroup>

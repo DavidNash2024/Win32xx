@@ -243,7 +243,7 @@
     <ClCompile Include="..\src\MakeDLL.cpp" />
     <ClCompile Include="..\src\MyDialog.cpp" />
     <ClCompile Include="..\src\MyWinThread.cpp" />
-    <ClCompile Include="..\src\StdAfx.cpp">
+    <ClCompile Include="..\src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
@@ -322,7 +322,7 @@
     <ClInclude Include="..\src\MyDialog.h" />
     <ClInclude Include="..\src\MyWinThread.h" />
     <ClInclude Include="..\src\resource.h" />
-    <ClInclude Include="..\src\StdAfx.h" />
+    <ClInclude Include="..\src\stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

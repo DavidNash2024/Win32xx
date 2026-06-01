@@ -383,7 +383,7 @@
         <None Include="..\src\Scrollbar.h">
             <BuildOrder>8</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>9</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

@@ -120,7 +120,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit8]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

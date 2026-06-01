@@ -410,7 +410,7 @@
         <None Include="..\src\ShellWrapper.h">
             <BuildOrder>16</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>17</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

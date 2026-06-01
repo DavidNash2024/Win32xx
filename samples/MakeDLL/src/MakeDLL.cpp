@@ -2,7 +2,7 @@
 // MakeDLL.cpp
 //
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MyDialog.h"
 #include "MakeDLL.h"
 #include "MyWinThread.h"

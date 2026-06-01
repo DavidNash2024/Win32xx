@@ -22,10 +22,13 @@ CMainFrame::CMainFrame()
 }
 
 // Adds a ComboBoxEx control to the rebar.
-void CMainFrame::AddComboBoxBand()
+LRESULT CMainFrame::AddComboBoxBand()
 {
-    // Create the ComboboxEx window.
+    // Destroy and re-create the ComboboxEx window.
+    m_combo.Destroy();
     m_combo.Create(GetReBar());
+    m_combo.RestoreItems();
+    GetCBEdit().SetWindowText(m_selectedItem);
 
     int padding = 2;
     int height = m_combo.GetWindowRect().Height() + DpiScaleInt(padding);
@@ -44,6 +47,7 @@ void CMainFrame::AddComboBoxBand()
     rbbi.lpText     = const_cast<LPWSTR>(L"Address");
 
     GetReBar().InsertBand(-1, rbbi);
+    return 0;
 }
 
 // Adds a string to the ComboBoxEx control if it is not already present.
@@ -311,8 +315,9 @@ void CMainFrame::SetupToolBar()
     // Load the 32bit bitmaps.
     SetToolBarImages(black, IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
 
-    // Add the ComboBoxEx control.
-    AddComboBoxBand();
+    // Use PostMessage to add the combo late to fix drawing issues
+    // that arise when the display scale is changed.
+    PostMessage(UWM_ADDCOMBOBAND);
 }
 
 // Called when the browser's history changes, to enable or disable the Back
@@ -373,6 +378,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case UWM_ADDCOMBOBAND:        return AddComboBoxBand();
         case WM_GETMINMAXINFO:        return OnGetMinMaxInfo(msg, wparam, lparam);
         case UWM_HISTORYCHANGED:      return OnHistoryChanged(msg, wparam, lparam);
         case UWM_NAVIGATIONCOMPLETED: return OnNavigationCompleted(msg, wparam, lparam);

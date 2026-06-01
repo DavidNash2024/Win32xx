@@ -3,9 +3,10 @@ Toolbar Builder Sample
 This sample provides a utility for creating bitmaps for use with toolbars.
 
 This utility can load, modify and save 4bit, 8bit 16bit, 24bit and 32bit
-bitmaps. When an image loaded and then saved, it is saved with the same bits
-per pixel as the loaded image. Images with a bits per pixel 24 or less can be
-displayed with a transparency mask color.
+bitmaps. When an image is loaded and then saved, 16bit, 24bit and 32bit bitmaps
+will be saved with the same bits per pixel as the loaded image. 4 and 8 bit
+bitmaps will be converted to 24 bit to avoid palette issues. Images with a bits
+per pixel 24 or less can be displayed with a transparency mask color.
 
 Images can also be added to the current toolbar bitmap. When an image is added
 to the toolbar it will be resized and have its bits per pixel adjusted to fit

@@ -373,7 +373,7 @@
             <Form>Resource.res</Form>
             <BuildOrder>8</BuildOrder>
         </ResourceCompile>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>9</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

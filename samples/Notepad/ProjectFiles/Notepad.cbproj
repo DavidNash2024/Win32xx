@@ -379,7 +379,7 @@
         <None Include="..\src\RichView.h">
             <BuildOrder>6</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>7</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

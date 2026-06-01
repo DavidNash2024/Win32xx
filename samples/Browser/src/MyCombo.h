@@ -14,12 +14,14 @@ public:
     CMyCombo() = default;
     virtual ~CMyCombo() override = default;
 
-    // Return by reference to avoid invoking the (inaccessible) copy constructor.
-    const CEdit& GetCBEdit() const { return m_edit; }
+    const CEdit& GetCBEdit() const;
+
+
+	void RestoreItems() const;
+    void SaveItems();
 
 protected:
     virtual void OnAttach() override;
-    virtual void OnDestroy() override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
 
 private:
@@ -27,6 +29,7 @@ private:
     CMyCombo& operator=(const CMyCombo&) = delete;
 
     CEdit m_edit;
+    std::vector<CString> m_items;
 };
 
 

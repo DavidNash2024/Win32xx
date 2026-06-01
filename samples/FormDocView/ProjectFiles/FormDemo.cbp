@@ -137,7 +137,7 @@
 		</Unit>
 		<Unit filename="../src/StaticImage.cpp" />
 		<Unit filename="../src/StaticImage.h" />
-		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h">

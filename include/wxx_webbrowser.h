@@ -1,4 +1,4 @@
-// Win32++   Version 10.2.1
+// Win32++   Version 10.3
 // Release Date: TBA
 //
 //      David Nash
@@ -34,6 +34,14 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 //
 ////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////
+// Warning: This class is deprecated. For modern applications, using
+// IWebBrowser2 is heavily discouraged due to obsolete security parameters and
+// lack of HTML5/CSS3 compatibility. Microsoft replaces this stack with the
+// Chromium-powered WebView2 control, which provides similar hosting logic but
+// maps directly to Microsoft Edge.
 
 #ifndef _WIN32XX_WEBBROWSER_H_
 #define _WIN32XX_WEBBROWSER_H_

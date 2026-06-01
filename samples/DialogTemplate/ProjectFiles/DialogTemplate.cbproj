@@ -403,7 +403,7 @@
         <None Include="..\src\RichView.h">
             <BuildOrder>14</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>15</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

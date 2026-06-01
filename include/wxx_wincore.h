@@ -1,4 +1,4 @@
-// Win32++   Version 10.2.1
+// Win32++   Version 10.3
 // Release Date: TBA
 //
 //      David Nash
@@ -422,8 +422,8 @@ namespace Win32xx
         // specified in PreCreate. The class name will default to "Win32++ Window"
         // if neither PreRegisterClass nor PreCreate specify a class name.
         LPCTSTR className = wc.lpszClassName ? wc.lpszClassName : cs.lpszClass;
-		if (cs.lpszClass != nullptr && cs.lpszClass != className)
-			TRACE("*** Warning: The class name specified in PreCreate is being ignored. The class name specified in PreRegisterClass will be used instead. ***\n");
+        if (cs.lpszClass != nullptr && cs.lpszClass != className)
+            TRACE("*** Warning: The class name specified in PreCreate is being ignored. The class name specified in PreRegisterClass will be used instead. ***\n");
 
         DWORD style = static_cast<DWORD>(cs.style & ~WS_VISIBLE);
         HWND wnd;

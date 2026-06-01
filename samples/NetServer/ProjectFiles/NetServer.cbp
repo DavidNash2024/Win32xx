@@ -127,7 +127,7 @@
 		</Unit>
 		<Unit filename="../src/Server.cpp" />
 		<Unit filename="../src/Server.h" />
-		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/SvrDialog.cpp" />
 		<Unit filename="../src/SvrDialog.h" />
 		<Unit filename="../src/main.cpp" />

@@ -362,7 +362,7 @@
         <None Include="..\src\resource.h">
             <BuildOrder>3</BuildOrder>
         </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
+        <CppCompile Include="..\src\stdafx.cpp">
             <BuildOrder>4</BuildOrder>
         </CppCompile>
         <PCHCompile Include="..\src\stdafx.h">

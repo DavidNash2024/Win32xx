@@ -150,7 +150,7 @@
 		</Unit>
 		<Unit filename="../src/RichEditView.cpp" />
 		<Unit filename="../src/RichEditView.h" />
-		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />
