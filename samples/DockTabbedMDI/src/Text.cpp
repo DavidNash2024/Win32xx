@@ -38,6 +38,8 @@ BOOL CViewText::OnCommand(WPARAM wparam, LPARAM)
     case IDM_EDIT_DELETE:   return OnEditDelete();
     case IDM_EDIT_REDO:     return OnEditRedo();
     case IDM_EDIT_UNDO:     return OnEditUndo();
+
+    default: break;
     }
 
     // return FALSE for unhandled commands

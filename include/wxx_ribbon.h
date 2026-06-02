@@ -365,9 +365,9 @@ namespace Win32xx
         m_ribbon.DestroyRibbon();
     }
 
-	// Retrieves a pointer to both the IUIApplication and IUICommandHandler
+    // Retrieves a pointer to both the IUIApplication and IUICommandHandler
     // interfaces for the Windows Ribbon framework.
-	template <class T>
+    template <class T>
     inline CRibbonT<CRibbonFrameT<T>> CRibbonFrameT<T>::GetRibbon() const
     {
         return m_ribbon;
@@ -381,14 +381,14 @@ namespace Win32xx
         return m_ribbon.GetRibbonFramework();
     }
 
-	// Retrieves the height of the ribbon.
+    // Retrieves the height of the ribbon.
     template <class T>
     inline STDMETHODIMP_(UINT32) CRibbonFrameT<T>::GetRibbonHeight() const
     {
         return m_ribbon.GetRibbonHeight();
     }
 
-	// Responds to execute events on commands bound to the Command handler.
+    // Responds to execute events on commands bound to the Command handler.
     template <class T>
     inline STDMETHODIMP CRibbonFrameT<T>::Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*)
     {
@@ -496,6 +496,8 @@ namespace Win32xx
             case UI_VIEWVERB_ERROR:
                 result = E_FAIL;
                 break;
+
+            default: break;
             }
         }
 
@@ -545,10 +547,10 @@ namespace Win32xx
             T::UpdateMRUMenu();
     }
 
-	// Called by the Ribbon framework when a command property (PKEY) needs to
-	// be updated.
+    // Called by the Ribbon framework when a command property (PKEY) needs to
+    // be updated.
     template <class T>
-    STDMETHODIMP CRibbonFrameT<T>::UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*)
+    inline STDMETHODIMP CRibbonFrameT<T>::UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*)
     {
         return E_NOTIMPL;
     }
@@ -557,8 +559,8 @@ namespace Win32xx
     ////////////////////////////////////////////////
     // Declaration of the nested CRecentFiles class.
     //
-    
-	// Constructor for the CRecentFiles class. Initializes the display name and
+
+    // Constructor for the CRecentFiles class. Initializes the display name and
     // full path for a recent file.
     template <class T>
     inline CRibbonFrameT<T>::CRecentFiles::CRecentFiles(PWSTR fullPath)

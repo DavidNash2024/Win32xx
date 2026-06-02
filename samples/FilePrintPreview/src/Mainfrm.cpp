@@ -475,9 +475,14 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDW_VIEW_STATUSBAR,  check_box_unselected);
 }
 
-// Define the resource identifiers for the toolbar, in order.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton(IDM_FILE_NEW);
     AddToolBarButton(IDM_FILE_OPEN);
     AddToolBarButton(IDM_FILE_SAVE);

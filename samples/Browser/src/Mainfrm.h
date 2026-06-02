@@ -29,21 +29,7 @@ public:
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int  OnCreate(CREATESTRUCT& cs) override;
-    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override
-    {
-        m_selectedItem = GetCBEdit().GetWindowText();
-		m_combo.SaveItems();    
-
-        // Delete the rebar band holding the combobox.
-        if (GetReBar().IsWindow())
-        {
-            int band = GetReBar().GetBand(m_combo);
-            GetReBar().DeleteBand(band);
-        }
-
-        // Call the base class function. This recreates the toolbars.
-        return CFrame::OnDpiChanged(msg, wparam, lparam);
-    }
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnHelp() override;
     virtual void OnInitialUpdate() override;
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;

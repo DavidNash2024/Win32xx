@@ -39,6 +39,9 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
                 return 0;
             }
+            break;
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -97,6 +100,8 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
             OnCancel();
             return TRUE;
         }
+
+    default: break;
     }
 
     return FALSE;
@@ -135,6 +140,8 @@ LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
         // Set timer for 1000 milliseconds
         SetTimer(ID_TIMER, 1000, 0);
         break;
+
+    default: break;
     }
 
     return 0;

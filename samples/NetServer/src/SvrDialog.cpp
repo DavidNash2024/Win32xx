@@ -81,6 +81,8 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM)
     case IDC_BUTTON_SEND2:
         Send();
         return TRUE;
+
+    default: break;
     }
 
     return FALSE;
@@ -172,6 +174,8 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case USER_ACCEPT:       return OnSocketAccept();
         case USER_DISCONNECT:   return OnSocketDisconnect(wparam);
         case USER_RECEIVE:      return OnSocketReceive(wparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -218,6 +222,8 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDC_BUTTON_START:      return OnStartServer();
     case IDC_BUTTON_SEND:       return OnSend();
+
+    default: break;
     }
 
     return FALSE;
@@ -353,8 +359,10 @@ BOOL CSvrDialog::OnSend()
                         return FALSE;
                     }
                 }
+                break;
             }
-            break;
+
+        default: break;
     }
 
     return TRUE;
@@ -433,8 +441,8 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
                     break;
                 }
             }
+            break;
         }
-        break;
     case SOCK_DGRAM:
         {
             int addrlen = sizeof(m_saUDPClient);
@@ -453,8 +461,10 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
             m_buttonSend.EnableWindow(TRUE);
             m_editSend.EnableWindow(TRUE);
             GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));
+            break;
         }
-        break;
+
+    default: break;
     }
     AppendText(m_editReceive, AtoW(bufArray));
 

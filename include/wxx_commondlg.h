@@ -415,6 +415,8 @@ namespace Win32xx
         //      OnMessage2();
         //      return x;       // Don't do default processing, but instead return
         //                      //  a value recommended by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
@@ -428,8 +430,11 @@ namespace Win32xx
     {
         switch (msg)
         {
-        case WM_INITDIALOG:     return OnInitDialog();
-        case WM_COMMAND:        if (LOWORD(wparam) == pshHelp)  OnHelpButton();
+        case WM_INITDIALOG:  return OnInitDialog();
+        case WM_COMMAND:     if (LOWORD(wparam) == pshHelp)  OnHelpButton();
+            break;
+
+        default: break;
         }
 
         // Return 0 to allow default processing of the message.
@@ -555,6 +560,8 @@ namespace Win32xx
         //      OnMessage2();
         //      return x;       // Don't do default processing, but instead return
         //                      //  a value recommended by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
@@ -595,6 +602,8 @@ namespace Win32xx
 
                 return 0;
             }
+
+            default: break;
         }
 
         // Dispatch special open/save file dialog messages.
@@ -900,6 +909,8 @@ namespace Win32xx
             case CDN_TYPECHANGE:
                 OnTypeChange();
                 return TRUE;
+
+            default: break;
         }
 
         // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result)
@@ -1144,6 +1155,8 @@ namespace Win32xx
         //      OnMessage2();
         //      return x;       // Don't do default processing, but instead return
         //                      //  a value recommended by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
@@ -1169,6 +1182,8 @@ namespace Win32xx
 
                 return 0;
             }
+
+        default: break;
         }
 
         return 0;
@@ -1401,6 +1416,8 @@ namespace Win32xx
         //      OnMessage2();
         //      return x;       // Don't do default processing, but instead return
         //                      //  a value recommended by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault

@@ -114,6 +114,8 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -277,6 +279,8 @@ STDMETHODIMP CMainMDIFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* 
         case UI_VIEWVERB_ERROR:
             result = E_FAIL;
             break;
+
+        default: break;
         }
     }
 
@@ -346,6 +350,8 @@ STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key
         // Set the initial pen color
         result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
         break;
+
+    default: break;
     }
 
     return result;
@@ -368,6 +374,8 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
             return 0;
         }
+
+        default: break;
         }
 
         // Use the default message handling for remaining messages.

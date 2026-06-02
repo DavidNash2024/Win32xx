@@ -74,6 +74,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case IDM_MINTOTRAY:     return Minimize();
     case IDM_FILE_EXIT:     return OnFileExit();
     case IDM_HELP_ABOUT:    return OnAbout();
+
+    default: break;
     }
 
     return FALSE;
@@ -174,6 +176,8 @@ LRESULT CView::OnTrayIcon(UINT, WPARAM wparam, LPARAM lparam)
         case IDM_MIN_RESTORE: Restore(); break;
         case IDM_MIN_ABOUT:   OnAbout(); break;
         case IDM_MIN_EXIT:    Destroy(); break;
+
+        default: break;
         }
     }
 
@@ -223,6 +227,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SIZE:       return OnSize(msg, wparam, lparam);
         case WM_SYSCOMMAND: return OnSysCommand(msg, wparam, lparam);
         case MSG_TRAYICON:  return OnTrayIcon(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

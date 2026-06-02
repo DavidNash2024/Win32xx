@@ -115,6 +115,8 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_MOUSEACTIVATE:  return OnMouseActivate(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
         case WM_TIMER:          return OnTimer(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

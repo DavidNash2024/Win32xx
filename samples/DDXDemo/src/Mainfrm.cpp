@@ -105,6 +105,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         case IDC_RADIO_A:
         case IDC_RADIO_B:
         case IDC_RADIO_C:          return OnRadioButton(id);
+
+        default: break;
     }
 
     // Indicate not processed here.
@@ -215,22 +217,24 @@ void CMainFrame::OnMenuUpdate(UINT id)
         bool isCheckA = (m_view.GetCheckA() != 0);
         UINT check = isCheckA ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
+        break;
     }
-    break;
     case IDC_CHECK_B:
     {
         bool isCheckB = (m_view.GetCheckB() != 0);
         UINT check = isCheckB ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
+        break;
     }
-    break;
     case IDC_CHECK_C:
     {
         bool isCheckC = (m_view.GetCheckC() != 0);
         UINT check = isCheckC ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
+        break;
     }
-    break;
+
+    default: break;
     }
 
     if ((id >= IDC_RADIO_A) && (id <= IDC_RADIO_C))
@@ -261,11 +265,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 }
 
-
-// Add the specified buttons to the tool bar.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );

@@ -187,6 +187,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_SHIFT_F1:      return OnShiftF1();               // Accelerator
     case IDM_F1:            return OnF1();                    // Accelerator
 
+    default: break;
     }
 
     return FALSE;
@@ -255,6 +256,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
     case ID_CHECK_A:    OnUpdateCheckA(id);    break;
     case ID_CHECK_B:    OnUpdateCheckB(id);    break;
     case ID_CHECK_C:    OnUpdateCheckC(id);    break;
+
+    default: break;
     }
 
     if ((id >= ID_RADIO_A) && (id <= ID_RADIO_C))
@@ -358,10 +361,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
-// Set the resource IDs and images for the toolbar buttons.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Connect button IDs to button icons.
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton(IDM_FILE_NEW, FALSE);
     AddToolBarButton(IDM_FILE_OPEN, FALSE);
     AddToolBarButton(IDM_FILE_SAVE, FALSE);
@@ -409,6 +416,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SYSCOMMAND:     return OnSysCommand(msg, wparam, lparam);          // Add SC_CONTEXTHELP support
         case WM_HELP:           return 0;                                          // Suppress default handling on F1 and SHIFT F1
         case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);         // Handle left mouse click
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

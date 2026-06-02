@@ -65,6 +65,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:
     case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
+
+    default: break;
     }
 
     return FALSE;
@@ -212,6 +214,8 @@ BOOL CMainFrame::OnFileSave()
             filter = L"Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0";
             ext = L"emf";
             break;
+
+        default: break;
         }
 
         DWORD flags = OFN_OVERWRITEPROMPT;
@@ -240,6 +244,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
         GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
+
+    default: break;
     }
 
     CFrame::OnMenuUpdate(id);
@@ -265,10 +271,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
-// Sets the resource identifiers and images for the toolbar buttons
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the resource identifiers for the toolbar buttons
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -305,6 +315,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case UWM_IMAGELOADED:      return OnImageLoaded((LPCWSTR)lparam);
         case WM_WINDOWPOSCHANGED:  return OnWindowPosChanged(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

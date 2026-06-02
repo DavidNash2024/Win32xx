@@ -67,6 +67,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         GetFocus().SendMessage(WM_PASTE);
         return TRUE;
     }
+
+    default: break;
     }
 
   return FALSE;
@@ -132,6 +134,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
     case ID_CHECK_C:
         OnUpdateCheckC(id);
         break;
+
+    default: break;
     }
 
     if ((id >= ID_RADIO_A) && (id <= ID_RADIO_C))
@@ -190,10 +194,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDB_MENUICONS);
 }
 
-// Configure the toolbar.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW, FALSE );
     AddToolBarButton( IDM_FILE_OPEN, FALSE );
     AddToolBarButton( IDM_FILE_SAVE, FALSE );

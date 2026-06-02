@@ -253,6 +253,8 @@ namespace Win32xx
         //      return x;   // Don't do default processing, but
         //              // instead return a value recommended
         //              // by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault.
@@ -273,14 +275,15 @@ namespace Win32xx
 
             case WM_COMMAND:
             {
-                switch (LOWORD(wparam))
+                if (LOWORD(wparam) == pshHelp)
                 {
-                    case pshHelp:
                     OnHelpButton();
                     return TRUE;
                 }
                 break;
             }
+
+            default: break;
         }
 
         return 0;
@@ -548,6 +551,8 @@ namespace Win32xx
         //      return x;   // Don't do default processing, but
         //              // instead return a value recommended
         //              // by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault.
@@ -569,15 +574,15 @@ namespace Win32xx
 
         case WM_COMMAND:
             {
-                switch (LOWORD(wparam))
+                if (LOWORD(wparam) == pshHelp)
                 {
-                case pshHelp:
                     OnHelpButton();
                     return TRUE;
-
                 }
                 break;
             }
+
+        default: break;
         }
 
         return 0;
@@ -723,6 +728,8 @@ namespace Win32xx
                 return static_cast<INT_PTR>(pDlg->OnDrawPage(
                     reinterpret_cast<HDC>(wparam), message, rc));
             }
+
+        default: break;
         }
         return 0;
     }

@@ -70,6 +70,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         case IDM_FONT_CHOICE:    OnFontChoice();    return TRUE;
         case IDW_VIEW_TOOLBAR:   OnViewToolBar();   return TRUE;
         case IDW_VIEW_STATUSBAR: OnViewStatusBar(); return TRUE;
+
+        default: break;
     }
     return FALSE;
 }
@@ -223,10 +225,7 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(255, 0, 255), IDB_MENUICONS);
 }
 
-// Called from the CFrame::CreateToolBar() function to load the toolbar
-// bitmaps, to connect the tool bar buttons to Resource IDs of the
-// toolbar buttons, and to define the order of appearance of the buttons
-// on the toolbar at runtime.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
     // Connect button IDs to button icons, show enabled status, and give the

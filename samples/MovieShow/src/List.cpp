@@ -125,6 +125,8 @@ int CALLBACK CViewList::CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortView
             compare = pSort->m_isSortDown ? 1 : -1;
         break;
     }
+
+    default: break;
     }
 
     return compare;
@@ -206,6 +208,8 @@ LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw)
 
         return CDRF_DODEFAULT;
     }
+
+    default: break;
     }
 
     return CDRF_DODEFAULT;
@@ -301,6 +305,8 @@ LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
     switch (pCustomDraw->hdr.code)
     {
     case NM_CUSTOMDRAW:          return OnCustomDraw(pCustomDraw);
+
+    default: break;
     }
 
     return 0;
@@ -319,6 +325,8 @@ LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
     case LVN_ITEMACTIVATE:         return OnItemActivate(pListView);
     case LVN_ITEMCHANGED:          return OnItemChanged(pListView);
     case NM_RCLICK:                return OnRClick();
+
+    default: break;
     }
 
     return 0;
@@ -501,6 +509,8 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_WINDOWPOSCHANGED:        return OnWindowPosChanged(msg, wparam, lparam);
         case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

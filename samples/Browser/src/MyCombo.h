@@ -17,7 +17,7 @@ public:
     const CEdit& GetCBEdit() const;
 
 
-	void RestoreItems() const;
+    void RestoreItems() const;
     void SaveItems();
 
 protected:

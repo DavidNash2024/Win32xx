@@ -1008,6 +1008,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
+
+    default: break;
     }
 
     if (nID >= IDM_BOXSET_0)
@@ -1172,6 +1174,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
         break;
     }
 
+    default: break;
     }
 }
 
@@ -1218,6 +1221,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     case HDN_ENDTRACK:
         GetViewList().SetLastColumnWidth();
         return 0;
+
+    default: break;
     }
 
     // Call the base class function.
@@ -1721,7 +1726,11 @@ void CMainFrame::SetupMenuIcons()
 // Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
-    // Add toolbar buttons and set their Resource IDs.
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton(IDM_ADD_FOLDER);
     AddToolBarButton(0);                        // Separator
     AddToolBarButton(IDM_PLAY);
@@ -1765,6 +1774,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PLAYMOVIE:             return PlayMovie((LPCWSTR)wparam);
         case UWM_ONSELECTLISTITEM:      return OnSelectListItem((const MovieInfo*)wparam);
         case UWM_ONRCLICKLISTITEM:      return OnRClickListItem();
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

@@ -38,13 +38,15 @@ INT_PTR CListBoxDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         }
         case WM_SYSCOMMAND:
         {
-            switch (wparam)
+            if (wparam == SC_CLOSE)
             {
-                case SC_CLOSE:
-                    OnCancel();
-                    return TRUE;
+                OnCancel();
+                return TRUE;
             }
+            break;
         }
+
+        default: break;
     }
 
     // Pass unhandled messages on for default processing.

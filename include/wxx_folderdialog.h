@@ -186,6 +186,8 @@ namespace Win32xx
         case BFFM_IUNKNOWN:
             pThis->OnIUnknown(param1);
             break;
+
+        default: break;
         }
 
         return result;

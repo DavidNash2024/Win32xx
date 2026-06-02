@@ -107,6 +107,8 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);
@@ -158,6 +160,8 @@ BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDM_FILE_NEW:      return OnFileNew();
     case IDM_HELP_ABOUT:    return OnHelpAbout();
+
+    default: break;
     }
 
     return FALSE;
@@ -180,7 +184,7 @@ BOOL CContainClasses::OnHelpAbout()
     return TRUE;
 }
 
-// Set the Bitmap resource for the toolbar
+// Assigns images and command IDs to the toolbar buttons.
 void CContainClasses::SetupToolBar()
 {
     SetToolBarImages(lightgray, IDW_MAIN, 0, 0);

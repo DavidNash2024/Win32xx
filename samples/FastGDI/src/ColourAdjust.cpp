@@ -74,6 +74,8 @@ INT_PTR CColorAdjust::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_DPICHANGED: return OnDpiChanged(msg, wparam, lparam);
         case WM_HSCROLL:    return OnHScroll(msg, wparam, lparam);
         case WM_PAINT:      return OnPaint(msg, wparam, lparam);
+
+        default: break;
         }
 
         return DialogProcDefault(msg, wparam, lparam);
@@ -115,6 +117,8 @@ BOOL CColorAdjust::OnCommand(WPARAM wparam, LPARAM lparam)
     switch (HIWORD(wparam))
     {
     case EN_CHANGE:    return OnTextChange(HWND(lparam));
+
+    default: break;
     }
 
     // return FALSE for unhandled commands.

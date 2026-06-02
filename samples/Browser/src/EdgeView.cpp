@@ -187,6 +187,8 @@ LRESULT CEdgeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_SIZE:       return OnSize(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

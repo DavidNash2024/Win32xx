@@ -262,6 +262,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
     case IDM_HELP_ABOUT:     return OnHelp();
+
+    default: break;
     }
 
     // Handle WM_COMMAND from ComboboxEx.
@@ -442,6 +444,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
     case IDM_VIEW_CARDS:
         GetFrameMenu().CheckMenuItem(id, m_showCards ? MF_CHECKED : MF_UNCHECKED);
         break;
+
+    default: break;
     }
 
     // Check the color menu item and make it a radio item.
@@ -695,10 +699,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR_SML);
 }
 
-// Configures the toolbars.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the first toolbar buttons
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( 0 );              // Separator
@@ -763,6 +771,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case UWM_ADDCOMBOBAND:     return AddComboBand();
         case WM_GETMINMAXINFO:     return OnGetMinMaxInfo(msg, wparam, lparam);
+
+        default: break;
         }
 
         //  pass unhandled messages on for default processing

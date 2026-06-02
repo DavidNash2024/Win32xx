@@ -66,9 +66,13 @@ INT_PTR CPrintPreviewEx::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
                     SaveSizesRegistry();
                     Destroy();
                     return TRUE;
+
+                default: break;
             }
             break;
         }
+
+        default: break;
     }
       // Pass unhandled messages on to parent DialogProc.
     return DialogProcDefault(msg, wparam, lparam);
@@ -207,6 +211,8 @@ BOOL CPrintPreviewEx::OnCommand(WPARAM wparam, LPARAM lparam)
         case IDC_PREVIEW_LAST:      return OnLastButton();
         case IDC_PREVIEW_CLOSE:     return ClosePreview();
         case IDC_PREVIEW_HELP:      return OnPreviewHelp();
+
+        default: break;
     }
     return FALSE;
 }

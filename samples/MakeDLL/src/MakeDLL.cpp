@@ -33,6 +33,8 @@ BOOL WINAPI DllMain( HANDLE, DWORD  ul_reason_for_call, LPVOID )
     case DLL_PROCESS_DETACH:
         TRACE("DLL_PROCESS_DETACH\n");
         break;
+
+    default: break;
     }
 
     return TRUE;

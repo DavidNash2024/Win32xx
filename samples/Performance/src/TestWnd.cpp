@@ -64,6 +64,8 @@ LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_TESTMESSAGE:   return OnTestMessage();
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

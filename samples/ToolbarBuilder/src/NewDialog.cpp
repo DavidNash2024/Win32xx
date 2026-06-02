@@ -60,6 +60,8 @@ int CNewDialog::GetColorBits() const
     case 1: return 32;
     case 2: return 24;
     case 3: return 8;
+
+    default: break;
     }
 
     return 32;
@@ -79,6 +81,8 @@ int CNewDialog::GetImageSize() const
     case 7: return 128;
     case 8: return 192;
     case 9: return 256;
+
+    default: break;
     }
 
     return 24;
@@ -101,8 +105,9 @@ BOOL CNewDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO9:    return OnRangeOfImageSizes(IDC_RADIO1, IDC_RADIO9, id);
 
     case IDC_RADIO10:   // intentionally blank
-    case IDC_RADIO11:   // intentionally blank
-    case IDC_RADIO12:   return OnRangeOfColorBits(IDC_RADIO10, IDC_RADIO12, id);
+    case IDC_RADIO11:   return OnRangeOfColorBits(IDC_RADIO10, IDC_RADIO11, id);
+
+    default: break;
     }
 
     return FALSE;
@@ -111,11 +116,11 @@ BOOL CNewDialog::OnCommand(WPARAM wparam, LPARAM)
 // Called before the dialog is displayed.
 BOOL CNewDialog::OnInitDialog()
 {
-    // Select the first image size radio button.
+    // Select the previously selected image size radio button.
     CheckRadioButton(IDC_RADIO1, IDC_RADIO9, m_imageSizeRadio);
 
-    // Select the first color format radio button.
-    CheckRadioButton(IDC_RADIO10, IDC_RADIO12, m_colorBitsRadio);
+    // Select the previously selected color format radio button.
+    CheckRadioButton(IDC_RADIO10, IDC_RADIO11, m_colorBitsRadio);
 
     return TRUE;
 }
@@ -124,7 +129,7 @@ BOOL CNewDialog::OnInitDialog()
 bool CNewDialog::OnRangeOfImageSizes(UINT idFirst, UINT idLast, UINT idClicked)
 {
     CheckRadioButton(idFirst, idLast, idClicked);
-    CheckRadioButton(IDC_RADIO10, IDC_RADIO12, m_colorBitsRadio);
+    CheckRadioButton(IDC_RADIO10, IDC_RADIO11, m_colorBitsRadio);
     m_imageSizeRadio = idClicked;
 
     return  true;

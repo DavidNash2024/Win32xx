@@ -98,6 +98,7 @@ LRESULT CViewMax::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             Invalidate();
             return 0;
 
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

@@ -113,8 +113,10 @@ LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
             CClientDC dc = GetDC();
             OnDraw(dc);
+            break;
         }
-        break;
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

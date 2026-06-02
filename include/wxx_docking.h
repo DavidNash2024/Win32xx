@@ -806,6 +806,8 @@ namespace Win32xx
         case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.
@@ -978,6 +980,8 @@ namespace Win32xx
                         drawDC.TextOut(rcClose.left, rcClose.top, _T("\x64"), 1);
                         break;
                     }
+
+                    default: break;
                     }
 
                     // Draw the close button (a Marlett "r" looks like "X").
@@ -1372,6 +1376,8 @@ namespace Win32xx
             return result;
         }
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
+
+        default: break;
         }
 
         return CWnd::WndProcDefault(msg, wparam, lparam);
@@ -1455,6 +1461,8 @@ namespace Win32xx
         case DS_DOCKED_BOTTOM:
             rcHint.top = rcHint.bottom - Width;
             break;
+
+        default: break;
         }
 
         return rcHint;
@@ -1514,6 +1522,8 @@ namespace Win32xx
         case DS_DOCKED_BOTTOMMOST:
             rcHint.top = rcHint.bottom - width;
             break;
+
+        default: break;
         }
 
         return rcHint;
@@ -3317,6 +3327,8 @@ namespace Win32xx
             pDocker->SetDockSize(rc.Height());
             DockOuter(pDocker, pDocker->GetDockStyle() | dockZone);
             break;
+
+        default: break;
         }
 
         GetDockHint().Destroy();
@@ -3436,6 +3448,8 @@ namespace Win32xx
             case UWN_DOCKSTART:     return OnDockStart(pdp);
             case UWN_DOCKMOVE:      return OnDockMove(pdp);
             case UWN_DOCKEND:       return OnDockEnd(pdp);
+
+            default: break;
             }
         }
 
@@ -3724,8 +3738,9 @@ namespace Win32xx
                 rcChild.top = rcChild.bottom - dockSize;
                 rcChild.top = std::min(rcChild.top, rc.bottom - minSize);
                 rcChild.top = std::max(rcChild.top, rc.top + minSize);
-
                 break;
+
+            default: break;
             }
 
             if (pDocker->IsDocked())
@@ -3852,6 +3867,8 @@ namespace Win32xx
             dockSize = std::max(-barWidth, dockSize);
             pDocker->SetDockSize(dockSize);
             break;
+
+        default: break;
         }
 
         RecalcDockLayout();
@@ -4522,6 +4539,8 @@ namespace Win32xx
         case UWM_DOCKACTIVATE:          return OnDockActivated(msg, wparam, lparam);
         case UWM_DOCKDESTROYED:         return OnDockDestroyed(msg, wparam, lparam);
         case UWM_GETCDOCKER:            return reinterpret_cast<LRESULT>(this);
+
+        default: break;
         }
 
         return CWnd::WndProcDefault(msg, wparam, lparam);
@@ -4946,6 +4965,8 @@ namespace Win32xx
         switch (pHeader->code)
         {
         case TCN_SELCHANGE: return OnTCNSelChange(pHeader);
+
+        default: break;
         }
 
         return 0;
@@ -5419,6 +5440,8 @@ namespace Win32xx
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
         case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
         case UWM_GETCDOCKCONTAINER: return reinterpret_cast<LRESULT>(this);
+
+        default: break;
         }
 
         // pass unhandled messages on to CTab for processing
@@ -5481,7 +5504,6 @@ namespace Win32xx
         LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
         switch (pHeader->code)
         {
-
         // Display tooltips for the toolbar.
         case TTN_GETDISPINFO:
             {
@@ -5509,6 +5531,8 @@ namespace Win32xx
                 }
             }
             break;
+
+        default: break;
         } // switch LPNMHDR
 
         return 0;
@@ -5575,6 +5599,8 @@ namespace Win32xx
         case WM_SIZE:
             RecalcLayout();
             break;
+
+        default: break;
         }
 
         // pass unhandled messages on for default processing.

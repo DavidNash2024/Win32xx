@@ -95,6 +95,8 @@ BOOL CFormView::OnCommand(WPARAM wparam, LPARAM)
     case ID_RADIO_A:
     case ID_RADIO_B:    // intentionally blank
     case ID_RADIO_C:    return OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
+
+    default: break;
     }
 
     return FALSE;

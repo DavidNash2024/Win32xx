@@ -44,6 +44,8 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc
@@ -100,6 +102,8 @@ BOOL CViewDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO1:    // intentionally blank
     case IDC_RADIO2:
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
+
+    default: break;
     }
 
     return FALSE;

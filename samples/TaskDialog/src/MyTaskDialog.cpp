@@ -61,6 +61,8 @@ BOOL CMyTaskDialog::OnTDButtonClicked(int buttonID)
     case IDCANCEL:
         TRACE(L"The 'Cancel' button was pressed\n");
         return FALSE;
+
+    default: break;
     }
 
     // Return FALSE to close the dialog.
@@ -124,6 +126,8 @@ BOOL CMyTaskDialog::OnTDRadioButtonClicked(int buttonID)
     case RB_THIRD:
         TRACE(L"Third radio button selected\n");
         break;
+
+    default: break;
     }
 
     return TRUE;

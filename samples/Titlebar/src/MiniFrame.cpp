@@ -318,6 +318,8 @@ BOOL CMiniFrame::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDM_FILE_EXIT:       return OnFileExit();
     case IDM_HELP_ABOUT:      return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -458,6 +460,8 @@ LRESULT CMiniFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         return hit;
     }
+
+    default: break;
     }
 
     // Provide the hit test for the caption buttons.
@@ -467,6 +471,8 @@ LRESULT CMiniFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     case TitlebarButton::Minimize:    return HTMINBUTTON;
     case TitlebarButton::Maximize:    return HTMAXBUTTON;
     case TitlebarButton::Close:       return HTCLOSE;
+
+    default: break;
     }
 
     // Looks like adjustment happening in NCCALCSIZE is messing with the detection
@@ -604,6 +610,8 @@ LRESULT CMiniFrame::OnNotify(WPARAM, LPARAM lparam)
         }
 
         return CDRF_DODEFAULT;   // Do default drawing.
+
+    default: break;
     }
 
     return 0;
@@ -705,6 +713,8 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_PAINT:              return OnPaint(msg, wparam, lparam);
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
         case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

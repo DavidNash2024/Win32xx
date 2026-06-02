@@ -80,6 +80,8 @@ LRESULT CDialogsTree::OnNotifyReflect(WPARAM, LPARAM lparam)
     switch (pTreeView->hdr.code)
     {
     case TVN_SELCHANGED:       return OnSelChanged();
+
+    default: break;
     }
 
     return 0;

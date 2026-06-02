@@ -34,6 +34,8 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SIZE:
             Invalidate();
             break;
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);
@@ -164,6 +166,8 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);
@@ -267,6 +271,8 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

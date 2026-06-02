@@ -108,6 +108,8 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Do default processing for other messages.
@@ -194,6 +196,8 @@ BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM)
     case IDM_COLOR_GREEN:   return OnColor(green);
     case IDM_COLOR_BLUE:    return OnColor(blue);
     case IDM_COLOR_WHITE:   return OnColor(white);
+
+    default: break;
     }
 
     return FALSE;
@@ -224,6 +228,8 @@ LRESULT CSplitterMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_SIZE:   return OnSize(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Do default processing for other messages.

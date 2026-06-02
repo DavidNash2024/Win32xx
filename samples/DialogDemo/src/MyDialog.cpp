@@ -30,6 +30,8 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_DPICHANGED:     return OnDpiChanged();
         case UWM_SETSTATIC:     return OnSetStatic(wparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -72,6 +74,8 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO1:
     case IDC_RADIO2:    // intentionally blank
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
+
+    default: break;
     }
 
     return FALSE;

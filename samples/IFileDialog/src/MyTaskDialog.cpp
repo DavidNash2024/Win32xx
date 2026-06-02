@@ -59,6 +59,8 @@ BOOL CMyTaskDialog::OnTDButtonClicked(int buttonID)
         return TRUE;
     case IDCANCEL:
         return FALSE;
+
+    default: break;
     }
 
     // Return FALSE to close the dialog.

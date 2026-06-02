@@ -127,6 +127,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
     case IDM_HIDE_SINGLE_TAB:   return OnHideSingleTab();
+
+    default: break;
     }
 
     return FALSE;
@@ -242,6 +244,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
         check = (m_hideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
         break;
+
+    default: break;
     }
 
     CDockFrame::OnMenuUpdate(id);
@@ -310,9 +314,15 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
-// Set the Resource IDs for the toolbar buttons
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
+    SetToolBarImages(lightgray, IDW_MAIN, 0, 0);
     AddToolBarButton( IDM_FILE_NEW,   FALSE );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );
@@ -342,6 +352,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_GETMINMAXINFO:   return OnGetMinMaxInfo(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

@@ -115,6 +115,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -303,8 +305,10 @@ void CMainFrame::OnMenuUpdate(UINT id)
     {
         // Enable these menu items if the template is shown in the rich edit view.
         GetFrameMenu().EnableMenuItem(id, m_isTemplateShown? MF_ENABLED : MF_GRAYED);
+        break;
     }
-    break;
+
+    default: break;
     }
 
     CDockFrame::OnMenuUpdate(id);
@@ -429,9 +433,14 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
-// Set the resource IDs and images for the toolbar buttons.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -505,6 +514,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWCLOSE:         OnPreviewClose();   break;
         case UWM_PREVIEWPRINT:         OnPreviewPrint();   break;
         case UWM_PREVIEWSETUP:         OnPreviewSetup();   break;
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

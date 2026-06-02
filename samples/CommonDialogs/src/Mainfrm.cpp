@@ -134,6 +134,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         case IDW_FILE_MRU_FILE3:
         case IDW_FILE_MRU_FILE4:
         case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
+
+        default: break;
     }
     return FALSE;
 }
@@ -290,6 +292,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
         checked = m_isTextWrap ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, checked);
         break;
+
+    default: break;
     }
 
     return CFrame::OnMenuUpdate(id);
@@ -345,6 +349,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
         case EN_DROPFILES:
             DropFiles(lparam);
             return TRUE;
+
+        default: break;
     }
     return CFrame::OnNotify(wparam, lparam);
 }
@@ -525,14 +531,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
 }
 
-// Called from the CFrame::CreateToolBar() method to load the toolbar bitmaps,
-// to connect the tool bar buttons to resource IDs of the toolbar buttons, and
-// to define the order of appearance of the buttons on the toolbar at runtime.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Connect button IDs to button icons, show enabled status, and
-    // give the explicit image index iImage of each button in the bitmap.
-    // Add the toolbar buttons in the order they are to appear at runtime.
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton(IDM_FILE_NEW,      TRUE, 0, 0);
     AddToolBarButton(IDM_FILE_OPEN,     TRUE, 0, 1);
     AddToolBarButton(IDM_FILE_SAVE,     TRUE, 0, 2);
@@ -551,7 +557,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(0);  // Separator
     AddToolBarButton(IDW_ABOUT,         TRUE, 0, 11);
 
-    // Set the toolbar image list: use defaults for hot and disabled
+    // Set the toolbar image list: use defaults for hot and disabled.
     SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
 }
 

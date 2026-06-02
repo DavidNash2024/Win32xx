@@ -376,8 +376,10 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_SETDEFAULTOPTIONS:
         {
             SetDefaultPrintOptions();
+            break;
         }
-        break;
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

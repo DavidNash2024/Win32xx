@@ -370,6 +370,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -748,6 +750,8 @@ LRESULT CMainFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         return hit;
     }
+
+    default: break;
     }
 
     // Provide the hit test for the caption buttons.
@@ -758,6 +762,8 @@ LRESULT CMainFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     case TitlebarButton::Maximize:    return HTMAXBUTTON;
     case TitlebarButton::Close:       return HTCLOSE;
     case TitlebarButton::None:        break;
+
+    default: break;
     }
 
     // Looks like adjustment happening in NCCALCSIZE is messing with the detection
@@ -937,9 +943,14 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
 }
 
-// Set the resource IDs and images for the toolbar buttons.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -978,6 +989,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWCLOSE:      return OnPreviewClose();
         case UWM_PREVIEWPRINT:      return OnPreviewPrint();
         case UWM_PREVIEWSETUP:      return OnPreviewSetup();
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

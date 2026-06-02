@@ -256,8 +256,8 @@ HRESULT CBrowserWindow::HandleTabMessageReceived(size_t tabId, ICoreWebView2* we
             jsonObj["args"]["tabId"] = tabId;
             CheckFailure(PostJsonToWebView(jsonObj, m_controlsWebView.Get()), L"Couldn't perform favorites operation.");
         }
+        break;
     }
-    break;
     case MG_GET_SETTINGS:
     {
         std::wstring fileURI = GetFilePathAsURI(GetFullPathFor(L"wvbrowser_ui\\content_ui\\settings.html"));
@@ -267,8 +267,8 @@ HRESULT CBrowserWindow::HandleTabMessageReceived(size_t tabId, ICoreWebView2* we
             jsonObj["args"]["tabId"] = tabId;
             CheckFailure(PostJsonToWebView(jsonObj, m_controlsWebView.Get()), L"Couldn't retrieve settings.");
         }
+        break;
     }
-    break;
     case MG_CLEAR_CACHE:
     {
         std::wstring fileURI = GetFilePathAsURI(GetFullPathFor(L"wvbrowser_ui\\content_ui\\settings.html"));
@@ -290,8 +290,8 @@ HRESULT CBrowserWindow::HandleTabMessageReceived(size_t tabId, ICoreWebView2* we
 
             CheckFailure(PostJsonToWebView(jsonObj, m_tabs.at(tabId)->m_contentWebView.Get()), L"");
         }
+        break;
     }
-    break;
     case MG_CLEAR_COOKIES:
     {
         std::wstring fileURI = GetFilePathAsURI(GetFullPathFor(L"wvbrowser_ui\\content_ui\\settings.html"));
@@ -314,8 +314,8 @@ HRESULT CBrowserWindow::HandleTabMessageReceived(size_t tabId, ICoreWebView2* we
 
             CheckFailure(PostJsonToWebView(jsonObj, m_tabs.at(tabId)->m_contentWebView.Get()), L"");
         }
+        break;
     }
-    break;
     case MG_GET_HISTORY:
     case MG_REMOVE_HISTORY_ITEM:
     case MG_CLEAR_HISTORY:
@@ -327,13 +327,14 @@ HRESULT CBrowserWindow::HandleTabMessageReceived(size_t tabId, ICoreWebView2* we
             jsonObj["args"]["tabId"] = tabId;
             CheckFailure(PostJsonToWebView(jsonObj, m_controlsWebView.Get()), L"Couldn't perform history operation");
         }
+        break;
     }
-    break;
+
     default:
     {
-        OutputDebugString(L"Unexpected message\n");
+        Trace(L"Unexpected message\n");
+        break;
     }
-    break;
     }
 
     return S_OK;
@@ -699,15 +700,15 @@ void CBrowserWindow::SetUIMessageBroker()
             std::map<size_t, std::unique_ptr<Tab>>::iterator it = m_tabs.find(id);
             if (it == m_tabs.end())
             {
-                m_tabs.insert(std::pair<size_t,std::unique_ptr<Tab>>(id, std::move(newTab)));
+                m_tabs.insert(std::pair<size_t, std::unique_ptr<Tab>>(id, std::move(newTab)));
             }
             else
             {
                 m_tabs.at(id)->m_contentController->Close();
                 it->second = std::move(newTab);
             }
+            break;
         }
-        break;
         case MG_NAVIGATE:
         {
             std::string uriA(args.at("uri").get<std::string>());
@@ -738,63 +739,63 @@ void CBrowserWindow::SetUIMessageBroker()
                 std::string uri = args.at("encodedSearchURI").get<std::string>().c_str();
                 CheckFailure(m_tabs.at(m_activeTabId)->m_contentWebView->Navigate(AtoW(uri.c_str(), CP_UTF8)), L"Can't navigate to requested page.");
             }
+            break;
         }
-        break;
         case MG_GO_FORWARD:
         {
             CheckFailure(m_tabs.at(m_activeTabId)->m_contentWebView->GoForward(), L"");
+            break;
         }
-        break;
         case MG_GO_BACK:
         {
             CheckFailure(m_tabs.at(m_activeTabId)->m_contentWebView->GoBack(), L"");
+            break;
         }
-        break;
         case MG_RELOAD:
         {
             CheckFailure(m_tabs.at(m_activeTabId)->m_contentWebView->Reload(), L"");
+            break;
         }
-        break;
         case MG_CANCEL:
         {
             CheckFailure(m_tabs.at(m_activeTabId)->m_contentWebView->CallDevToolsProtocolMethod(L"Page.stopLoading", L"{}", nullptr), L"");
+            break;
         }
-        break;
         case MG_SWITCH_TAB:
         {
             size_t tabId = args.at("tabId").get<size_t>();
 
             SwitchToTab(tabId);
+            break;
         }
-        break;
         case MG_CLOSE_TAB:
         {
             size_t id = args.at("tabId").get<size_t>();
             m_tabs.at(id)->m_contentController->Close();
             m_tabs.erase(id);
+            break;
         }
-        break;
         case MG_CLOSE_WINDOW:
         {
             DestroyWindow(*this);
+            break;
         }
-        break;
         case MG_SHOW_OPTIONS:
         {
             CheckFailure(m_optionsController->put_IsVisible(TRUE), L"");
             m_optionsController->MoveFocus(COREWEBVIEW2_MOVE_FOCUS_REASON_PROGRAMMATIC);
+            break;
         }
-        break;
         case MG_HIDE_OPTIONS:
         {
             CheckFailure(m_optionsController->put_IsVisible(FALSE), L"Something went wrong when trying to close the options dropdown.");
+            break;
         }
-        break;
         case MG_OPTION_SELECTED:
         {
             m_tabs.at(m_activeTabId)->m_contentController->MoveFocus(COREWEBVIEW2_MOVE_FOCUS_REASON_PROGRAMMATIC);
+            break;
         }
-        break;
         case MG_GET_FAVORITES:
         case MG_GET_SETTINGS:
         case MG_GET_HISTORY:
@@ -804,13 +805,13 @@ void CBrowserWindow::SetUIMessageBroker()
             jsonObj["args"].erase("tabId");
 
             CheckFailure(PostJsonToWebView(jsonObj, m_tabs.at(tabId)->m_contentWebView.Get()), L"Requesting history failed.");
+            break;
         }
-        break;
         default:
         {
             OutputDebugString(L"Unexpected message\n");
+            break;
         }
-        break;
         }
 
         return S_OK;

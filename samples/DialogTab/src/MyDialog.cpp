@@ -27,6 +27,8 @@ INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_CTLCOLORDLG:    return OnCtlColorDlg(msg, wparam, lparam);
         case WM_CTLCOLORSTATIC: return OnCtlColorStatic(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -69,6 +71,8 @@ BOOL CButtonDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO1:
     case IDC_RADIO2:    // intentionally blank
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
+
+    default: break;
     }
 
     return FALSE;
@@ -161,6 +165,7 @@ INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
             if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
             break;
 
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc

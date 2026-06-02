@@ -153,6 +153,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -414,6 +416,8 @@ STDMETHODIMP CMainFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* pVi
         case UI_VIEWVERB_ERROR:
             result = E_FAIL;
             break;
+
+        default: break;
         }
     }
 
@@ -426,8 +430,13 @@ void CMainFrame::SetPenColor(COLORREF clr)
     m_view.SetPenColor(clr);
 }
 
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
     // Define our toolbar. Used when there isn't a ribbon.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
@@ -476,6 +485,8 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key, _
         // Set the initial pen color
         result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
         break;
+
+    default: break;
     }
 
     return result;
@@ -491,6 +502,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_GETALLPOINTS:      return OnGetAllPoints();
         case UWM_SENDPOINT:         return OnSendPoint(wparam);
         case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Use the default message handling for remaining messages.

@@ -413,8 +413,10 @@ namespace Win32xx
                     CDC dc(lpNMCustomDraw->nmcd.hdc);
                     pMenubar->DrawAllMDIButtons(dc);
                 }
+                break;
             }
-            break;
+
+            default: break;
             }
         }
 
@@ -593,8 +595,8 @@ namespace Win32xx
                     activeMenu.CheckMenuItem(id, MF_CHECKED);
                 else
                     activeMenu.CheckMenuItem(id, MF_UNCHECKED);
+                break;
             }
-            break;
 
         case IDW_VIEW_TOOLBAR:
             {
@@ -610,8 +612,10 @@ namespace Win32xx
                     activeMenu.CheckMenuItem(id, MF_CHECKED);
                 else
                     activeMenu.CheckMenuItem(id, MF_UNCHECKED);
+                break;
             }
-            break;
+
+        default: break;
         }
     }
 
@@ -836,6 +840,8 @@ namespace Win32xx
             }
             case UWM_GETCMDIFRAMET:     return reinterpret_cast<LRESULT>(this);
             case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
+
+            default: break;
         }
 
         return T::WndProcDefault(msg, wparam, lparam);
@@ -916,6 +922,8 @@ namespace Win32xx
         case WM_MDIACTIVATE:    return OnMDIActivate(msg, wparam, lparam);
         case WM_MDIDESTROY:     return OnMDIDestroy(msg, wparam, lparam);
         case WM_MDIGETACTIVE:   return OnMDIGetActive(msg, wparam, lparam);
+
+        default: break;
         }
 
         return CWnd::WndProcDefault(msg, wparam, lparam);
@@ -1160,7 +1168,10 @@ namespace Win32xx
         {
             case WM_MDIACTIVATE:      return OnMDIActivate(msg, wparam, lparam);
             case WM_WINDOWPOSCHANGED: return OnWindowPosChanged(msg, wparam, lparam);
+
+            default: break;
         }
+
         return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 

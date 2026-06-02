@@ -232,6 +232,8 @@ LRESULT CD2DView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_DISPLAYCHANGE:  return OnDisplayChange(msg, wparam, lparam);
         case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

@@ -173,7 +173,7 @@ void CMainMDIFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
-// Define the resource IDs and images for toolbar buttons.
+// Assign the resource IDs and images to toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar.
@@ -201,6 +201,8 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:    return OnMouseActivate(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

@@ -66,6 +66,8 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO1:    // intentionally blank
     case IDC_RADIO2:
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
+
+    default: break;
     }
 
     return FALSE;

@@ -39,6 +39,8 @@ INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case USER_CONNECT:      return OnSocketConnect();
         case USER_DISCONNECT:   return OnSocketDisconnect();
         case USER_RECEIVE:      return OnSocketReceive();
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -101,6 +103,8 @@ BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM)
         // Give keyboard focus to the Send edit box
         GotoDlgCtrl(m_editSend);
         return TRUE;
+
+    default: break;
     }
 
     return FALSE;
@@ -283,9 +287,8 @@ void CClientDialog::OnStartClient()
                     return;
                 }
                 m_client.StartEvents();
-
+                break;
             }
-            break;
 
         case SOCK_DGRAM:
             {
@@ -313,8 +316,10 @@ void CClientDialog::OnStartClient()
                 AppendText(m_editStatus, L"Connected, ready to send");
                 GotoDlgCtrl(m_editSend);
                 m_isClientConnected = true;
+                break;
             }
-            break;
+
+        default: break;
         }
     }
     else
@@ -352,8 +357,8 @@ void CClientDialog::OnSend()
             if (SOCKET_ERROR == m_client.Send(send, send.GetLength(), 0))
                 if (WSAGetLastError() != WSAEWOULDBLOCK)
                     AppendText(m_editStatus, L"Send Failed");
+            break;
         }
-        break;
     case SOCK_DGRAM:    // for UDP client
         {
             LRESULT check = m_radioIP4.GetCheck();
@@ -376,8 +381,10 @@ void CClientDialog::OnSend()
             if (SOCKET_ERROR == m_client.SendTo(WtoA(strSend), strSend.GetLength(), 0, strAddr, port ))
                 if (WSAGetLastError() != WSAEWOULDBLOCK)
                     AppendText(m_editStatus, L"SendTo Failed");
+            break;
         }
-        break;
+
+    default: break;
     }
 }
 

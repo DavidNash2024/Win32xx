@@ -234,6 +234,8 @@ namespace Win32xx
         case UWM_DOCKACTIVATE:      return OnDockActivated(msg, wparam, lparam);
         case UWM_DOCKDESTROYED:     return OnDockDestroyed(msg, wparam, lparam);
         case UWM_GETCDOCKER:        return reinterpret_cast<LRESULT>(this);
+
+        default: break;
         }
 
         return CFrameT<CDocker>::WndProcDefault(msg, wparam, lparam);

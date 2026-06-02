@@ -7,15 +7,10 @@
 
 
 // User defined messages used in this application.
-#define UWM_ADDCOMBOBAND          (WM_APP + 0x0001)
-#define UWM_HISTORYCHANGED        (WM_APP + 0x0002)
-#define UWM_NAVIGATIONCOMPLETED   (WM_APP + 0x0003)
-#define UWM_NAVIGATIONSTARTED     (WM_APP + 0x0004)
-#define UWM_SOURCECHANGED         (WM_APP + 0x0005)
-
-// UWM_ADDCOMBOBAND parameters
-//   wparam - This parameter is not used.
-//   lparam - This parameter is not used.
+#define UWM_HISTORYCHANGED        (WM_APP + 0x0001)
+#define UWM_NAVIGATIONCOMPLETED   (WM_APP + 0x0002)
+#define UWM_NAVIGATIONSTARTED     (WM_APP + 0x0003)
+#define UWM_SOURCECHANGED         (WM_APP + 0x0004)
 
 // UWM_HISTORYCHANGED parameters
 //   wparam - This parameter is not used.

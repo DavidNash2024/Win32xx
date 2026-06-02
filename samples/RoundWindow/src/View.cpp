@@ -47,6 +47,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDM_COLOR:     return OnColor();
     case IDM_EXIT:      return OnExit();
+
+    default: break;
     }
 
     // Return FALSE for unhandled commands.
@@ -250,6 +252,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
         case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

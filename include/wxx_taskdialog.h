@@ -794,6 +794,8 @@ namespace Win32xx
         case TDN_VERIFICATION_CLICKED:
             OnTDVerificationCheckboxClicked(isClicked);
             break;
+
+        default: break;
         }
 
         return S_OK;
@@ -813,6 +815,8 @@ namespace Win32xx
         //      OnMessage2();
         //      return x;       // Don't do default processing, but instead return
         //                      //  a value recommended by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to TaskDialogProcDefault

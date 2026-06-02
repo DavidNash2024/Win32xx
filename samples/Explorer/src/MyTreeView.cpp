@@ -306,6 +306,8 @@ LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lparam)
     case TVN_ITEMEXPANDING: return OnTVNExpanding(reinterpret_cast<LPNMTREEVIEW>(lparam));
     case TVN_GETDISPINFO:   return OnTVNGetDispInfo(reinterpret_cast<LPNMTVDISPINFO>(lparam));
     case TVN_SELCHANGED:    return OnTVNSelChanged(reinterpret_cast<LPNMTREEVIEW>(lparam));
+
+    default: break;
     }
 
     return 0;
@@ -360,8 +362,10 @@ LRESULT CMyTreeView::OnTVNExpanding(LPNMTREEVIEW pNMTV)
         UINT ExpandedOnce = pNMTV->itemNew.state & TVIS_EXPANDEDONCE;
         if (!ExpandedOnce)
             GetChildItems(pNMTV->itemNew.hItem);
+        break;
     }
-    break;
+
+    default: break;
     }
 
     return 0;
@@ -448,8 +452,10 @@ LRESULT CMyTreeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             // Add features implemented via IContextMenu2.
             if (m_ccm2.GetIContextMenu2())
                 m_ccm2.HandleMenuMsg(msg, wparam, lparam);
+            break;
         }
-        break;
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

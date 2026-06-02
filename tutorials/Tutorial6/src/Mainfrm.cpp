@@ -31,6 +31,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
     case IDM_FILE_EXIT:       return OnFileExit();
+
+    default: break;
     }
 
     return FALSE;

@@ -423,6 +423,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
         check = (m_isMDITabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
         break;
+
+    default: break;
     }
 
     CDockFrame::OnMenuUpdate(id);
@@ -511,9 +513,14 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_NEWTREE, IDI_CLASSVIEW);
 }
 
-// Set the Resource IDs for the toolbar buttons
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );
@@ -538,6 +545,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Always pass unhandled messages on to WndProcDefault.

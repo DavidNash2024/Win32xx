@@ -149,6 +149,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_TIMER:  return OnTimer(msg, wparam, lparam);
+
+        default: break;
         }
 
         // pass unhandled messages on for default processing

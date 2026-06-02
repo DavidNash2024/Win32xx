@@ -89,6 +89,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_VIEW_REPORT:       return OnViewReport();
     case IDM_SHOW_HIDDEN:       return OnShowHidden();
     case IDM_VIEWMENU:          return OnViewMenu();
+
+    default: break;
     }
 
     return FALSE;
@@ -236,7 +238,10 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
         {
             if (pHeader->hwndFrom == GetToolBar())
                 DoPopupMenu();
+            break;
         }
+
+        default: break;
 
     } //switch LPNMHDR
 
@@ -276,6 +281,7 @@ BOOL CMainFrame::OnViewList()
 
     GetListView().ViewList();
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, MF_BYCOMMAND);
+
     return TRUE;
 }
 
@@ -306,6 +312,8 @@ BOOL CMainFrame::OnViewSmallIcon()
 
     GetListView().ViewSmallIcons();
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, MF_BYCOMMAND);
+
+    GetListView().SendMessage(LVM_SETICONSPACING, 0, -1);
     return TRUE;
 }
 
@@ -379,9 +387,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
-// Define our toolbar.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW  , FALSE, L"New" );
     AddToolBarButton( IDM_FILE_OPEN , FALSE, L"Open" );
     AddToolBarButton( IDM_FILE_SAVE , FALSE, L"Save" );
@@ -398,7 +411,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT, TRUE,  L" About " );
 
-    // Use larger buttons
+    // Assign larger button images.
     SetToolBarImages(lightgray, IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
     // Configure the ViewMenu button to bring up a menu
@@ -413,6 +426,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
+
+        default: break;
         }
 
         // pass any unhandled messages on for default processing

@@ -49,6 +49,8 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             // Force the window to be repainted.
             Invalidate();
             break;      // Also do default processing
+
+        default: break;
         }
 
         // Do default processing for other messages
@@ -136,6 +138,8 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM)
         m_view.SetColor(white);
         Invalidate();
         return TRUE;
+
+    default: break;
     }
 
     return FALSE;

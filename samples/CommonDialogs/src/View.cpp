@@ -83,6 +83,8 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         Invalidate();
         break;  // Also do default processing.
     }
+
+    default: break;
     }
 
     // Pass unhandled messages on for default processing.
@@ -118,6 +120,8 @@ INT_PTR CView::OnCtlColor(UINT msg, WPARAM wparam, LPARAM)
         case CTLCOLOR_SCROLLBAR:
         case CTLCOLOR_STATIC:
             break;
+
+        default: break;
     }
 
     return (INT_PTR)0;
@@ -157,6 +161,8 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
         case EN_DROPFILES: // A file has been dropped in the rich edit box.
             SendMessage(m_parent, WM_NOTIFY, wparam, lparam);
             return TRUE;
+
+        default: break;
     }
 
     return CDialog::OnNotify(wparam, lparam);

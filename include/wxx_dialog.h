@@ -304,6 +304,8 @@ namespace Win32xx
         //      OnMessage2();
         //      return x;       // Don't do default processing, but instead return
         //                      //  a value recommended by the Windows API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault.
@@ -321,41 +323,43 @@ namespace Win32xx
             {
                 // Center the dialog.
                 CenterWindow();
+                return OnInitDialog();
             }
-            return OnInitDialog();
         case WM_CLOSE:
             {
                 OnClose();
                 return 0;
             }
         case WM_COMMAND:
+        {
+            if (HIWORD(wparam) == BN_CLICKED)
             {
-                if (HIWORD(wparam) == BN_CLICKED)
+                switch (LOWORD(wparam))
                 {
-                    switch (LOWORD(wparam))
-                    {
-                    case IDOK:
-                        OnOK();
-                        return TRUE;
-                    case IDCANCEL:
-                        OnCancel();
-                        return TRUE;
-                    }
+                case IDOK:
+                    OnOK();
+                    return TRUE;
+                case IDCANCEL:
+                    OnCancel();
+                    return TRUE;
+
+                default: break;
                 }
-
-                // Reflect this message if it's from a control.
-                CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lparam));
-                if (pWnd != nullptr)
-                    result = pWnd->OnCommand(wparam, lparam);
-
-                // Handle user commands.
-                if (!result)
-                    result =  OnCommand(wparam, lparam);
-
-                if (result) return 0;
             }
-            break;  // Some commands require default processing.
 
+            // Reflect this message if it's from a control.
+            CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lparam));
+            if (pWnd != nullptr)
+                result = pWnd->OnCommand(wparam, lparam);
+
+            // Handle user commands.
+            if (!result)
+                result = OnCommand(wparam, lparam);
+
+            if (result) return 0;
+
+            break;  // Some commands require default processing.
+        }
 
         case WM_DESTROY:
             OnDestroy();
@@ -438,6 +442,7 @@ namespace Win32xx
             return TRUE;
         }
 
+        default: break;
         } // switch(msg)
 
         return 0;
@@ -858,6 +863,8 @@ namespace Win32xx
             if (lparam == 0)
                 OnVScroll(msg, wparam, lparam);
             break;
+
+        default: break;
         }
     }
 
@@ -1169,6 +1176,8 @@ namespace Win32xx
                 left   = (childRect.left * currentRect.Width()) / m_initRect.Width();
                 top    = childRect.bottom - height - m_initRect.Height() + currentRect.Height();
                 break;
+
+            default: break;
             }
 
             // Determine the position of the child window.

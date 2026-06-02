@@ -48,6 +48,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case IDM_LEFT:      return OnLeft();
     case IDM_RIGHT:     return OnRight();
     case IDM_BOTTOM:    return OnBottom();
+
+    default: break;
     }
 
     return FALSE;
@@ -156,6 +158,8 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
     {
     // Pass the ToolBar's ToolTip info up to the frame
     case TTN_GETDISPINFO: return GetParent().SendMessage(WM_NOTIFY, wparam, lparam);
+
+    default: break;
     }
 
     return 0;
@@ -278,6 +282,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_SIZE:                     return OnSize(msg, wparam, lparam);
         case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

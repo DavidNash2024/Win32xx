@@ -91,6 +91,8 @@ int CALLBACK CMyListView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM p
 
         break;
     }
+
+    default: break;
     }
 
     return compare;
@@ -599,15 +601,18 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         SHFILEINFO sfi{};
         bool isTimeValid = (pItem->m_fileTime.dwHighDateTime != 0 && pItem->m_fileTime.dwLowDateTime != 0);
 
+        // Limit the text length for the name column when in small icon view.
+        int maxSize = ((GetStyle() & LVS_TYPEMASK) == LVS_SMALLICON) ? 16 : pdi->item.cchTextMax;
+
         switch (pdi->item.iSubItem)
         {
         case 0:  // Name
         {
             // Get the display name of the item.
             if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-                StrCopy(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax);
+                StrCopy(pdi->item.pszText, sfi.szDisplayName, maxSize);
+            break;
         }
-        break;
         case 1: // Size
         {
             // Report the size files and not folders.
@@ -619,16 +624,16 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             }
             else
                 StrCopy(pdi->item.pszText, L"", 1);
+            break;
         }
-        break;
         case 2: // Type
         {
             if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
             {
                 StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax);
             }
+            break;
         }
-        break;
         case 3: // Modified
         {
             // Retrieve the modified file time for the file.
@@ -639,8 +644,10 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             }
             else
                 StrCopy(pdi->item.pszText, L"", 1);
+            break;
         }
-        break;
+
+        default: break;
         }
     }
 
@@ -695,6 +702,8 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
     case NM_DBLCLK:         return OnNMReturn(pHeader);
     case NM_RCLICK:         return OnNMRClick(pHeader);
     case NM_RETURN:         return OnNMReturn(pHeader);
+
+    default: break;
     }
     return 0;
 }
@@ -823,8 +832,10 @@ LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             // Add features implemented via IContextMenu2 such as 'New'.
             if (m_ccm2.GetIContextMenu2())
                 m_ccm2.HandleMenuMsg(msg, wparam, lparam);
+            break;
         }
-        break;
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

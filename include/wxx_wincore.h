@@ -752,13 +752,18 @@ namespace Win32xx
             break;
 
         case WM_PARENTNOTIFY:
-            switch(LOWORD(wparam))
+        {
+            switch (LOWORD(wparam))
             {
             case WM_CREATE:
             case WM_DESTROY:
                 wnd = reinterpret_cast<HWND>(lparam);
                 break;
+            default: break;
             }
+            break;
+        }
+        default: break;
         }
 
         CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
@@ -799,6 +804,8 @@ namespace Win32xx
         //  case IDM_FILE_NEW:
         //      OnFileNew();
         //      TRUE;   // return TRUE for handled commands
+        //
+        //  default: break;
         //  }
 
         // Return FALSE for unhandled commands.
@@ -1172,6 +1179,8 @@ namespace Win32xx
         //  {
         //  case MESSAGE1:  return OnMessage1();
         //  case MESSAGE2:  return OnMessage2();
+        //
+        //  default: break;
         //  }
 
         // The message functions should return a value recommended by the
@@ -1298,6 +1307,7 @@ namespace Win32xx
             return reinterpret_cast<LRESULT>(this);
         }
 
+        default: break;
         } // switch (msg)
 
         // Now hand all messages to the default procedure.

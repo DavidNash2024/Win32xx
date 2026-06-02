@@ -226,8 +226,10 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
         {
             if (pHeader->hwndFrom == GetToolBar())
                 OnFileNew();
+            break;
         }
-        break;
+
+        default: break;
 
     } //switch LPNMHDR
 
@@ -252,10 +254,10 @@ void CMainMDIFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_NEWTREE, IDI_CLASSES);
 }
 
-// Define the resource IDs and images for toolbar buttons.
+// Assign the resource IDs and images to toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
-    // Define the resource IDs for the toolbar
+    // Define the resource IDs for the toolbar.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );

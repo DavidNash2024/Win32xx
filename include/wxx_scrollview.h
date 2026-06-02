@@ -184,8 +184,7 @@ namespace Win32xx
             newPos.x = si.nTrackPos;
             break;
 
-        default:
-            break;
+        default: break;
         }
 
         int maxPosX = m_totalSize.cx - GetClientRect().Width();
@@ -246,8 +245,7 @@ namespace Win32xx
             newPos.y +=  m_lineSize.cy;
             break;
 
-        default:
-            break;
+        default: break;
         }
 
         if (newPos != m_currentPos)
@@ -357,8 +355,7 @@ namespace Win32xx
                 newPos.y = si.nTrackPos;
                 break;
 
-            default:
-               break;
+            default: break;
         }
 
         int maxPosY = m_totalSize.cy - GetClientRect().Height();
@@ -568,6 +565,8 @@ namespace Win32xx
         case WM_VSCROLL:            return OnVScroll(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

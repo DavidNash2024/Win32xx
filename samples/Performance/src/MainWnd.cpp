@@ -189,6 +189,8 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case WM_SIZE:           return OnSize();
         case WM_WINDOWCREATED:  return OnWindowCreated();
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

@@ -199,6 +199,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:
     case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
+
+    default: break;
     }
 
     return FALSE;
@@ -658,6 +660,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
         GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
+
+    default: break;
     }
 
     if ((id >= IDM_ENC_ANSI) && (id <= IDM_ENC_UTF16))
@@ -677,8 +681,10 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
         ENDROPFILES* enDrop = reinterpret_cast<ENDROPFILES*>(lparam);
         HDROP dropInfo = reinterpret_cast<HDROP>(enDrop->hDrop);
         OnDropFiles(dropInfo);
+        return TRUE;
     }
-    return TRUE;
+
+    default: break;
     }
 
     return CFrame::OnNotify(wparam, lparam);
@@ -890,6 +896,8 @@ void CMainFrame::SetEncoding(int encoding)
     case ANSI:         SetStatusText(L"Encoding: ANSI");            break;
     case UTF8:         SetStatusText(L"Encoding: UTF-8");           break;
     case UTF16LE:      SetStatusText(L"Encoding: UTF-16");          break;
+
+    default: break;
     }
 }
 
@@ -978,10 +986,14 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDW_MENUICONS);
 }
 
-// Assigns images and command IDs to the toolbar buttons,
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Define the resource IDs for the toolbar
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton(IDM_FILE_NEW_PLAIN);
     AddToolBarButton(IDM_FILE_NEW_RICH);
     AddToolBarButton(IDM_FILE_OPEN);
@@ -1035,6 +1047,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWCLOSE:      return OnPreviewClose();
         case UWM_PREVIEWPRINT:      return OnPreviewPrint();
         case UWM_PREVIEWSETUP:      return OnPreviewSetup();
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

@@ -48,6 +48,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -134,8 +136,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
             BOOL isAtTop = m_view.GetTabsAtTop();
             UINT check = (isAtTop)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_TOP, check);
+            break;
         }
-        break;
         case IDM_TAB_BUTTONS:
         {
             BOOL isShown = m_view.GetShowButtons() && isOwnerDraw;
@@ -144,14 +146,14 @@ void CMainFrame::OnMenuUpdate(UINT id)
 
             UINT enable = (isOwnerDraw)? MF_ENABLED : MF_GRAYED;
             GetFrameMenu().EnableMenuItem(IDM_TAB_BUTTONS, enable);
+            break;
         }
-        break;
         case IDM_TAB_DRAW:
         {
             UINT check = (isOwnerDraw)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_DRAW, check);
+            break;
         }
-        break;
         case IDM_TAB_FIXED:
         {
             UINT check = (isFixed) ? MF_CHECKED : MF_UNCHECKED;
@@ -159,8 +161,10 @@ void CMainFrame::OnMenuUpdate(UINT id)
 
             UINT enable = isOwnerDraw ? MF_GRAYED : MF_ENABLED;
             GetFrameMenu().EnableMenuItem(IDM_TAB_FIXED, enable);
+            break;
         }
-        break;
+
+        default: break;
     }
 
     CFrame::OnMenuUpdate(id);
@@ -278,10 +282,14 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_NEW_DIALOG,  IDI_DIALOGVIEW);
 }
 
-// Configure the toolbar.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons.
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_NEW_TAB           );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );

@@ -34,7 +34,6 @@
 #define IDC_RADIO9                      189
 #define IDC_RADIO10                     190
 #define IDC_RADIO11                     191
-#define IDC_RADIO12                     192
 #define IDC_STATIC1                     200
 #define IDC_STATIC2                     201
 #define TB_BUTTON0                      500

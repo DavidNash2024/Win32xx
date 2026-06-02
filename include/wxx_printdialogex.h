@@ -253,6 +253,8 @@ namespace Win32xx
             OnPrint();
             break;
         }
+
+        default: break;
         }
 
         m_pdex.hDevMode = 0;

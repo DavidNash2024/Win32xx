@@ -197,6 +197,8 @@ STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* pView, U
         case UI_VIEWVERB_ERROR:
             result = E_FAIL;
             break;
+
+        default: break;
         }
     }
 
@@ -247,6 +249,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_DPICHANGED:  return OnDpiChanged(msg, wparam, lparam);
         case WM_SIZE:        return OnSize();
+
+        default: break;
         }
 
         // pass unhandled messages on for default processing

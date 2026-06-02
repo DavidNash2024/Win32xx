@@ -91,6 +91,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
+
+    default: break;
     }
     return FALSE;
 }
@@ -165,6 +167,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
         GetFrameMenu().CheckMenuItem(id, m_pDockText->IsWindowVisible() ?
             MF_CHECKED : MF_UNCHECKED);
         break;
+
+    default: break;
     }
 }
 
@@ -231,10 +235,14 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 }
 
-// Set the resource IDs and images for the toolbar buttons.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Define the resource IDs for the toolbar
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW, FALSE );
     AddToolBarButton( IDM_FILE_OPEN, FALSE );
     AddToolBarButton( IDM_FILE_SAVE, FALSE );
@@ -256,6 +264,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

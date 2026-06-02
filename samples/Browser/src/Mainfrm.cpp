@@ -103,6 +103,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_STOP:           return OnStop();
     case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
+
+    default: break;
     }
 
     // Handle notification WM_COMMAND from ComboboxEx.
@@ -117,8 +119,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
             // Navigate to web page.
             Navigate(str);
+            return TRUE;
         }
-        return TRUE;
+
+        default: break;
         }
     }
 
@@ -144,7 +148,36 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
     // Call the base function
-    return CFrame::OnCreate(cs);
+    int result = CFrame::OnCreate(cs);
+
+    // Add a ComboBoxEx control to the rebar.
+    AddComboBoxBand();
+
+    return result;
+}
+
+// Respond to a change in DPI. This is only relevant when using Per Monitor DPI Awareness.
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Save the current ComboBoxEx edit control text, and the list of items in the
+    // ComboBoxEx before the DPI change.
+    m_selectedItem = GetCBEdit().GetWindowText();
+    m_combo.SaveItems();
+
+    // Delete the rebar band holding the combobox.
+    if (GetReBar().IsWindow())
+    {
+        int band = GetReBar().GetBand(m_combo);
+        GetReBar().DeleteBand(band);
+    }
+
+    // Call the base class function. This recreates the toolbars.
+    CFrame::OnDpiChanged(msg, wparam, lparam);
+
+    // Add the ComboBoxEx control to the rebar after the DPI change.
+    AddComboBoxBand();
+
+    return 0;
 }
 
 // Cuts the selected text from the ComboBoxEx controlto the clip board.
@@ -301,9 +334,14 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(iconData, lightgray, IDB_MENUICONS16, 0);
 }
 
-// Set the Resource IDs for the toolbar buttons.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton(IDM_BACK, FALSE);    // Initially disabled
     AddToolBarButton(IDM_FORWARD, FALSE); // Initially disabled
     AddToolBarButton(0);                  // Separator
@@ -314,10 +352,6 @@ void CMainFrame::SetupToolBar()
 
     // Load the 32bit bitmaps.
     SetToolBarImages(black, IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
-
-    // Use PostMessage to add the combo late to fix drawing issues
-    // that arise when the display scale is changed.
-    PostMessage(UWM_ADDCOMBOBAND);
 }
 
 // Called when the browser's history changes, to enable or disable the Back
@@ -378,13 +412,16 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_ADDCOMBOBAND:        return AddComboBoxBand();
         case WM_GETMINMAXINFO:        return OnGetMinMaxInfo(msg, wparam, lparam);
         case UWM_HISTORYCHANGED:      return OnHistoryChanged(msg, wparam, lparam);
         case UWM_NAVIGATIONCOMPLETED: return OnNavigationCompleted(msg, wparam, lparam);
         case UWM_NAVIGATIONSTARTED:   return OnNavigationStarted(msg, wparam, lparam);
         case UWM_SOURCECHANGED:       return OnSourceChanged(msg, wparam, lparam);
-        }
+
+        default: break;
+
+        } // switch msg
+
 
         // Pass unhandled messages on for default processing.
         return WndProcDefault(msg, wparam, lparam);

@@ -33,6 +33,8 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
       switch (msg)
       {
       case WM_SIZE:  return OnSize(msg, wparam, lparam);
+
+      default: break;
       }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -113,6 +115,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case ID_RADIO_A:
     case ID_RADIO_B:    // intentionally blank
     case ID_RADIO_C:    return OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
+
+    default: break;
     }
 
     return FALSE;

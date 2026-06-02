@@ -479,12 +479,16 @@ BOOL CCustomPrintDlg::OnCommand(WPARAM wparam, LPARAM)
     case IDB_RADIOALL:           // Intentionally blank
     case IDB_RADIORANGE:         // Intentionally blank
     case IDB_RADIOSELECTION:     return OnRadioSelection(id);
+
+    default: break;
     }
 
     UINT msg = HIWORD(wparam);
     switch (msg)
     {
     case CBN_SELCHANGE:    return OnComboSelection();
+
+    default: break;
     }
 
     return FALSE;

@@ -21,6 +21,8 @@ BOOL CTestWindow::OnCommand(WPARAM wparam, LPARAM)
     {;
     case IDM_FILE_EXIT:     return OnFileExit();
     case IDM_VIEW_DIALOG:   return OnViewDialog();
+
+    default: break;
     }
 
     return FALSE;
@@ -122,6 +124,8 @@ LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch(msg)
     {
     case WM_SIZE:           return OnSize(msg, wparam, lparam);
+
+    default: break;
     }
 
     // Pass unhandled messages on for default processing.

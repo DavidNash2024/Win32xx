@@ -67,6 +67,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -395,6 +397,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case UWM_PREVIEWCLOSE:    return OnPreviewClose();
     case UWM_PREVIEWPRINT:    return OnPreviewPrint();
     case UWM_PREVIEWSETUP:    return OnPreviewSetup();
+
+    default: break;
     }
 
     // Use the default message handling for remaining messages.

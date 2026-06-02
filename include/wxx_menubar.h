@@ -269,6 +269,8 @@ namespace Win32xx
                 drawDC.SetTextColor(white);
                 drawDC.TextOut(m_mdiRect[button].left, m_mdiRect[button].top, _T("\x64"), 1);
                 break;
+
+            default: break;
             }
 
             switch (button)
@@ -301,6 +303,7 @@ namespace Win32xx
                 break;
             }
 
+            default: break;
             }
         }
     }
@@ -692,6 +695,8 @@ namespace Win32xx
                     m_isExitAfter = TRUE;
                     break;
 
+                default: break;
+
                 } // switch (wparam)
 
             } // case WM_KEYDOWN
@@ -760,9 +765,10 @@ namespace Win32xx
 
                 // Reflect messages back to the MenuBar for hot tracking.
                 SendMessage(WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
+                break;
             }
-            break;
 
+        default: break;
         }
         return FALSE;
     }
@@ -805,6 +811,8 @@ namespace Win32xx
         {
         case TBN_DROPDOWN:      return OnTBNDropDown(reinterpret_cast<LPNMTOOLBAR>(lparam));
         case TBN_HOTITEMCHANGE: return OnTBNHotItemChange(reinterpret_cast<LPNMTBHOTITEM>(lparam));
+
+        default: break;
         }
 
         return 0;
@@ -1302,6 +1310,7 @@ namespace Win32xx
         case UWM_POPUPMENU:         return OnPopupMenu();
         case UWM_GETCMENUBAR:       return reinterpret_cast<LRESULT>(this);
 
+        default: break;
         } // switch (msg)
 
         return CToolBar::WndProcDefault(msg, wparam, lparam);

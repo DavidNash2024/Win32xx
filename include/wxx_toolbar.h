@@ -1080,6 +1080,8 @@ namespace Win32xx
         {
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
         case UWM_GETCTOOLBAR:       return reinterpret_cast<LRESULT>(this);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

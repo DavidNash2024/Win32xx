@@ -87,6 +87,8 @@ BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM)
     case IDM_EDIT_PASTE:
         GetView().SendMessage(WM_PASTE, 0, 0);
         return TRUE;
+
+    default: break;
     }
 
     return FALSE;

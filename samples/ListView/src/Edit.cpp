@@ -34,6 +34,8 @@ LRESULT CMyEdit::OnChar(UINT msg, WPARAM wparam, LPARAM lparam)
             // Return 0 to avoid a beep.
             return 0;
         }
+
+        default: break;
     }
 
     // Perform default processing for this message.
@@ -61,6 +63,8 @@ LRESULT CMyEdit::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_KILLFOCUS:  return OnKillFocus();
         case WM_CHAR:       return OnChar(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

@@ -23,6 +23,8 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_HSCROLL:   return OnHScroll(wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc.

@@ -106,6 +106,8 @@ IFACEMETHODIMP CDialogEventHandler::OnTypeChange(IFileDialog *pfd)
                     hr = pfsd->SetCollectedProperties(pdl.Get(), TRUE);
                 }
                 break;
+
+            default: break;
             }
         }
     }
@@ -132,6 +134,8 @@ IFACEMETHODIMP CDialogEventHandler::OnItemSelected(IFileDialogCustomize *pfdc, D
             case CONTROL_RADIOBUTTON2:
                 hr = pfd->SetTitle(L"Vista Dialog");
                 break;
+
+            default: break;
             }
         }
     }

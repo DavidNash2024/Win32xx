@@ -395,6 +395,8 @@ namespace Win32xx
         case IDW_PREVIEWPREV:    return OnPrevButton();
         case IDW_PREVIEWNEXT:    return OnNextButton();
         case IDW_PREVIEWCLOSE:   return OnCloseButton();
+
+        default: break;
         }
 
         return FALSE;

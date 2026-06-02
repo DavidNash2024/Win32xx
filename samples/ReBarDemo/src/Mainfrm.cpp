@@ -99,6 +99,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_LEFT:      OnLeft();       return TRUE;
     case IDM_RIGHT:     OnRight();      return TRUE;
     case IDM_BOTTOM:    OnBottom();     return TRUE;
+
+    default: break;
     }
 
     return FALSE;
@@ -352,10 +354,14 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(data, lightgray, IDB_TOOLBAR16);
 }
 
-// Sets the resource IDs and images for the toolbar buttons.
+// Assigns images and command IDs to the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons.
+    // Note: The toolbar is destroyed and recreated when the DPI changes when
+    // using Per Monitor DPI Awareness.
+    // This function is called when the toobar is created.
+
+    // Set the resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
     AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button

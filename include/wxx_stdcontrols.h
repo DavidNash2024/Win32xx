@@ -1129,6 +1129,8 @@ namespace Win32xx
                 LPCOMPAREITEMSTRUCT>(lparam);
             return CompareItem(pCompareItemStruct);
         }
+
+        default: break;
         }
 
         return 0;   // Allow other messages to be handled elsewhere.

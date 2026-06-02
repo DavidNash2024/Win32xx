@@ -959,6 +959,8 @@ namespace Win32xx
         switch (msg)
         {
         case WM_COMPAREITEM:    return CompareItem(compare);
+
+        default: break;
         }
 
         return 0;   // Allow other messages to be handled elsewhere.

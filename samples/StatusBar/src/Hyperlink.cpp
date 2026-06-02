@@ -107,6 +107,8 @@ LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_LBUTTONUP:    return OnLButtonUp(msg, wparam, lparam);
         case WM_SETCURSOR:    return OnSetCursor(msg, wparam, lparam);
         case WM_NCHITTEST:    return HTCLIENT;      // Claim that the mouse is in a client area
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

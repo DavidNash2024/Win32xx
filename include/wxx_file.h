@@ -363,16 +363,12 @@ namespace Win32xx
         DWORD access = 0;
         switch (openFlags & 0xF00)
         {
-        case modeNone:
-            access = 0; break;
-        case modeRead:
-            access = GENERIC_READ;    break;
-        case modeWrite:
-            access = GENERIC_WRITE;   break;
-        case modeReadWrite:
-            access = GENERIC_READ | GENERIC_WRITE; break;
-        default:
-            access = GENERIC_READ | GENERIC_WRITE; break;
+        case modeNone:      access = 0; break;
+        case modeRead:      access = GENERIC_READ;    break;
+        case modeWrite:     access = GENERIC_WRITE;   break;
+        case modeReadWrite: access = GENERIC_READ | GENERIC_WRITE; break;
+
+        default:            access = GENERIC_READ | GENERIC_WRITE; break;
         }
 
         DWORD share = 0;

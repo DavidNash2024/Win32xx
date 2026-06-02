@@ -54,6 +54,8 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_SIZE:   return OnSize(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Do default processing for other messages.
@@ -139,6 +141,8 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM)
         m_view.SetColor(white);
         Invalidate();
         return TRUE;
+
+    default: break;
     }
 
     return FALSE;

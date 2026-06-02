@@ -527,6 +527,7 @@ namespace Win32xx
             }
             break;
 
+            default: break;
             }
 
             // Draw the close button (a Marlett "r" looks like "X").
@@ -596,6 +597,7 @@ namespace Win32xx
             }
             break;
 
+            default: break;
             }
 
             if (GetWinVersion() >= 3000)  // Windows 10 or later.
@@ -1070,6 +1072,8 @@ namespace Win32xx
         switch (pHeader->code)
         {
         case TCN_SELCHANGE: return OnTCNSelChange(pHeader);
+
+        default: break;
         }
 
         return 0;
@@ -1627,6 +1631,8 @@ namespace Win32xx
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
         case WM_DPICHANGED_AFTERPARENT: return OnDpiChangedAfterParent(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.
@@ -2152,6 +2158,7 @@ namespace Win32xx
                     return !OnTabClose(pTabNMHDR->page);
                 }
 
+            default: break;
             }   // switch(pnmhdr->code)
 
         }   // if (pHeader == nullptr)
@@ -2280,6 +2287,8 @@ namespace Win32xx
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case UWM_GETCTABBEDMDI:     return reinterpret_cast<LRESULT>(this);
+
+        default: break;
         }
 
         return CWnd::WndProcDefault(msg, wparam, lparam);

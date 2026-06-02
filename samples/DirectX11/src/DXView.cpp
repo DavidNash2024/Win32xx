@@ -468,6 +468,8 @@ LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             SetWindowPos(HWND_TOP, *prc, SWP_SHOWWINDOW);
             break;
         }
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

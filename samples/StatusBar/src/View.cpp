@@ -70,6 +70,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SIZE:
             Invalidate();
             break;  // Also do default processing.
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

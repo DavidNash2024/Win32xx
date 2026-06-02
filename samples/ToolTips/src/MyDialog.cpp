@@ -115,6 +115,8 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO1:    // intentionally blank
     case IDC_RADIO2:
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
+
+    default: break;
     }
 
     return FALSE;
@@ -232,7 +234,11 @@ LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lparam)
                 if (m_str.IsEmpty()) m_str = "No text to display";
                 lpnmtdi->lpszText = const_cast<LPWSTR>(m_str.c_str());
             }
+
+            break;
         }
+
+        default: break;
     }
 
     return 0;

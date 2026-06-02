@@ -629,6 +629,8 @@ namespace Win32xx
         // Messages defined by Win32++.
         case UWM_TBRESIZE:  return OnToolBarResize(msg, wparam, lparam);
         case UWM_TBWINPOSCHANGING:  return OnTBWinPosChanging(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

@@ -294,6 +294,7 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
             return TRUE;
         }
 
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc
@@ -535,6 +536,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case IDC_CHECK_C:
         SetCheckCStatus();
         return TRUE;
+
+    default: break;
     }
 
     // Deal with setting the focus for edit controls, combo boxes,
@@ -565,66 +568,68 @@ INT_PTR CView::OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)
 
     switch (nCtlColor)
     {
-        case WM_CTLCOLORBTN:
-            if (id == IDOK)
-            {
-                fg = m_buttonFgClr;
-                bk = m_buttonBgClr;
-                br = m_buttonBgBrush;
-            }
-            if (id == IDC_PUSH_ME_BUTTON)
-            {
-                fg = m_buttonFgClr;
-                bk = m_buttonBgClr;
-                br = m_buttonBgBrush;
-            }
-            break;
+    case WM_CTLCOLORBTN:
+        if (id == IDOK)
+        {
+            fg = m_buttonFgClr;
+            bk = m_buttonBgClr;
+            br = m_buttonBgBrush;
+        }
+        if (id == IDC_PUSH_ME_BUTTON)
+        {
+            fg = m_buttonFgClr;
+            bk = m_buttonBgClr;
+            br = m_buttonBgBrush;
+        }
+        break;
 
-        case WM_CTLCOLOREDIT:
-            fg = m_editFgClr;
-            bk = m_editBgClr;
-            br = m_editBgBrush;
-            break;
+    case WM_CTLCOLOREDIT:
+        fg = m_editFgClr;
+        bk = m_editBgClr;
+        br = m_editBgBrush;
+        break;
 
-        case WM_CTLCOLORDLG:
+    case WM_CTLCOLORDLG:
+        fg = m_dialogFgClr;
+        bk = m_dialogBgClr;
+        br = m_dialogBgBrush;
+        break;
+
+    case WM_CTLCOLORLISTBOX:
+        fg = m_listBoxFgClr;
+        bk = m_listBoxBgClr;
+        br = m_listBoxBgBrush;
+        break;
+
+    case WM_CTLCOLORSCROLLBAR:
+        fg = m_scrollFgClr;
+        bk = m_scrollBgClr;
+        br = m_scrollBgBrush;
+        break;
+
+    case WM_CTLCOLORSTATIC:
+        // Change caption color of group box.
+        if (id == IDC_STATUS_GROUP)
+        {
             fg = m_dialogFgClr;
             bk = m_dialogBgClr;
             br = m_dialogBgBrush;
-            break;
+        }
+        else if (IDC_RADIO_A <= id && id <= IDC_CHECK_C)
+        {
+            fg = m_buttonFgClr;
+            bk = m_buttonBgClr;
+            br = m_buttonBgBrush;
+        }
+        else
+        {
+            fg = m_staticBoxFgClr;
+            bk = m_staticBoxBgClr;
+            br = m_staticBoxBgBrush;
+        }
+        break;
 
-        case WM_CTLCOLORLISTBOX:
-            fg = m_listBoxFgClr;
-            bk = m_listBoxBgClr;
-            br = m_listBoxBgBrush;
-            break;
-
-        case WM_CTLCOLORSCROLLBAR:
-            fg = m_scrollFgClr;
-            bk = m_scrollBgClr;
-            br = m_scrollBgBrush;
-            break;
-
-        case WM_CTLCOLORSTATIC:
-            // Change caption color of group box.
-            if (id == IDC_STATUS_GROUP)
-            {
-                fg = m_dialogFgClr;
-                bk = m_dialogBgClr;
-                br = m_dialogBgBrush;
-            }
-            else if (IDC_RADIO_A <= id && id <= IDC_CHECK_C)
-            {
-                fg = m_buttonFgClr;
-                bk = m_buttonBgClr;
-                br = m_buttonBgBrush;
-            }
-            else
-            {
-                fg = m_staticBoxFgClr;
-                bk = m_staticBoxBgClr;
-                br = m_staticBoxBgBrush;
-            }
-            break;
+    default: break;
     }
 
     // Set the foreground and background device contexts.
@@ -729,14 +734,17 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
     NMHDR *pNMHdr = reinterpret_cast<LPNMHDR>(lparam);
     switch (pNMHdr->code)
     {
-        case NM_SETFOCUS:   // date-time picker
-        case MCN_SELECT:    // month calendar
-        case MCN_SELCHANGE: //  "       "
-        {
-            m_focusID = static_cast<int>(wparam);
-            return TRUE;
-        }
+    case NM_SETFOCUS:   // date-time picker
+    case MCN_SELECT:    // month calendar
+    case MCN_SELCHANGE: //  "       "
+    {
+        m_focusID = static_cast<int>(wparam);
+        return TRUE;
     }
+
+    default: break;
+    }
+
     return FALSE;
 }
 

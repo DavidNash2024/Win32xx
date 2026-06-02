@@ -29,6 +29,8 @@ INT_PTR CDarkAbout::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_CTLCOLORBTN:
         case WM_CTLCOLORSTATIC:  return OnCtlColors(msg, wparam, lparam);
         case WM_DRAWITEM:        return OnDrawItem(wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on to parent DialogProc.

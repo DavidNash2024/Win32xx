@@ -28,6 +28,8 @@ LRESULT CStaticImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case WM_DPICHANGED_AFTERPARENT:  return OnAfterDpiChange(msg, wparam, lparam);
+
+    default: break;
     }
 
     return WndProcDefault(msg, wparam, lparam);

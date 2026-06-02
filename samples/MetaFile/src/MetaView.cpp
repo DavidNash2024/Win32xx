@@ -78,6 +78,8 @@ LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SIZE:
             RedrawWindow();
             return 0;
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

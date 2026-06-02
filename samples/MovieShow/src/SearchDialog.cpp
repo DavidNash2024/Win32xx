@@ -58,23 +58,24 @@ BOOL CSearchDialog::OnCommand(WPARAM wparam, LPARAM /*lparam*/)
         UINT state = m_titleButton.GetState();
         m_titleWindow.EnableWindow(state & BST_CHECKED);
         m_titleWindow.SetFocus();
+        break;
     }
-    break;
     case IDC_CHECKACTORS:
     {
         UINT state = m_actorsButton.GetState();
         m_actorsWindow.EnableWindow(state & BST_CHECKED);
         m_actorsWindow.SetFocus();
-
+        break;
     }
-    break;
     case IDC_CHECKINFO:
     {
         UINT state = m_infoButton.GetState();
         m_infoWindow.EnableWindow(state & BST_CHECKED);
         m_infoWindow.SetFocus();
+        break;
     }
-    break;
+
+    default: break;
     }
 
     return FALSE;

@@ -90,6 +90,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_SIZE:
         OnSize();
         break;  // Also do default processing for this message.
+
+    default: break;
     }
 
     // Pass unhandled messages on for default processing.

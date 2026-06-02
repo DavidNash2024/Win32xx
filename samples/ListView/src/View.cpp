@@ -165,8 +165,8 @@ LRESULT CView::OnCustomDraw(LPNMLVCUSTOMDRAW pLVCustomDraw)
                         pLVCustomDraw->clrText = RGB(32, 32, 32);
                         pLVCustomDraw->clrTextBk = RGB(255, 255, 192);
                     }
+                    break;
                 }
-                break;
 
                 case 1: // 2nd column
                 {
@@ -180,8 +180,8 @@ LRESULT CView::OnCustomDraw(LPNMLVCUSTOMDRAW pLVCustomDraw)
                         pLVCustomDraw->clrText = RGB(64, 64, 64);
                         pLVCustomDraw->clrTextBk = RGB(255, 255, 208);
                     }
+                    break;
                 }
-                break;
 
                 case 2:  // 3rd column
                 {
@@ -195,8 +195,10 @@ LRESULT CView::OnCustomDraw(LPNMLVCUSTOMDRAW pLVCustomDraw)
                         pLVCustomDraw->clrText = RGB(96, 96, 96);
                         pLVCustomDraw->clrTextBk = RGB(255, 255, 244);
                     }
+                    break;
                 }
-                break;
+
+                default: break;
 
             }  // switch (lplvcd->iSubItem)
 

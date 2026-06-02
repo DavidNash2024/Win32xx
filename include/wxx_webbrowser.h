@@ -843,6 +843,8 @@ namespace Win32xx
         case WM_SIZE:
             OnSize(LOWORD(lparam), HIWORD(lparam));
             break;
+
+        default: break;
         }
 
         return CWnd::WndProcDefault(msg, wparam, lparam);

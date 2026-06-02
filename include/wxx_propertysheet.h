@@ -215,6 +215,8 @@ namespace Win32xx
         //      OnMessage2();
         //      return x;       // Don't do default processing, but instead return
         //                      //  a value recommended by the Win32 API documentation
+        //
+        //  default: break;
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault.
@@ -230,6 +232,8 @@ namespace Win32xx
         {
         case PSM_QUERYSIBLINGS:
             return OnQuerySiblings(msg, wparam, lparam);
+
+        default: break;
         }
 
         return CDialog::DialogProcDefault(msg, wparam, lparam);
@@ -476,6 +480,8 @@ namespace Win32xx
             pTLSData->pWnd = reinterpret_cast<CWnd*>(ppsp->lParam);
         }
         break;
+
+        default: break;
         }
 
         return TRUE;
@@ -620,8 +626,10 @@ namespace Win32xx
                     // to CWnd::StaticWindowProc for handling in WndProc.
                     w->Attach(wnd);
                 }
+                break;
             }
-            break;
+
+        default: break;
         }
     }
 
@@ -899,6 +907,8 @@ namespace Win32xx
         switch (msg)
         {
         case DM_SETDEFID:  return OnSetDefID(wparam);
+
+        default: break;
         }
         // Pass unhandled messages on for default processing.
         return CWnd::WndProcDefault(msg, wparam, lparam);

@@ -142,6 +142,8 @@ LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lparam)
         case TVN_SELCHANGED:       return OnSelChanged();
         case TVN_BEGINLABELEDIT:   return OnBeginLabelEdit(lparam);
         case TVN_ENDLABELEDIT:     return OnEndLabelEdit(lparam);
+
+        default: break;
     }
 
     return 0;
@@ -242,6 +244,8 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_RBUTTONDOWN:            return OnRButtonDown(msg, wparam, lparam);
         case WM_RBUTTONUP:              return OnRButtonUp(msg, wparam, lparam);
         case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+
+        default: break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

@@ -48,19 +48,15 @@ namespace Calc
             case tPlus:
                 Value += nodeVal;
                 break;
-
             case tMinus:
                 Value -= nodeVal;
                 break;
-
             case tMultiply:
                 Value *= nodeVal;
                 break;
-
             case tDivide:
                 Value /= nodeVal;
                 break;
-
             case tPower:
                 Value = pow(Value, nodeVal);
                 break;

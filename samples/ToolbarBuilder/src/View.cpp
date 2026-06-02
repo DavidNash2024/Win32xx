@@ -386,15 +386,19 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
             CSize size = m_toolbar.GetMaxSize();
             pCalcSize->iWidth = size.cx;
         }
+        default: break;
         }
         break;
     }
+
     case PGN_SCROLL:
     {
         LPNMPGSCROLL pScroll = (LPNMPGSCROLL)lparam;
         pScroll->iScroll = m_toolbar.GetButtonSize().cx;
         break;
     }
+
+    default: break;
     }
 
     // Some notifications should return a value when handled
@@ -566,6 +570,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_SIZE:                   return OnSize(msg, wparam, lparam);
         case WM_DPICHANGED_AFTERPARENT: return OnDpiChanged(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Pass unhandled messages on for default processing.

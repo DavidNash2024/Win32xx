@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "ScribbleApp.h"
 
-
 BOOL CScribbleApp::InitInstance()
 {
     // Create the window.

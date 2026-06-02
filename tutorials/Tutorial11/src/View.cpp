@@ -54,19 +54,18 @@ CMemDC CView::Draw()
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
-    // Start with the pen up.
-    bool isDrawing = false;
+    bool isDrawing = false;  // Start with the pen up.
 
     // Draw the lines on the memory DC.
-    for (const PlotPoint& p : GetAllPoints())
+    for (const PlotPoint& i : GetAllPoints())
     {
-        memDC.CreatePen(PS_SOLID, 1, p.penColor);
+        memDC.CreatePen(PS_SOLID, 1, i.penColor);
         if (isDrawing)
-            memDC.LineTo(p.x, p.y);
+            memDC.LineTo(i.x, i.y);
         else
-            memDC.MoveTo(p.x, p.y);
+            memDC.MoveTo(i.x, i.y);
 
-        isDrawing = p.isPenDown;
+        isDrawing = i.isPenDown;
     }
 
     return memDC;
@@ -276,6 +275,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+
+        default: break;
         }
 
         // Use the default message handling for remaining messages.
@@ -286,9 +287,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        CString str1 = e.GetText();
-        if (e.GetError() != 0)
-            str1 << L'\n' << e.GetErrorString();
+        CString str1;
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
 
         CString str2;
         str2 << L"Error: " << e.what();
