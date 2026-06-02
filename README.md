@@ -55,8 +55,10 @@ dialogs, forms, and frames. The frames produced using Win32++ can have the follo
 	<li>The Ribbon Framework</li>
 	<li>Splitter windows</li>
 	<li>Docking</li>
+	<li>Support for the Scintilla text control</li>
 	<li>Support for dark mode</li>
 	<li>Support for per-monitor DPI awareness, version 2</li>
+	<li>Support for the Microsoft Edge WebView2 control for internet browsing</li>
 </ul>
 <div class="markdown-heading" dir="auto">
 	<h2 class="heading-element" dir="auto" tabindex="-1">License</h2>
