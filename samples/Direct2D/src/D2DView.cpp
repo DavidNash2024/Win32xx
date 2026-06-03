@@ -100,6 +100,9 @@ LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
+// This function is only called when using Per Monitor DPI Awareness,
+// version 2. This is specified by loading the appropriate manifest in the
+// resource script (Resource.rc).
 LRESULT CD2DView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = (LPRECT)lparam;

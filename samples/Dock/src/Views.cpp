@@ -53,9 +53,9 @@ void CViewClasses::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CViewClasses::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
@@ -180,9 +180,9 @@ void CViewFiles::OnAttach()
     SetExtendedStyle(LVS_EX_DOUBLEBUFFER);
 }
 
-// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CViewFiles::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();

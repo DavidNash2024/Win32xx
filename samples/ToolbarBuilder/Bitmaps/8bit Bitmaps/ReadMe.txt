@@ -1,0 +1,1 @@
+The color mask for these bitmaps is RDB(192, 192, 192).

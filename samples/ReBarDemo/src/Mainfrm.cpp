@@ -173,6 +173,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
+// This function is only called when using Per Monitor DPI Awareness. This is
+// specified by loading the appropriate manifest in the resource script (Resource.rc).
 LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Turn redrawing off to make the transition smoother.

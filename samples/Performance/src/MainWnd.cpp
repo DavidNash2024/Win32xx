@@ -72,6 +72,9 @@ void CMainWindow::OnDestroy()
     ::PostQuitMessage(0);
 }
 
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CMainWindow::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);

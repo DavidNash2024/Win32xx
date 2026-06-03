@@ -1052,7 +1052,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-// Called after a DPI change is processed.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Call base class function first.

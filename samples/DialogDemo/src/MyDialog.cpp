@@ -88,7 +88,9 @@ void CMyDialog::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-// Called when the effective dots per inch (dpi) for the dialog has changed.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 INT_PTR CMyDialog::OnDpiChanged()
 {
     SetURLFont();

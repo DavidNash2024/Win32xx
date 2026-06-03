@@ -80,8 +80,9 @@ void CView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-// Called in response to a WM_DPICHANGED message that is sent to a top-level
-// window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     // Resize the window.

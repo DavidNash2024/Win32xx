@@ -194,13 +194,15 @@ namespace Win32xx
         virtual void DrawMenuItemIcon(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pDrawItem);
         virtual BOOL DrawReBarBkgnd(CDC& dc, CReBar& rebar);
+        virtual void DrawReBarBkgndLines(CMemDC& memDC, CReBar& rebar);
         virtual void DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem);
         virtual BOOL DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar);
-        virtual void DrawToolbarArrow(CToolBar* pTB, CDC& drawDC, CRect rc, CSize szImage,
+        virtual void DrawToolbarArrow(CDC& drawDC, CToolBar* pTB, CRect rc, CSize szImage,
             int yImagePos, UINT item, UINT state);
-        virtual void DrawToolbarStateBackground(CToolBar* pTB, CDC& drawDC, CRect rc,
+        virtual void DrawToolbarStateBackground(CDC& drawDC, CToolBar* pTB, CRect rc,
             UINT item, UINT state);
-        virtual void DrawToolbarText(NMHDR* pNMHDR, const CImageList& toolbarImages, int yImagePos);
+        virtual void DrawToolbarText(NMHDR* pNMHDR, const CImageList& toolbarImages,
+            int yImagePos);
         virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDrawItem);
@@ -268,6 +270,7 @@ namespace Win32xx
         virtual void UpdateSettings();
 
         // Not intended to be overridden.
+        CRect GetReBarBandDrawRect(CReBar& rebar, int band);
         int  GetToolbarDropDownWidth(CDC& drawDC, bool isDropDown, bool isWholeDropDown);
         void GetToolbarImagePosition(CToolBar* pTB, CDC& drawDC, UINT state, CRect rc,
             int item, int* xImagePos, int* yImagePos);
@@ -284,7 +287,8 @@ namespace Win32xx
         BOOL IsUsingToolBar() const { return m_useToolBar; }
         BOOL IsUsingVistaMenu() const { return m_menuMetrics.IsVistaMenu(); }
         void UseDarkMenu(BOOL useDarkMenu) { m_useDarkMenu = useDarkMenu; }
-        void UseIndicatorStatus(BOOL useIndicatorStatus) { m_useIndicatorStatus = useIndicatorStatus; }
+        void UseIndicatorStatus(BOOL useIndicatorStatus)
+            { m_useIndicatorStatus = useIndicatorStatus; }
         void UseMenuStatus(BOOL useMenuStatus) { m_useMenuStatus = useMenuStatus; }
         void UseOwnerDrawnMenu(BOOL useOwnerDraw) { m_useOwnerDrawnMenu = useOwnerDraw; }
         void UseReBar(BOOL useReBar) { m_useReBar = useReBar; }
@@ -852,7 +856,7 @@ namespace Win32xx
                         UINT item = static_cast<UINT>(pCustomDraw->nmcd.dwItemSpec);
 
                         // Draw background for hot and pressed states.
-                        DrawToolbarStateBackground(pTB, drawDC, rc, item, state);
+                        DrawToolbarStateBackground(drawDC, pTB, rc, item, state);
 
                         // Get the appropriate image list depending on the button state.
                         CImageList toolbarImages = GetToolbarStateImages(pTB, state);
@@ -873,7 +877,7 @@ namespace Win32xx
                         if (isDropDown || isWholeDropDown)
                         {
                             CSize szImage = toolbarImages.GetIconSize();
-                            DrawToolbarArrow(pTB, drawDC, rc, szImage, yImagePos, item, state);
+                            DrawToolbarArrow(drawDC, pTB, rc, szImage, yImagePos, item, state);
                         }
 
                         // Draw the button image.
@@ -1187,26 +1191,16 @@ namespace Win32xx
         SetBkMode(pDrawItem->hDC, mode);
     }
 
-
-
     // Draws the ReBar's background when ReBar themes are enabled.
     // Returns TRUE when the default background drawing is suppressed.
     template <class T>
     inline BOOL CFrameT<T>::DrawReBarBkgnd(CDC& dc, CReBar& rebar)
     {
-        BOOL isDrawn = TRUE;
-
         const ReBarTheme& rt = GetReBarTheme();
-        if (!rt.UseThemes)
-            isDrawn = FALSE;
-
-        if (!rt.clrBkgnd1 && !rt.clrBkgnd2 && !rt.clrBand1 && !rt.clrBand2)
-            isDrawn = FALSE;
-
+        BOOL isDrawn = (rt.UseThemes &&(rt.clrBkgnd1 || rt.clrBkgnd2 || rt.clrBand1 || rt.clrBand2));
         if (isDrawn)
         {
             assert(rebar.IsWindow());
-
             bool isVertical = (rebar.GetStyle() & CCS_VERT) != 0;
 
             // Create our memory DC.
@@ -1229,42 +1223,8 @@ namespace Win32xx
                     {
                         if (band != rebar.GetBand(GetMenuBar()))
                         {
-                            // Determine the size of this band.
-                            CRect bandRect = rebar.GetBandRect(band);
-
-                            if (isVertical)
-                            {
-                                int right = bandRect.right;
-                                bandRect.right = bandRect.bottom;
-                                bandRect.bottom = right;
-                            }
-
-                            // Determine the size of the child window.
-                            REBARBANDINFO rbbi = {};
-                            rbbi.fMask = RBBIM_CHILD;
-                            rebar.GetBandInfo(band, rbbi);
-                            CWnd* pChild = T::GetCWndPtr(rbbi.hwndChild);
-                            assert(pChild);
-                            CRect childRect = pChild->GetWindowRect();
-                            pChild->ScreenToClient(childRect);
-
-                            // Determine our drawing rectangle.
-                            int startPad = IsXPThemed() ? 2 : 0;
-                            CRect drawRect = bandRect;
-                            CRect borderRect = rebar.GetBandBorders(band);
-                            if (isVertical)
-                            {
-                                drawRect.bottom = drawRect.top + childRect.Height() + borderRect.top;
-                                drawRect.top -= startPad;
-                            }
-                            else
-                            {
-                                drawRect.right = drawRect.left + childRect.Width() + borderRect.left;
-                                drawRect.left -= startPad;
-                            }
-
-                            if (!rt.FlatStyle)
-                                VERIFY(::InflateRect(&drawRect, 1, 1));
+                            // Retrieve the band's drawing rectangle.
+                            CRect drawRect = GetReBarBandDrawRect(rebar, band);
 
                             // Fill the Source CDC with the band's background.
                             CMemDC sourceDC(dc);
@@ -1307,27 +1267,9 @@ namespace Win32xx
                 }
             }
 
+            // Draw lines between bands if required by the theme.
             if (rt.UseLines)
-            {
-                // Draw lines between bands.
-                for (int j = 0; j < GetReBar().GetBandCount() - 1; ++j)
-                {
-                    CRect bandRect = GetReBar().GetBandRect(j);
-                    if (isVertical)
-                    {
-                        int rebarTop = rebarRect.top;
-                        bandRect.top = std::max(0, rebarTop - 4);
-                        bandRect.right += 2;
-                    }
-                    else
-                    {
-                        int rebarLeft = rebarRect.left;
-                        bandRect.left = std::max(0, rebarLeft - 4);
-                        bandRect.bottom += 2;
-                    }
-                    memDC.DrawEdge(bandRect, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
-                }
-            }
+                DrawReBarBkgndLines(memDC, rebar);
 
             // Copy the Memory DC to the window's DC.
             dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
@@ -1335,6 +1277,34 @@ namespace Win32xx
 
         return isDrawn;
     }
+
+    template <class T>
+    inline void CFrameT<T>::DrawReBarBkgndLines(CMemDC& memDC, CReBar& rebar)
+    {
+        CRect rebarRect = rebar.GetClientRect();
+
+        // Draw lines between bands.
+        for (int j = 0; j < GetReBar().GetBandCount() - 1; ++j)
+        {
+            CRect bandRect = GetReBar().GetBandRect(j);
+            bool isVertical = (rebar.GetStyle() & CCS_VERT) != 0;
+            if (isVertical)
+            {
+                int rebarTop = rebarRect.top;
+                bandRect.top = std::max(0, rebarTop - 4);
+                bandRect.right += 2;
+            }
+            else
+            {
+                int rebarLeft = rebarRect.left;
+                bandRect.left = std::max(0, rebarLeft - 4);
+                bandRect.bottom += 2;
+            }
+            memDC.DrawEdge(bandRect, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+        }
+    }
+
+
 
     // Draws the status bar text with the appropriate color.
     template <class T>
@@ -1390,7 +1360,7 @@ namespace Win32xx
     // Draw the dropdown arrow for toolbar buttons with the BTNS_DROPDOWN and
     // BTNS_WHOLEDROPDOWN styles.
     template <class T>
-    inline void CFrameT<T>::DrawToolbarArrow(CToolBar* pTB, CDC& drawDC, CRect rc,
+    inline void CFrameT<T>::DrawToolbarArrow(CDC& drawDC, CToolBar* pTB, CRect rc,
         CSize szImage, int yImagePos, UINT item, UINT state)
     {
         // Calculate arrow position for the BTNS_DROPDOWN
@@ -1446,8 +1416,7 @@ namespace Win32xx
 
     // Draw the toolbar button background for hot, pressed and checked states.
     template <class T>
-    inline void CFrameT<T>::DrawToolbarStateBackground(CToolBar* pTB, CDC& drawDC,
-        CRect rc, UINT item, UINT state)
+    inline void CFrameT<T>::DrawToolbarStateBackground(CDC& drawDC, CToolBar* pTB, CRect rc, UINT item, UINT state)
     {
         // Draw outline rectangle.
         bool isHot = (state & CDIS_HOT) != 0;
@@ -1709,6 +1678,54 @@ namespace Win32xx
             AddMRUEntry(pathName);
         }
         return pathName;
+    }
+
+    // Returns the drawing rectangle for a ReBar band. The drawing rectangle is
+    // the area within the band borders where child windows are drawn.
+    template <class T>
+    inline CRect CFrameT<T>::GetReBarBandDrawRect(CReBar& rebar, int band)
+    {
+        // Determine the size of this band.
+        CRect bandRect = rebar.GetBandRect(band);
+
+        bool isVertical = (rebar.GetStyle() & CCS_VERT) != 0;
+        if (isVertical)
+        {
+            int right = bandRect.right;
+            bandRect.right = bandRect.bottom;
+            bandRect.bottom = right;
+        }
+
+        // Determine the size of the child window.
+        REBARBANDINFO rbbi = {};
+        rbbi.fMask = RBBIM_CHILD;
+        rebar.GetBandInfo(band, rbbi);
+        CWnd* pChild = T::GetCWndPtr(rbbi.hwndChild);
+        assert(pChild);
+        CRect childRect = pChild->GetWindowRect();
+        pChild->ScreenToClient(childRect);
+
+        // Determine our drawing rectangle.
+        int startPad = IsXPThemed() ? 2 : 0;
+        CRect drawRect = bandRect;
+        CRect borderRect = rebar.GetBandBorders(band);
+
+        if (isVertical)
+        {
+            drawRect.bottom = drawRect.top + childRect.Height() + borderRect.top;
+            drawRect.top -= startPad;
+        }
+        else
+        {
+            drawRect.right = drawRect.left + childRect.Width() + borderRect.left;
+            drawRect.left -= startPad;
+        }
+
+        const ReBarTheme& rt = GetReBarTheme();
+        if (!rt.FlatStyle)
+            VERIFY(::InflateRect(&drawRect, 1, 1));
+
+        return drawRect;
     }
 
     // Returns the size of a bitmap image.
@@ -2253,6 +2270,8 @@ namespace Win32xx
         UpdateSettings();
 
         // Destroy and re-create the current toolbar.
+        // This ensures the toolbar is rendered with the correct button spacing,
+        // and any child controls placed over buttons are rendered correctly.
         if (GetToolBar().IsWindow())
         {
             BOOL isToolbarShown = GetToolBar().IsWindowVisible();

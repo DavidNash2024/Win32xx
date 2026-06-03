@@ -125,8 +125,9 @@ BOOL CColorAdjust::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-// Called in response to a WM_DPICHANGED message that is sent to a
-// top-level window when the DPI changes.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CColorAdjust::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CreateImagePreviews();

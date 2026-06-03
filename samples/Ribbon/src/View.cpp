@@ -128,6 +128,8 @@ STDMETHODIMP CView::OnDestroyUICommand(UINT32, __in UI_COMMANDTYPE, __in_opt IUI
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
+// This function is only called when using Per Monitor DPI Awareness. This is
+// specified by loading the appropriate manifest in the resource script (Resource.rc).
 LRESULT CView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);

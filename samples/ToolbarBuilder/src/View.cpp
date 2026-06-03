@@ -43,9 +43,15 @@ CView::~CView()
 // Create the image list and store the colorBits information.
 void CView::CreateImageList(int imageWidth, int imageHeight, int colorBits)
 {
-    // The imagelists don't preserve the palette when 8 bit bitmaps are added.
-    // We convert 4 and 8 bit images to 24 bit to avoid palette issues by
-    // adding them to a 24bit image list.
+    // Note: 4 and 8 bit images are converted to 24 bit images when added to
+    // the image list. This is because the image list doesn't preserve the
+    // palette when 4 and 8 bit images are added. The image list creates a
+    // new palette for the 4 and 8 bit images, and the colors in the new
+    // palette may not match the colors in the original palette.
+    //
+    // This also avoids palette issues when a new image is added to the
+    // existing image list.
+
     if (colorBits <= 8) colorBits = 24;
     m_toolbarImages.Create(imageWidth, imageHeight, colorBits, 1, 1);
     m_colorBits = colorBits;
@@ -282,7 +288,9 @@ int CView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-// Called after the parent receives a DPI changed message.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CView::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     UpdateToolbar();

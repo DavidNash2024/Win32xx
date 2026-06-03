@@ -156,9 +156,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return result;
 }
 
-// Respond to a change in DPI. This is only relevant when using Per Monitor DPI Awareness.
+// Respond to a change in DPI. This function is only called when using
+// Per Monitor DPI Awareness, version 2. This is specified by loading
+// the appropriate manifest in the resource script (Resource.rc).
 LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    // Note: We destroy and recreate the ComboBoxEx control when the DPI changes.
+    // This turns out to be simpler and more reliable than modifying the control.
+
     // Save the current ComboBoxEx edit control text, and the list of items in the
     // ComboBoxEx before the DPI change.
     m_selectedItem = GetCBEdit().GetWindowText();
