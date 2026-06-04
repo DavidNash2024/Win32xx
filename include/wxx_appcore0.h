@@ -262,6 +262,7 @@ namespace Win32xx
         std::weak_ptr<CGDI_Data> GetCGDIData(HGDIOBJ object);
         std::weak_ptr<CIml_Data> GetCImlData(HIMAGELIST images);
         std::weak_ptr<CMenu_Data> GetCMenuData(HMENU menu);
+        static CWinApp*& GetSetThis();
         void RemoveCWndFromMap(CWnd* pWnd);
         void RemoveDCFromMap(HDC dc);
         void RemoveGDIObjectFromMap(HGDIOBJ gdiObject);
@@ -269,9 +270,6 @@ namespace Win32xx
         void RemoveMenuFromMap(HMENU menu);
         void SetCallback();
         void SetTlsData();
-
-        static CWinApp* SetnGetThis(CWinApp* pThis = nullptr, bool reset = false);
-
         std::unordered_map<HDC, std::weak_ptr<CDC_Data>> m_mapCDCData;
         std::unordered_map<HGDIOBJ, std::weak_ptr<CGDI_Data>> m_mapCGDIData;
         std::unordered_map<HIMAGELIST, std::weak_ptr<CIml_Data>> m_mapCImlData;
@@ -369,10 +367,6 @@ namespace Win32xx
 
         // Message string used for time.
         virtual CString MsgTimeValid() const;
-
-        // Message used for CWinApp.
-        virtual CString MsgCWinApp() const;
-        virtual CString MsgTlsIndexes() const;
     };
 
     // Returns a pointer to the CWinApp object.
@@ -380,7 +374,7 @@ namespace Win32xx
     // or an object inherited from CWinApp to start Win32++.
     inline CWinApp* GetApp()
     {
-        CWinApp* pApp = CWinApp::SetnGetThis();
+       CWinApp* pApp = CWinApp::GetSetThis();
         assert(pApp);  // This assert fails if Win32++ isn't started.
         return pApp;
     }
@@ -389,7 +383,7 @@ namespace Win32xx
     // object, or an object inherited from CWinApp to start Win32++.
     inline BOOL IsAppRunning()
     {
-        return  (CWinApp::SetnGetThis() != nullptr);
+        return  (CWinApp::GetSetThis() != nullptr);
     }
 
 } // namespace Win32xx

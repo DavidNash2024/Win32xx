@@ -86,8 +86,8 @@ namespace Win32xx
     class CException : public std::exception
     {
     public:
-        CException(int messageID) noexcept;
-        CException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
+        explicit CException(int messageID) noexcept;
+        explicit CException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
         CException(const CException& rhs) noexcept;
         CException& operator=(const CException&) noexcept;
         virtual ~CException() noexcept;
@@ -113,8 +113,8 @@ namespace Win32xx
     class CFileException : public CException
     {
     public:
-        CFileException(LPCTSTR filePath, int messageID) noexcept;
-        CFileException(LPCTSTR filePath, LPCTSTR text = nullptr, int messageID = 0) noexcept;
+        explicit CFileException(LPCTSTR filePath, int messageID) noexcept;
+        explicit CFileException(LPCTSTR filePath, LPCTSTR text = nullptr, int messageID = 0) noexcept;
         CFileException(const CFileException& rhs) noexcept;
         CFileException& operator=(const CFileException& rhs)  noexcept;
         virtual ~CFileException() noexcept override;
@@ -135,8 +135,8 @@ namespace Win32xx
     class CNotSupportedException : public CException
     {
     public:
-        CNotSupportedException(int messageID) noexcept;
-        CNotSupportedException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
+        explicit CNotSupportedException(int messageID) noexcept;
+        explicit CNotSupportedException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
         CNotSupportedException(const CNotSupportedException& rhs) noexcept;
         CNotSupportedException& operator=(const CNotSupportedException& rhs) noexcept;
         virtual ~CNotSupportedException() noexcept override;
@@ -151,8 +151,8 @@ namespace Win32xx
     class CResourceException : public CException
     {
     public:
-        CResourceException(int messageID) noexcept;
-        CResourceException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
+        explicit CResourceException(int messageID) noexcept;
+        explicit CResourceException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
         CResourceException(const CResourceException& rhs) noexcept;
         CResourceException& operator=(const CResourceException& rhs)  noexcept;
         virtual ~CResourceException() noexcept override;
@@ -170,8 +170,8 @@ namespace Win32xx
     class CUserException : public CException
     {
     public:
-        CUserException(int messageID) noexcept;
-        CUserException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
+        explicit CUserException(int messageID) noexcept;
+        explicit CUserException(LPCTSTR text = nullptr, int messageID = 0) noexcept;
         CUserException(const CUserException& rhs) noexcept;
         CUserException& operator=(const CUserException& rhs) noexcept;
         virtual ~CUserException() noexcept override;
@@ -186,8 +186,8 @@ namespace Win32xx
     class CWinException : public CException
     {
     public:
-        CWinException(int messageID) noexcept;
-        CWinException(LPCTSTR text= nullptr, int messageID = 0) noexcept;
+        explicit CWinException(int messageID) noexcept;
+        explicit CWinException(LPCTSTR text= nullptr, int messageID = 0) noexcept;
         CWinException(const CWinException& rhs) noexcept;
         CWinException& operator=(const CWinException& rhs) noexcept;
         virtual ~CWinException() noexcept override;

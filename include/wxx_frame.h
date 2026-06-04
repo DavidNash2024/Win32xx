@@ -152,7 +152,7 @@ namespace Win32xx
         CString GetTitle() const                          { return T::GetWindowText(); }
         CWnd& GetView() const;
         CString GetXPThemeName() const;
-        BOOL IsMDIFrame() const                           { return static_cast<BOOL>(T::SendMessage(UWM_GETCMDIFRAMET)); }
+        BOOL IsMDIFrame() const                           { return (T::SendMessage(UWM_GETCMDIFRAMET)) ? TRUE : FALSE; }
         void RemoveKbdHook();
         void ResetMenuMetrics()                           { m_menuMetrics.SetMetrics(*this); }
         void SetAccelerators(UINT accelID);

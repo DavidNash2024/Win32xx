@@ -99,7 +99,7 @@ namespace Win32xx
 
         WPARAM wparam = static_cast<WPARAM>(parts);
         LPARAM lparam = reinterpret_cast<LPARAM>(paneWidths);
-        return static_cast<BOOL>(SendMessage(SB_SETPARTS, wparam, lparam));
+        return (SendMessage(SB_SETPARTS, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Retrieves a count of the parts in the status bar.
@@ -155,7 +155,7 @@ namespace Win32xx
     inline BOOL CStatusBar::IsSimple() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(SB_ISSIMPLE, 0, 0));
+        return (SendMessage(SB_ISSIMPLE, 0, 0)) ? TRUE : FALSE;
     }
 
     // Called when the background needs erasing.
@@ -163,8 +163,8 @@ namespace Win32xx
     {
         // Permit the parent window to handle the drawing of the StatusBar's
         // background. Return TRUE to suppress default background drawing.
-        return static_cast<BOOL>(GetParent().SendMessage(UWM_DRAWSBBKGND,
-            reinterpret_cast<WPARAM>(&dc), reinterpret_cast<LPARAM>(this)));
+        return (GetParent().SendMessage(UWM_DRAWSBBKGND, reinterpret_cast<WPARAM>(&dc),
+            reinterpret_cast<LPARAM>(this))) ? TRUE : FALSE;
     }
 
     // Called by Create to set the window creation parameters.
@@ -204,7 +204,7 @@ namespace Win32xx
         {
             WPARAM wparam = static_cast<WPARAM>(part | style);
             LPARAM lparam = reinterpret_cast<LPARAM>(text);
-            result = static_cast<BOOL>(SendMessage(SB_SETTEXT, wparam, lparam));
+            result = (SendMessage(SB_SETTEXT, wparam, lparam)) ? TRUE : FALSE;
         }
 
         return result;
@@ -217,7 +217,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(part);
         LPARAM lparam = reinterpret_cast<LPARAM>(icon);
-        return static_cast<BOOL>(SendMessage(SB_SETICON, wparam, lparam));
+        return (SendMessage(SB_SETICON, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Changes the width of an existing pane, or creates a new pane with the
@@ -253,8 +253,8 @@ namespace Win32xx
         }
 
         // Set the StatusBar parts with our new parts count and part widths.
-        return static_cast<BOOL>(SendMessage(SB_SETPARTS, static_cast<WPARAM>(newCount),
-            reinterpret_cast<LPARAM>(pNewWidthsArray)));
+        return (SendMessage(SB_SETPARTS, static_cast<WPARAM>(newCount),
+            reinterpret_cast<LPARAM>(pNewWidthsArray))) ? TRUE : FALSE;
     }
 
     // Specifies whether a status window displays simple text or displays all

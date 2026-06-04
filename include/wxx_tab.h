@@ -931,7 +931,7 @@ namespace Win32xx
         LPARAM lparam = reinterpret_cast<LPARAM>(&tabNMHDR);
 
         // The default return value is zero.
-        return static_cast<BOOL>(GetParent().SendMessage(WM_NOTIFY, wparam, lparam));
+        return (GetParent().SendMessage(WM_NOTIFY, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Called when this object is attached to a tab control.

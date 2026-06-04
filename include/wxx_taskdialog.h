@@ -347,7 +347,7 @@ namespace Win32xx
         CStringW str;
         if (IS_INTRESOURCE(text))      // support MAKEINTRESOURCE
         {
-            UINT textID = static_cast<UINT>(reinterpret_cast<UINT_PTR>(text));
+            UINT textID = LOWORD(reinterpret_cast<ULONG_PTR>(text));
             str.LoadString(textID);
         }
         else
@@ -756,7 +756,7 @@ namespace Win32xx
         LPARAM lparam)
     {
         int button = static_cast<int>(wparam);
-        BOOL isClicked = static_cast<BOOL>(wparam);
+        BOOL isClicked = (wparam) ? TRUE : FALSE;
         LPCWSTR hyperLink = reinterpret_cast<LPCWSTR>(lparam);
         DWORD milliseconds = static_cast<DWORD>(wparam);
         switch(msg)
@@ -842,7 +842,7 @@ namespace Win32xx
     {
         if (IS_INTRESOURCE(text))        // support MAKEINTRESOURCE
         {
-            UINT textID = static_cast<UINT>(reinterpret_cast<UINT_PTR>(text));
+            UINT textID = LOWORD(reinterpret_cast<ULONG_PTR>(text));
             buttonText.LoadString(textID);
         }
         else

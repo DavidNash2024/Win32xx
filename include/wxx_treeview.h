@@ -348,7 +348,7 @@ namespace Win32xx
         *reinterpret_cast<HTREEITEM*>(&rc) = item;
         WPARAM wparam = static_cast<WPARAM>(isTextOnly);
         LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
-        return static_cast<BOOL>(SendMessage(TVM_GETITEMRECT, wparam, lparam));
+        return (SendMessage(TVM_GETITEMRECT, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Retrieves the bounding rectangle for a tree-view item and indicates

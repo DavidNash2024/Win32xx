@@ -76,7 +76,7 @@ namespace Win32xx
     class CThreadLock
     {
     public:
-        CThreadLock(CCriticalSection& cs) : m_cs(cs) { m_cs.Lock(); }
+        explicit CThreadLock(CCriticalSection& cs) : m_cs(cs) { m_cs.Lock(); }
         ~CThreadLock() { m_cs.Release(); }
 
     private:

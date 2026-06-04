@@ -803,7 +803,7 @@ namespace Win32xx
     inline BOOL CComboBox::GetDroppedState() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CB_GETDROPPEDSTATE, 0, 0));
+        return (SendMessage(CB_GETDROPPEDSTATE, 0, 0)) ? TRUE : FALSE;
     }
 
     // Retrieves the minimum allowable width, in pixels, of the list box of the combo box
@@ -840,7 +840,7 @@ namespace Win32xx
     inline BOOL CComboBox::GetExtendedUI() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CB_GETEXTENDEDUI, 0, 0));
+        return (SendMessage(CB_GETEXTENDEDUI, 0, 0)) ? TRUE : FALSE;
     }
 
     // Retrieve from the combo box the width, in pixels, by which the list box can
@@ -1024,7 +1024,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = MAKELONG(startChar, endChar);
-        return static_cast<BOOL>(SendMessage(CB_SETEDITSEL, 0, lparam));
+        return (SendMessage(CB_SETEDITSEL, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Selects either the default user interface or the extended user interface for the combo box that
@@ -1146,7 +1146,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&item);
-        return static_cast<BOOL>(SendMessage(CBEM_GETITEM, 0, lparam));
+        return (SendMessage(CBEM_GETITEM, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Determines whether or not the user has changed the text of the ComboBoxEx edit control.
@@ -1154,7 +1154,7 @@ namespace Win32xx
     inline BOOL CComboBoxEx::HasEditChanged () const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CBEM_HASEDITCHANGED, 0, 0));
+        return (SendMessage(CBEM_HASEDITCHANGED, 0, 0)) ? TRUE : FALSE;
     }
 
     // Inserts a new item in the ComboBoxEx control.
@@ -1199,7 +1199,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&item);
-        return static_cast<BOOL>(SendMessage(CBEM_SETITEM, 0, lparam));
+        return (SendMessage(CBEM_SETITEM, 0, lparam)) ? TRUE : FALSE;
     }
 
     ////////////////////////////////////////
@@ -1643,7 +1643,7 @@ namespace Win32xx
     inline BOOL CIPAddress::IsBlank() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(IPM_ISBLANK, 0, 0));
+        return (SendMessage(IPM_ISBLANK, 0, 0)) ? TRUE : FALSE;
     }
 
     // Called by Create to set some window class parameters.
@@ -1843,7 +1843,7 @@ namespace Win32xx
     inline BOOL CMonthCalendar::SetDayState(int months, LPMONTHDAYSTATE pStateArray) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(MonthCal_SetDayState(*this, months, pStateArray));
+        return (MonthCal_SetDayState(*this, months, pStateArray)) ? TRUE : FALSE;
     }
 
     // Sets the first day of the week for the month calendar control.
@@ -1897,7 +1897,7 @@ namespace Win32xx
         minMax[0] = minRange;
         minMax[1] = maxRange;
 
-        return static_cast<BOOL>(MonthCal_SetSelRange(*this, &minMax));
+        return (MonthCal_SetSelRange(*this, &minMax)) ? TRUE : FALSE;
     }
 
     // Sets the "today" selection for the month calendar control.
@@ -2435,7 +2435,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = static_cast<LPARAM>(tic);
-        return static_cast<BOOL>(SendMessage(TBM_SETTIC, 0, lparam));
+        return (SendMessage(TBM_SETTIC, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Sets the interval frequency for tick marks in the trackbar.
@@ -2531,7 +2531,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(accels);
         LPARAM lparam = reinterpret_cast<LPARAM>(pAccels);
-        return static_cast<BOOL>(SendMessage(UDM_SETACCEL, wparam, lparam));
+        return (SendMessage(UDM_SETACCEL, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Sets the radix base for the up-down control.
@@ -2596,7 +2596,7 @@ namespace Win32xx
         info.hinst = GetApp()->GetResourceHandle();
         info.lpszText = MAKEINTRESOURCE(textID);
         LPARAM lparam = reinterpret_cast<LPARAM>(&info);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0, lparam));
+        return (SendMessage(TTM_ADDTOOL, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Registers a tool with a ToolTip control.
@@ -2611,7 +2611,7 @@ namespace Win32xx
         info.hinst = GetApp()->GetResourceHandle();
         info.lpszText = MAKEINTRESOURCE(textID);
         LPARAM lparam = reinterpret_cast<LPARAM>(&info);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0, lparam));
+        return (SendMessage(TTM_ADDTOOL, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Registers a tool with a ToolTip control.
@@ -2628,7 +2628,7 @@ namespace Win32xx
         FillToolInfo(info, control, toolRect, id);
         info.lpszText = const_cast<LPTSTR>(text);
         LPARAM lparam = reinterpret_cast<LPARAM>(&info);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0, lparam));
+        return (SendMessage(TTM_ADDTOOL, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Registers a tool with a ToolTip control.
@@ -2643,7 +2643,7 @@ namespace Win32xx
         FillToolInfo(info, control);
         info.lpszText = const_cast<LPTSTR>(text);
         LPARAM lparam = reinterpret_cast<LPARAM>(&info);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0, lparam));
+        return (SendMessage(TTM_ADDTOOL, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Calculates a ToolTip control's text display rectangle from its window
@@ -2655,7 +2655,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(isLarger);
         LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
-        return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, wparam, lparam));
+        return (SendMessage(TTM_ADJUSTRECT, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Removes a tool from a ToolTip control.
@@ -2833,7 +2833,7 @@ namespace Win32xx
         hti.pt = pt;
         hti.ti = toolInfo;
         LPARAM lparam = reinterpret_cast<LPARAM>(&hti);
-        return static_cast<BOOL>(SendMessage(TTM_HITTEST, 0, lparam));
+        return (SendMessage(TTM_HITTEST, 0, lparam)) ? TRUE : FALSE;
     }
 
     // Removes a displayed ToolTip window from view.
@@ -2930,7 +2930,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(icon);
         LPARAM lparam = reinterpret_cast<LPARAM>(title);
-        return static_cast<BOOL>(SendMessage(TTM_SETTITLE, wparam, lparam));
+        return (SendMessage(TTM_SETTITLE, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Sets the information that a ToolTip control maintains for a tool.

@@ -4118,7 +4118,7 @@ namespace Win32xx
         system.ReleaseBuffer();
 
         // Use runtime dynamic linking. Avoids the need to explicitly link Msimg32.lib.
-        static HMODULE msimg32 = ::LoadLibrary(system + _T("\\msimg32.dll"));
+        HMODULE msimg32 = ::LoadLibrary(system + _T("\\msimg32.dll"));
         if (msimg32)
         {
             using PGRADIENTFILL = BOOL(WINAPI*)(HDC, PTRIVERTEX, ULONG, PVOID,
@@ -4129,6 +4129,8 @@ namespace Win32xx
 
             if (pGradientFill)
                 return pGradientFill(m_pData->dc, pVertex, vertex, pMesh, mesh, mode);
+
+            ::FreeLibrary(msimg32);
         }
 
         return FALSE;

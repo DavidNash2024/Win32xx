@@ -219,7 +219,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonCount);
         LPARAM lparam = reinterpret_cast<LPARAM>(pButtonInfoArray);
-        return static_cast<BOOL>(SendMessage(TB_ADDBUTTONS, wparam, lparam));
+        return (SendMessage(TB_ADDBUTTONS, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Adds a new string, passed as a resource ID, to the ToolBar's internal
@@ -318,7 +318,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_ENABLEBUTTON, wparam, MAKELONG(isEnabled, 0)));
+        return (SendMessage(TB_ENABLEBUTTON, wparam, MAKELONG(isEnabled, 0))) ? TRUE : FALSE;
     }
 
     // Receives the TBBUTTON structure information from the specified button.
@@ -328,7 +328,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
         LPARAM lparam = reinterpret_cast<LPARAM>(&buttonInfo);
-        return static_cast<BOOL>(SendMessage(TB_GETBUTTON, wparam, lparam));
+        return (SendMessage(TB_GETBUTTON, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Retrieves a count of the buttons currently in the ToolBar.
@@ -585,7 +585,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_HIDEBUTTON, wparam, MAKELONG (show, 0)));
+        return (SendMessage(TB_HIDEBUTTON, wparam, MAKELONG (show, 0))) ? TRUE : FALSE;
     }
 
     // Returns the button that's positioned under the cursor.
@@ -615,7 +615,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_INDETERMINATE, wparam, MAKELONG (isIndeterminate, 0)));
+        return (SendMessage(TB_INDETERMINATE, wparam, MAKELONG (isIndeterminate, 0))) ? TRUE : FALSE;
     }
 
     // Inserts a button to the left of the specified button index.
@@ -625,7 +625,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
         LPARAM lparam = reinterpret_cast<LPARAM>(&buttonInfo);
-        return static_cast<BOOL>(SendMessage(TB_INSERTBUTTON, wparam, lparam));
+        return (SendMessage(TB_INSERTBUTTON, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Determines whether the specified button in a ToolBar is hidden.
@@ -634,7 +634,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONHIDDEN, wparam, 0));
+        return (SendMessage(TB_ISBUTTONHIDDEN, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Checks the highlight state of a ToolBar button.
@@ -643,7 +643,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONHIGHLIGHTED, wparam, 0));
+        return (SendMessage(TB_ISBUTTONHIGHLIGHTED, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Determines whether the specified button in a ToolBar is indeterminate.
@@ -652,7 +652,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONINDETERMINATE, wparam, 0));
+        return (SendMessage(TB_ISBUTTONINDETERMINATE, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Determines whether the specified button in a ToolBar is pressed.
@@ -661,7 +661,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONPRESSED, wparam, 0));
+        return (SendMessage(TB_ISBUTTONPRESSED, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Determines the ID of the button that corresponds to the specified
@@ -686,7 +686,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
         LPARAM lparam = static_cast<LPARAM>(highlight);
-        return static_cast<BOOL>(SendMessage(TB_MARKBUTTON, wparam, lparam));
+        return (SendMessage(TB_MARKBUTTON, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Moves a button from one index to another.
@@ -696,7 +696,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(oldPos);
         LPARAM lparam = static_cast<LPARAM>(newPos);
-        return static_cast<BOOL>(SendMessage(TB_MOVEBUTTON, wparam, lparam));
+        return (SendMessage(TB_MOVEBUTTON, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Called when the toolbar window is created and attached to this object.
@@ -748,7 +748,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_PRESSBUTTON, wparam, MAKELONG(press, 0)));
+        return (SendMessage(TB_PRESSBUTTON, wparam, MAKELONG(press, 0))) ? TRUE : FALSE;
     }
 
     // Saves or restores the toolbar state in the registry. Parameter values:
@@ -771,7 +771,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetBitmapSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETBITMAPSIZE, 0, MAKELONG(cx, cy)));
+        return (SendMessage(TB_SETBITMAPSIZE, 0, MAKELONG(cx, cy))) ? TRUE : FALSE;
     }
 
     // Sets the size of the buttons to be added to a ToolBar.
@@ -780,7 +780,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy)));
+        return (SendMessage(TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy))) ? TRUE : FALSE;
     }
 
     // Use this to change a button's Command ID. It can also be used to change
@@ -814,7 +814,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
         LPARAM lparam = reinterpret_cast<LPARAM>(&tbbi);
-        return static_cast<BOOL>(SendMessage(TB_SETBUTTONINFO, wparam, lparam));
+        return (SendMessage(TB_SETBUTTONINFO, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Set the state of an individual button
@@ -833,7 +833,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_SETSTATE, wparam, MAKELONG (state, 0)));
+        return (SendMessage(TB_SETSTATE, wparam, MAKELONG (state, 0))) ? TRUE : FALSE;
     }
 
     //  The the style of the ToolBar control. The following button styles are supported:
@@ -964,7 +964,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
         LPARAM lparam = static_cast<LPARAM>(buttonID);
-        return static_cast<BOOL>(SendMessage(TB_SETCMDID, wparam, lparam));
+        return (SendMessage(TB_SETCMDID, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Sets the ImageList that the ToolBar control will use to display disabled
@@ -1043,7 +1043,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(indent);
-        return static_cast<BOOL>(SendMessage(TB_SETINDENT, wparam, 0));
+        return (SendMessage(TB_SETINDENT, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Sets the maximum number of text rows displayed on a ToolBar button.
@@ -1052,7 +1052,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(maxRows);
-        return static_cast<BOOL>(SendMessage(TB_SETMAXTEXTROWS, wparam, 0));
+        return (SendMessage(TB_SETMAXTEXTROWS, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Sets the padding for a ToolBar control.
@@ -1060,7 +1060,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetPadding(int cx, int cy) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETPADDING, 0, MAKELONG(cx, cy)));
+        return (SendMessage(TB_SETPADDING, 0, MAKELONG(cx, cy))) ? TRUE : FALSE;
     }
 
     // Associates a ToolTip control with a ToolBar. This should be done before

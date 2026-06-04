@@ -1083,26 +1083,26 @@ namespace Win32xx
     {
         assert(text != nullptr);
 
-        int count = 0;
+        size_t count = 0;
         size_t pos = 0;
         size_t len = strlenT(text);
         if (len > 0)
         {
-            while ((pos = m_str.find(text, pos)) != std::string::npos)
+            while ((pos = m_str.find(text, pos)) <= std::string::npos)
             {
                 m_str.erase(pos, len);
                 ++count;
             }
         }
 
-        return count;
+        return static_cast<int>(count);
     }
 
     // Removes each occurrence of the specified character from the string.
     template <class T>
     inline int CStringT<T>::Remove(T ch)
     {
-        int count = 0;
+        size_t count = 0;
         size_t pos = 0;
 
         while ((pos = m_str.find(ch, pos)) != std::string::npos)
@@ -1111,7 +1111,7 @@ namespace Win32xx
             ++count;
         }
 
-        return count;
+        return static_cast<int>(count);
     }
 
     // Replaces each occurrence of the old character with the new character.
@@ -1139,7 +1139,7 @@ namespace Win32xx
         assert(oldText);
         assert(newText);
 
-        int count = 0;
+        size_t count = 0;
         size_t pos = 0;
         size_t lenOld = strlenT(oldText);
         size_t lenNew = strlenT(newText);
@@ -1152,7 +1152,8 @@ namespace Win32xx
                 ++count;
             }
         }
-        return count;
+
+        return static_cast<int>(count);
     }
 
     // Search for a character within the string, starting from the end.

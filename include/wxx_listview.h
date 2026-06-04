@@ -239,7 +239,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(item);
         LPARAM lparam = static_cast<LPARAM>(isPartialOK);
-        return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, wparam, lparam));
+        return (SendMessage(LVM_ENSUREVISIBLE, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Searches for a list-view item with the specified characteristics.
@@ -279,7 +279,7 @@ namespace Win32xx
     inline BOOL CListView::GetCheckState( int item ) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(ListView_GetCheckState( *this, item ));
+        return (ListView_GetCheckState( *this, item )) ? TRUE : FALSE;
     }
 
     // Retrieves the attributes of the list-view control's column.
@@ -965,7 +965,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(item);
         LPARAM lparam = reinterpret_cast<LPARAM>(&itemInfo);
-        return static_cast<BOOL>(SendMessage(LVM_SETITEMSTATE, wparam, lparam));
+        return (SendMessage(LVM_SETITEMSTATE, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Changes the state of an item in the list-view control.

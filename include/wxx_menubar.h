@@ -387,7 +387,7 @@ namespace Win32xx
     // Returns TRUE if the frame is a MDI frame.
     inline BOOL CMenuBar::IsMDIFrame() const
     {
-        return static_cast<BOOL>(GetAncestor().SendMessage(UWM_GETCMDIFRAMET));
+        return (GetAncestor().SendMessage(UWM_GETCMDIFRAMET)) ? TRUE : FALSE;
     }
 
     // Used by CFrameT when a menu is active, and a key is pressed other than

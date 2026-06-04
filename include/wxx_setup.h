@@ -225,7 +225,10 @@ namespace Win32xx
 
         // If OS version less than Vista, adjust size to correct value.
         if (GetWinVersion() < 2600)
-            ncm.cbSize = CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);
+        {
+            ncm.cbSize = FIELD_OFFSET(NONCLIENTMETRICS, lfMessageFont) +
+                static_cast<UINT>(sizeof(ncm.lfMessageFont));
+        }
 
         VERIFY(::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0));
 

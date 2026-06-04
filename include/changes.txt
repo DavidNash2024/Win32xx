@@ -41,6 +41,8 @@ Removed CRibbon                   - class
 Deprecated CPrintDialogEx         - class
 Deprecated CWebBrowser            - class
 Removed BrowserATL                - sample
+Removed CWinApp::MsgCWinApp       - member function
+Removed CWinApp::MsgTlsIndexe     - member function
 
 
 Version 10.2

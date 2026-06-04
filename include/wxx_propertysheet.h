@@ -785,13 +785,13 @@ namespace Win32xx
     // Returns TRUE of the property sheet is modeless.
     inline BOOL CPropertySheet::IsModeless() const
     {
-        return static_cast<BOOL>(m_psh.dwFlags & PSH_MODELESS);
+        return (m_psh.dwFlags & PSH_MODELESS) ? TRUE : FALSE;
     }
 
     // Returns TRUE if this property sheet is a wizard.
     inline BOOL CPropertySheet::IsWizard() const
     {
-        return static_cast<BOOL>(m_psh.dwFlags & PSH_WIZARD);
+        return (m_psh.dwFlags & PSH_WIZARD) ? TRUE : FALSE;
     }
 
     // Called in response to a DM_SETDEFID message.
@@ -859,7 +859,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(page);
-        return static_cast<BOOL>(SendMessage(*this, PSM_SETCURSEL, wparam, 0));
+        return (SendMessage(*this, PSM_SETCURSEL, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Activates the specified property page.

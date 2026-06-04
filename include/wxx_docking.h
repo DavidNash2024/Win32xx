@@ -2939,9 +2939,6 @@ namespace Win32xx
                     dockChildName.Format(_T("DockChild%d"), i);
                 }
 
-                if (dockList.size() > 0)
-                    isLoaded = TRUE;
-
                 // Add the dock ancestor's style.
                 DWORD style;
                 if (ERROR_SUCCESS != settingsKey.QueryDWORDValue(_T("DockAncestor"), style))

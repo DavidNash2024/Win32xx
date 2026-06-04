@@ -2416,7 +2416,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(redraw);
-        return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, wparam, 0));
+        return (::SendMessage(*this, WM_SETREDRAW, wparam, 0)) ? TRUE : FALSE;
     }
 
     // The SetScrollInfo function sets the parameters of a scroll bar, including

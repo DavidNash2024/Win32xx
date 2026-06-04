@@ -204,22 +204,19 @@ namespace Win32xx
     inline CWinApp::CWinApp() : m_callback(nullptr)
     {
         CThreadLock appLock(m_appLock);
+        m_tlsData = ::TlsAlloc();
 
-        if (SetnGetThis() == nullptr)
+        // Set the instance handle.
+        m_instance = reinterpret_cast<HINSTANCE>(&__ImageBase);
+        m_resource = m_instance;
+
+        if (GetSetThis() == nullptr)
         {
-            m_tlsData = ::TlsAlloc();
-
             // An exception is thrown if all TLS indexes are already allocated by this app.
             // At least 64 TLS indexes per process are allowed.
             // Win32++ requires only one TLS index.
             if (m_tlsData != TLS_OUT_OF_INDEXES)
             {
-                SetnGetThis(this);
-
-                // Set the instance handle.
-                m_instance = reinterpret_cast<HINSTANCE>(&__ImageBase);
-
-                m_resource = m_instance;
                 SetTlsData();
                 SetCallback();
                 LoadCommonControls();
@@ -230,13 +227,16 @@ namespace Win32xx
                 //       with COINIT_APARTMENTTHREADED, and provides support
                 //       for other OLE functionality.
                 VERIFY(SUCCEEDED(OleInitialize(nullptr)));
+
+                // Store the pointer to this CWinApp object.
+                CWinApp::GetSetThis() = this;
             }
             else
-                throw CNotSupportedException(MsgTlsIndexes());
+                throw CNotSupportedException(_T("No available Thread Local Storage Indexes."));
         }
         else
             // Throw an exception if we run more than one instance of CWinApp.
-            throw CNotSupportedException(MsgCWinApp());
+            throw CNotSupportedException(_T("Only one instance of CWinApp can run at a time"));
     }
 
     // Destructor
@@ -261,11 +261,14 @@ namespace Win32xx
             ::TlsFree(m_tlsData);
         }
 
-        SetnGetThis(nullptr, true);
         if (m_resource != m_instance)
             ::FreeLibrary(m_resource);
 
         OleUninitialize();
+
+        // Clear the stored CWinApp pointer before the CWinApp object is
+        // destroyed.
+        CWinApp::GetSetThis() = nullptr;
     }
 
     // Adds a HDC and CDC_Data* pair to the map.
@@ -471,6 +474,15 @@ namespace Win32xx
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }
 
+    // Retrieves and stores the pointer to this CWinApp object. The pointer is
+    // assigned when the CWinApp constructor is called, and reset to nullptr
+    // when the destructor is called.
+    inline CWinApp*& CWinApp::GetSetThis()
+    {
+        static CWinApp* pWinApp = nullptr;
+        return pWinApp;
+    }
+
     // Removes this CWnd's pointer from m_mapHWND.
     inline void CWinApp::RemoveCWndFromMap(CWnd* pWnd)
     {
@@ -580,29 +592,6 @@ namespace Win32xx
     inline HCURSOR CWinApp::SetCursor(HCURSOR cursor) const
     {
         return ::SetCursor(cursor);
-    }
-
-    // This function stores the 'this' pointer in a static variable.
-    // Once stored, it can be used later to return the 'this' pointer.
-    // CWinApp's constructor calls this function and sets the static variable.
-    // CWinApp's destructor resets pWinApp to nullptr.
-    inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= nullptr*/, bool reset /*= false*/)
-    {
-        static CWinApp* pWinApp = nullptr;
-
-        if (reset)
-        {
-            pWinApp = nullptr;
-        }
-        else
-        {
-            if (pWinApp == nullptr)
-                pWinApp = pThis;
-            else
-                assert(pThis == nullptr);
-        }
-
-        return pWinApp;
     }
 
     // Sets the main window for this thread.
@@ -900,13 +889,6 @@ namespace Win32xx
     // CTime messages
     inline CString CWinApp::MsgTimeValid() const
     { return _T("Invalid time."); }
-
-    // CWinApp messages
-    inline CString CWinApp::MsgCWinApp() const
-    { return _T("Only one instance of CWinApp can run at a time"); }
-
-    inline CString CWinApp::MsgTlsIndexes() const
-    { return _T("No available Thread Local Storage Indexes."); }
 
 
     /////////////////////////////////////////////////////////

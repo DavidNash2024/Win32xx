@@ -429,7 +429,7 @@ namespace Win32xx
     inline BOOL CEdit::CanUndo() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_CANUNDO, 0, 0));
+        return (SendMessage(EM_CANUNDO, 0, 0)) ? TRUE : FALSE;
     }
 
     // Returns the character index and line index of the character nearest the
@@ -543,7 +543,7 @@ namespace Win32xx
     inline BOOL CEdit::GetModify() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_GETMODIFY, 0, 0));
+        return (SendMessage(EM_GETMODIFY, 0, 0)) ? TRUE : FALSE;
     }
 
     // Returns the character that edit controls use in conjunction with the
@@ -620,7 +620,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(addEOL);
-        return static_cast<BOOL>(SendMessage(EM_FMTLINES, wparam, 0));
+        return (SendMessage(EM_FMTLINES, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Sets the text limit of an edit control. The text limit is the maximum
@@ -774,7 +774,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(isReadOnly);
-        return static_cast<BOOL>(SendMessage(EM_SETREADONLY, wparam, 0));
+        return (SendMessage(EM_SETREADONLY, wparam, 0)) ? TRUE : FALSE;
     }
 
     // Sets the formatting rectangle for the multi-line edit control and
@@ -830,7 +830,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(tabStops);
         LPARAM lparam = reinterpret_cast<LPARAM>(pTabStopsArray);
-        return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, wparam, lparam));
+        return (SendMessage(EM_SETTABSTOPS, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Sets tab-stop positions in the multi-line edit control.
@@ -838,7 +838,7 @@ namespace Win32xx
     inline BOOL CEdit::SetTabStops() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, 0, 0));
+        return (SendMessage(EM_SETTABSTOPS, 0, 0)) ? TRUE : FALSE;
     }
 
     // Sets tab-stop positions in the multi-line edit control.
@@ -848,7 +848,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(1);
         LPARAM lparam = reinterpret_cast<LPARAM>(&cxEachStop);
-        return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, wparam, lparam));
+        return (SendMessage(EM_SETTABSTOPS, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Removes any text that was just inserted or inserts any deleted
@@ -1282,7 +1282,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(tabStops);
         LPARAM lparam = reinterpret_cast<LPARAM>(pTabStopsArray);
-        return static_cast<BOOL>(SendMessage(LB_SETTABSTOPS, wparam, lparam));
+        return (SendMessage(LB_SETTABSTOPS, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Sets the tab stops to those specified in a specified array.
@@ -1300,7 +1300,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(1);
         LPARAM lparam = reinterpret_cast<LPARAM>(&cxEachStop);
-        return static_cast<BOOL>(SendMessage(LB_SETTABSTOPS, wparam, lparam));
+        return (SendMessage(LB_SETTABSTOPS, wparam, lparam)) ? TRUE : FALSE;
     }
 
     // Scrolls the list box so the specified item is at the top of the visible range.
