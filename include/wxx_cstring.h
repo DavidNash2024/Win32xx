@@ -1088,7 +1088,7 @@ namespace Win32xx
         size_t len = strlenT(text);
         if (len > 0)
         {
-            while ((pos = m_str.find(text, pos)) <= std::string::npos)
+            while ((pos = m_str.find(text, pos)) != std::string::npos)
             {
                 m_str.erase(pos, len);
                 ++count;
