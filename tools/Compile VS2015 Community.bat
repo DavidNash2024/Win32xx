@@ -1,9 +1,9 @@
+@echo off
 REM: A batch program to rebuild the Win32++ samples using VS2015 Community.
 REM: The contents of the log file is erased 
 
 REM: Set the paths and environment variables
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-
 
 ::Cleanup
 call CleanSamples
@@ -59,8 +59,8 @@ MSBuild DockTabbedMDI\ProjectFiles\DockTabbedMDI_2015.sln /p:Configuration=Debug
 MSBuild DockTabbedMDI\ProjectFiles\DockTabbedMDI_2015.sln /p:Configuration=Release /p:Platform=x86       >>"..\output\VS2015.log"
 MSBuild DoubleBuffer\ProjectFiles\DoubleBuffer_2015.sln /p:Configuration=Debug /p:Platform=x86           >>"..\output\VS2015.log"
 MSBuild DoubleBuffer\ProjectFiles\DoubleBuffer_2015.sln /p:Configuration=Release /p:Platform=x86         >>"..\output\VS2015.log"
-MSBuild Explorer\ProjectFiles\Explorer_2015.sln /p:Configuration=Debug /p:Platform=x86                   >>"..\output\VS2015.log"
-MSBuild Explorer\ProjectFiles\Explorer_2015.sln /p:Configuration=Release /p:Platform=x86                 >>"..\output\VS2015.log"
+MSBuild ExplorerEx\ProjectFiles\ExplorerEx_2015.sln /p:Configuration=Debug /p:Platform=x86               >>"..\output\VS2015.log"
+MSBuild ExplorerEx\ProjectFiles\ExplorerEx_2015.sln /p:Configuration=Release /p:Platform=x86             >>"..\output\VS2015.log"
 MSBuild FastGDI\ProjectFiles\FastGDI_2015.sln /p:Configuration=Debug /p:Platform=x86                     >>"..\output\VS2015.log"
 MSBuild FastGDI\ProjectFiles\FastGDI_2015.sln /p:Configuration=Release /p:Platform=x86                   >>"..\output\VS2015.log"
 MSBuild FilePrintPreview\ProjectFiles\FilePrintPreview_2015.sln /p:Configuration=Debug /p:Platform=x86   >>"..\output\VS2015.log"
@@ -166,7 +166,7 @@ copy Dock\ProjectFiles\Debug\Dock.exe                         "..\output\VS2015\
 copy DockContainer\ProjectFiles\Debug\DockContainer.exe       "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy DockTabbedMDI\ProjectFiles\Debug\DockTabbedMDI.exe       "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy DoubleBuffer\ProjectFiles\Debug\DoubleBuffer.exe         "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
-copy Explorer\ProjectFiles\Debug\Explorer.exe                 "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
+copy ExplorerEx\ProjectFiles\Debug\ExplorerEx.exe             "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy FastGDI\ProjectFiles\Debug\FastGDI.exe                   "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy FilePrintPreview\ProjectFiles\Debug\FilePrintPreview.exe "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy FormDocView\ProjectFiles\Debug\FormDemo.exe              "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
@@ -234,7 +234,7 @@ copy Dock\ProjectFiles\Release\Dock.exe                         "..\output\VS201
 copy DockContainer\ProjectFiles\Release\DockContainer.exe       "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy DockTabbedMDI\ProjectFiles\Release\DockTabbedMDI.exe       "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy DoubleBuffer\ProjectFiles\Release\DoubleBuffer.exe         "..\output\VS2015\Release"    >>"..\output\VS2015.log"
-copy Explorer\ProjectFiles\Release\Explorer.exe                 "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+copy ExplorerEx\ProjectFiles\Release\ExplorerEx.exe             "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy FastGDI\ProjectFiles\Release\FastGDI.exe                   "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy FilePrintPreview\ProjectFiles\Release\FilePrintPreview.exe "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy FormDocView\ProjectFiles\Release\FormDemo.exe              "..\output\VS2015\Release"    >>"..\output\VS2015.log"

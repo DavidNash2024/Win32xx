@@ -1,9 +1,9 @@
+@echo off
 REM: A batch program to rebuild the Win32++ samples using VS2026 Community.
 REM: The contents of the log file is erased 
 
 REM: Set the paths and environment variables
 call "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
-
 
 ::Cleanup
 call CleanSamples
@@ -21,8 +21,8 @@ if not exist "..\output" mkdir "..\output"
 ::Compile code
 MSBuild Animation\ProjectFiles\Animation_2026.slnx /p:Configuration=Debug /p:Platform=x64                 > "..\output\VS2026.log"
 MSBuild Animation\ProjectFiles\Animation_2026.slnx /p:Configuration=Release /p:Platform=x64               >>"..\output\VS2026.log"
-MSBuild Browser\ProjectFiles\Browser_2026.slnx /p:Configuration=Debug /p:Platform=x64                     >>"..\output\VS2026.log"
-MSBuild Browser\ProjectFiles\Browser_2026.slnx /p:Configuration=Release /p:Platform=x64                   >>"..\output\VS2026.log"
+MSBuild BrowserEx\ProjectFiles\BrowserEx_2026.slnx /p:Configuration=Debug /p:Platform=x64                 >>"..\output\VS2026.log"
+MSBuild BrowserEx\ProjectFiles\BrowserEx_2026.slnx /p:Configuration=Release /p:Platform=x64               >>"..\output\VS2026.log"
 MSBuild CommonDialogs\ProjectFiles\CommonDialogs_2026.slnx /p:Configuration=Debug /p:Platform=x64         >>"..\output\VS2026.log"
 MSBuild CommonDialogs\ProjectFiles\CommonDialogs_2026.slnx /p:Configuration=Release /p:Platform=x64       >>"..\output\VS2026.log"
 MSBuild Console\ProjectFiles\Console_2026.slnx /p:Configuration=Debug /p:Platform=x64                     >>"..\output\VS2026.log"
@@ -69,8 +69,8 @@ MSBuild EdgeBrowser\ProjectFiles\EdgeBrowser_2026.slnx /p:Configuration=Debug /p
 MSBuild EdgeBrowser\ProjectFiles\EdgeBrowser_2026.slnx /p:Configuration=Release /p:Platform=x64           >>"..\output\VS2026.log"
 MSBuild EdgeBrowserEx\ProjectFiles\EdgeBrowserEx_2026.slnx /p:Configuration=Debug /p:Platform=x64         >>"..\output\VS2026.log"
 MSBuild EdgeBrowserEx\ProjectFiles\EdgeBrowserEx_2026.slnx /p:Configuration=Release /p:Platform=x64       >>"..\output\VS2026.log"
-MSBuild Explorer\ProjectFiles\Explorer_2026.slnx /p:Configuration=Debug /p:Platform=x64                   >>"..\output\VS2026.log"
-MSBuild Explorer\ProjectFiles\Explorer_2026.slnx /p:Configuration=Release /p:Platform=x64                 >>"..\output\VS2026.log"
+MSBuild ExplorerEx\ProjectFiles\ExplorerEx_2026.slnx /p:Configuration=Debug /p:Platform=x64               >>"..\output\VS2026.log"
+MSBuild ExplorerEx\ProjectFiles\ExplorerEx_2026.slnx /p:Configuration=Release /p:Platform=x64             >>"..\output\VS2026.log"
 MSBuild FastGDI\ProjectFiles\FastGDI_2026.slnx /p:Configuration=Debug /p:Platform=x64                     >>"..\output\VS2026.log"
 MSBuild FastGDI\ProjectFiles\FastGDI_2026.slnx /p:Configuration=Release /p:Platform=x64                   >>"..\output\VS2026.log"
 MSBuild FilePrintPreview\ProjectFiles\FilePrintPreview_2026.slnx /p:Configuration=Debug /p:Platform=x64   >>"..\output\VS2026.log"
@@ -169,7 +169,7 @@ mkdir "..\output\VS2026\Debug"
 
 ECHO "Copying Debug Samples" >>"..\output\VS2026.log"
 copy Animation\ProjectFiles\x64\Debug\Animation.exe               "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
-copy Browser\ProjectFiles\x64\Debug\Browser.exe                   "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
+copy BrowserEx\ProjectFiles\x64\Debug\BrowserEx.exe               "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 copy CommonDialogs\ProjectFiles\x64\Debug\CommonDialogs.exe       "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 copy Console\ProjectFiles\x64\Debug\Console.exe                   "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 copy ContextHelp\ProjectFiles\x64\Debug\ContextHelp.exe           "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
@@ -198,7 +198,7 @@ copy EdgeBrowser\ProjectFiles\x64\Debug\WebView2Loader.dll        "..\output\VS2
 copy EdgeBrowserEx\ProjectFiles\x64\Debug\EdgeBrowserEx.exe       "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 copy EdgeBrowserEx\ProjectFiles\x64\Debug\WebView2Loader.dll      "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 xcopy "EdgeBrowserEx\src\wvbrowser_ui" "..\output\VS2026\Debug\wvbrowser_ui" /S /I /Y         >> "..\output\VS2026.log"
-copy Explorer\ProjectFiles\x64\Debug\Explorer.exe                 "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
+copy ExplorerEx\ProjectFiles\x64\Debug\ExplorerEx.exe             "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 copy FastGDI\ProjectFiles\x64\Debug\FastGDI.exe                   "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 copy FilePrintPreview\ProjectFiles\x64\Debug\FilePrintPreview.exe "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
 copy FormDocView\ProjectFiles\x64\Debug\FormDemo.exe              "..\output\VS2026\Debug"    >>"..\output\VS2026.log"
@@ -252,7 +252,7 @@ mkdir "..\output\VS2026\Release"
 
 ECHO "Copying Release Samples" >>"..\output\VS2026.log"
 copy Animation\ProjectFiles\x64\Release\Animation.exe             "..\output\VS2026\Release"    >>"..\output\VS2026.log"
-copy Browser\ProjectFiles\x64\Release\Browser.exe                 "..\output\VS2026\Release"    >>"..\output\VS2026.log"
+copy BrowserEx\ProjectFiles\x64\Release\BrowserEx.exe             "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 copy CommonDialogs\ProjectFiles\x64\Release\CommonDialogs.exe     "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 copy Console\ProjectFiles\x64\Release\Console.exe                 "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 copy ContextHelp\ProjectFiles\x64\Release\ContextHelp.exe         "..\output\VS2026\Release"    >>"..\output\VS2026.log"
@@ -281,7 +281,7 @@ copy EdgeBrowser\ProjectFiles\x64\Release\WebView2Loader.dll      "..\output\VS2
 copy EdgeBrowserEx\ProjectFiles\x64\Release\EdgeBrowserEx.exe     "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 copy EdgeBrowserEx\ProjectFiles\x64\Release\WebView2Loader.dll    "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 xcopy "EdgeBrowserEx\src\wvbrowser_ui" "..\output\VS2026\Release\wvbrowser_ui" /S /I /Y         >>"..\output\VS2026.log"
-copy Explorer\ProjectFiles\x64\Release\Explorer.exe               "..\output\VS2026\Release"    >>"..\output\VS2026.log"
+copy ExplorerEx\ProjectFiles\x64\Release\ExplorerEx.exe           "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 copy FastGDI\ProjectFiles\x64\Release\FastGDI.exe                 "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 copy FilePrintPreview\ProjectFiles\x64\Release\FilePrintPreview.exe "..\output\VS2026\Release"    >>"..\output\VS2026.log"
 copy FormDocView\ProjectFiles\x64\Release\FormDemo.exe            "..\output\VS2026\Release"    >>"..\output\VS2026.log"

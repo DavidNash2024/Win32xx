@@ -1,13 +1,13 @@
 [Project]
-FileName=Explorer_RELEASE.dev
-Name=Explorer
+FileName=ExplorerEx_RELEASE.dev
+Name=ExplorerEx
 UnitCount=19
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=Explorer_RELEASE_private.rc
+PrivateResource=ExplorerEx_RELEASE_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Release
 ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
-OverrideOutputName=Explorer.exe
+OverrideOutputName=ExplorerEx.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=

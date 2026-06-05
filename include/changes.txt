@@ -36,13 +36,16 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+Added BrowserEx                   - sample
 Added CRibbonT                    - class template
-Removed CRibbon                   - class
 Deprecated CPrintDialogEx         - class
 Deprecated CWebBrowser            - class
+Removed Browser                   - sample
 Removed BrowserATL                - sample
+Removed CRibbon                   - class
 Removed CWinApp::MsgCWinApp       - member function
 Removed CWinApp::MsgTlsIndexe     - member function
+Renamed Explorer sample to ExplorerEx
 
 
 Version 10.2

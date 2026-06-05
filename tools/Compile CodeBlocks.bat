@@ -1,6 +1,6 @@
+@echo off
 REM: A batch program to rebuild the Win32++ samples using Code::Blocks.
 REM: The contents of the log file is erased 
-
 
 REM: Set the paths
 @set PATH=c:\Program Files\CodeBlocks;%PATH%
@@ -15,6 +15,7 @@ pushd ..\Samples
 if exist "..\output\MinGW" rmdir /s /q "..\output\MinGW"
 if not exist "..\output" mkdir "..\output"
 
+@echo on
 
 REM: Compile the code
 
@@ -35,7 +36,7 @@ codeblocks.exe --rebuild Dock\ProjectFiles\Dock.cbp                         >>".
 codeblocks.exe --rebuild DockContainer\ProjectFiles\DockContainer.cbp       >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild DockTabbedMDI\ProjectFiles\DockTabbedMDI.cbp       >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild DoubleBuffer\ProjectFiles\DoubleBuffer.cbp         >>"..\output\CodeBlocks.log"
-codeblocks.exe --rebuild Explorer\ProjectFiles\Explorer.cbp                 >>"..\output\CodeBlocks.log"
+codeblocks.exe --rebuild ExplorerEx\ProjectFiles\ExplorerEx.cbp             >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild FastGDI\ProjectFiles\FastGDI.cbp                   >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild FilePrintPreview\ProjectFiles\FilePrintPreview.cbp >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild FormDocView\ProjectFiles\FormDemo.cbp              >>"..\output\CodeBlocks.log"
@@ -100,7 +101,7 @@ copy Dock\ProjectFiles\GNU\Debug\Dock.exe                         "..\output\Min
 copy DockContainer\ProjectFiles\GNU\Debug\DockContainer.exe       "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy DockTabbedMDI\ProjectFiles\GNU\Debug\DockTabbedMDI.exe       "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy DoubleBuffer\ProjectFiles\GNU\Debug\DoubleBuffer.exe         "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
-copy Explorer\ProjectFiles\GNU\Debug\Explorer.exe                 "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
+copy ExplorerEx\ProjectFiles\GNU\Debug\ExplorerEx.exe             "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy FastGDI\ProjectFiles\GNU\Debug\FastGDI.exe                   "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy FilePrintPreview\ProjectFiles\GNU\Debug\FilePrintPreview.exe "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy FormDocView\ProjectFiles\GNU\Debug\FormDemo.exe              "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
@@ -164,7 +165,7 @@ copy Dock\ProjectFiles\GNU\Release\Dock.exe                         "..\output\M
 copy DockContainer\ProjectFiles\GNU\Release\DockContainer.exe       "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy DockTabbedMDI\ProjectFiles\GNU\Release\DockTabbedMDI.exe       "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy DoubleBuffer\ProjectFiles\GNU\Release\DoubleBuffer.exe         "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
-copy Explorer\ProjectFiles\GNU\Release\Explorer.exe                 "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
+copy ExplorerEx\ProjectFiles\GNU\Release\ExplorerEx.exe             "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy FastGDI\ProjectFiles\GNU\Release\FastGDI.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy FilePrintPreview\ProjectFiles\GNU\Release\FilePrintPreview.exe "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy FormDocView\ProjectFiles\GNU\Release\FormDemo.exe              "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"

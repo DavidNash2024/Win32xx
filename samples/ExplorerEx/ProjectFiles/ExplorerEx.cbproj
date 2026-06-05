@@ -8,7 +8,7 @@
         <Platform Condition="'$(Platform)'==''">Win64x</Platform>
         <TargetedPlatforms>1048579</TargetedPlatforms>
         <AppType>Application</AppType>
-        <ProjectName Condition="'$(ProjectName)'==''">Explorer</ProjectName>
+        <ProjectName Condition="'$(ProjectName)'==''">ExplorerEx</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -86,7 +86,7 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <Multithreaded>true</Multithreaded>
         <_TCHARMapping>wchar_t</_TCHARMapping>
-        <SanitizedProjectName>Explorer</SanitizedProjectName>
+        <SanitizedProjectName>ExplorerEx</SanitizedProjectName>
         <IncludePath>..\..\..\include\;..\src\;$(IncludePath)</IncludePath>
         <ILINK_LibraryPath>..\..\..\include\;..\src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <VerInfo_Locale>3081</VerInfo_Locale>
@@ -555,15 +555,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Embarcadero\Win64\Debug\Explorer.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName=".\Embarcadero\Win64\Debug\ExplorerEx.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>Explorer.exe</RemoteName>
+                        <RemoteName>ExplorerEx.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Embarcadero\Win64x\Release\Explorer.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName=".\Embarcadero\Win64x\Release\ExplorerEx.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64x">
-                        <RemoteName>Explorer.exe</RemoteName>
+                        <RemoteName>ExplorerEx.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
