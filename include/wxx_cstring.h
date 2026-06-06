@@ -269,7 +269,6 @@ namespace Win32xx
             static_cast<unsigned char>(c)) & 0xFF); }
 
         std::basic_string<T> m_str;
-        std::vector<T> m_buf;
     };
 
 
@@ -377,7 +376,7 @@ namespace Win32xx
     // Move constructor.
     template <class T>
     inline CStringT<T>::CStringT(CStringT&& str) noexcept
-        : m_str(std::move(str.m_str)), m_buf(std::move(str.m_buf))
+        : m_str(std::move(str.m_str))
     {
     }
 
@@ -397,7 +396,6 @@ namespace Win32xx
     {
         if (this != &str)
         {
-            m_buf = std::move(str.m_buf);
             m_str = std::move(str.m_str);
         }
         return *this;
@@ -835,18 +833,13 @@ namespace Win32xx
         assert (minBufLength >= 0);
 
         T ch = 0;
-        m_buf.assign(size_t(minBufLength) + 1, ch);
-        auto it = m_str.begin();
-        if (m_str.length() >= static_cast<size_t>(minBufLength))
-        {
-            std::advance(it, minBufLength);
-        }
-        else
-            it = m_str.end();
 
-        std::copy(m_str.begin(), it, m_buf.begin());
+        // As of C++11, std::string is guaranteed to store its characters in
+        // contiguous memory.
+        m_str.assign(size_t(minBufLength), ch);
 
-        return m_buf.data();
+        // Cast required for VS2015 and VS2017.
+        return const_cast<T*>(m_str.data());
     }
 
     // Sets the string to the value of the specified environment variable.
@@ -1058,23 +1051,14 @@ namespace Win32xx
     template <class T>
     inline void CStringT<T>::ReleaseBuffer(int newLength /*= -1*/ )
     {
-        if (newLength == -1)
-        {
-            newLength = static_cast<int>(strlenT(m_buf.data()));
-        }
+        // Trim extra trailing null characters from the string.
+        typename std::basic_string<T>::size_type lastChar = m_str.find_last_not_of(T(0));
+        if (newLength > 0)
+            m_str.erase(newLength);
+        else
+            m_str.erase(lastChar + 1);
 
-        assert(m_buf.size() > 0);
-        assert(newLength <= static_cast<int>(m_buf.size() -1));
-        newLength = std::min(newLength, static_cast<int>(m_buf.size() -1));
-
-        T ch = 0;
-        m_str.assign(static_cast<size_t>(newLength), ch);
-
-        auto it_end = m_buf.begin();
-        std::advance(it_end, newLength);
-
-        std::move(m_buf.begin(), it_end, m_str.begin());
-        m_buf.clear();
+        m_str.shrink_to_fit();
     }
 
     // Removes each occurrence of the specified substring from the string.
@@ -1684,7 +1668,6 @@ namespace Win32xx
     {
         if (this != &str)
         {
-            m_buf = std::move(str.m_buf);
             m_str = std::move(str.m_str);
         }
         return *this;

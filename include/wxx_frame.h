@@ -1416,7 +1416,8 @@ namespace Win32xx
 
     // Draw the toolbar button background for hot, pressed and checked states.
     template <class T>
-    inline void CFrameT<T>::DrawToolbarStateBackground(CDC& drawDC, CToolBar* pTB, CRect rc, UINT item, UINT state)
+    inline void CFrameT<T>::DrawToolbarStateBackground(CDC& drawDC, CToolBar* pTB,
+        CRect rc, UINT item, UINT state)
     {
         // Draw outline rectangle.
         bool isHot = (state & CDIS_HOT) != 0;

@@ -117,12 +117,12 @@ namespace Win32xx
         UINT    GetObjectSchema() const;
         bool    IsLoading() const;
         bool    IsStoring() const;
-        void    Read(void* buffer, UINT_PTR size);
+        void    Read(void* buffer, ULONGLONG size);
         LPTSTR  ReadString(LPTSTR string, UINT max);
         LPSTR   ReadStringA(LPSTR string, UINT max);
         LPWSTR  ReadStringW(LPWSTR string, UINT max);
         void    SetObjectSchema(UINT schema);
-        void    Write(const void* buffer, UINT_PTR size);
+        void    Write(const void* buffer, ULONGLONG size);
         void    WriteString(LPCTSTR string);
         void    WriteStringA(LPCSTR string);
         void    WriteStringW(LPCWSTR string);
@@ -284,14 +284,14 @@ namespace Win32xx
 
     // Reads size bytes from the open archive file into the given buffer.
     // Throws an exception if not successful.
-    inline void CArchive::Read(void* buffer, UINT_PTR size)
+    inline void CArchive::Read(void* buffer, ULONGLONG size)
     {
         // read, simply and  in binary mode, the size into the buffer
         assert(m_pFile);
 
         if (m_pFile)
         {
-            UINT_PTR nBytes = m_pFile->Read(buffer, size);
+            ULONGLONG nBytes = m_pFile->Read(buffer, size);
             if (nBytes != size)
                 throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArReadFail());
         }
@@ -308,7 +308,7 @@ namespace Win32xx
 
     // Writes size characters of from the buffer into the open archive file.
     // Throws an exception if unsuccessful.
-    inline void CArchive::Write(const void* buffer, UINT_PTR size)
+    inline void CArchive::Write(const void* buffer, ULONGLONG size)
     {
         // write size characters in buffer to the  file
         assert(m_pFile);
