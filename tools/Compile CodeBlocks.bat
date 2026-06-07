@@ -16,7 +16,7 @@ if not exist "..\output" mkdir "..\output"
 REM: Compile the code
 
 codeblocks.exe --rebuild Animation\ProjectFiles\Animation.cbp                         >"..\output\CodeBlocks.log"
-codeblocks.exe - rebuild BatchSourceFileEditor\ProjectFiles\BatchSourceFileEditor.cbd >>"..\output\CodeBlocks.log"
+codeblocks.exe --rebuild BatchSourceFileEditor\ProjectFiles\BatchSourceFileEditor.cbp >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild CommonDialogs\ProjectFiles\CommonDialogs.cbp                 >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Console\ProjectFiles\Console.cbp                             >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild ContextHelp\ProjectFiles\ContextHelp.cbp                     >>"..\output\CodeBlocks.log"
