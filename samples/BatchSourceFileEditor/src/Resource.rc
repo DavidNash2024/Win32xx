@@ -1,0 +1,201 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                      RT_MANIFEST            "../src/res/PerMonitorV2.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New",                        IDM_FILE_NEW
+        MENUITEM "Choose &Folder...",           IDM_FILE_CHOOSE
+        MENUITEM "&Check Files",                IDM_FILE_CHECK
+        MENUITEM "&Fix Files",                  IDM_FILE_FIX
+        MENUITEM "&Stop",                       IDM_FILE_STOP
+        MENUITEM SEPARATOR
+        MENUITEM "Print Preview",               IDM_FILE_PREVIEW
+        MENUITEM "&Print",                      IDM_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "../src/res/editcheck.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDW_MAIN                BITMAP                  "../src/res/Toolbar24.bmp"
+IDB_MENUICONS           BITMAP                  "../src/res/Toolbar16.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDW_ABOUT DIALOGEX 0, 0, 186, 109
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,60,50,14
+    CTEXT           "Batch Editor",IDC_STATIC,43,22,99,8
+    ICON            IDW_MAIN,0,4,4,20,20
+    CTEXT           "",IDC_STATIC1,53,32,80,8
+    CTEXT           "",IDC_STATIC2,53,42,80,8
+END
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDW_MAIN ACCELERATORS
+BEGIN
+    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "Batch Editor"
+    IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+    IDW_INDICATOR_SCRL      "SCRL"
+    IDW_READY               "Ready"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_PREVIEWPRINT         "Print Now"
+    IDW_PREVIEWSETUP         "Print Setup"
+    IDW_PREVIEWPREV          "Prev Page"
+    IDW_PREVIEWNEXT          "Next Page"
+    IDW_PREVIEWCLOSE         "Close"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW            "Prepare for a new search"
+    IDM_FILE_CHOOSE         "Choose a folder containing source files to search"
+    IDM_FILE_CHECK          "Check source files for tabs, trailing white space, and non-ascii characters"
+    IDM_FILE_FIX            "Fix source files by removing tabs, trailing white space, and non-ascii characters"
+    IDM_FILE_STOP           "Stop the current action"
+    IDM_FILE_PREVIEW        "Preview the document before printing"
+    IDM_FILE_PRINT          "Print the document"
+    IDM_FILE_EXIT           "End the program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    SC_CLOSE                "Close the Window"
+    SC_MAXIMIZE             "Maximize the Window"
+    SC_MINIMIZE             "Minimize the Window"
+    SC_MOVE                 "Move the Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
+    SC_RESTORE              "Restore the Window"
+    SC_SIZE                 "Resize the Window"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+

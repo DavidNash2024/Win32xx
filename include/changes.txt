@@ -1,19 +1,31 @@
 Version 10.3
 ============
-This version provides minor updates to the Win32++ framework and updates the
-samples shipped with Win32++.
+This version uses features from C++17 and updates the Win32++ framework.
+Some Win32++ classes have been depreciated. The samples that ship with
+Win32++ have been updated.
 
 New Features and Enhancements
 -----------------------------
+* Win32++ now uses features from C++17.
+  It supports Visual Studio (Community) 2019 and later, C++ Builder 12, Clang
+  and GNU compilers. GNU 32bit compilers can be used to compile Win32++
+  applications for Windows XP.
+
 * Updated support for the Windows Ribbon Framework.
   The CRibbon class had been replaced by the CRibbonT class template. The code
   now uses the ComPtr included in the Windows Runtime C++ Template Library.
   The new code is backwards compatible with code that inherits from
   CRibbonFrame, CRibbonDockFrame, CRibbonMDIFrame and CRibbonMDIDOckFrame.
-  
+
 * Updated the samples.
   Project files for Visual Studio 2026 have been added to each sample. The
-  Help About dialog has been updated to display the version of Win32++ used.  
+  Help About dialog has been updated to display the version of Win32++ used.
+
+* Added the BatchSourceFileEditor Sample
+  This utility edits source files in the selected folder and any subfolders.
+  For each source file (*.cpp, *.h, *.rc) tabs are replaced with spaces,
+  lines with trailing spaces have the trailing spaces removed, and non-ascii
+  characters are removed.
 
 * CWebBrower has been deprecated.
   For modern applications, using IWebBrowser2 is heavily discouraged due to
@@ -45,6 +57,9 @@ Removed BrowserATL                - sample
 Removed CRibbon                   - class
 Removed CWinApp::MsgCWinApp       - member function
 Removed CWinApp::MsgTlsIndexe     - member function
+
+Added VS2026 project files to samples
+Removed VS2015 project files from samples
 Renamed Explorer sample to ExplorerEx
 
 

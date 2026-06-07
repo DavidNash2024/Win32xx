@@ -11,7 +11,7 @@ PrivateResource=CommonDialogs_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=_@@_
-CppCompiler=-D _DEBUG_@@_-g_@@_-O0_@@_-D _UNICODE_@@_-D UNICODE_@@__@@_
+CppCompiler=-D _DEBUG_@@_-g_@@_-O0_@@_-D _UNICODE_@@_-D UNICODE_@@_-std=c++17_@@__@@_
 Linker=-lComctl32_@@_-lOle32_@@_-lUuid_@@_-lOleaut32_@@_-lWs2_32_@@_-municode_@@__@@_
 IsCpp=1
 Icon=

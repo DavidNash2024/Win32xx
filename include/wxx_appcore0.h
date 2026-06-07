@@ -262,7 +262,6 @@ namespace Win32xx
         std::weak_ptr<CGDI_Data> GetCGDIData(HGDIOBJ object);
         std::weak_ptr<CIml_Data> GetCImlData(HIMAGELIST images);
         std::weak_ptr<CMenu_Data> GetCMenuData(HMENU menu);
-        static CWinApp*& GetSetThis();
         void RemoveCWndFromMap(CWnd* pWnd);
         void RemoveDCFromMap(HDC dc);
         void RemoveGDIObjectFromMap(HGDIOBJ gdiObject);
@@ -286,6 +285,8 @@ namespace Win32xx
         WNDPROC m_callback;           // callback address of CWnd::StaticWndowProc
         CHGlobal m_devMode;           // Used by CPrintDialog and CPageSetupDialog
         CHGlobal m_devNames;          // Used by CPrintDialog and CPageSetupDialog
+
+        inline static CWinApp* m_pCWinApp = nullptr;
 
     public:
         // Message strings used for exceptions.
@@ -374,7 +375,7 @@ namespace Win32xx
     // or an object inherited from CWinApp to start Win32++.
     inline CWinApp* GetApp()
     {
-       CWinApp* pApp = CWinApp::GetSetThis();
+       CWinApp* pApp = CWinApp::m_pCWinApp;
         assert(pApp);  // This assert fails if Win32++ isn't started.
         return pApp;
     }
@@ -383,7 +384,7 @@ namespace Win32xx
     // object, or an object inherited from CWinApp to start Win32++.
     inline BOOL IsAppRunning()
     {
-        return  (CWinApp::GetSetThis() != nullptr);
+        return  (CWinApp::m_pCWinApp != nullptr);
     }
 
 } // namespace Win32xx

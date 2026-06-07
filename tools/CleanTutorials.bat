@@ -6,13 +6,10 @@ REM: Change the directory to the parent
 pushd ..\Tutorials
 
 ::Remove directories
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Borland"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Debug"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Debug_Build"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++\Debug"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++\Release"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Dev-C++"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\GNU"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Microsoft"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Release"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Release_Build"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\x64"
@@ -20,9 +17,12 @@ FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\_UpgradeReport_Files"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__history"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\ipch"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\GNU64"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\.sarif
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\.vs
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Embarcadero"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__astcache"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__recovery"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\%%f"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\src\stdafx.h.gch"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\src\__history"
 
@@ -59,6 +59,8 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.aps"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.bak"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.bml"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.layout"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\src\RibbonUI.h"
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\src\RibbonUI.rc"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\src\*.aps"
 
 popd

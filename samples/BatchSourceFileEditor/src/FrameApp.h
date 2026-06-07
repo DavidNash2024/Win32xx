@@ -1,0 +1,25 @@
+/////////////////////////////
+// FrameApp.h
+//
+
+#ifndef FRAMEAPP_H
+#define FRAMEAPP_H
+
+#include "mainfrm.h"
+
+/////////////////////////////////////
+// Declaration of the CFrameApp class
+//
+class CFrameApp : public CWinApp
+{
+public:
+    CFrameApp();
+    virtual ~CFrameApp();
+    virtual BOOL InitInstance();
+
+private:
+    CMainFrame m_frame;
+};
+
+
+#endif // define FRAMEAPP_H

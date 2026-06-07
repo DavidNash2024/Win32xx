@@ -838,8 +838,7 @@ namespace Win32xx
         // contiguous memory.
         m_str.assign(size_t(minBufLength), ch);
 
-        // Cast required for VS2015 and VS2017.
-        return const_cast<T*>(m_str.data());
+        return &m_str.front();
     }
 
     // Sets the string to the value of the specified environment variable.

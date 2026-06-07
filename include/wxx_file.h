@@ -90,7 +90,7 @@ namespace Win32xx
         void LockRange(ULONGLONG pos, ULONGLONG count) const;
         void Open(LPCTSTR fileName, UINT openFlags,
                   DWORD attributes = FILE_ATTRIBUTE_NORMAL);
-        ULONGLONG Read(void* buffer, ULONGLONG count) const;
+        UINT Read(void* buffer, UINT count) const;
         void Remove(LPCTSTR fileName) const;
         void Rename(LPCTSTR oldName, LPCTSTR newName) const;
         ULONGLONG Seek(LONGLONG seekTo, UINT method) const;
@@ -99,7 +99,7 @@ namespace Win32xx
         void SetFilePath(LPCTSTR fileName);
         void SetLength(LONGLONG length) const;
         void UnlockRange(ULONGLONG pos, ULONGLONG count) const;
-        void Write(const void* buffer, ULONGLONG count) const;
+        void Write(const void* buffer, UINT count) const;
 
     private:
         CFile(const CFile&) = delete;
@@ -400,34 +400,19 @@ namespace Win32xx
 
     // Reads from the file, storing the contents in the specified buffer.
     // Refer to ReadFile in the Windows API documentation for more information.
-    inline ULONGLONG CFile::Read(void* buffer, ULONGLONG count) const
+    inline UINT CFile::Read(void* buffer, UINT count) const
     {
         assert(m_file != INVALID_HANDLE_VALUE);
 
         if (count == 0) return 0;
 
         assert(buffer);
-        ULONGLONG totalRead = 0;
-        BYTE* pBuffer = static_cast<BYTE*>(buffer);
+        DWORD read = 0;
 
-        // Loop handles chunks larger than 4GB on 64-bit systems
-        while (count > 0)
-        {
-            // ReadFile only accepts a 32-bit DWORD (max 4GB per single call)
-            DWORD bytesToRead = (count > 0xFFFFFFFF) ? 0xFFFFFFFF : static_cast<DWORD>(count);
-            DWORD bytesRead = 0;
+        if (!::ReadFile(m_file, buffer, count, &read, nullptr))
+            throw CFileException(GetFilePath(), GetApp()->MsgFileRead());
 
-            if (!::ReadFile(m_file, pBuffer + totalRead, bytesToRead, &bytesRead, nullptr))
-                throw CFileException(GetFilePath(), GetApp()->MsgFileRead());
-
-            if (bytesRead == 0)
-                break; // End of file reached
-
-            totalRead += bytesRead;
-            count -= bytesRead;
-        }
-
-        return totalRead;
+        return read;
     }
 
     // Renames the specified file.
@@ -530,34 +515,19 @@ namespace Win32xx
 
     // Writes the specified buffer to the file.
     // Refer to WriteFile in the Windows API documentation for more information.
-    inline void CFile::Write(const void* buffer, ULONGLONG count) const
+    inline void CFile::Write(const void* buffer, UINT count) const
     {
         assert(m_file != INVALID_HANDLE_VALUE);
 
         if (count == 0) return;
 
         assert(buffer);
+        DWORD written = 0;
+        if (!::WriteFile(m_file, buffer, count, &written, nullptr))
+            throw CFileException(GetFilePath(), GetApp()->MsgFileWrite());
 
-        ULONGLONG totalWritten = 0;
-        const BYTE* pBuffer = static_cast<const BYTE*>(buffer);
-
-        // Loop handles chunks larger than 4GB on 64-bit systems
-        while (count > 0)
-        {
-            // WriteFile only accepts a 32-bit DWORD (max 4GB per single call)
-            DWORD bytesToWrite = (count > 0xFFFFFFFF) ? 0xFFFFFFFF : static_cast<DWORD>(count);
-            DWORD bytesWritten = 0;
-
-            if (!::WriteFile(m_file, pBuffer + totalWritten, bytesToWrite, &bytesWritten, nullptr))
-                throw CFileException(GetFilePath(), GetApp()->MsgFileWrite());
-
-            // Error check: Ensure the OS actually wrote the requested chunk bytes
-            if (bytesWritten != bytesToWrite)
-                throw CFileException(GetFilePath(), GetApp()->MsgFileWrite());
-
-            totalWritten += bytesWritten;
-            count -= bytesWritten;
-        }
+        if (written != count)
+            throw CFileException(GetFilePath(), GetApp()->MsgFileWrite());
     }
 
 }   // namespace Win32xx

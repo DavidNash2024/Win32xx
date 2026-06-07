@@ -1,8 +1,10 @@
-REM  Run the complete set of Compile scripts
-
-cmd /c call "Compile CodeBlocks.bat"
-cmd /c call "Compile C++ Builder.bat"
-cmd /c call "Compile VS2015 Community.bat"
+REM  Clean the projects folders.
+call "CleanSamples.bat"
+call "CleanTutorials.bat"
 cmd /c call "Compile VS2022 Community.bat"
-cmd /c call "Compile VS2026 Community.bat"
+
+REM  Run these compile scripts concurrently.
+start "" cmd /c "Compile CodeBlocks.bat"
+start "" cmd /c "Compile C++ Builder.bat"
+start "" cmd /c "Compile VS2026 Community.bat"
 

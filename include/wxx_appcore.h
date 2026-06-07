@@ -210,7 +210,7 @@ namespace Win32xx
         m_instance = reinterpret_cast<HINSTANCE>(&__ImageBase);
         m_resource = m_instance;
 
-        if (GetSetThis() == nullptr)
+        if (m_pCWinApp == nullptr)
         {
             // An exception is thrown if all TLS indexes are already allocated by this app.
             // At least 64 TLS indexes per process are allowed.
@@ -229,7 +229,7 @@ namespace Win32xx
                 VERIFY(SUCCEEDED(OleInitialize(nullptr)));
 
                 // Store the pointer to this CWinApp object.
-                CWinApp::GetSetThis() = this;
+                CWinApp::m_pCWinApp = this;
             }
             else
                 throw CNotSupportedException(_T("No available Thread Local Storage Indexes."));
@@ -268,7 +268,7 @@ namespace Win32xx
 
         // Clear the stored CWinApp pointer before the CWinApp object is
         // destroyed.
-        CWinApp::GetSetThis() = nullptr;
+        CWinApp::m_pCWinApp = nullptr;
     }
 
     // Adds a HDC and CDC_Data* pair to the map.
@@ -472,15 +472,6 @@ namespace Win32xx
     inline HANDLE CWinApp::LoadImage(UINT imageID, UINT type, int cx, int cy, UINT flags) const
     {
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
-    }
-
-    // Retrieves and stores the pointer to this CWinApp object. The pointer is
-    // assigned when the CWinApp constructor is called, and reset to nullptr
-    // when the destructor is called.
-    inline CWinApp*& CWinApp::GetSetThis()
-    {
-        static CWinApp* pWinApp = nullptr;
-        return pWinApp;
     }
 
     // Removes this CWnd's pointer from m_mapHWND.
