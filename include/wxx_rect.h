@@ -58,7 +58,7 @@ namespace Win32xx
     {
     public:
         CPoint();
-        CPoint(int X, int Y);
+        CPoint(int x, int y);
         CPoint(POINT pt);
         CPoint(POINTS pts);
         CPoint(SIZE sz);
@@ -173,11 +173,11 @@ namespace Win32xx
     {
     public:
         CSize();
-        CSize(int CX, int CY);
+        CSize(int x, int y);
         CSize(SIZE sz);
         CSize(POINT pt);
         CSize(DWORD dw);
-        void SetSize(int CX, int CY);
+        void SetSize(int sx, int sy);
 
         // Operators
         operator LPSIZE();
@@ -206,45 +206,34 @@ namespace Win32xx
     //
 
     // CPoint constructor.
-    inline CPoint::CPoint()
+    inline CPoint::CPoint() : POINT(0, 0)
     {
-        x = 0;
-        y = 0;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(int X, int Y)
+    inline CPoint::CPoint(int x, int y) : POINT(x, y)
     {
-        x = X;
-        y = Y;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(POINT pt)
+    inline CPoint::CPoint(POINT pt) : POINT(pt)
     {
-        x = pt.x;
-        y = pt.y;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(POINTS pts)
+    inline CPoint::CPoint(POINTS pts) : POINT(pts.x, pts.y)
     {
-        x = pts.x;
-        y = pts.y;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(SIZE sz)
+    inline CPoint::CPoint(SIZE sz) : POINT(sz.cx, sz.cy)
     {
-        x = sz.cx;
-        y = sz.cy;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(LPARAM dwPos)
+    inline CPoint::CPoint(LPARAM dwPos) :
+        POINT(GET_X_LPARAM(dwPos), GET_Y_LPARAM(dwPos))
     {
-        x = GET_X_LPARAM(dwPos);
-        y = GET_Y_LPARAM(dwPos);
     }
 
     // Moves the CPoint by the specified offsets.
@@ -269,10 +258,10 @@ namespace Win32xx
     }
 
     // Sets the coordinates of the CPoint.
-    inline void CPoint::SetPoint(int X, int Y)
+    inline void CPoint::SetPoint(int px, int py)
     {
-        x = X;
-        y = Y;
+        x = px;
+        y = py;
     }
 
     // Returns a pointer to the POINT associated with this object.
@@ -281,13 +270,15 @@ namespace Win32xx
         return this;
     }
 
-    // Returns true if the co-ordinates of the source point and the CPoint are equal.
+    // Returns true if the co-ordinates of the source point and the CPoint are
+    // equal.
     inline bool CPoint::operator==(CPoint pt) const
     {
         return ((x == pt.x) && (y == pt.y));
     }
 
-    // Returns true if the co-ordinates of the source point and the CPoint are not equal.
+    // Returns true if the co-ordinates of the source point and the CPoint are
+    // not equal.
     inline bool CPoint::operator!=(CPoint pt) const
     {
         return ((x != pt.x) || (y != pt.y));
@@ -369,43 +360,30 @@ namespace Win32xx
     //
 
     // CRect constructor.
-    inline CRect::CRect()
+    inline CRect::CRect() : RECT(0, 0, 0, 0)
     {
-        left = top = right = bottom = 0;
     }
 
     // CRect constructor.
-    inline CRect::CRect(int l, int t, int r, int b)
+    inline CRect::CRect(int l, int t, int r, int b) : RECT(l, t, r, b)
     {
-        left = l;
-        top = t;
-        right = r;
-        bottom = b;
     }
 
     // CRect constructor.
-    inline CRect::CRect(RECT rc)
+    inline CRect::CRect(RECT rc) : RECT(rc)
     {
-        left = rc.left;
-        top = rc.top;
-        right = rc.right;
-        bottom = rc.bottom;
     }
 
     // CRect constructor.
-    inline CRect::CRect(POINT pt, SIZE sz)
+    inline CRect::CRect(POINT pt, SIZE sz) :
+        RECT(pt.x, pt.y, pt.x + sz.cx, pt.y + sz.cy)
     {
-        right = (left = pt.x) + sz.cx;
-        bottom = (top = pt.y) + sz.cy;
     }
 
     // CRect constructor.
-    inline CRect::CRect(POINT topLeft, POINT bottomRight)
+    inline CRect::CRect(POINT topLeft, POINT bottomRight) :
+        RECT(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
     {
-        left = topLeft.x;
-        top = topLeft.y;
-        right = bottomRight.x;
-        bottom = bottomRight.y;
     }
 
     // Copies the coordinates of the source rectangle to the CRect.
@@ -482,7 +460,7 @@ namespace Win32xx
     }
 
     // Calculates the intersection of two source rectangles and places the
-    // coordinates of the intersection rectange into the CRect.
+    // coordinates of the intersection rectangle into the CRect.
     inline BOOL CRect::IntersectRect(LPCRECT prc1, LPCRECT prc2)
     {
         return ::IntersectRect(this, prc1, prc2);
@@ -581,28 +559,28 @@ namespace Win32xx
         return ::UnionRect(this, prc1, prc2);
     }
 
-    // Moves the rect to the specified left position.
+    // Moves the CRect to the specified left position.
     inline void CRect::MoveToX(int x)
     {
         right = Width() + x;
         left = x;
     }
 
-    // Moves the rect to the specified top position.
+    // Moves the CRect to the specified top position.
     inline void CRect::MoveToY(int y)
     {
         bottom = Height() + y;
         top = y;
     }
 
-    // Moves to rect to the specified left and top positions.
+    // Moves to CRect to the specified left and top positions.
     inline void CRect::MoveToXY(int x, int y)
     {
         MoveToX(x);
         MoveToY(y);
     }
 
-    // Moves to rect to the specified left and top positions.
+    // Moves to CRect to the specified left and top positions.
     inline void CRect::MoveToXY(POINT pt)
     {
         MoveToX(pt.x);
@@ -789,45 +767,35 @@ namespace Win32xx
     //
 
     // CSize constructor.
-    inline CSize::CSize()
+    inline CSize::CSize() : SIZE(0, 0)
     {
-        cx = 0;
-        cy = 0;
     }
 
     // CSize constructor.
-    inline CSize::CSize(int CX, int CY)
+    inline CSize::CSize(int x, int y) : SIZE(x, y)
     {
-        cx = CX;
-        cy = CY;
     }
 
     // CSize constructor.
-    inline CSize::CSize(SIZE sz)
+    inline CSize::CSize(SIZE sz) : SIZE(sz)
     {
-        cx = sz.cx;
-        cy = sz.cy;
     }
 
     // CSize constructor.
-    inline CSize::CSize(POINT pt)
+    inline CSize::CSize(POINT pt) : SIZE(pt.x, pt.y)
     {
-        cx = pt.x;
-        cy = pt.y;
     }
 
     // CSize constructor.
-    inline CSize::CSize(DWORD dw)
+    inline CSize::CSize(DWORD dw) : SIZE((short)LOWORD(dw), (short)HIWORD(dw))
     {
-        cx = (short)LOWORD(dw);
-        cy = (short)HIWORD(dw);
     }
 
     // Sets the coordinates of the CSize.
-    inline void CSize::SetSize(int CX, int CY)
+    inline void CSize::SetSize(int sx, int sy)
     {
-        cx = CX;
-        cy = CY;
+        cx = sx;
+        cy = sy;
     }
 
     // Returns the pointer to the SIZE associated with this object.
@@ -836,13 +804,15 @@ namespace Win32xx
         return this;
     }
 
-    // Returns true if the co-ordinates of the source size and the CSize are equal.
+    // Returns true if the co-ordinates of the source size and the CSize are
+    // equal.
     inline bool CSize::operator==(CSize sz) const
     {
         return (cx == sz.cx && cy == sz.cy);
     }
 
-    // Returns true if the co - ordinates of the source size and the CSize are equal.
+    // Returns true if the co-ordinates of the source size and the CSize are
+    // not equal.
     inline bool CSize::operator!=(CSize sz) const
     {
         return (cx != sz.cx || cy != sz.cy);
