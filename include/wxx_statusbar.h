@@ -189,11 +189,14 @@ namespace Win32xx
 
     // Set the text in a status bar part.
     // The Style parameter can be a combinations of ...
-    //0                 The text is drawn with a border to appear lower than the plane of the window.
-    //SBT_NOBORDERS     The text is drawn without borders.
-    //SBT_OWNERDRAW     The text is drawn by the parent window.
-    //SBT_POPOUT        The text is drawn with a border to appear higher than the plane of the window.
-    //SBT_RTLREADING    The text will be displayed in the opposite direction to the text in the parent window.
+    // 0                 The text is drawn with a border to appear lower than the
+    //                   plane of the window.
+    // SBT_NOBORDERS     The text is drawn without borders.
+    // SBT_OWNERDRAW     The text is drawn by the parent window.
+    // SBT_POPOUT        The text is drawn with a border to appear higher than
+    //                   the plane of the window.
+    // SBT_RTLREADING    The text will be displayed in the opposite direction
+    //                   to the text in the parent window.
     // Refer to SB_SETTEXT in the Windows API documentation for more information.
     inline BOOL CStatusBar::SetPartText(int part, LPCTSTR text, UINT style) const
     {

@@ -90,10 +90,11 @@ namespace Win32xx
         return LOWORD(msg.wParam);
     }
 
-    // This function is called by the MessageLoop. It is called when the message queue
-    // is empty. Return TRUE to continue idle processing or FALSE to end idle processing
-    // until another message is queued. The count is incremented each time OnIdle is
-    // called, and reset to 0 each time a new messages is processed.
+    // This function is called by the MessageLoop. It is called when the
+    // message queue is empty. Return TRUE to continue idle processing or FALSE
+    // to end idle processing until another message is queued. The count is
+    // incremented each time OnIdle is called, and reset to 0 each time a new
+    // messages is processed.
     inline BOOL CMessagePump::OnIdle(LONG)
     {
         return FALSE;

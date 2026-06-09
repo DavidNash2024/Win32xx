@@ -428,7 +428,8 @@ namespace Win32xx
         m_resizer.AddChild(m_buttonPrev, CResizer::topleft, 0);
         m_resizer.AddChild(m_buttonNext, CResizer::topleft, 0);
         m_resizer.AddChild(m_buttonClose, CResizer::topleft, 0);
-        m_resizer.AddChild(GetPreviewPane(), CResizer::topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+        m_resizer.AddChild(GetPreviewPane(), CResizer::topleft,
+            RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
         return TRUE;
     }

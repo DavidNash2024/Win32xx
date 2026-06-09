@@ -291,7 +291,8 @@ namespace Win32xx
             OnDraw(memDC);
 
             // Copy the modified memory DC to the window's DC with scrolling offsets.
-            dc.BitBlt(0, 0, m_totalSize.cx, m_totalSize.cy, memDC, m_currentPos.x, m_currentPos.y, SRCCOPY);
+            dc.BitBlt(0, 0, m_totalSize.cx, m_totalSize.cy, memDC, m_currentPos.x,
+                m_currentPos.y, SRCCOPY);
 
             // Set the area outside the scrolling area.
             FillOutsideRect(dc, m_bkgndBrush);

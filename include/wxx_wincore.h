@@ -53,8 +53,10 @@
 // main.cpp
 
 // To configure your project:
-// 1) Add Win32++'s include directory to the project's additional include directories for C/C++
-// 2) Add Win32++'s include directory to the project's additional include directories for Resources
+// 1) Add Win32++'s include directory to the project's additional include
+//    directories for C/C++
+// 2) Add Win32++'s include directory to the project's additional include
+//    directories for Resources
 
 #include "wxx_wincore.h"
 
@@ -115,14 +117,19 @@ namespace Win32xx
         system.ReleaseBuffer();
 
         // Call the SHGetFolderPath function to retrieve the AppData folder.
-        SHGetFolderPath(nullptr, CSIDL_APPDATA | CSIDL_FLAG_CREATE, nullptr, 0, appData.GetBuffer(MAX_PATH));
+        SHGetFolderPath(nullptr, CSIDL_APPDATA | CSIDL_FLAG_CREATE, nullptr, 0,
+            appData.GetBuffer(MAX_PATH));
+
         appData.ReleaseBuffer();
 
         // If we can't get the AppData folder, get the MyDocuments folder instead.
         if (appData.IsEmpty())
         {
-            // Call the SHGetSpecialFolderPath function to retrieve the MyDocuments folder.
-            SHGetSpecialFolderPath(nullptr, appData.GetBuffer(MAX_PATH), CSIDL_PERSONAL, TRUE);
+            // Call the SHGetSpecialFolderPath function to retrieve the
+            // MyDocuments folder.
+            SHGetSpecialFolderPath(nullptr, appData.GetBuffer(MAX_PATH),
+                CSIDL_PERSONAL, TRUE);
+
             appData.ReleaseBuffer();
         }
 
@@ -274,7 +281,8 @@ namespace Win32xx
     inline CWnd& CWnd::operator=(const CWnd& rhs)
     {
         // This CWnd must not own a managed window.
-        for (auto it = GetApp()->m_mapHWND.begin(); it != GetApp()->m_mapHWND.end(); ++it)
+        for (auto it = GetApp()->m_mapHWND.begin(); it != GetApp()->
+            m_mapHWND.end(); ++it)
         {
             assert(this != it->second);
         }
@@ -306,7 +314,8 @@ namespace Win32xx
         GetApp()->AddCWndToMap(*this, this);
     }
 
-    // Attaches a CWnd object to an existing window and calls the OnAttach virtual function.
+    // Attaches a CWnd object to an existing window and calls the OnAttach
+    // virtual function.
     inline BOOL CWnd::Attach(HWND wnd)
     {
         assert( ::IsWindow(wnd) );
@@ -360,7 +369,8 @@ namespace Win32xx
                 parentRect = mi.rcWork;
         }
 
-        // Calculate point to center the dialog over the portion of parent window on this monitor.
+        // Calculate point to center the dialog over the portion of parent
+        // window on this monitor.
         parentRect.IntersectRect(parentRect, desktopRect);
         int x = parentRect.left + (parentRect.Width() - rc.Width())/2;
         int y = parentRect.top + (parentRect.Height() - rc.Height())/2;
@@ -396,7 +406,8 @@ namespace Win32xx
         // Allow the WNDCLASS parameters to be modified.
         PreRegisterClass(wc);
 
-        // Register the window class (if not already registered and the class name is specified).
+        // Register the window class (if not already registered and the class
+        // name is specified).
         if (wc.lpszClassName)
             VERIFY(RegisterClass(wc));
 
@@ -423,7 +434,10 @@ namespace Win32xx
         // if neither PreRegisterClass nor PreCreate specify a class name.
         LPCTSTR className = wc.lpszClassName ? wc.lpszClassName : cs.lpszClass;
         if (cs.lpszClass != nullptr && cs.lpszClass != className)
-            TRACE("*** Warning: The class name specified in PreCreate is being ignored. The class name specified in PreRegisterClass will be used instead. ***\n");
+        {
+            TRACE("*** Warning: The class name specified in PreCreate is being ignored.\n");
+            Trace("The class name specified in PreRegisterClass will be used instead. ***\n");
+        }
 
         DWORD style = static_cast<DWORD>(cs.style & ~WS_VISIBLE);
         HWND wnd;
@@ -683,7 +697,9 @@ namespace Win32xx
         assert(IsWindow());
 
         CString str;
-        VERIFY(::GetClassName(*this, str.GetBuffer(WXX_MAX_STRING_SIZE), WXX_MAX_STRING_SIZE));
+        VERIFY(::GetClassName(*this, str.GetBuffer(WXX_MAX_STRING_SIZE),
+            WXX_MAX_STRING_SIZE));
+
         str.ReleaseBuffer();
         return str;
     }
@@ -707,7 +723,9 @@ namespace Win32xx
         CString str;
         if (length > 0)
         {
-            VERIFY(::GetDlgItemText(*this, dlgItem, str.GetBuffer(length + 1), length + 1));
+            VERIFY(::GetDlgItemText(*this, dlgItem, str.GetBuffer(length + 1),
+                length + 1));
+
             str.ReleaseBuffer();
         }
         return str;
@@ -972,8 +990,8 @@ namespace Win32xx
     //       assigned in the PreRegisterClass function if required.
     inline void CWnd::PreCreate(CREATESTRUCT&)
     {
-        // Override this function to set the CREATESTRUCT values prior to window creation.
-        // Here we set the initial values for the following:
+        // Override this function to set the CREATESTRUCT values prior to window
+        // creation. Here we set the initial values for the following:
         //  window styles (WS_VISABLE, WS_CHILD, WS_WS_MAXIMIZEBOX etc.)
         //  window extended styles
         //  window position
@@ -1016,7 +1034,8 @@ namespace Win32xx
     // class prior to window creation.
     inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
     {
-        assert((wc.lpszClassName != nullptr) && (lstrlen(wc.lpszClassName) <=  WXX_MAX_STRING_SIZE));
+        assert((wc.lpszClassName != nullptr) && (lstrlen(wc.lpszClassName) <=
+            WXX_MAX_STRING_SIZE));
 
         // Check to see if this classname is already registered.
         WNDCLASS wcTest = {};
@@ -1046,10 +1065,13 @@ namespace Win32xx
         assert(IsWindow());
 
         // Large icon sizes
-        int cxIcon = ::GetSystemMetrics(SM_CXICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
-        int cyIcon = ::GetSystemMetrics(SM_CYICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+        int cxIcon = ::GetSystemMetrics(SM_CXICON) * GetWindowDpi(*this) /
+            GetWindowDpi(HWND_DESKTOP);
+        int cyIcon = ::GetSystemMetrics(SM_CYICON) * GetWindowDpi(*this) /
+            GetWindowDpi(HWND_DESKTOP);
 
-        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
+        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID,
+            IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 
         if (icon != nullptr)
             SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (icon));
@@ -1065,10 +1087,13 @@ namespace Win32xx
         assert(IsWindow());
 
         // Small icon sizes
-        int cxIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
-        int cyIcon = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+        int cxIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) /
+            GetWindowDpi(HWND_DESKTOP);
+        int cyIcon = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) /
+            GetWindowDpi(HWND_DESKTOP);
 
-        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
+        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID,
+            IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 
         if (icon != nullptr)
             SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (icon));
@@ -1078,9 +1103,10 @@ namespace Win32xx
         return icon;
     }
 
-    // All CWnd windows direct their messages here. This function redirects the message
-    // to the CWnd's WndProc function.
-    inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+    // All CWnd windows direct their messages here. This function redirects the
+    // message to the CWnd's WndProc function.
+    inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND wnd, UINT msg,
+        WPARAM wparam, LPARAM lparam)
     {
         CWnd* w = GetApp()->GetCWndFromMap(wnd);
         if (w == nullptr)

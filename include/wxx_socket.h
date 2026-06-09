@@ -144,10 +144,12 @@ namespace Win32xx
         bool IsIPV6Supported() const;
         int  Listen(int backlog = SOMAXCONN) const;
         int  Receive(char* buf, int len, int flags) const;
-        int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen) const;
+        int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from,
+            int* fromlen) const;
         int  Send(const char* buf, int len, int flags) const;
         int  SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port) const;
-        int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const;
+        int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to,
+            int tolen) const;
         void StartEvents();
         void StopEvents();
 
@@ -238,7 +240,8 @@ namespace Win32xx
 
     // The accept function permits an incoming connection attempt on the socket.
     // Refer to accept in the Windows API documentation for additional information.
-    inline void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen) const
+    inline void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr,
+        int* addrlen) const
     {
         rClientSock.m_socket = ::accept(m_socket, addr, addrlen);
         if (INVALID_SOCKET == rClientSock.GetSocket())
@@ -267,7 +270,8 @@ namespace Win32xx
             }
 
             // Bind the IP address to the listening socket.
-            result =  ::bind( m_socket, AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
+            result =  ::bind( m_socket, AddrInfo->ai_addr, static_cast<int>(
+                AddrInfo->ai_addrlen) );
             if (result == SOCKET_ERROR )
             {
                 TRACE("Bind failed\n");
@@ -286,7 +290,9 @@ namespace Win32xx
             clientService.sin_addr = ipv4_addr;
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
-            result = ::bind( m_socket, reinterpret_cast<SOCKADDR*>( &clientService), sizeof(clientService) );
+            result = ::bind( m_socket, reinterpret_cast<SOCKADDR*>(
+                &clientService), sizeof(clientService) );
+
             if (result != 0)
                 TRACE("Bind failed\n");
         }
@@ -345,7 +351,9 @@ namespace Win32xx
             clientService.sin_addr = ipv4_addr;
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
-            result = ::connect( m_socket, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
+            result = ::connect( m_socket, reinterpret_cast<SOCKADDR*>(
+                &clientService ), sizeof(clientService) );
+
             if (result != 0)
                 TRACE("Connect failed\n");
         }
@@ -368,7 +376,8 @@ namespace Win32xx
     // Valid parameter values:
     //  family:     AF_INET or AF_INET6
     //  type:       SOCK_DGRAM, SOCK_SEQPACKET, SOCK_STREAM, SOCK_RAW
-    //  protocol:   IPPROTO_IP, IPPROTO_TCP, IPPROTO_UDP, IPPROTO_RAW, IPPROTO_ICMP, IPPROTO_ICMPV6
+    //  protocol:   IPPROTO_IP, IPPROTO_TCP, IPPROTO_UDP, IPPROTO_RAW,
+    //              IPPROTO_ICMP, IPPROTO_ICMPV6
     //
     // Refer to socket in the Windows API documentation for additional information.
     inline bool CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
@@ -402,8 +411,10 @@ namespace Win32xx
     //  FD_CONNECT  Notification of completed connection or multipoint join operation.
     //  FD_CLOSE    Notification of socket closure.
     //  FD_QOS      Notification of socket Quality Of Service changes
-    //  FD_ROUTING_INTERFACE_CHANGE Notification of routing interface changes for the specified destination.
-    //  FD_ADDRESS_LIST_CHANGE      Notification of local address list changes for the address family of the socket.
+    //  FD_ROUTING_INTERFACE_CHANGE Notification of routing interface changes
+    //                              for the specified destination.
+    //  FD_ADDRESS_LIST_CHANGE      Notification of local address list changes
+    //                              for the address family of the socket.
     inline UINT WINAPI CSocket::EventThread(LPVOID pThis)
     {
         WSANETWORKEVENTS networkEvents;
@@ -429,7 +440,8 @@ namespace Win32xx
         for (;;) // infinite loop
         {
             // Wait for a network event, or a request to stop
-            DWORD result = ::WSAWaitForMultipleEvents(2, allEvents, FALSE, WSA_INFINITE, FALSE);
+            DWORD result = ::WSAWaitForMultipleEvents(2, allEvents, FALSE,
+                WSA_INFINITE, FALSE);
 
             // Check event for stop thread
             if (result - WSA_WAIT_EVENT_0 == 1)
@@ -449,7 +461,8 @@ namespace Win32xx
             if (result != WSA_WAIT_TIMEOUT)
             {
 
-                if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(clientSocket, allEvents[0], &networkEvents) )
+                if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(clientSocket,
+                    allEvents[0], &networkEvents) )
                 {
                     TRACE("WSAEnumNetworkEvents failed\n");
                     ::WSACloseEvent(allEvents[0]);
@@ -501,8 +514,9 @@ namespace Win32xx
         CString errorMessage;
 
         FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS |
-                      FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK,
-                      nullptr, errorCode, 0, reinterpret_cast<LPTSTR>(&message), 1024, nullptr);
+            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK,
+            nullptr, errorCode, 0, reinterpret_cast<LPTSTR>(&message), 1024,
+            nullptr);
 
         if (message)
         {
@@ -568,7 +582,8 @@ namespace Win32xx
         return isIPV6Supported;
     }
 
-    // Places the socket in a state in which it is listening for an incoming connection.
+    // Places the socket in a state in which it is listening for an incoming
+    // connection.
     // Refer to listen in the Windows API documentation for additional information.
     inline int CSocket::Listen(int backlog /*= SOMAXCONN*/) const
     {
@@ -591,7 +606,8 @@ namespace Win32xx
 
     // Receives a datagram and stores the source address.
     // Refer to recvfrom in the Windows API documentation for additional information.
-    inline int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen) const
+    inline int CSocket::ReceiveFrom(char* buf, int len, int flags,
+        struct sockaddr* from, int* fromlen) const
     {
         int result = ::recvfrom(m_socket, buf, len, flags, from, fromlen);
         if (SOCKET_ERROR == result)
@@ -612,7 +628,8 @@ namespace Win32xx
 
     // Sends data to a specific destination.
     // Refer to sendto in the Windows API documentation for additional information.
-    inline int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const
+    inline int CSocket::SendTo(const char* buf, int len, int flags,
+        const struct sockaddr* to, int tolen) const
     {
         int result =  ::sendto(m_socket, buf, len, flags, to, tolen);
         if (SOCKET_ERROR == result)
@@ -626,7 +643,8 @@ namespace Win32xx
 
     // Sends data to a specific destination.
     // Refer to sendto in the Windows API documentation for additional information.
-    inline int CSocket::SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port) const
+    inline int CSocket::SendTo(const char* send, int len, int flags,
+        LPCTSTR addr, UINT port) const
     {
         int result = 0;
 
@@ -645,8 +663,10 @@ namespace Win32xx
                 return SOCKET_ERROR;
             }
 
-            result = ::sendto(m_socket, send, len, flags, addrInfo->ai_addr, static_cast<int>(addrInfo->ai_addrlen) );
-            if (result == SOCKET_ERROR )
+            result = ::sendto(m_socket, send, len, flags, addrInfo->ai_addr,
+                static_cast<int>(addrInfo->ai_addrlen));
+
+            if (result == SOCKET_ERROR)
             {
                 if (WSAGetLastError() != WSAEWOULDBLOCK)
                 {
@@ -667,7 +687,10 @@ namespace Win32xx
             clientService.sin_addr = ipv4_addr;
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
-            result = ::sendto( m_socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
+            result = ::sendto( m_socket, send, len, flags,
+                reinterpret_cast<SOCKADDR*>( &clientService ),
+                sizeof(clientService) );
+
             if (SOCKET_ERROR != result)
             {
                 if (WSAGetLastError() != WSAEWOULDBLOCK)
@@ -681,7 +704,8 @@ namespace Win32xx
 
     // Sets the socket option.
     // Refer to setsockopt in the Windows API documentation for additional information.
-    inline int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen) const
+    inline int CSocket::SetSockOpt(int level, int optname, const char* optval,
+        int optlen) const
     {
         int result = ::setsockopt(m_socket, level, optname, optval, optlen);
         if (result != 0)

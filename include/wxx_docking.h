@@ -240,8 +240,8 @@ namespace Win32xx
         CSize GetTBImageSize(CBitmap* pBitmap) const;
 
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
-        std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
-        std::vector<UINT> m_toolBarData;               // vector of resource IDs for ToolBar buttons
+        std::vector<ContainerInfo> m_allInfo;  // vector of ContainerInfo structs
+        std::vector<UINT> m_toolBarData;       // vector of resource IDs for ToolBar buttons
         CString m_tabText;
         CString m_caption;
 
@@ -922,11 +922,14 @@ namespace Win32xx
         if (m_pDocker->IsUndockable() && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             CDockContainer* pContainer = m_pDocker->GetContainer();
-            if ((m_pDocker->IsDocked()) || ((m_pDocker == m_pDocker->GetDockAncestor()) && pContainer && pContainer->GetItemCount() > 0))
+            if ((m_pDocker->IsDocked()) || ((m_pDocker == m_pDocker->GetDockAncestor()) &&
+                pContainer && pContainer->GetItemCount() > 0))
             {
                 // Determine the close button's drawing position relative to the window.
                 CRect rcClose = GetCloseRect();
-                UINT uState = GetCloseRect().PtInRect(GetCursorPos()) ? m_isClosePressed && IsLeftButtonDown() ? 2U : 1U : 0U;
+                UINT uState = GetCloseRect().PtInRect(GetCursorPos()) ?
+                    m_isClosePressed && IsLeftButtonDown() ? 2U : 1U : 0U;
+
                 VERIFY(ScreenToClient(rcClose));
 
                 if (GetExStyle() & WS_EX_CLIENTEDGE)
@@ -998,8 +1001,10 @@ namespace Win32xx
         CRect rcClose;
         int gap = DpiScaleInt(2);
         CRect rc = GetWindowRect();
-        int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
-        int cy = GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+        int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) /
+            GetWindowDpi(HWND_DESKTOP);
+        int cy = GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) /
+            GetWindowDpi(HWND_DESKTOP);
 
         rcClose.top = gap + rc.top + (m_pDocker->m_ncHeight - cy) / 2;
         rcClose.bottom = rc.top + cy;
@@ -1227,7 +1232,8 @@ namespace Win32xx
     inline LRESULT CDocker::CDockClient::OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         m_isTracking = FALSE;
-        if ((m_pDocker != nullptr) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION | DS_NO_CLOSE)) && m_pDocker->IsUndockable())
+        if ((m_pDocker != nullptr) && !(m_pDocker->GetDockStyle() &
+            (DS_NO_CAPTION | DS_NO_CLOSE)) && m_pDocker->IsUndockable())
         {
             CWindowDC dc(*this);
             DrawCloseButton(dc);
@@ -1258,7 +1264,8 @@ namespace Win32xx
     }
 
     // Called after the window is resized.
-    inline LRESULT CDocker::CDockClient::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::CDockClient::OnWindowPosChanged(UINT msg,
+        WPARAM wparam, LPARAM lparam)
     {
         // Reposition the View window to cover the DockClient's client area.
         CRect rc = GetClientRect();
@@ -1351,7 +1358,8 @@ namespace Win32xx
         }
     }
 
-    inline LRESULT CDocker::CDockClient::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::CDockClient::WndProcDefault(UINT msg, WPARAM wparam,
+        LPARAM lparam)
     {
         switch (msg)
         {
@@ -1921,7 +1929,9 @@ namespace Win32xx
         // Test if our cursor is in one of the docking zones.
         if (rcLeft.PtInRect(pt))
         {
-            pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFTMOST);
+            pDockTarget->GetDockHint().DisplayHint(pDockTarget, pDockDrag,
+                DS_DOCKED_LEFTMOST);
+
             pDockDrag->m_dockZone = DS_DOCKED_LEFTMOST;
             return TRUE;
         }
@@ -2759,7 +2769,8 @@ namespace Win32xx
     // Returns TRUE if this docker is docked.
     inline BOOL CDocker::IsDocked() const
     {
-        return (((m_dockStyle&0xF) || (m_dockStyle & DS_DOCKED_CONTAINER)) && !m_isUndocking); // Boolean expression
+        // Boolean expression.
+        return (((m_dockStyle&0xF) || (m_dockStyle & DS_DOCKED_CONTAINER)) && !m_isUndocking);
     }
 
     // Returns TRUE if the wnd is a docker within this dock family.

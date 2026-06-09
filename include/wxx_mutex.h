@@ -148,19 +148,27 @@ namespace Win32xx
 
     // Creates a named or unnamed event.
     // Parameters:
-    //  isInitiallySignaled - TRUE the initial state of the created event is signalled, FALSE otherwise
-    //  isManualReset  - TRUE requires the use of the ResetEvent function to set the event state to non-signalled.
-    //                 - FALSE the event is automatically reset to non-signalled after a single waiting thread has been released.
-    //  name           - pointer to a null terminated string specifying the event's name. Can be nullptr.
-    //                 - If name matches an existing event, the existing handle is retrieved.
-    //  attributes     - Pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned
-    //                   handle can be inherited by child processes. If attributes is nullptr, the
+    //  isInitiallySignaled - TRUE the initial state of the created event is
+    //                        signalled, FALSE otherwise
+    //  isManualReset  - TRUE requires the use of the ResetEvent function to
+    //                   set the event state to non-signalled.
+    //                 - FALSE the event is automatically reset to non-signalled
+    //                   after a single waiting thread has been released.
+    //  name           - pointer to a null terminated string specifying the
+    //                   event's name. Can be nullptr.
+    //                 - If name matches an existing event, the existing handle
+    //                   is retrieved.
+    //  attributes     - Pointer to a SECURITY_ATTRIBUTES structure that
+    //                   determines whether the returned handle can be inherited
+    //                   by child processes. If attributes is nullptr, the
     //                   handle cannot be inherited.
-    inline CEvent::CEvent(BOOL isInitiallySignaled, BOOL isManualReset, LPCTSTR name,
-                    LPSECURITY_ATTRIBUTES attributes)
+    inline CEvent::CEvent(BOOL isInitiallySignaled, BOOL isManualReset,
+        LPCTSTR name, LPSECURITY_ATTRIBUTES attributes)
     : m_event(nullptr)
     {
-        m_event = ::CreateEvent(attributes, isManualReset, isInitiallySignaled, name);
+        m_event = ::CreateEvent(attributes, isManualReset,
+            isInitiallySignaled, name);
+
         if (m_event == nullptr)
             throw CResourceException(GetApp()->MsgMtxEvent());
     }
@@ -184,12 +192,14 @@ namespace Win32xx
 
     // Creates a named or unnamed mutex.
     // Parameters:
-    //  isInitiallySignaled - TRUE the initial state of the created mutex is signalled, FALSE otherwise
-    //  name           - pointer to a null terminated string specifying the mutex's name. Can be nullptr.
-    //                 - If name matches an existing mutex, the existing handle is retrieved.
-    //  attributes     - Pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned
-    //                   handle can be inherited by child processes. If attributes is nullptr, the
-    //                   handle cannot be inherited.
+    //  isInitiallySignaled - TRUE the initial state of the created mutex is
+    //                        signalled, FALSE otherwise
+    //  name       - pointer to a null terminated string specifying the mutex's
+    //               name. Can be nullptr.
+    //             - If name matches an existing mutex, the existing handle is retrieved.
+    //  attributes - Pointer to a SECURITY_ATTRIBUTES structure that determines
+    //               whether the returned handle can be inherited by child
+    //               processes. If attributes is nullptr, the handle cannot be inherited.
     inline CMutex::CMutex(BOOL isInitiallySignaled, LPCTSTR name,
                             LPSECURITY_ATTRIBUTES attributes)
     : m_mutex(nullptr)
@@ -206,11 +216,14 @@ namespace Win32xx
 
     // Creates a named or unnamed semaphore.
     // Parameters:
-    //  initialCount   - Initial count for the semaphore object. This value must be greater than or equal
-    //                   to zero and less than or equal to lMaximumCount.
-    //  maxCount       - Maximum count for the semaphore object. This value must be greater than zero.
-    //  attributes     - Pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned
-    //                   handle can be inherited by child processes. If attributes is nullptr, the
+    //  initialCount   - Initial count for the semaphore object. This value must
+    //                   be greater than or equal to zero and less than or equal
+    //                   to lMaximumCount.
+    //  maxCount       - Maximum count for the semaphore object. This value must
+    //                   be greater than zero.
+    //  attributes     - Pointer to a SECURITY_ATTRIBUTES structure that
+    //                   determines whether the returned handle can be inherited
+    //                   by child processes. If attributes is nullptr, the
     //                   handle cannot be inherited.
     inline CSemaphore::CSemaphore(LONG initialCount, LONG maxCount, LPCTSTR name,
                             LPSECURITY_ATTRIBUTES attributes)
@@ -226,8 +239,8 @@ namespace Win32xx
 
     // Increases the count of the specified semaphore object by a specified amount.
     // Parameters:
-    //  releaseCount   - Amount by which the semaphore object's current count is to be increased.
-    //                   must be greater than zero.
+    //  releaseCount   - Amount by which the semaphore object's current count is
+    //                   to be increased. Must be greater than zero.
     //  pPreviousCount - pointer to a variable to receive the previous count.
     inline BOOL CSemaphore::ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount)
     {

@@ -75,7 +75,8 @@ namespace Win32xx
         // IDispatch Methods
         virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** names,
             unsigned int namesCount, LCID lcid, DISPID* pID) override;
-        virtual STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo) override;
+        virtual STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid,
+            ITypeInfo** pptinfo) override;
         virtual STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo) override;
         virtual STDMETHODIMP Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags,
             DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo,
@@ -83,7 +84,8 @@ namespace Win32xx
 
         // IOleClientSite Methods
         virtual STDMETHODIMP GetContainer(LPOLECONTAINER* ppContainer) override;
-        virtual STDMETHODIMP GetMoniker(DWORD assign, DWORD whichMoniker, LPMONIKER* ppMk) override;
+        virtual STDMETHODIMP GetMoniker(DWORD assign, DWORD whichMoniker,
+            LPMONIKER* ppMk) override;
         virtual STDMETHODIMP OnShowWindow(BOOL show) override;
         virtual STDMETHODIMP RequestNewObjectLayout() override;
         virtual STDMETHODIMP SaveObject() override;
@@ -95,14 +97,17 @@ namespace Win32xx
         virtual STDMETHODIMP OnControlInfoChanged() override;
         virtual STDMETHODIMP OnFocus(BOOL gotFocus) override;
         virtual STDMETHODIMP ShowPropertyFrame() override;
-        virtual STDMETHODIMP TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags) override;
+        virtual STDMETHODIMP TransformCoords(POINTL* pHimetric,
+            POINTF* pContainer, DWORD flags) override;
         virtual STDMETHODIMP TranslateAccelerator(LPMSG pMsg, DWORD modifiers) override;
 
         // IOleInPlaceFrame Methods
         virtual STDMETHODIMP EnableModeless(BOOL enable) override;
-        virtual STDMETHODIMP InsertMenus(HMENU shared, LPOLEMENUGROUPWIDTHS pMenuWidths) override;
+        virtual STDMETHODIMP InsertMenus(HMENU shared,
+            LPOLEMENUGROUPWIDTHS pMenuWidths) override;
         virtual STDMETHODIMP RemoveMenus(HMENU shared) override;
-        virtual STDMETHODIMP SetMenu(HMENU shared, HOLEMENU holemenu, HWND activeObject) override;
+        virtual STDMETHODIMP SetMenu(HMENU shared, HOLEMENU holemenu,
+            HWND activeObject) override;
         virtual STDMETHODIMP SetStatusText(LPCOLESTR pStatusText) override;
         virtual STDMETHODIMP TranslateAccelerator(LPMSG pMsg, WORD id) override;
 
@@ -188,16 +193,20 @@ namespace Win32xx
 
         // Operations
         HRESULT AddWebBrowserControl();
-        HRESULT ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecOpt, VARIANT* pIn, VARIANT* pOut) const;
+        HRESULT ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecOpt, VARIANT* pIn,
+            VARIANT* pOut) const;
         HRESULT GoBack() const;
         HRESULT GoForward() const;
         HRESULT GoHome() const;
         HRESULT GoSearch() const;
-        HRESULT Navigate(LPCTSTR URL, DWORD flags = 0, LPCTSTR targetFrameName = nullptr,
-            LPCTSTR headers = nullptr, LPVOID pPostData = nullptr, DWORD postDataLen = 0) const;
-        HRESULT Navigate2(LPITEMIDLIST pIDL, DWORD flags = 0, LPCTSTR targetFrameName = nullptr) const;
-        HRESULT Navigate2(LPCTSTR URL, DWORD flags = 0, LPCTSTR targetFrameName = nullptr,
-            LPCTSTR headers = nullptr, LPVOID pPostData = nullptr, DWORD postDataLen = 0) const;
+        HRESULT Navigate(LPCTSTR URL, DWORD flags = 0,
+            LPCTSTR targetFrameName = nullptr, LPCTSTR headers = nullptr,
+            LPVOID pPostData = nullptr, DWORD postDataLen = 0) const;
+        HRESULT Navigate2(LPITEMIDLIST pIDL, DWORD flags = 0,
+            LPCTSTR targetFrameName = nullptr) const;
+        HRESULT Navigate2(LPCTSTR URL, DWORD flags = 0,
+            LPCTSTR targetFrameName = nullptr, LPCTSTR headers = nullptr,
+            LPVOID pPostData = nullptr, DWORD postDataLen = 0) const;
         HRESULT PutProperty(LPCTSTR propertyName, const VARIANT& value) const;
         HRESULT PutProperty(LPCTSTR propertyName, double value) const;
         HRESULT PutProperty(LPCTSTR propertyName, long value) const;

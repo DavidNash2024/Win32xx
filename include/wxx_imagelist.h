@@ -153,7 +153,8 @@ namespace Win32xx
     {
     }
 
-    inline CImageList::CImageList(HIMAGELIST images) : m_pData(std::make_shared<CIml_Data>())
+    inline CImageList::CImageList(HIMAGELIST images) :
+        m_pData(std::make_shared<CIml_Data>())
     {
         Attach(images);
     }
@@ -204,7 +205,8 @@ namespace Win32xx
         return ::ImageList_Add(m_pData->images, bitmap, 0);
     }
 
-    // Adds an image or images to an image list, generating a mask from the specified bitmap.
+    // Adds an image or images to an image list, generating a mask from the
+    // specified bitmap.
     // Refer to ImageList_Add in the Windows API documentation for more information.
     inline int CImageList::Add(HBITMAP bitmap, HBITMAP mask) const
     {
@@ -258,7 +260,9 @@ namespace Win32xx
             if (images != nullptr)
             {
                 // Add the image list to this CImageList.
-                std::shared_ptr<CIml_Data> pCImlData = GetApp()->GetCImlData(images).lock();
+                std::shared_ptr<CIml_Data> pCImlData =
+                    GetApp()->GetCImlData(images).lock();
+
                 if (pCImlData)
                 {
                     m_pData = std::move(pCImlData);
@@ -357,7 +361,9 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        HIMAGELIST images = ::ImageList_LoadBitmap(GetApp()->GetResourceHandle(), resourceName, cx, grow, mask);
+        HIMAGELIST images = ::ImageList_LoadBitmap(GetApp()->GetResourceHandle(),
+            resourceName, cx, grow, mask);
+
         if (images == nullptr)
             throw CResourceException(GetApp()->MsgImageList());
 
@@ -404,7 +410,9 @@ namespace Win32xx
                 COLORREF mask = RGB(200, 200, 200);
                 if (GetDeviceCaps(desktopDC, BITSPIXEL) < 24)
                 {
-                    HPALETTE hPal = static_cast<HPALETTE>(GetCurrentObject(desktopDC, OBJ_PAL));
+                    HPALETTE hPal = static_cast<HPALETTE>(GetCurrentObject(
+                        desktopDC, OBJ_PAL));
+
                     UINT index = GetNearestPaletteIndex(hPal, mask);
                     if (index != CLR_INVALID)
                         mask = PALETTEINDEX(index);
@@ -510,7 +518,8 @@ namespace Win32xx
         return ::ImageList_DragEnter(lock, point.x, point.y);
     }
 
-    // Unlocks the specified window and hides the drag image, allowing the window to be updated.
+    // Unlocks the specified window and hides the drag image, allowing the
+    // window to be updated.
     // Refer to ImageList_DragLeave in the Windows API documentation for more information.
     inline BOOL CImageList::DragLeave(HWND lock) const
     {

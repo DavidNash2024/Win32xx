@@ -678,9 +678,10 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_ADDSTRING, 0, lparam));
     }
 
-    // Called by in response to the WM_COMPAREITEM message to determine the relative position
-    // of a new item in a sorted owner-draw list box. Override this function in an owner-drawn
-    // Combo-Box to specify the sort order when items are added using AddString.
+    // Called by in response to the WM_COMPAREITEM message to determine the
+    // relative position of a new item in a sorted owner-draw list box.
+    // Override this function in an owner-drawn Combo-Box to specify the sort
+    // order when items are added using AddString.
     // Refer to WM_COMPAREITEM in the Windows API documentation for more information.
     inline int CComboBox::CompareItem(LPCOMPAREITEMSTRUCT)
     {
@@ -751,7 +752,8 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_FINDSTRING, wparam, lparam));
     }
 
-    // Find the first list box string in a combo box that matches the string specified in string.
+    // Find the first list box string in a combo box that matches the string
+    // specified in string.
     // Refer to CB_FINDSTRINGEXACT in the Windows API documentation for more information.
     inline int  CComboBox::FindStringExact(int indexStart, LPCTSTR string) const
     {
@@ -779,7 +781,8 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_GETCOUNT, 0, 0));
     }
 
-    // Retrieves the index of the currently selected item, if any, in the list box of the combo box.
+    // Retrieves the index of the currently selected item, if any, in the
+    // list box of the combo box.
     // Refer to CB_GETCURSEL in the Windows API documentation for more information.
     inline int  CComboBox::GetCurSel() const
     {
@@ -835,7 +838,8 @@ namespace Win32xx
         return static_cast<DWORD>(SendMessage(CB_GETEDITSEL, 0, 0));
     }
 
-    // Determines whether the combo box has the default user interface or the extended user interface.
+    // Determines whether the combo box has the default user interface or the
+    // extended user interface.
     // Refer to CB_GETEXTENDEDUI in the Windows API documentation for more information.
     inline BOOL CComboBox::GetExtendedUI() const
     {
@@ -852,7 +856,8 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_GETHORIZONTALEXTENT, 0, 0));
     }
 
-    // Retrieves the application-supplied value associated with the specified item in the combo box.
+    // Retrieves the application-supplied value associated with the specified
+    // item in the combo box.
     // Refer to CB_GETITEMDATA in the Windows API documentation for more information.
     inline DWORD CComboBox::GetItemData(int index) const
     {
@@ -908,7 +913,8 @@ namespace Win32xx
         return static_cast<LCID>(SendMessage(CB_GETLOCALE, 0, 0));
     }
 
-    // Retrieves the zero-based index of the first visible item in the list box portion of the combo box.
+    // Retrieves the zero-based index of the first visible item in the list box
+    // portion of the combo box.
     // Refer to CB_GETTOPINDEX in the Windows API documentation for more information.
     inline int  CComboBox::GetTopIndex() const
     {
@@ -938,7 +944,8 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_INSERTSTRING, wparam, lparam));
     }
 
-    // Limits the length of the text the user may type into the edit control of the combo box.
+    // Limits the length of the text the user may type into the edit control of
+    // the combo box.
     // Refer to CB_LIMITTEXT in the Windows API documentation for more information.
     inline void CComboBox::LimitText(int maxChars) const
     {
@@ -966,7 +973,8 @@ namespace Win32xx
         return 0;   // Allow other messages to be handled elsewhere.
     }
 
-    // Copies the current content of the clipboard to the combo box's edit control at the current caret position.
+    // Copies the current content of the clipboard to the combo box's edit
+    // control at the current caret position.
     // Refer to WM_PASTE in the Windows API documentation for more information.
     inline void CComboBox::Paste() const
     {
@@ -988,8 +996,9 @@ namespace Win32xx
         SendMessage(CB_RESETCONTENT, 0, 0);
     }
 
-    // Searches the list of a combo box for an item that begins with the characters in a
-    // specified string. If a matching item is found, it is selected and copied to the edit control.
+    // Searches the list of a combo box for an item that begins with the
+    // characters in a specified string. If a matching item is found, it is
+    // selected and copied to the edit control.
     // Refer to CB_SELECTSTRING in the Windows API documentation for more information.
     inline int  CComboBox::SelectString(int startAfter, LPCTSTR string) const
     {
@@ -999,7 +1008,8 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_SELECTSTRING, wparam, lparam));
     }
 
-    // Selects a string in the list of the combo box. If necessary, the list scrolls the string into view.
+    // Selects a string in the list of the combo box. If necessary, the list
+    // scrolls the string into view.
     // Refer to CB_SETCURSEL in the Windows API documentation for more information.
     inline int  CComboBox::SetCurSel(int index) const
     {
@@ -1008,8 +1018,8 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_SETCURSEL, wparam, 0));
     }
 
-    // Sets the maximum allowable width, in pixels, of the list box of the combo box with
-    // the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
+    // Sets the maximum allowable width, in pixels, of the list box of the
+    // combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
     // Refer to CB_SETDROPPEDWIDTH in the Windows API documentation for more information.
     inline int  CComboBox::SetDroppedWidth(int width) const
     {
@@ -1027,8 +1037,8 @@ namespace Win32xx
         return (SendMessage(CB_SETEDITSEL, 0, lparam)) ? TRUE : FALSE;
     }
 
-    // Selects either the default user interface or the extended user interface for the combo box that
-    // has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
+    // Selects either the default user interface or the extended user interface
+    // for the combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
     // Refer to CB_SETEXTENDEDUI in the Windows API documentation for more information.
     inline int  CComboBox::SetExtendedUI(BOOL isExtended) const
     {
@@ -1037,7 +1047,8 @@ namespace Win32xx
         return static_cast<int>(SendMessage(CB_SETEXTENDEDUI, wparam, 0));
     }
 
-    // Sets the width, in pixels, by which the list box can be scrolled horizontally (the scrollable width).
+    // Sets the width, in pixels, by which the list box can be scrolled
+    // horizontally (the scrollable width).
     // Refer to CB_SETHORIZONTALEXTENT in the Windows API documentation for more information.
     inline void CComboBox::SetHorizontalExtent(UINT extent ) const
     {
@@ -1149,7 +1160,8 @@ namespace Win32xx
         return (SendMessage(CBEM_GETITEM, 0, lparam)) ? TRUE : FALSE;
     }
 
-    // Determines whether or not the user has changed the text of the ComboBoxEx edit control.
+    // Determines whether or not the user has changed the text of the
+    // ComboBoxEx edit control.
     // Refer to CBEM_HASEDITCHANGED in the Windows API documentation for more information.
     inline BOOL CComboBoxEx::HasEditChanged () const
     {
@@ -1216,7 +1228,8 @@ namespace Win32xx
         return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, wparam));
     }
 
-    // Retrieves the handle to the date and time picker's (DTP) child month calendar control.
+    // Retrieves the handle to the date and time picker's (DTP) child month
+    // calendar control.
     // Refer to DateTime_GetMonthCal in the Windows API documentation for more information.
     inline HWND CDateTime::GetMonthCalCtrl() const
     {
@@ -1270,7 +1283,8 @@ namespace Win32xx
         wc.lpszClassName = DATETIMEPICK_CLASS;
     }
 
-    // Sets the display of the date and time picker (DTP) control based on a given format string.
+    // Sets the display of the date and time picker (DTP) control based on a
+    // given format string.
     // Refer to DateTime_SetFormat in the Windows API documentation for more information.
     inline BOOL CDateTime::SetFormat(LPCTSTR format) const
     {
@@ -1616,6 +1630,8 @@ namespace Win32xx
         return result;
     }
 
+    // Gets the address values for all four fields in the IP address control.
+    // Refer to GetAddress in the Windows API documentation for more information.
     inline CString CIPAddress::GetAddress() const
     {
         DWORD addr = 0;
@@ -1767,7 +1783,8 @@ namespace Win32xx
         return count;
     }
 
-    // Retrieves the minimum and maximum allowable dates set for the month calendar control.
+    // Retrieves the minimum and maximum allowable dates set for the month
+    // calendar control.
     // Refer to MCM_GETRANGE in the Windows API documentation for more information.
     inline LRESULT CMonthCalendar::GetRange(SYSTEMTIME& minRange, SYSTEMTIME& maxRange) const
     {
@@ -1805,7 +1822,8 @@ namespace Win32xx
         return dateTime;
     }
 
-    // Determines which portion of the month calendar control is at a given point on the screen.
+    // Determines which portion of the month calendar control is at a given
+    // point on the screen.
     // Refer to MonthCal_HitTest in the Windows API documentation for more information.
     inline LRESULT CMonthCalendar::HitTest(MCHITTESTINFO& mcHitTest) const
     {
@@ -2096,7 +2114,8 @@ namespace Win32xx
     inline int CProgressBar::SetRange(short minRange, short maxRange) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(PBM_SETRANGE, 0, MAKELPARAM(minRange, maxRange)));
+        return static_cast<int>(SendMessage(PBM_SETRANGE, 0,
+            MAKELPARAM(minRange, maxRange)));
     }
 
     // Specifies the step increment for the progress bar.
@@ -2621,7 +2640,8 @@ namespace Win32xx
     // messages are sent to the parent window.
     // id is a user defined ID. It is required if the control has multiple tooltips.
     // Refer to TTM_ADDTOOL in the Windows API documentation for more information.
-    inline BOOL CToolTip::AddTool(HWND control, RECT toolRect, UINT id, LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
+    inline BOOL CToolTip::AddTool(HWND control, RECT toolRect, UINT id,
+        LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
     {
         assert(IsWindow());
         TOOLINFO info;
@@ -2636,7 +2656,8 @@ namespace Win32xx
     // If text contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
     // messages are sent to the parent window.
     // Refer to TTM_ADDTOOL in the Windows API documentation for more information.
-    inline BOOL CToolTip::AddTool(HWND control, LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
+    inline BOOL CToolTip::AddTool(HWND control,
+        LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
     {
         assert(IsWindow());
         TOOLINFO info;

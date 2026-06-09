@@ -125,12 +125,16 @@ namespace Win32xx
                 // Set the initial folder if specified.
                 if (!m_initialFolderName.IsEmpty())
                 {
-                    using PSHCREATEITEMFROMPARSINGNAME = HRESULT(WINAPI*)(PCWSTR, IBindCtx*, REFIID, void**);
+                    using PSHCREATEITEMFROMPARSINGNAME = HRESULT(WINAPI*)(PCWSTR,
+                        IBindCtx*, REFIID, void**);
+
                     HMODULE shell32 = ::GetModuleHandle(_T("Shell32.dll"));
                     if (shell32 != nullptr)
                     {
-                        PSHCREATEITEMFROMPARSINGNAME pSHCreateItemFromParsingName = reinterpret_cast<PSHCREATEITEMFROMPARSINGNAME>(
-                            reinterpret_cast<void*>(::GetProcAddress(shell32, "SHCreateItemFromParsingName")));
+                        PSHCREATEITEMFROMPARSINGNAME pSHCreateItemFromParsingName =
+                            reinterpret_cast<PSHCREATEITEMFROMPARSINGNAME>(
+                            reinterpret_cast<void*>(::GetProcAddress(shell32,
+                            "SHCreateItemFromParsingName")));
 
                         if (pSHCreateItemFromParsingName != nullptr)
                         {
@@ -156,7 +160,8 @@ namespace Win32xx
                     if (SUCCEEDED(pFileDialog->GetResult(&pShellItem)))
                     {
                         PWSTR pFilePath = nullptr;
-                        if (SUCCEEDED(pShellItem->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &pFilePath)))
+                        if (SUCCEEDED(pShellItem->GetDisplayName(
+                            SIGDN_DESKTOPABSOLUTEPARSING, &pFilePath)))
                         {
                             m_folderName = pFilePath;
                             CoTaskMemFree(pFilePath);

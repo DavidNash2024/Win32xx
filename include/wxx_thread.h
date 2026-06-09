@@ -60,7 +60,7 @@ namespace Win32xx
         HANDLE  GetThread() const;
         UINT    GetThreadID() const;
         int     GetThreadPriority() const;
-        BOOL    IsRunning() const { return (WaitForSingleObject(m_thread, 0) == WAIT_TIMEOUT); }
+        BOOL    IsRunning() const;
         BOOL    PostThreadMessage(UINT message, WPARAM wparam, LPARAM lparam) const;
         DWORD   ResumeThread() const;
         BOOL    SetThreadPriority(int priority) const;
@@ -211,17 +211,26 @@ namespace Win32xx
         return ::GetThreadPriority(m_thread);
     }
 
-    // Posts a message to the thread. The message will reach the MessageLoop, but
-    // will not call a CWnd's WndProc.
+    // Returns TRUE if the thread is running.
+    template <class T>
+    inline BOOL CThreadT<T>::IsRunning() const
+    {
+        return (WaitForSingleObject(m_thread, 0) == WAIT_TIMEOUT);
+    }
+
+    // Posts a message to the thread. The message will reach the MessageLoop,
+    // but will not call a CWnd's WndProc.
     // Refer to PostThreadMessage in the Windows API documentation for more information.
     template <class T>
-    inline BOOL CThreadT<T>::PostThreadMessage(UINT msg, WPARAM wparam, LPARAM lparam) const
+    inline BOOL CThreadT<T>::PostThreadMessage(UINT msg, WPARAM wparam,
+        LPARAM lparam) const
     {
         assert(m_thread);
         return ::PostThreadMessage(GetThreadID(), msg, wparam, lparam);
     }
 
-    // Resumes a thread that has been suspended, or created with the CREATE_SUSPENDED flag.
+    // Resumes a thread that has been suspended, or created with the
+    // CREATE_SUSPENDED flag.
     // Refer to ResumeThread in the Windows API documentation for more information.
     template <class T>
     inline DWORD CThreadT<T>::ResumeThread() const
@@ -232,9 +241,9 @@ namespace Win32xx
 
     // Sets the priority of this thread. The priority parameter can be:
     // THREAD_PRIORITY_IDLE, THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL,
-    // THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST,
-    // THREAD_PRIORITY_TIME_CRITICAL or other values permitted by the
-    // SetThreadPriority Windows API function.
+    // THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL,
+    // THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_TIME_CRITICAL or other values
+    // permitted by the SetThreadPriority Windows API function.
     // Refer to SetThreadPriority in the Windows API documentation for more information.
     template <class T>
     inline BOOL CThreadT<T>::SetThreadPriority(int priority) const

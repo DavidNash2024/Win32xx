@@ -4292,7 +4292,8 @@ namespace Win32xx
     // in the specified DIB.
     // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
     // Refer to SetDIBits in the Windows API documentation for more information.
-    inline int CDC::SetDIBits(HBITMAP bitmap, UINT startScan, UINT scanLines, LPCVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const
+    inline int CDC::SetDIBits(HBITMAP bitmap, UINT startScan, UINT scanLines, LPCVOID pBits,
+        LPBITMAPINFO pBMI, UINT colorUse) const
     {
         assert(m_pData->dc != nullptr);
         return ::SetDIBits(m_pData->dc, bitmap, startScan, scanLines, pBits, pBMI, colorUse);

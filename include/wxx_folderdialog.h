@@ -118,7 +118,8 @@ namespace Win32xx
         CFolderDialog(const CFolderDialog&) = delete;
         CFolderDialog& operator=(const CFolderDialog&) = delete;
 
-        static int CALLBACK BrowseCallbackProc(HWND wnd, UINT msg, LPARAM param1, LPARAM lparam2);
+        static int CALLBACK BrowseCallbackProc(HWND wnd, UINT msg,
+            LPARAM param1, LPARAM lparam2);
 
         CString m_displayName;
         CString m_title;
@@ -140,7 +141,8 @@ namespace Win32xx
     // Definitions for the CFolderDialog class.
     //
 
-    inline CFolderDialog::CFolderDialog() : m_pidlRoot(nullptr), m_fullPidl(nullptr), m_imageIndex(0)
+    inline CFolderDialog::CFolderDialog() : m_pidlRoot(nullptr), m_fullPidl(nullptr),
+        m_imageIndex(0)
     {
         m_bi = {};
         m_bi.lpfn = BrowseCallbackProc;
@@ -161,7 +163,8 @@ namespace Win32xx
 
     // The callback function used to send messages to and process messages
     // from a Browse dialog box displayed in response to a call to SHBrowseForFolder.
-    inline int CALLBACK CFolderDialog::BrowseCallbackProc(HWND wnd, UINT msg, LPARAM param1, LPARAM param2)
+    inline int CALLBACK CFolderDialog::BrowseCallbackProc(HWND wnd, UINT msg,
+        LPARAM param1, LPARAM param2)
     {
         CFolderDialog* pThis = reinterpret_cast<CFolderDialog*>(param2);
         int result = 0;

@@ -55,7 +55,8 @@ namespace Win32xx
         virtual ~CToolBar() override = default;
 
         // Operations
-        virtual BOOL AddButton(UINT buttonID, BOOL isEnabled = TRUE, int image = -1);
+        virtual BOOL AddButton(UINT buttonID, BOOL isEnabled = TRUE,
+            int image = -1);
         virtual void Destroy() override;
         virtual BOOL SetButtonText(UINT buttonID, LPCTSTR text);
 
@@ -214,7 +215,8 @@ namespace Win32xx
     // Adds one or more buttons to a ToolBar. pButtonInfoArray is a pointer to
     // an array of TBBUTTON.
     // Refer to TB_ADDBUTTONS in the Windows API documentation for more information.
-    inline BOOL CToolBar::AddButtons(UINT buttonCount, LPTBBUTTON pButtonInfoArray) const
+    inline BOOL CToolBar::AddButtons(UINT buttonCount,
+        LPTBBUTTON pButtonInfoArray) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonCount);
@@ -318,7 +320,8 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return (SendMessage(TB_ENABLEBUTTON, wparam, MAKELONG(isEnabled, 0))) ? TRUE : FALSE;
+        return (SendMessage(TB_ENABLEBUTTON, wparam, MAKELONG(isEnabled, 0))) ?
+            TRUE : FALSE;
     }
 
     // Receives the TBBUTTON structure information from the specified button.
@@ -353,10 +356,12 @@ namespace Win32xx
     // Retrieves the state of an individual button
     //  TBSTATE_CHECKED     The button has the TBSTYLE_CHECK style and is being clicked.
     //  TBSTATE_ELLIPSES    The button's text is cut off and an ellipsis is displayed.
-    //  TBSTATE_ENABLED     The button accepts user input. A button that doesn't have this state is grayed.
+    //  TBSTATE_ENABLED     The button accepts user input. A button that doesn't have
+    //                      this state is grayed.
     //  TBSTATE_HIDDEN      The button is not visible and cannot receive user input.
     //  TBSTATE_INDETERMINATE   The button is grayed.
-    //  TBSTATE_MARKED      The button is marked. The interpretation of a marked item is dependent upon the application.
+    //  TBSTATE_MARKED      The button is marked. The interpretation of a marked
+    //                      item is dependent upon the application.
     //  TBSTATE_PRESSED     The button is being clicked.
     //  TBSTATE_WRAP        The button is followed by a line break.
     // Refer to TB_GETSTATE in the Windows API documentation for more information.
@@ -367,15 +372,18 @@ namespace Win32xx
         return static_cast<UINT>(SendMessage(TB_GETSTATE, wparam, 0));
     }
 
-    //  Retrieves the the style of the ToolBar control. The following button styles are supported:
+    // Retrieves the the style of the ToolBar control. The following button
+    // styles are supported:
     //  BTNS_BUTTON      Standard push button (default)
     //  BTNS_SEP         Separator
     //  BTNS_CHECK       Auto check-box button
     //  BTNS_GROUP       Marks the start of a group of buttons
     //  BTNS_CHECKGROUP  Marks the start of a group of check-box buttons
     //  BTNS_DROPDOWN    Creates a drop-down list button
-    //  BTNS_AUTOSIZE    The button's width will be calculated based on the text of the button, not on the size of the image
-    //  BTNS_NOPREFIX    The button text will not have an accelerator prefix associated with it
+    //  BTNS_AUTOSIZE    The button's width will be calculated based on the text
+    //                   of the button, not on the size of the image
+    //  BTNS_NOPREFIX    The button text will not have an accelerator prefix
+    //                   associated with it
     // Refer to TB_GETBUTTON in the Windows API documentation for more information.
     inline BYTE CToolBar::GetButtonStyle(UINT buttonID) const
     {
@@ -426,7 +434,9 @@ namespace Win32xx
     inline CImageList CToolBar::GetDisabledImageList() const
     {
         assert(IsWindow());
-        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETDISABLEDIMAGELIST, 0, 0));
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(
+            TB_GETDISABLEDIMAGELIST, 0, 0));
+
         return CImageList(images);
     }
 
@@ -447,7 +457,9 @@ namespace Win32xx
     inline CImageList CToolBar::GetHotImageList() const
     {
         assert(IsWindow());
-        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETHOTIMAGELIST, 0, 0));
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(
+            TB_GETHOTIMAGELIST, 0, 0));
+
         return CImageList(images);
     }
 
@@ -466,7 +478,9 @@ namespace Win32xx
     inline CImageList CToolBar::GetImageList() const
     {
         assert(IsWindow());
-        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETIMAGELIST, 0, 0));
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(
+            TB_GETIMAGELIST, 0, 0));
+
         return CImageList(images);
     }
 
@@ -585,7 +599,8 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return (SendMessage(TB_HIDEBUTTON, wparam, MAKELONG (show, 0))) ? TRUE : FALSE;
+        return (SendMessage(TB_HIDEBUTTON, wparam, MAKELONG (show, 0))) ?
+            TRUE : FALSE;
     }
 
     // Returns the button that's positioned under the cursor.
@@ -615,7 +630,8 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(buttonID);
-        return (SendMessage(TB_INDETERMINATE, wparam, MAKELONG (isIndeterminate, 0))) ? TRUE : FALSE;
+        return (SendMessage(TB_INDETERMINATE, wparam, MAKELONG(
+            isIndeterminate, 0))) ? TRUE : FALSE;
     }
 
     // Inserts a button to the left of the specified button index.
@@ -715,7 +731,8 @@ namespace Win32xx
     }
 
     // Called when the toolbar is resized.
-    inline LRESULT CToolBar::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CToolBar::OnWindowPosChanging(UINT msg, WPARAM wparam,
+        LPARAM lparam)
     {
         //  Used by ReBar controls to adjust ToolBar window size
         if ( GetParent().SendMessage(UWM_TBWINPOSCHANGING, reinterpret_cast<
@@ -752,9 +769,11 @@ namespace Win32xx
     }
 
     // Saves or restores the toolbar state in the registry. Parameter values:
-    //  save       If this parameter is TRUE, the information is saved, otherwise it is restored.
-    //  pSaveInfo  Pointer to a TBSAVEPARAMS structure that specifies the registry key, subkey,
-    //             and value name for the toolbar state information.
+    //  save       If this parameter is TRUE, the information is saved,
+    //             otherwise it is restored.
+    //  pSaveInfo  Pointer to a TBSAVEPARAMS structure that specifies the
+    //             registry key, subkey, and value name for the toolbar state
+    //             information.
     // Refer to TB_SAVERESTORE in the Windows API documentation for more information.
     inline void CToolBar::SaveRestore(BOOL save, TBSAVEPARAMS* pSaveInfo) const
     {

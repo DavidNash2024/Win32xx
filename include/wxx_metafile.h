@@ -57,8 +57,8 @@
 
 namespace Win32xx
 {
-
-    struct MetaFileData   // A structure that contains the data members for CMetaFile.
+    // A structure that contains the data members for CMetaFile.
+    struct MetaFileData
     {
         // Constructor
         MetaFileData() : metaFile(nullptr) {}
@@ -66,7 +66,8 @@ namespace Win32xx
         HMETAFILE metaFile;
     };
 
-    struct EnhMetaFileData    // A structure that contains the data members for CEnhMetaFile.
+    // A structure that contains the data members for CEnhMetaFile.
+    struct EnhMetaFileData
     {
         // Constructor
         EnhMetaFileData() : enhMetaFile(nullptr) {}
@@ -138,7 +139,8 @@ namespace Win32xx
     }
 
     // A private constructor used by CMetaFileDC.
-    inline CMetaFile::CMetaFile(HMETAFILE metaFile) : m_pData(std::make_shared<MetaFileData>())
+    inline CMetaFile::CMetaFile(HMETAFILE metaFile) : m_pData(
+        std::make_shared<MetaFileData>())
     {
         m_pData->metaFile = metaFile;
     }

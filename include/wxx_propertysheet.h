@@ -372,7 +372,8 @@ namespace Win32xx
 
     // This function is called when the Finish button is pressed on a wizard page.
     // Override this function to perform tasks when the wizard is finished.
-    // Return TRUE if the property sheet is destroyed when the wizard finishes; otherwise return FALSE.
+    // Return TRUE if the property sheet is destroyed when the wizard finishes;
+    // otherwise return FALSE.
     inline BOOL CPropertyPage::OnWizardFinish()
     {
         return TRUE; // Allow wizard to finish.
@@ -451,18 +452,22 @@ namespace Win32xx
     }
 
     // Enables or disables the various buttons on a wizard property page.
-    // flags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
-    //  PSWIZB_BACK             Enable the Back button. If this flag is not set, the Back button is displayed as disabled.
+    // flags:  A value that specifies which wizard buttons are enabled. You can
+    //         combine one or more of the following flags.
+    //  PSWIZB_BACK             Enable the Back button. If this flag is not set,
+    //                          the Back button is displayed as disabled.
     //  PSWIZB_DISABLEDFINISH   Display a disabled Finish button.
     //  PSWIZB_FINISH           Display an enabled Finish button.
-    //  PSWIZB_NEXT             Enable the Next button. If this flag is not set, the Next button is displayed as disabled.
+    //  PSWIZB_NEXT             Enable the Next button. If this flag is not set,
+    //                          the Next button is displayed as disabled.
     inline void CPropertyPage::SetWizardButtons(DWORD flags) const
     {
         assert ( IsWindow() );
         PropSheet_SetWizButtons(::GetParent(*this), flags);
     }
 
-    inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND, UINT msg, LPPROPSHEETPAGE ppsp)
+    inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND, UINT msg,
+        LPPROPSHEETPAGE ppsp)
     {
         switch (msg)
         {
@@ -487,7 +492,8 @@ namespace Win32xx
         return TRUE;
     }
 
-    inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hDlg, UINT msg, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hDlg,
+        UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Find matching CWnd pointer for this HWND.
         CPropertyPage* pPage = static_cast<CPropertyPage*>(GetCWndPtr(hDlg));
@@ -835,7 +841,8 @@ namespace Win32xx
     // being passed to WndProc.
     inline BOOL CPropertySheet::PreTranslateMessage(MSG& msg)
     {
-        // Allow sheet to translate Ctrl+Tab, Shift+Ctrl+Tab, Ctrl+PageUp, and Ctrl+PageDown.
+        // Allow sheet to translate Ctrl+Tab, Shift+Ctrl+Tab, Ctrl+PageUp, and
+        // Ctrl+PageDown.
         if (msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
             (msg.wParam == VK_TAB || msg.wParam == VK_PRIOR || msg.wParam == VK_NEXT))
         {

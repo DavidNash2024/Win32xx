@@ -228,7 +228,10 @@ namespace Win32xx
     {
         assert(m_theme);
         if (m_pfnDrawThemeText)
-            return m_pfnDrawThemeText(m_theme, dc, partID, stateID, text, charCount, textFlags, textFlags2, pRect);
+        {
+            return m_pfnDrawThemeText(m_theme, dc, partID, stateID, text,
+                charCount, textFlags, textFlags2, pRect);
+        }
 
         return E_NOTIMPL;
     }
@@ -248,7 +251,9 @@ namespace Win32xx
     {
         int x = item.left;
         int y = item.top;
-        int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheck.Width() + m_sizeCheck.cx;
+        int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() +
+            m_marCheck.Width() + m_sizeCheck.cx;
+
         int cy = item.Height();
 
         return CRect(x, y, x + cx, y + cy);
@@ -256,7 +261,9 @@ namespace Win32xx
 
     inline CRect CMenuMetrics::GetCheckRect(const CRect& item) const
     {
-        int x = item.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth + m_marItem.cxLeftWidth;
+        int x = item.left + m_marCheckBackground.cxLeftWidth +
+            m_marCheck.cxLeftWidth + m_marItem.cxLeftWidth;
+
         int y = item.top + (item.Height() - m_sizeCheck.cy) / 2;
 
         return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
@@ -289,8 +296,8 @@ namespace Win32xx
             // Account for text width and checkmark height.
             CSize sizeText = GetTextSize(pmd, dc);
             size.cx += sizeText.cx;
-            size.cy = std::max(sizeText.cy, m_sizeCheck.cy) + m_marCheckBackground.Height() +
-                m_marCheck.Height();
+            size.cy = std::max(sizeText.cy, m_sizeCheck.cy) +
+                m_marCheckBackground.Height() + m_marCheck.Height();
         }
 
         return (size);
@@ -393,7 +400,10 @@ namespace Win32xx
     {
         assert(m_theme);
         if (m_pfnGetThemeTextExtent)
-            return m_pfnGetThemeTextExtent(m_theme, dc, partID, stateID, text, charCount, textFlags, pBoundingRect, pExtentRect);
+        {
+            return m_pfnGetThemeTextExtent(m_theme, dc, partID, stateID, text,
+                charCount, textFlags, pBoundingRect, pExtentRect);
+        }
 
         return E_NOTIMPL;
     }
@@ -420,7 +430,8 @@ namespace Win32xx
             m_pfnGetThemeTextExtent = reinterpret_cast<GETTHEMETEXTEXTENT>(
                 reinterpret_cast<void*>(::GetProcAddress(uxTheme, "GetThemeTextExtent")));
             m_pfnIsThemeBGPartTransparent = reinterpret_cast<ISTHEMEBGPARTTRANSPARENT>(
-                reinterpret_cast<void*>(::GetProcAddress(uxTheme, "IsThemeBackgroundPartiallyTransparent")));
+                reinterpret_cast<void*>(::GetProcAddress(uxTheme,
+                "IsThemeBackgroundPartiallyTransparent")));
             m_pfnOpenThemeData = reinterpret_cast<OPENTHEMEDATA>(
                 reinterpret_cast<void*>(::GetProcAddress(uxTheme, "OpenThemeData")));
         }
@@ -441,12 +452,16 @@ namespace Win32xx
             int borderSize = 0;    // Border space between item text and accelerator.
             int bgBorderSize = 0;  // Border space between item text and gutter.
             GetThemePartSize(nullptr, MENU_POPUPCHECK, 0, nullptr, TS_TRUE, &m_sizeCheck);
-            GetThemePartSize(nullptr, MENU_POPUPSEPARATOR, 0, nullptr, TS_TRUE, &m_sizeSeparator);
+            GetThemePartSize(nullptr, MENU_POPUPSEPARATOR, 0, nullptr, TS_TRUE,
+                &m_sizeSeparator);
             GetThemeInt(MENU_POPUPITEM, 0, TMT_BORDERSIZE, &borderSize);
             GetThemeInt(MENU_POPUPBACKGROUND, 0, TMT_BORDERSIZE, &bgBorderSize);
-            GetThemeMargins(nullptr, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS, nullptr, &m_marCheck);
-            GetThemeMargins(nullptr, MENU_POPUPCHECKBACKGROUND, 0, TMT_CONTENTMARGINS, nullptr, &m_marCheckBackground);
-            GetThemeMargins(nullptr, MENU_POPUPITEM, 0, TMT_CONTENTMARGINS, nullptr, &m_marItem);
+            GetThemeMargins(nullptr, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS,
+                nullptr, &m_marCheck);
+            GetThemeMargins(nullptr, MENU_POPUPCHECKBACKGROUND, 0,
+                TMT_CONTENTMARGINS, nullptr, &m_marCheckBackground);
+            GetThemeMargins(nullptr, MENU_POPUPITEM, 0, TMT_CONTENTMARGINS,
+                nullptr, &m_marItem);
 
             // Popup text margins
             m_marText = m_marItem;
@@ -455,7 +470,9 @@ namespace Win32xx
         }
         else
         {
-            m_sizeCheck.SetSize(::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
+            m_sizeCheck.SetSize(::GetSystemMetrics(SM_CXSMICON),
+                ::GetSystemMetrics(SM_CYSMICON));
+
             m_sizeSeparator.SetSize(1, 7);
             m_marCheck.SetMargins(4, 4, 2, 2);
             m_marCheckBackground.SetMargins(0, 0, 0, 0);
@@ -464,8 +481,10 @@ namespace Win32xx
         }
     }
 
-    // Retrieves whether the background specified by the visual style has transparent pieces or alpha-blended pieces.
-    inline BOOL CMenuMetrics::IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const
+    // Retrieves whether the background specified by the visual style has
+    // transparent pieces or alpha-blended pieces.
+    inline BOOL CMenuMetrics::IsThemeBackgroundPartiallyTransparent(int partID,
+        int stateID) const
     {
         assert(m_theme);
         if (m_pfnIsThemeBGPartTransparent)

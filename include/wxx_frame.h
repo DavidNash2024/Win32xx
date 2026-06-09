@@ -152,7 +152,7 @@ namespace Win32xx
         CString GetTitle() const                          { return T::GetWindowText(); }
         CWnd& GetView() const;
         CString GetXPThemeName() const;
-        BOOL IsMDIFrame() const                           { return (T::SendMessage(UWM_GETCMDIFRAMET)) ? TRUE : FALSE; }
+        BOOL IsMDIFrame() const;
         void RemoveKbdHook();
         void ResetMenuMetrics()                           { m_menuMetrics.SetMetrics(*this); }
         void SetAccelerators(UINT accelID);
@@ -3031,6 +3031,13 @@ namespace Win32xx
         }
 
         return TRUE;
+    }
+
+    // Returns TRUE if this is a MDI frame. Returns FALSE otherwise.
+    template<class T>
+    inline BOOL CFrameT<T>::IsMDIFrame() const
+    {
+        return (T::SendMessage(UWM_GETCMDIFRAMET)) ? TRUE : FALSE;
     }
 
     // Removes the keyboard hook installed by SetKbdHook. The hook is used to

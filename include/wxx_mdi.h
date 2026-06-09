@@ -1074,7 +1074,9 @@ namespace Win32xx
     inline int CMDIChild::OnCreate(CREATESTRUCT&)
     {
         // Create the view window
-        assert( &GetView() );           // Use SetView in CMDIChild's constructor to set the view window.
+        assert( &GetView() );
+
+        // Use SetView in CMDIChild's constructor to set the view window.
         GetView().Create(*this);
         RecalcLayout();
 

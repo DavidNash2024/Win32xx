@@ -197,9 +197,9 @@ namespace Win32xx
         CStringT& operator+=(T ch);
 
         // Accessors
-        const T* c_str() const          { return m_str.c_str(); }                // alternative for casting to LPCTSTR
-        const std::basic_string<T>& GetString() const { return m_str; }          // returns const reference to CString's internal std::basic_string<T>
-        int      GetLength() const  { return static_cast<int>(m_str.length()); } // returns the length in characters
+        const T* c_str() const;
+        const std::basic_string<T>& GetString() const;
+        int GetLength() const;
 
         // Operations
         BSTR     AllocSysString() const;
@@ -569,6 +569,13 @@ namespace Win32xx
         return 0;
     }
 
+    // Provides an alternative for casting to LPCTSTR.
+    template <class T>
+    inline const T* CStringT<T>::c_str() const
+    {
+        return m_str.c_str();
+    }
+
     // Performs a case sensitive comparison of the two strings using
     // locale-specific information.
     template <class T>
@@ -779,8 +786,9 @@ namespace Win32xx
         LPSTR temp = nullptr;
         if (format)
         {
-            DWORD result = ::FormatMessageA(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                                   format, 0, 0, reinterpret_cast<LPSTR>(&temp), 0, &args);
+            DWORD result = ::FormatMessageA(
+                FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                format, 0, 0, reinterpret_cast<LPSTR>(&temp), 0, &args);
 
             if ( result == 0 || temp == nullptr )
                 throw std::bad_alloc();
@@ -797,8 +805,9 @@ namespace Win32xx
         LPWSTR temp = 0;
         if (format)
         {
-            DWORD result = ::FormatMessageW(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                                  format, 0, 0, reinterpret_cast<LPWSTR>(&temp), 0, &args);
+            DWORD result = ::FormatMessageW(
+                FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                format, 0, 0, reinterpret_cast<LPWSTR>(&temp), 0, &args);
 
             if ( result == 0 || temp == 0 )
                 throw std::bad_alloc();
@@ -915,8 +924,10 @@ namespace Win32xx
     {
         Empty();
         CHAR* buffer = nullptr;
-        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageA(flags, nullptr, error, 0, reinterpret_cast<LPSTR>(&buffer), 1, nullptr);
+        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER |
+            FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+        ::FormatMessageA(flags, nullptr, error, 0,
+            reinterpret_cast<LPSTR>(&buffer), 1, nullptr);
         if (buffer != nullptr)
         {
             m_str.assign(buffer);
@@ -931,13 +942,32 @@ namespace Win32xx
     {
         Empty();
         WCHAR* buffer = nullptr;
-        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageW(flags, nullptr, error, 0, reinterpret_cast<LPWSTR>(&buffer), 1, nullptr);
+        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER |
+            FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+        ::FormatMessageW(flags, nullptr, error, 0,
+            reinterpret_cast<LPWSTR>(&buffer), 1, nullptr);
         if (buffer != nullptr)
         {
             m_str.assign(buffer);
             ::LocalFree(buffer);
         }
+    }
+
+
+
+
+    // Returns the length in characters.
+    template <class T>
+    int CStringT<T>::GetLength() const
+    {
+        return static_cast<int>(m_str.length());
+    }
+
+    // Returns const reference to CString's internal std::basic_string<T>.
+    template <class T>
+    inline const std::basic_string<T>& CStringT<T>::GetString() const
+    {
+        return m_str;
     }
 
     // Inserts a single character at the given index within the string.
@@ -1038,7 +1068,8 @@ namespace Win32xx
 
         CStringT str;
         if (first <= GetLength())
-            str.m_str.assign(m_str, static_cast<size_t>(first), static_cast<size_t>(count));
+            str.m_str.assign(m_str, static_cast<size_t>(first),
+                static_cast<size_t>(count));
 
         return str;
     }
@@ -1169,7 +1200,9 @@ namespace Win32xx
 
         CStringT str;
         count = std::min(count, GetLength());
-        str.m_str.assign(m_str, m_str.size() - static_cast<size_t>(count), static_cast<size_t>(count));
+        str.m_str.assign(m_str, m_str.size() - static_cast<size_t>(count),
+            static_cast<size_t>(count));
+
         return str;
     }
 
@@ -1206,8 +1239,11 @@ namespace Win32xx
 
         if ((pBstr) != nullptr)
         {
-            if (!::SysReAllocStringLen(pBstr, m_str.c_str(), static_cast<UINT>(m_str.length())))
+            if (!::SysReAllocStringLen(pBstr, m_str.c_str(),
+                static_cast<UINT>(m_str.length())))
+            {
                 throw std::bad_alloc();
+            }
         }
 
         return pBstr ? *pBstr : nullptr;

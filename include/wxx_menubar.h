@@ -199,8 +199,11 @@ namespace Win32xx
 
         if (IsMDIChildMaxed())
         {
-            int cx = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
-            int cy = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+            int cx = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) /
+                GetWindowDpi(HWND_DESKTOP);
+            int cy = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) /
+            GetWindowDpi(HWND_DESKTOP);
+
             CRect rc = GetClientRect();
             int gap = 4;
             rc.right -= gap;
@@ -331,7 +334,9 @@ namespace Win32xx
         CWnd* pMDIChild = nullptr;
         if (GetMDIClient())
         {
-            HWND mdiChild = reinterpret_cast<HWND>(GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, 0));
+            HWND mdiChild = reinterpret_cast<HWND>(GetMDIClient()->
+                SendMessage(WM_MDIGETACTIVE, 0, 0));
+
             pMDIChild = GetCWndPtr(mdiChild);
         }
 
@@ -348,7 +353,9 @@ namespace Win32xx
         if (GetAncestor().SendMessage(UWM_GETCMDIFRAMET) != 0)
         {
             // Retrieve the window handle of the MDI frame's view.
-            HWND wnd = reinterpret_cast<HWND>(GetAncestor().SendMessage(UWM_GETFRAMEVIEW));
+            HWND wnd = reinterpret_cast<HWND>(GetAncestor().
+                SendMessage(UWM_GETFRAMEVIEW));
+
             pMDIClient = GetCWndPtr(wnd);
         }
 
@@ -809,8 +816,10 @@ namespace Win32xx
         LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
         switch (pHeader->code)
         {
-        case TBN_DROPDOWN:      return OnTBNDropDown(reinterpret_cast<LPNMTOOLBAR>(lparam));
-        case TBN_HOTITEMCHANGE: return OnTBNHotItemChange(reinterpret_cast<LPNMTBHOTITEM>(lparam));
+        case TBN_DROPDOWN:
+            return OnTBNDropDown(reinterpret_cast<LPNMTOOLBAR>(lparam));
+        case TBN_HOTITEMCHANGE:
+            return OnTBNHotItemChange(reinterpret_cast<LPNMTBHOTITEM>(lparam));
 
         default: break;
         }
@@ -818,8 +827,8 @@ namespace Win32xx
         return 0;
     }
 
-    // Display the popup menu for a menu item. This function doesn't complete until
-    // the popup menu is closed.
+    // Display the popup menu for a menu item. This function doesn't complete
+    // until the popup menu is closed.
     inline LRESULT CMenuBar::OnPopupMenu()
     {
         if (m_isKeyMode)
@@ -1082,7 +1091,9 @@ namespace Win32xx
                 // Pass the Left Mouse Click back up to the frame window (and update cursor).
                 LPARAM lparam = MAKELPARAM(screenPos.x, screenPos.y);
                 HWND frame = GetAncestor();
-                WPARAM wparam = static_cast<WPARAM>(::SendMessage(frame, WM_NCHITTEST, 0, lparam));
+                WPARAM wparam = static_cast<WPARAM>(::SendMessage(
+                    frame, WM_NCHITTEST, 0, lparam));
+
                 ::SendMessage(frame, WM_NCMOUSEMOVE, wparam, lparam);
                 ::SendMessage(frame, WM_SETCURSOR, reinterpret_cast<WPARAM>(frame),
                               MAKELPARAM(wparam, WM_NCMOUSEMOVE));
@@ -1252,9 +1263,12 @@ namespace Win32xx
                     // Toggle the MDI button image pressed/unpressed as required.
                     if (MDIButton >= 0)
                     {
-                        DrawMDIButton(MenuBarDC, MDI_MIN,     ((MDIButton == 0) && (m_nMDIButton == 0)) ? 2U : 0U);
-                        DrawMDIButton(MenuBarDC, MDI_RESTORE, ((MDIButton == 1) && (m_nMDIButton == 1)) ? 2U : 0U);
-                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   ((MDIButton == 2) && (m_nMDIButton == 2)) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_MIN,
+                            ((MDIButton == 0) && (m_nMDIButton == 0)) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_RESTORE,
+                            ((MDIButton == 1) && (m_nMDIButton == 1)) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_CLOSE,
+                            ((MDIButton == 2) && (m_nMDIButton == 2)) ? 2U : 0U);
                     }
                     else
                     {

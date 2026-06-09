@@ -224,7 +224,8 @@ namespace Win32xx
         if (GetApp()->GetHDevNames().Get() == nullptr)
             GetApp()->UpdateDefaultPrinter();
 
-        if ((GetApp()->GetHDevNames().Get() != nullptr) && (GetApp()->GetHDevMode().Get() != nullptr))
+        if ((GetApp()->GetHDevNames().Get() != nullptr) &&
+            (GetApp()->GetHDevMode().Get() != nullptr))
         {
             dc.CreateDC(GetDriverName(), GetDeviceName(),
                 GetPortName(), GetDevMode());
@@ -378,9 +379,9 @@ namespace Win32xx
         return str;
     }
 
-    // Returns a pointer to the locked hDevMode memory encapsulated in a CDevMode object.
-    // There is no need to unlock this memory. The CDevMode object automatically
-    // unlocks the memory when it goes out of scope.
+    // Returns a pointer to the locked hDevMode memory encapsulated in a
+    // CDevMode object. There is no need to unlock this memory. The CDevMode
+    // object automatically unlocks the memory when it goes out of scope.
     // Usage:
     //  CDevMode pDevMode = GetDevMode();
     //  Then use pDevMode as if it were a LPDEVMODE.
@@ -762,7 +763,9 @@ namespace Win32xx
         m_psd.hInstance         = GetApp()->GetResourceHandle();
         m_psd.lCustData         = psd.lCustData;
         m_psd.lpfnPageSetupHook = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-        m_psd.lpfnPagePaintHook = reinterpret_cast<LPCCHOOKPROC>(CPageSetupDialog::PaintHookProc);
+        m_psd.lpfnPagePaintHook = reinterpret_cast<LPCCHOOKPROC>(
+            CPageSetupDialog::PaintHookProc);
+
         m_psd.lpPageSetupTemplateName = psd.lpPageSetupTemplateName;
         m_psd.hPageSetupTemplate = psd.hPageSetupTemplate;
     }

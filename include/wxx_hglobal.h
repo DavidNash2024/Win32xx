@@ -92,7 +92,10 @@ namespace Win32xx
     inline void CHGlobal::Free()
     {
         if (m_global != nullptr)
-            VERIFY(::GlobalFree(m_global) == nullptr);  // Fails if the memory was already freed.
+        {
+            // Fails if the memory was already freed.
+            VERIFY(::GlobalFree(m_global) == nullptr);
+        }
 
         m_global = nullptr;
     }

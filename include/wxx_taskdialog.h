@@ -49,7 +49,7 @@
 //  Task dialogs are only supported on Windows Vista and above.
 //  Task dialogs require XP themes enabled (use version 6 of Common Controls)
 //  Task dialogs are always modal.
-//  Task dialogs require Unicode. There is no ANSI version of the TaskDialogIndirect function.
+//  Task dialogs require Unicode.
 
 
 #ifndef _WIN32XX_TASKDIALOG_H_
@@ -312,7 +312,8 @@ namespace Win32xx
 
     // Adds a shield icon to indicate that the button's action requires
     // elevated privileges.
-    // Refer to TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE in the Windows API documentation for more information.
+    // Refer to TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE in the Windows API
+    // documentation for more information.
     inline void CTaskDialog::ElevateButton(int buttonID, BOOL isElevated) const
     {
         assert(GetHwnd());
@@ -480,7 +481,8 @@ namespace Win32xx
     //  TDCBF_CANCEL_BUTTON     Cancel button
     //  TDCBF_RETRY_BUTTON      Retry button
     //  TDCBF_CLOSE_BUTTON      Close button
-    inline void CTaskDialog::SetCommonButtons(TASKDIALOG_COMMON_BUTTON_FLAGS commonButtons)
+    inline void CTaskDialog::SetCommonButtons(
+        TASKDIALOG_COMMON_BUTTON_FLAGS commonButtons)
     {
         assert (GetHwnd() == nullptr);
         m_tc.dwCommonButtons = commonButtons;
@@ -559,7 +561,8 @@ namespace Win32xx
     // Possible icons:
     // TD_ERROR_ICON        A stop-sign icon appears in the task dialog.
     // TD_WARNING_ICON      An exclamation-point icon appears in the task dialog.
-    // TD_INFORMATION_ICON  An icon consisting of a lowercase letter i in a circle appears in the task dialog.
+    // TD_INFORMATION_ICON  An icon consisting of a lowercase letter i in a
+    //                      circle appears in the task dialog.
     // TD_SHIELD_ICON       A shield icon appears in the task dialog.
     //  or a value passed via MAKEINTRESOURCE
     // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
@@ -605,7 +608,8 @@ namespace Win32xx
     // Possible icons:
     // TD_ERROR_ICON        A stop-sign icon appears in the task dialog.
     // TD_WARNING_ICON      An exclamation-point icon appears in the task dialog.
-    // TD_INFORMATION_ICON  An icon consisting of a lowercase letter i in a circle appears in the task dialog.
+    // TD_INFORMATION_ICON  An icon consisting of a lowercase letter i in a
+    //                      circle appears in the task dialog.
     // TD_SHIELD_ICON       A shield icon appears in the task dialog.
     // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
     inline void CTaskDialog::SetMainIcon(LPCWSTR mainIcon)

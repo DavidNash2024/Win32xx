@@ -1107,7 +1107,9 @@ namespace Win32xx
     inline UINT CListBox::ItemFromPoint(CPoint pt, BOOL& isOutside) const
     {
         assert(IsWindow());
-        DWORD result = static_cast<DWORD>(SendMessage(LB_ITEMFROMPOINT, 0, MAKELPARAM(pt.x, pt.y)));
+        DWORD result = static_cast<DWORD>(SendMessage(LB_ITEMFROMPOINT, 0,
+            MAKELPARAM(pt.x, pt.y)));
+
         isOutside = !!HIWORD(result);
         return LOWORD(result);
     }

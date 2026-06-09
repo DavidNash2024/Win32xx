@@ -104,8 +104,10 @@ namespace Win32xx
         virtual void DDV_MaxChars(const CString& value, int count) const;
         virtual void DDV_MinMaxByte(BYTE value, BYTE min, BYTE max) const;
         virtual void DDV_MinMaxDateTime(SYSTEMTIME, SYSTEMTIME, SYSTEMTIME) const;
-        virtual void DDV_MinMaxDouble(double value, double min, double max, int precision = DBL_DIG) const;
-        virtual void DDV_MinMaxFloat(float value, float min, float max, int precision = FLT_DIG) const;
+        virtual void DDV_MinMaxDouble(double value, double min, double max,
+            int precision = DBL_DIG) const;
+        virtual void DDV_MinMaxFloat(float value, float min, float max,
+            int precision = FLT_DIG) const;
         virtual void DDV_MinMaxInt(int value, int min, int max) const;
         virtual void DDV_MinMaxLong(long value, long min, long max) const;
         virtual void DDV_MinMaxMonth(SYSTEMTIME, SYSTEMTIME, SYSTEMTIME) const;
@@ -682,7 +684,8 @@ namespace Win32xx
             if (index == LB_ERR)
             {
                 // The value string was not found.
-                CString str = CString(_T("*** WARNING: listbox item was not found:  ")) + value + _T(". ***\n");
+                CString str = CString(_T("*** WARNING: listbox item was not found:  ")) +
+                    value + _T(". ***\n");
                 TRACE(str);
             }
         }
@@ -716,7 +719,8 @@ namespace Win32xx
             if (index < 0)
             {
                 // No match found.
-                CString str = (_T("Warning: listbox item was not found:  ")) + value + _T( "\n");
+                CString str = (_T("Warning: listbox item was not found:  ")) +
+                    value + _T( "\n");
                 TRACE(str);
             }
             else
@@ -786,7 +790,9 @@ namespace Win32xx
         assert(firstInGroup);
 
         // Assure the button is a radio button.
-        bool isRadioButton = (::GetWindowLongPtr(control, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON)) != 0;
+        bool isRadioButton = (::GetWindowLongPtr(control, GWL_STYLE) &
+            (BS_RADIOBUTTON | BS_AUTORADIOBUTTON)) != 0;
+
         assert(isRadioButton);
 
         // Preset the returned value to empty in case no button is set.
@@ -827,7 +833,9 @@ namespace Win32xx
             control = ::GetWindow(control, GW_HWNDNEXT);
             if (control)
             {
-                isRadioButton = (::GetWindowLongPtr(control, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON)) != 0;
+                isRadioButton = (::GetWindowLongPtr(control, GWL_STYLE) &
+                   (BS_RADIOBUTTON | BS_AUTORADIOBUTTON)) != 0;
+
                 firstInGroup  = (::GetWindowLongPtr(control, GWL_STYLE) & WS_GROUP) != 0;
             }
         }
@@ -1032,7 +1040,8 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type float with the given precision.
-    inline void CDataExchange::DDX_Text(UINT id, float& value, int precision /* = FLT_DIG */)
+    inline void CDataExchange::DDX_Text(UINT id, float& value,
+        int precision /* = FLT_DIG */)
     {
         HWND control = PrepareEditCtrl(id);
         if (m_retrieveAndValidate)
@@ -1058,7 +1067,8 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type double with the given precision.
-    inline void CDataExchange::DDX_Text(UINT id, double& value, int precision /* = DBL_DIG */)
+    inline void CDataExchange::DDX_Text(UINT id, double& value,
+        int precision /* = DBL_DIG */)
     {
         HWND control = PrepareEditCtrl(id);
         if (m_retrieveAndValidate)

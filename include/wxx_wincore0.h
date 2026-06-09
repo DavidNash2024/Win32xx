@@ -176,19 +176,25 @@ namespace Win32xx
         // These functions aren't virtual, and shouldn't be overridden.
         HDC     BeginPaint(PAINTSTRUCT& ps) const;
         BOOL    BringWindowToTop() const;
-        LRESULT CallWindowProc(WNDPROC pPrevWndFunc, UINT msg, WPARAM wparam, LPARAM lparam) const;
+        LRESULT CallWindowProc(WNDPROC pPrevWndFunc, UINT msg, WPARAM wparam,
+            LPARAM lparam) const;
         BOOL    CheckDlgButton(UINT buttonID, UINT check) const;
-        BOOL    CheckRadioButton(UINT firstButtonID, UINT lastButtonID, UINT checkButtonID) const;
+        BOOL    CheckRadioButton(UINT firstButtonID, UINT lastButtonID,
+            UINT checkButtonID) const;
         CWnd    ChildWindowFromPoint(POINT point) const;
         BOOL    ClientToScreen(POINT& point) const;
         BOOL    ClientToScreen(RECT& rect) const;
         void    Close() const;
         BOOL    CloseWindow() const;
-        HDWP    DeferWindowPos(HDWP winPosInfo, HWND insertAfter, int x, int y, int cx, int cy, UINT flags) const;
-        HDWP    DeferWindowPos(HDWP winPosInfo, HWND insertAfter, RECT rect, UINT flags) const;
+        HDWP    DeferWindowPos(HDWP winPosInfo, HWND insertAfter, int x, int y,
+            int cx, int cy, UINT flags) const;
+        HDWP    DeferWindowPos(HDWP winPosInfo, HWND insertAfter, RECT rect,
+            UINT flags) const;
         LRESULT DefWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) const;
-        int     DlgDirList(LPTSTR pathSpec, UINT listBoxID, UINT staticPathID, UINT fileType) const;
-        int     DlgDirListComboBox(LPTSTR pathSpec, UINT comboBoxID, UINT staticPathID, UINT filetype) const;
+        int     DlgDirList(LPTSTR pathSpec, UINT listBoxID, UINT staticPathID,
+            UINT fileType) const;
+        int     DlgDirListComboBox(LPTSTR pathSpec, UINT comboBoxID,
+            UINT staticPathID, UINT filetype) const;
         BOOL    DlgDirSelectEx(LPTSTR string, int count, UINT listBoxID) const;
         BOOL    DlgDirSelectComboBoxEx(LPTSTR string, int count, UINT comboBoxID) const;
         CFont   DpiScaleFont(const CFont& font, int pointSize) const;
@@ -265,16 +271,20 @@ namespace Win32xx
         BOOL    PostMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;
         BOOL    PostMessage(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) const;
         void    Print(HDC dc, DWORD flags) const;
-        BOOL    RedrawWindow(RECT updateRect, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
-        BOOL    RedrawWindow(HRGN rgn, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
-        BOOL    RedrawWindow(UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+        BOOL    RedrawWindow(RECT updateRect, UINT flags = RDW_INVALIDATE |
+            RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+        BOOL    RedrawWindow(HRGN rgn, UINT flags = RDW_INVALIDATE |
+            RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+        BOOL    RedrawWindow(UINT flags = RDW_INVALIDATE | RDW_UPDATENOW |
+            RDW_ERASE | RDW_ALLCHILDREN) const;
         int     ReleaseDC(HDC dc) const;
         BOOL    ScreenToClient(POINT& point) const;
         BOOL    ScreenToClient(RECT& rect) const;
-        BOOL    ScrollWindow(int xAmount, int yAmount, RECT scrollRect, LPCRECT pClipRect = nullptr) const;
+        BOOL    ScrollWindow(int xAmount, int yAmount, RECT scrollRect,
+            LPCRECT pClipRect = nullptr) const;
         BOOL    ScrollWindow(int xAmount, int yAmount, LPCRECT pClipRect = nullptr) const;
-        int     ScrollWindowEx(int dx, int dy, LPCRECT pScrollRect, LPCRECT pClipRect,
-                               HRGN updateRgn, LPRECT updateRect, UINT flags) const;
+        int     ScrollWindowEx(int dx, int dy, LPCRECT pScrollRect,
+            LPCRECT pClipRect, HRGN updateRgn, LPRECT updateRect, UINT flags) const;
         LRESULT SendDlgItemMessage(UINT dlgItemID, UINT msg, WPARAM wparam, LPARAM lparam) const;
         LRESULT SendMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;
         LRESULT SendMessage(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) const;
@@ -350,7 +360,8 @@ namespace Win32xx
     private:
         CWnd(HWND wnd);                 // Private constructor used internally.
 
-        static LRESULT CALLBACK StaticWindowProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+        static LRESULT CALLBACK StaticWindowProc(HWND wnd, UINT msg,
+            WPARAM wparam, LPARAM lparam);
 
         void    AddToMap();
         void    Cleanup();

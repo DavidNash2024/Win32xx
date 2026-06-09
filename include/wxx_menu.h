@@ -242,7 +242,8 @@ namespace Win32xx
     // Appends a new item to the end of the specified menu bar, drop-down menu,
     // submenu, or shortcut menu.
     // Refer to AppendMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR idOrHandle /*= 0*/, LPCTSTR newItemName /*= nullptr*/)
+    inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR idOrHandle /*= 0*/,
+        LPCTSTR newItemName /*= nullptr*/)
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -520,7 +521,8 @@ namespace Win32xx
 
     // Retrieves information about the specified menu item.
     // Refer to GetMenuItemInfo in the Windows API documentation for more information.
-    inline BOOL CMenu::GetMenuItemInfo(UINT idOrPos, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
+    inline BOOL CMenu::GetMenuItemInfo(UINT idOrPos, MENUITEMINFO& menuItemInfo,
+        BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -578,7 +580,8 @@ namespace Win32xx
 
     // Inserts a new menu item into a menu, moving other items down the menu.
     // Refer to InsertMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR idOrHandle /*= 0*/, LPCTSTR newItemName /*= nullptr*/) const
+    inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR idOrHandle /*= 0*/,
+        LPCTSTR newItemName /*= nullptr*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -599,7 +602,8 @@ namespace Win32xx
 
     // Inserts a new menu item at the specified position in the menu.
     // Refer to InsertMenuItem in the Windows API documentation for more information.
-    inline BOOL CMenu::InsertMenuItem(UINT idOrPos, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
+    inline BOOL CMenu::InsertMenuItem(UINT idOrPos, MENUITEMINFO& menuItemInfo,
+        BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -610,7 +614,8 @@ namespace Win32xx
 
     // Inserts a popup menu item at the specified position in the menu.
     // Refer to InsertMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU popupMenu, LPCTSTR newItemName) const
+    inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU popupMenu,
+        LPCTSTR newItemName) const
     {
         assert(popupMenu);
         assert(m_pData);
@@ -677,7 +682,8 @@ namespace Win32xx
     // Changes an existing menu item. This function is used to specify the
     // content, appearance, and behavior of the menu item.
     // Refer to ModifyMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR idOrHandle /*= 0*/, LPCTSTR newItemName /*= nullptr*/) const
+    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR idOrHandle /*= 0*/,
+        LPCTSTR newItemName /*= nullptr*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -688,12 +694,14 @@ namespace Win32xx
     // Changes an existing menu item. This function is used to specify the
     // content, appearance, and behavior of the menu item.
     // Refer to ModifyMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR idOrHandle, HBITMAP bitmap) const
+    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR idOrHandle,
+        HBITMAP bitmap) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        return ::ModifyMenu(m_pData->menu, pos, flags, idOrHandle, reinterpret_cast<LPCTSTR>(bitmap));
+        return ::ModifyMenu(m_pData->menu, pos, flags, idOrHandle,
+            reinterpret_cast<LPCTSTR>(bitmap));
     }
 
     // Destroys m_pData if this is the only copy of the CMenu.
@@ -739,7 +747,8 @@ namespace Win32xx
 
     // Associates the specified bitmap with a menu item.
     // Refer to SetMenuItemBitmaps in the Windows API documentation for more information.
-    inline BOOL CMenu::SetMenuItemBitmaps(UINT pos, UINT flags, HBITMAP unchecked, HBITMAP checked) const
+    inline BOOL CMenu::SetMenuItemBitmaps(UINT pos, UINT flags,
+        HBITMAP unchecked, HBITMAP checked) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -759,7 +768,8 @@ namespace Win32xx
 
     // Changes information about a menu item.
     // Refer to SetMenuItemInfo in the Windows API documentation for more information.
-    inline BOOL CMenu::SetMenuItemInfo(UINT idOrPos, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
+    inline BOOL CMenu::SetMenuItemInfo(UINT idOrPos, MENUITEMINFO& menuItemInfo,
+       BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -771,7 +781,8 @@ namespace Win32xx
     // Displays a shortcut menu at the specified location and tracks the
     // selection of items on the menu.
     // Refer to TrackPopupMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::TrackPopupMenu(UINT flags, int x, int y, HWND wnd, LPCRECT pRect /*= nullptr*/) const
+    inline BOOL CMenu::TrackPopupMenu(UINT flags, int x, int y, HWND wnd,
+        LPCRECT pRect /*= nullptr*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -782,7 +793,8 @@ namespace Win32xx
     // Displays a shortcut menu at the specified location and tracks the
     // selection of items on the shortcut menu.
     // Refer to TrackPopupMenuEx in the Windows API documentation for more information.
-    inline BOOL CMenu::TrackPopupMenuEx(UINT flags, int x, int y, HWND wnd, LPTPMPARAMS pTPMP) const
+    inline BOOL CMenu::TrackPopupMenuEx(UINT flags, int x, int y, HWND wnd,
+        LPTPMPARAMS pTPMP) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));

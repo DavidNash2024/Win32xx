@@ -344,7 +344,8 @@ namespace Win32xx
     // Definitions for the CRibbonFrameT class template.
     //
 
-    // Constructor for the CRibbonFrameT class template. Sets the ribbon's window to this frame.
+    // Constructor for the CRibbonFrameT class template. Sets the ribbon's
+    // window to this frame.
     template <class T>
     inline CRibbonFrameT<T>::CRibbonFrameT()
     {
@@ -390,7 +391,8 @@ namespace Win32xx
 
     // Responds to execute events on commands bound to the Command handler.
     template <class T>
-    inline STDMETHODIMP CRibbonFrameT<T>::Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*)
+    inline STDMETHODIMP CRibbonFrameT<T>::Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*,
+        const PROPVARIANT*, IUISimplePropertySet*)
     {
         return E_NOTIMPL;
     }
@@ -469,7 +471,8 @@ namespace Win32xx
     // // Called for each Command specified in the Windows Ribbon framework markup
     // when the application window is destroyed.
     template <class T>
-    inline STDMETHODIMP CRibbonFrameT<T>::OnDestroyUICommand(UINT32, __in UI_COMMANDTYPE, __in_opt IUICommandHandler*)
+    inline STDMETHODIMP CRibbonFrameT<T>::OnDestroyUICommand(UINT32, __in UI_COMMANDTYPE,
+        __in_opt IUICommandHandler*)
     {
         return E_NOTIMPL;
     }
@@ -550,7 +553,8 @@ namespace Win32xx
     // Called by the Ribbon framework when a command property (PKEY) needs to
     // be updated.
     template <class T>
-    inline STDMETHODIMP CRibbonFrameT<T>::UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*)
+    inline STDMETHODIMP CRibbonFrameT<T>::UpdateProperty(UINT32, __in REFPROPERTYKEY,
+        __in_opt const PROPVARIANT*, __out PROPVARIANT*)
     {
         return E_NOTIMPL;
     }

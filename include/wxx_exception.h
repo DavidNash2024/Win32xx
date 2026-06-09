@@ -114,7 +114,8 @@ namespace Win32xx
     {
     public:
         explicit CFileException(LPCTSTR filePath, int messageID) noexcept;
-        explicit CFileException(LPCTSTR filePath, LPCTSTR text = nullptr, int messageID = 0) noexcept;
+        explicit CFileException(LPCTSTR filePath, LPCTSTR text = nullptr,
+            int messageID = 0) noexcept;
         CFileException(const CFileException& rhs) noexcept;
         CFileException& operator=(const CFileException& rhs)  noexcept;
         virtual ~CFileException() noexcept override;
@@ -214,7 +215,8 @@ namespace Win32xx
 
         // Store error information in m_errorString.
         DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessage(flags, nullptr, m_error, 0, m_errorString, WXX_MAX_STRING_SIZE-1, nullptr);
+        ::FormatMessage(flags, nullptr, m_error, 0, m_errorString,
+            WXX_MAX_STRING_SIZE-1, nullptr);
 
         if (m_error == 0 && IsAppRunning())
             StrCopy(m_errorString, GetApp()->MsgNoError(), WXX_MAX_STRING_SIZE);
@@ -502,7 +504,8 @@ namespace Win32xx
     }
 
     // CResourceException assignment operator.
-    inline CResourceException& CResourceException::operator=(const CResourceException& rhs) noexcept
+    inline CResourceException& CResourceException::operator=(
+        const CResourceException& rhs) noexcept
     {
         CException::operator=(rhs);
         return *this;
@@ -533,8 +536,8 @@ namespace Win32xx
     }
 
     // CUserException constructor.
-    inline CUserException::CUserException(LPCTSTR text /*= nullptr*/, int messageID /*= 0*/) noexcept
-            : CException(text, messageID)
+    inline CUserException::CUserException(LPCTSTR text /*= nullptr*/,
+        int messageID /*= 0*/) noexcept : CException(text, messageID)
     {
         // Display some text in the debugger.
         TRACE(_T("*** CUserException thrown ***\n"));

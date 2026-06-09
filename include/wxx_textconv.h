@@ -72,7 +72,8 @@ namespace Win32xx
     // ------------------------------------------
     // char (or CHAR) character types are ANSI (8 bits).
     // wchar_t (or WCHAR) character types are Unicode (16 bits).
-    // TCHAR characters are Unicode if the _UNICODE macro is defined, otherwise they are ANSI.
+    // TCHAR characters are Unicode if the _UNICODE macro is defined, otherwise
+    //       they are ANSI.
     // BSTR (Basic String) is a type of string used in Visual Basic and COM programming.
     // OLE is the same as WCHAR. It is used in Visual Basic and COM programming.
 
@@ -122,7 +123,9 @@ namespace Win32xx
         CAtoW(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1);
         ~CAtoW();
         operator LPCWSTR() { return m_str? &m_wideArray[0] : nullptr; }
-        operator LPOLESTR() { return m_str? reinterpret_cast<LPOLESTR>(&m_wideArray[0]) : nullptr; }
+        operator LPOLESTR() { return m_str? reinterpret_cast<LPOLESTR>(
+            &m_wideArray[0]) : nullptr; }
+
         LPCWSTR c_str() { return m_str ? &m_wideArray[0] : nullptr; }
 
     private:
@@ -209,7 +212,8 @@ namespace Win32xx
 namespace Win32xx
 {
 
-    inline CAtoW::CAtoW(LPCSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/) : m_str(str)
+    inline CAtoW::CAtoW(LPCSTR str, UINT codePage /*= CP_ACP*/,
+        int charCount /*= -1*/) : m_str(str)
     {
         // Resize the vector and assign null WCHAR to each element.
         int charSize = static_cast<int>(sizeof(CHAR));
@@ -233,16 +237,20 @@ namespace Win32xx
     //
     // or
     //   SetWindowTextA( WtoA(L"Some Text") ); The ANSI version of SetWindowText
-    inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/) : m_str(str)
+    inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/,
+        int charCount /*= -1*/) : m_str(str)
     {
         // Resize the vector and assign null char to each element
         int charSize = static_cast<int>(sizeof(WCHAR));
         int charBytes = (charCount == -1) ? -1 : charSize * charCount;
-        int length = WideCharToMultiByte(codePage, 0, str, charBytes, nullptr, 0, nullptr, nullptr) + 1;
+        int length = WideCharToMultiByte(codePage, 0, str, charBytes, nullptr,
+            0, nullptr, nullptr) + 1;
+
         m_ansiArray.assign(static_cast<size_t>(length), '\0');
 
         // Fill our vector with the converted char array
-        WideCharToMultiByte(codePage, 0, str, charCount, &m_ansiArray[0], length, nullptr, nullptr);
+        WideCharToMultiByte(codePage, 0, str, charCount, &m_ansiArray[0],
+            length, nullptr, nullptr);
     }
 
     inline CWtoA::~CWtoA()
@@ -251,11 +259,13 @@ namespace Win32xx
         std::fill(m_ansiArray.begin(), m_ansiArray.end(), '\0');
     }
 
-    inline CWtoW::CWtoW(LPCWSTR str, UINT /*codePage = CP_ACP*/, int /*charCount = -1*/) : m_str(str)
+    inline CWtoW::CWtoW(LPCWSTR str, UINT /*codePage = CP_ACP*/,
+        int /*charCount = -1*/) : m_str(str)
     {
     }
 
-    inline CAtoA::CAtoA(LPCSTR str, UINT /*codePage = CP_ACP*/, int /*charCount = -1*/) : m_str(str)
+    inline CAtoA::CAtoA(LPCSTR str, UINT /*codePage = CP_ACP*/,
+        int /*charCount = -1*/) : m_str(str)
     {
     }
 

@@ -97,8 +97,8 @@ namespace Win32xx
     {
     public:
         // Constructor
-        CPrintDialogEx(DWORD flags = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS
-                                   | PD_NOSELECTION | PD_NOCURRENTPAGE);
+        CPrintDialogEx(DWORD flags = PD_ALLPAGES | PD_USEDEVMODECOPIES |
+            PD_NOPAGENUMS | PD_NOSELECTION | PD_NOCURRENTPAGE);
 
         // Destructor
         virtual ~CPrintDialogEx() override = default;
@@ -422,7 +422,8 @@ namespace Win32xx
         if (GetApp()->GetHDevNames().Get() == nullptr)
             GetApp()->UpdateDefaultPrinter();
 
-        if ((GetApp()->GetHDevNames().Get() != nullptr) && (GetApp()->GetHDevMode().Get() != 0))
+        if ((GetApp()->GetHDevNames().Get() != nullptr) &&
+            (GetApp()->GetHDevMode().Get() != 0))
         {
             dc.CreateDC(GetDriverName(), GetDeviceName(),
                 GetPortName(), GetDevMode());
@@ -434,7 +435,8 @@ namespace Win32xx
         return dc;
     }
 
-    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::GetSite(REFIID riid, void** ppvSite)
+    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::GetSite(REFIID riid,
+        void** ppvSite)
     {
         if (riid == IID_IPrintDialogServices)
         {
@@ -446,8 +448,8 @@ namespace Win32xx
     }
 
     // Passes messages on to the DialogProc for processing.
-    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::HandleMessage(HWND wnd, UINT msg, WPARAM wparam,
-                                                      LPARAM lparam, LRESULT* pResult)
+    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::HandleMessage(HWND wnd,
+        UINT msg, WPARAM wparam, LPARAM lparam, LRESULT* pResult)
     {
         if (GetHwnd() == nullptr)
             Attach(wnd);
@@ -487,7 +489,8 @@ namespace Win32xx
     }
 
     // Returns a pointer to the requested object.
-    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::QueryInterface(REFIID riid, void** ppvObject)
+    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::QueryInterface(REFIID riid,
+        void** ppvObject)
     {
         if (ppvObject == nullptr)
             return E_POINTER;

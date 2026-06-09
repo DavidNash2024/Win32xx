@@ -92,7 +92,7 @@ namespace Win32xx
 
         // Virtual functions
         virtual void AttachItem(UINT id, CWnd& wnd);
-        virtual HWND Create(HWND parent = nullptr)  override { return DoModeless(parent); }
+        virtual HWND Create(HWND parent = nullptr)  override;
         virtual INT_PTR DoModal(HWND parent = nullptr);
         virtual HWND DoModeless(HWND parent = nullptr);
 
@@ -128,8 +128,10 @@ namespace Win32xx
         CDialog(const CDialog&) = delete;
         CDialog& operator=(const CDialog&) = delete;
 
-        static INT_PTR CALLBACK StaticDialogProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-        static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
+        static INT_PTR CALLBACK StaticDialogProc(HWND wnd, UINT msg,
+            WPARAM wparam, LPARAM lparam);
+        static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam,
+            LPARAM lparam);
 
         // State functions
         BOOL IsModal() const { return m_isModal; }
@@ -194,7 +196,9 @@ namespace Win32xx
 
         struct ResizeData
         {
-            ResizeData() : corner(topleft), isFixedWidth(false), isFixedHeight(false), wnd(0) {}
+            ResizeData() : corner(topleft), isFixedWidth(false),
+                isFixedHeight(false), wnd(0) {}
+
             CRect childRect;
             Alignment corner;
             bool isFixedWidth;
@@ -289,8 +293,8 @@ namespace Win32xx
         wnd.AttachDlgItem(id, *this);
     }
 
-    // The dialog's message procedure. Override this function in your class derived
-    // from CDialog if you wish to handle messages.
+    // The dialog's message procedure. Override this function in your class
+    // derived from CDialog if you wish to handle messages.
     inline INT_PTR CDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // A typical function might look like this:
@@ -449,6 +453,14 @@ namespace Win32xx
 
     } // INT_PTR CALLBACK CDialog::DialogProc(...)
 
+    // Creates a modeless dialog.
+    // Refer to CreateDialog and CreateDialogIndirect in the Windows API
+    // documentation for more information.
+    inline HWND CDialog::Create(HWND parent /* = nullptr */)
+    {
+        return DoModeless(parent);
+    }
+
     // Creates a modal dialog. A modal dialog box must be closed by the user
     // before the application continues.
     // Refer to DialogBox and DialogBoxIndirect in the Windows API documentation
@@ -475,7 +487,10 @@ namespace Win32xx
         // Create a modal dialog.
         HINSTANCE instance = GetApp()->GetInstanceHandle();
         if (m_pDlgTemplate != nullptr)
-            result = ::DialogBoxIndirect(instance, m_pDlgTemplate, parent, CDialog::StaticDialogProc);
+        {
+            result = ::DialogBoxIndirect(instance, m_pDlgTemplate, parent,
+                CDialog::StaticDialogProc);
+        }
         else
         {
             if (::FindResource(GetApp()->GetResourceHandle(), m_resourceName, RT_DIALOG))
@@ -499,7 +514,8 @@ namespace Win32xx
     }
 
     // Creates a modeless dialog.
-    // Refer to CreateDialog and CreateDialogIndirect in the Windows API documentation for more information.
+    // Refer to CreateDialog and CreateDialogIndirect in the Windows API
+    // documentation for more information.
     inline HWND CDialog::DoModeless(HWND parent /* = nullptr*/)
     {
         assert(m_pDlgTemplate || m_resourceName);  // Dialog layout must be defined.
@@ -518,13 +534,17 @@ namespace Win32xx
 
         // Create the modeless dialog.
         if (m_pDlgTemplate != nullptr)
-            wnd = ::CreateDialogIndirect(instance, m_pDlgTemplate, parent, CDialog::StaticDialogProc);
+        {
+            wnd = ::CreateDialogIndirect(instance, m_pDlgTemplate, parent,
+                CDialog::StaticDialogProc);
+        }
         else
         {
             if (::FindResource(GetApp()->GetResourceHandle(), m_resourceName, RT_DIALOG))
                 instance = GetApp()->GetResourceHandle();
 
-            wnd = ::CreateDialog(instance, m_resourceName, parent, CDialog::StaticDialogProc);
+            wnd = ::CreateDialog(instance, m_resourceName, parent,
+                CDialog::StaticDialogProc);
         }
 
         // Tidy up.
@@ -680,7 +700,8 @@ namespace Win32xx
     }
 
     // This callback function passes messages to DialogProc
-    inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND wnd, UINT msg,
+        WPARAM wparam, LPARAM lparam)
     {
         // Find the CWnd pointer mapped to this HWND.
         CDialog* pDialog = static_cast<CDialog*>(GetCWndPtr(wnd));
@@ -715,7 +736,8 @@ namespace Win32xx
     } // INT_PTR CALLBACK CDialog::StaticDialogProc(...)
 
     // Used only by modal dialogs for idle processing and PreTranslateMessage.
-    inline LRESULT CALLBACK CDialog::StaticMsgHook(int code, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CALLBACK CDialog::StaticMsgHook(int code, WPARAM wparam,
+        LPARAM lparam)
     {
         MSG msg = {};
         LONG count = 0;
@@ -829,7 +851,8 @@ namespace Win32xx
         return TRUE;
     }
 
-    // Performs the resizing and scrolling. Call this function from within the window's DialogProc.
+    // Performs the resizing and scrolling. Call this function from within
+    // the window's DialogProc.
     inline void CResizer::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
@@ -1059,8 +1082,10 @@ namespace Win32xx
         VERIFY(::GetClientRect(m_parent, &currentRect));
 
         // Adjust the scrolling if required
-        m_xScrollPos = std::min(m_xScrollPos, std::max(0, m_minRect.Width()  - currentRect.Width() ) );
-        m_yScrollPos = std::min(m_yScrollPos, std::max(0, m_minRect.Height() - currentRect.Height()) );
+        m_xScrollPos = std::min(m_xScrollPos, std::max(0, m_minRect.Width()  -
+            currentRect.Width()));
+        m_yScrollPos = std::min(m_yScrollPos, std::max(0, m_minRect.Height() -
+            currentRect.Height()));
         SCROLLINFO si = {};
         si.cbSize = sizeof(si);
         si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
@@ -1077,12 +1102,12 @@ namespace Win32xx
         // we get it again.
         VERIFY(::GetClientRect(m_parent, &currentRect));
 
-        currentRect.right  = std::max(currentRect.Width(),  m_minRect.Width() );
-        currentRect.bottom = std::max(currentRect.Height(), m_minRect.Height() );
+        currentRect.right  = std::max(currentRect.Width(),  m_minRect.Width());
+        currentRect.bottom = std::max(currentRect.Height(), m_minRect.Height());
         if (!m_maxRect.IsRectEmpty())
         {
-            currentRect.right  = std::min(currentRect.Width(),  m_maxRect.Width() );
-            currentRect.bottom = std::min(currentRect.Height(), m_maxRect.Height() );
+            currentRect.right  = std::min(currentRect.Width(),  m_maxRect.Width());
+            currentRect.bottom = std::min(currentRect.Height(), m_maxRect.Height());
         }
 
         int dpi = GetWindowDpi(m_parent);
@@ -1125,16 +1150,21 @@ namespace Win32xx
                     m_initRect.Width() + currentRect.Width();
                 height = rd.isFixedHeight? childRect.Height() : childRect.Height() -
                     m_initRect.Height() + currentRect.Height();
+
                 left   = childRect.left;
-                top    = childRect.bottom - height - m_initRect.Height() + currentRect.Height();
+                top    = childRect.bottom - height - m_initRect.Height() +
+                    currentRect.Height();
                 break;
             case bottomright:  // Positions bottom right.
                 width  = rd.isFixedWidth? childRect.Width()  : childRect.Width()  -
                     m_initRect.Width() + currentRect.Width();
                 height = rd.isFixedHeight? childRect.Height() : childRect.Height() -
                     m_initRect.Height() + currentRect.Height();
-                left   = childRect.right   - width - m_initRect.Width() + currentRect.Width();
-                top    = childRect.bottom  - height - m_initRect.Height() + currentRect.Height();
+
+                left   = childRect.right   - width - m_initRect.Width() +
+                    currentRect.Width();
+                top    = childRect.bottom  - height - m_initRect.Height() +
+                    currentRect.Height();
                 break;
             case center:       // Positions proportionally.
                 width  = rd.isFixedWidth ? childRect.Width() : (childRect.Width() *
@@ -1149,6 +1179,7 @@ namespace Win32xx
                     m_initRect.Width() + currentRect.Width();
                 height = rd.isFixedHeight ? childRect.Height() : (childRect.Height() *
                     currentRect.Height()) / m_initRect.Height();
+
                 left   = childRect.left;
                 top    = (childRect.top * currentRect.Height()) / m_initRect.Height();
                 break;
@@ -1157,6 +1188,7 @@ namespace Win32xx
                     m_initRect.Width() + currentRect.Width();
                 height = rd.isFixedHeight ? childRect.Height() : (childRect.Height() *
                     currentRect.Height()) / m_initRect.Height();
+
                 left   = childRect.right - width - m_initRect.Width() + currentRect.Width();
                 top    = (childRect.top * currentRect.Height()) / m_initRect.Height();
                 break;
@@ -1165,6 +1197,7 @@ namespace Win32xx
                     currentRect.Width()) /  m_initRect.Width();
                 height = rd.isFixedHeight ? childRect.Height() : childRect.Height() -
                     m_initRect.Height() + currentRect.Height();
+
                 left   = (childRect.left * currentRect.Width()) / m_initRect.Width();
                 top    = childRect.top;
                 break;
@@ -1173,6 +1206,7 @@ namespace Win32xx
                     currentRect.Width()) / m_initRect.Width();
                 height = rd.isFixedHeight ? childRect.Height() : childRect.Height() -
                     m_initRect.Height() + currentRect.Height();
+
                 left   = (childRect.left * currentRect.Width()) / m_initRect.Width();
                 top    = childRect.bottom - height - m_initRect.Height() + currentRect.Height();
                 break;
@@ -1181,8 +1215,8 @@ namespace Win32xx
             }
 
             // Determine the position of the child window.
-            CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos,
-                top + height - m_yScrollPos);
+            CRect rc(left - m_xScrollPos, top - m_yScrollPos,
+                left + width - m_xScrollPos, top + height - m_yScrollPos);
 
             // Note: The tab order of the dialog's controls is determined by the order
             //       they are specified in the resource script (resource.rc).
