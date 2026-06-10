@@ -423,13 +423,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_NAVIGATIONSTARTED:   return OnNavigationStarted(msg, wparam, lparam);
         case UWM_SOURCECHANGED:       return OnSourceChanged(msg, wparam, lparam);
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
+        }
 
-        } // switch msg
-
-
-        // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

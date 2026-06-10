@@ -109,10 +109,8 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
         case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

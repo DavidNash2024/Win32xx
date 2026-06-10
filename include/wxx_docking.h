@@ -807,11 +807,8 @@ namespace Win32xx
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
 
-        default: break;
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 
@@ -1385,10 +1382,8 @@ namespace Win32xx
         }
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
 
-        default: break;
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 
@@ -4548,10 +4543,8 @@ namespace Win32xx
         case UWM_DOCKDESTROYED:         return OnDockDestroyed(msg, wparam, lparam);
         case UWM_GETCDOCKER:            return reinterpret_cast<LRESULT>(this);
 
-        default: break;
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 
@@ -5608,11 +5601,10 @@ namespace Win32xx
             RecalcLayout();
             break;
 
-        default: break;
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
 
-        // pass unhandled messages on for default processing.
-        return CWnd::WndProcDefault(msg, wparam, lparam);
+        return 0;
     }
 
 } // namespace Win32xx

@@ -79,10 +79,8 @@ LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             RedrawWindow();
             return 0;
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

@@ -333,10 +333,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_TIMER:    OnTimer();     break;
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

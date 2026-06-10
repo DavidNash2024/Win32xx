@@ -98,10 +98,8 @@ LRESULT CViewMax::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             Invalidate();
             return 0;
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

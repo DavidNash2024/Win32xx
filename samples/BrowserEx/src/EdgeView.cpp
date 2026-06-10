@@ -188,10 +188,8 @@ LRESULT CEdgeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_SIZE:       return OnSize(msg, wparam, lparam);
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

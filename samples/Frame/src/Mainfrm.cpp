@@ -333,9 +333,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWCLOSE:    return OnPreviewClose();
         case UWM_PREVIEWPRINT:    return OnPreviewPrint();
         case UWM_PREVIEWSETUP:    return OnPreviewSetup();
-        }
 
-        return WndProcDefault(msg, wparam, lparam);
+        default: return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     // Catch all unhandled CException types.

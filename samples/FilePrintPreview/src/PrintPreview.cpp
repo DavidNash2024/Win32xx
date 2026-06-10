@@ -69,7 +69,6 @@ INT_PTR CPrintPreviewEx::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
                 default: break;
             }
-            break;
         }
 
         default: break;

@@ -239,11 +239,8 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_DROPFILES:      return OnDropFiles(msg, wparam, lparam);
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

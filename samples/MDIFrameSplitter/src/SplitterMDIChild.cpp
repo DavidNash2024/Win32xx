@@ -109,11 +109,9 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
 
-        default: break;
-        }
-
         // Do default processing for other messages.
-        return WndProcDefault(msg, wparam, lparam);
+        default: return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     // Catch all unhandled CException types.

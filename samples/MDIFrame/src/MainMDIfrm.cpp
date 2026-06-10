@@ -231,7 +231,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     //  Add case statements for each messages to be handled here.
     //  }
 
-        //  Pass unhandled messages on for default processing.
+        // Pass unhandled messages on for default processing.
         return WndProcDefault(msg, wparam, lparam);
     }
 

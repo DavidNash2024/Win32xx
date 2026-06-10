@@ -630,11 +630,9 @@ namespace Win32xx
         case UWM_TBRESIZE:  return OnToolBarResize(msg, wparam, lparam);
         case UWM_TBWINPOSCHANGING:  return OnTBWinPosChanging(msg, wparam, lparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 } // namespace Win32xx

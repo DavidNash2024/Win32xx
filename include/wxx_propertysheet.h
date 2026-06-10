@@ -915,10 +915,9 @@ namespace Win32xx
         {
         case DM_SETDEFID:  return OnSetDefID(wparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-        // Pass unhandled messages on for default processing.
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 }
 

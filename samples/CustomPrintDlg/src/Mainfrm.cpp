@@ -965,6 +965,7 @@ void CMainFrame::SetStatusIndicators()
         case ANSI:        m_encoding = LoadString(IDM_ENC_ANSI);   break;
         case UTF8:        m_encoding = LoadString(IDM_ENC_UTF8);   break;
         case UTF16LE:     m_encoding = LoadString(IDM_ENC_UTF16);  break;
+
         default:          m_encoding = LoadString(IDM_ENC_ANSI);   break;
         }
 
@@ -1097,10 +1098,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWPRINT:      return OnPreviewPrint();
         case UWM_PREVIEWSETUP:      return OnPreviewSetup();
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

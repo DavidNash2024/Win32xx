@@ -1642,11 +1642,9 @@ namespace Win32xx
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
         case WM_DPICHANGED_AFTERPARENT: return OnDpiChangedAfterParent(msg, wparam, lparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
     // Wrappers for Win32 Macros.
@@ -2304,10 +2302,8 @@ namespace Win32xx
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case UWM_GETCTABBEDMDI:     return reinterpret_cast<LRESULT>(this);
 
-        default: break;
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 } // namespace Win32xx

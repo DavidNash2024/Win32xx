@@ -373,16 +373,11 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_SETDEFAULTOPTIONS:
-        {
-            SetDefaultPrintOptions();
-            break;
-        }
+        case UWM_SETDEFAULTOPTIONS:  SetDefaultPrintOptions();  break;
 
-        default: break;
+        // Do default message handing for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

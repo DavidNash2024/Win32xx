@@ -125,9 +125,7 @@ LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case WM_SIZE:           return OnSize(msg, wparam, lparam);
 
-    default: break;
+    // Do default processing for other messages.
+    default:return WndProcDefault(msg, wparam, lparam);
     }
-
-    // Pass unhandled messages on for default processing.
-    return WndProcDefault(msg, wparam, lparam);
 }

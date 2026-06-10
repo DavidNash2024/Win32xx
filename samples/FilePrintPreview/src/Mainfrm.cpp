@@ -86,6 +86,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
         case IDM_WRAP_WINDOW:
         case IDM_WRAP_PRINTER:
             return OnOptionsWrap((WordWrapType)(id - IDM_WRAP_NONE));
+
+        default: break;
     }
     return FALSE;
 }
@@ -390,8 +392,10 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
             ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
             HDROP dropInfo = (HDROP) ENDrop->hDrop;
             OnDropFiles(dropInfo);
+            return TRUE;
         }
-        return TRUE;
+
+        default: break;
     }
     return CFrame::OnNotify(wparam, lparam);
 }
@@ -526,11 +530,13 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
                     case SC_CLOSE:
                     m_printPreview.Destroy();
                     break;  // let default process this further
+
+                    default: break;
                 }
             }
-        }
 
-        return WndProcDefault(msg, wparam, lparam);
+            default: return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     // Catch all CException types.

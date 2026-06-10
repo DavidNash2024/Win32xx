@@ -48,13 +48,11 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SIZE:
             // Force the window to be repainted.
             Invalidate();
-            break;      // Also do default processing
+            break;      // Also do default processing.
 
-        default: break;
+        // Do default processing for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // Do default processing for other messages
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

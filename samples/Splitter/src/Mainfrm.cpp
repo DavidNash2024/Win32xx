@@ -265,11 +265,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

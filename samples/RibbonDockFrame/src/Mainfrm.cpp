@@ -503,11 +503,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_SENDPOINT:         return OnSendPoint(wparam);
         case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
 
-        default: break;
+        // Use the default message handling for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // Use the default message handling for remaining messages.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

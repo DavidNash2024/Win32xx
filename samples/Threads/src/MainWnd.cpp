@@ -184,10 +184,8 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_DPICHANGED:      return OnDpiChanged(msg, wparam, lparam);
         case WM_SIZE:            return OnSize();
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

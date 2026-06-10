@@ -276,11 +276,9 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // Use the default message handling for remaining messages.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

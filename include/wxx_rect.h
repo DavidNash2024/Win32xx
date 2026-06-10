@@ -67,7 +67,7 @@ namespace Win32xx
         void Offset(int dx, int dy);
         void Offset(POINT pt);
         void Offset(SIZE sz);
-        void SetPoint(int X, int Y);
+        void SetPoint(int px, int py);
 
         // Operators
         operator LPPOINT();
@@ -173,7 +173,7 @@ namespace Win32xx
     {
     public:
         CSize();
-        CSize(int x, int y);
+        CSize(int px, int py);
         CSize(SIZE sz);
         CSize(POINT pt);
         CSize(DWORD dw);
@@ -206,34 +206,45 @@ namespace Win32xx
     //
 
     // CPoint constructor.
-    inline CPoint::CPoint() : POINT(0, 0)
+    inline CPoint::CPoint()
     {
+        x = 0;
+        y = 0;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(int x, int y) : POINT(x, y)
+    inline CPoint::CPoint(int px, int py)
     {
+        x = px;
+        y = py;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(POINT pt) : POINT(pt)
+    inline CPoint::CPoint(POINT pt)
     {
+        x = pt.x;
+        y = pt.y;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(POINTS pts) : POINT(pts.x, pts.y)
+    inline CPoint::CPoint(POINTS pts)
     {
+        x = pts.x;
+        y = pts.y;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(SIZE sz) : POINT(sz.cx, sz.cy)
+    inline CPoint::CPoint(SIZE sz)
     {
+        x = sz.cx;
+        y = sz.cy;
     }
 
     // CPoint constructor.
-    inline CPoint::CPoint(LPARAM dwPos) :
-        POINT(GET_X_LPARAM(dwPos), GET_Y_LPARAM(dwPos))
+    inline CPoint::CPoint(LPARAM dwPos)
     {
+        x = GET_X_LPARAM(dwPos);
+        y = GET_Y_LPARAM(dwPos);
     }
 
     // Moves the CPoint by the specified offsets.
@@ -360,30 +371,48 @@ namespace Win32xx
     //
 
     // CRect constructor.
-    inline CRect::CRect() : RECT(0, 0, 0, 0)
+    inline CRect::CRect()
     {
+        left = 0;
+        top = 0;
+        right = 0;
+        bottom = 0;
     }
 
     // CRect constructor.
-    inline CRect::CRect(int l, int t, int r, int b) : RECT(l, t, r, b)
+    inline CRect::CRect(int l, int t, int r, int b)
     {
+        left = l;
+        top = t;
+        right = r;
+        bottom = b;
     }
 
     // CRect constructor.
-    inline CRect::CRect(RECT rc) : RECT(rc)
+    inline CRect::CRect(RECT rc)
     {
+        left = rc.left;
+        top = rc.top;
+        right = rc.right;
+        bottom = rc.bottom;
     }
 
     // CRect constructor.
-    inline CRect::CRect(POINT pt, SIZE sz) :
-        RECT(pt.x, pt.y, pt.x + sz.cx, pt.y + sz.cy)
+    inline CRect::CRect(POINT pt, SIZE sz)
     {
+        left = pt.x;
+        top = pt.y;
+        right = pt.x + sz.cx;
+        bottom = pt.y + sz.cy;
     }
 
     // CRect constructor.
-    inline CRect::CRect(POINT topLeft, POINT bottomRight) :
-        RECT(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
+    inline CRect::CRect(POINT topLeft, POINT bottomRight)
     {
+        left = topLeft.x;
+        top = topLeft.y;
+        right = bottomRight.x;
+        bottom = bottomRight.y;
     }
 
     // Copies the coordinates of the source rectangle to the CRect.
@@ -767,28 +796,38 @@ namespace Win32xx
     //
 
     // CSize constructor.
-    inline CSize::CSize() : SIZE(0, 0)
+    inline CSize::CSize()
     {
+        cx = 0;
+        cy = 0;
     }
 
     // CSize constructor.
-    inline CSize::CSize(int x, int y) : SIZE(x, y)
+    inline CSize::CSize(int x, int y)
     {
+        cx = x;
+        cy = y;
     }
 
     // CSize constructor.
-    inline CSize::CSize(SIZE sz) : SIZE(sz)
+    inline CSize::CSize(SIZE sz)
     {
+        cx = sz.cx;
+        cy = sz.cy;
     }
 
     // CSize constructor.
-    inline CSize::CSize(POINT pt) : SIZE(pt.x, pt.y)
+    inline CSize::CSize(POINT pt)
     {
+        cx = pt.x;
+        cy = pt.y;
     }
 
     // CSize constructor.
-    inline CSize::CSize(DWORD dw) : SIZE((short)LOWORD(dw), (short)HIWORD(dw))
+    inline CSize::CSize(DWORD dw)
     {
+        cx = LOWORD(dw);
+        cy = HIWORD(dw);
     }
 
     // Sets the coordinates of the CSize.

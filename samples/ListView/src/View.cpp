@@ -394,9 +394,9 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case UWM_UPDATETEXT:  return OnUpdateText();
-        }
 
-        return WndProcDefault(msg, wparam, lparam);
+        default: return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     // Catch all unhandled CException types.

@@ -193,10 +193,8 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SIZE:           return OnSize();
         case WM_WINDOWCREATED:  return OnWindowCreated();
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

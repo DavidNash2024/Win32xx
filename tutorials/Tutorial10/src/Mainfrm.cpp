@@ -398,10 +398,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case UWM_PREVIEWPRINT:    return OnPreviewPrint();
     case UWM_PREVIEWSETUP:    return OnPreviewSetup();
 
-    default: break;
-    }
-
     // Use the default message handling for remaining messages.
-    return WndProcDefault(msg, wparam, lparam);
+    default: return WndProcDefault(msg, wparam, lparam);
+    }
 }
 

@@ -417,11 +417,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_HELP:           return 0;                                          // Suppress default handling on F1 and SHIFT F1
         case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);         // Handle left mouse click
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);                       // Pass unhandled messages on for default processing.
         }
-
-        // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

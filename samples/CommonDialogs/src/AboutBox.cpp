@@ -4,7 +4,7 @@
 //
 
 
-#include "Stdafx.h"
+#include "stdafx.h"
 #include "AboutBox.h"
 #include "resource.h"
 

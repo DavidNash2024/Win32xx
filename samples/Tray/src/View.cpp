@@ -231,11 +231,9 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SYSCOMMAND: return OnSysCommand(msg, wparam, lparam);
         case MSG_TRAYICON:  return OnTrayIcon(msg, wparam, lparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

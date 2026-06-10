@@ -72,11 +72,9 @@ LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
         case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
-        default:
-            break;
-        }
 
-        return WndProcDefault(msg, wparam, lparam);
+        default: return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     catch (const CException& e)

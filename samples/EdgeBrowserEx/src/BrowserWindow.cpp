@@ -868,6 +868,7 @@ LRESULT CBrowserWindow::WndProc(UINT message, WPARAM wparam, LPARAM lparam)
         case WM_GETMINMAXINFO:  return OnGetMinMaxInfo(message, wparam, lparam);
         case WM_DPICHANGED:     return OnDPIChanged(message, wparam, lparam);
         case WM_SIZE:           return OnSize(message, wparam, lparam);
+
         default:                return WndProcDefault(message, wparam, lparam);
         }
     }

@@ -567,11 +567,9 @@ namespace Win32xx
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 }
 

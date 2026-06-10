@@ -1777,11 +1777,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_ONSELECTLISTITEM:      return OnSelectListItem((const MovieInfo*)wparam);
         case UWM_ONRCLICKLISTITEM:      return OnRClickListItem();
 
-        default: break;
+        // Use default processing for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

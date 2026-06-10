@@ -774,11 +774,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_ADDCOMBOBAND:     return AddComboBand();
         case WM_GETMINMAXINFO:     return OnGetMinMaxInfo(msg, wparam, lparam);
 
-        default: break;
+        // Do default processing for other messages.
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        //  pass unhandled messages on for default processing
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

@@ -150,11 +150,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_TIMER:  return OnTimer(msg, wparam, lparam);
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        // pass unhandled messages on for default processing
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

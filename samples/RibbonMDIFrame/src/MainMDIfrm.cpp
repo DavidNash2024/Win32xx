@@ -375,11 +375,9 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             return 0;
         }
 
-        default: break;
-        }
-
         // Use the default message handling for remaining messages.
-        return WndProcDefault(msg, wparam, lparam);
+        default: return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     // Catch all unhandled CException types.

@@ -239,6 +239,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
+
+    default: break;
     }
 
     return FALSE;
@@ -682,9 +684,11 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
     case UWM_PREVIEWPRINT:      OnPreviewPrint();   break;
-    case UWM_PREVIEWSETUP:        OnPreviewSetup();   break;
+    case UWM_PREVIEWSETUP:      OnPreviewSetup();   break;
+
+    default: return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return 0;
 }
 

@@ -118,11 +118,9 @@ LRESULT CMainView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_DROPFILES:   return OnDropFiles(msg, wparam, lparam);
         case WM_SIZE:        return OnSize(msg, wparam, lparam);
 
-        default: break;
-        }
-
         // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
+        default: return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     // Catch all unhandled CException types.

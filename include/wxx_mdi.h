@@ -835,16 +835,14 @@ namespace Win32xx
                     LPBOOL pIsMDIChildMax = reinterpret_cast<LPBOOL>(lparam);
                     OnMDIMaximized(*pIsMDIChildMax);
                 }
-                break;
+                return T::WndProcDefault(msg, wparam, lparam);
 
             }
             case UWM_GETCMDIFRAMET:     return reinterpret_cast<LRESULT>(this);
             case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
 
-            default: break;
+            default: return T::WndProcDefault(msg, wparam, lparam);
         }
-
-        return T::WndProcDefault(msg, wparam, lparam);
     }
 
 
@@ -923,10 +921,8 @@ namespace Win32xx
         case WM_MDIDESTROY:     return OnMDIDestroy(msg, wparam, lparam);
         case WM_MDIGETACTIVE:   return OnMDIGetActive(msg, wparam, lparam);
 
-        default: break;
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 
@@ -1171,10 +1167,8 @@ namespace Win32xx
             case WM_MDIACTIVATE:      return OnMDIActivate(msg, wparam, lparam);
             case WM_WINDOWPOSCHANGED: return OnWindowPosChanged(msg, wparam, lparam);
 
-            default: break;
+            default: return CWnd::WndProcDefault(msg, wparam, lparam);
         }
-
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 

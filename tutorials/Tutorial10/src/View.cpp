@@ -252,11 +252,9 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
     case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
 
-    default: break;
-    }
-
     // Use the default message handling for remaining messages.
-    return WndProcDefault(msg, wparam, lparam);
+    default: return WndProcDefault(msg, wparam, lparam);
+    }
 }
 
 

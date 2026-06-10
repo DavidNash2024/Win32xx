@@ -64,10 +64,8 @@ LRESULT CMyEdit::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_KILLFOCUS:  return OnKillFocus();
         case WM_CHAR:       return OnChar(msg, wparam, lparam);
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.

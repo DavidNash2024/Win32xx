@@ -469,10 +469,8 @@ LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             break;
         }
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

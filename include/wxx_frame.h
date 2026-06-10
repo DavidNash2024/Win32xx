@@ -3950,11 +3950,8 @@ namespace Win32xx
         case UWM_DRAWSBBKGND:       return OnDrawSBBkgnd(msg, wparam, lparam);
         case UWM_GETCFRAMET:        return reinterpret_cast<LRESULT>(this);
 
-        default: break;
-
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
         } // switch msg
-
-        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 

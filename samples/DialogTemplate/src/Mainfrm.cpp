@@ -515,10 +515,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWPRINT:         OnPreviewPrint();   break;
         case UWM_PREVIEWSETUP:         OnPreviewSetup();   break;
 
-        default: break;
+        default: return WndProcDefault(msg, wparam, lparam);
         }
-
-        return WndProcDefault(msg, wparam, lparam);
     }
 
     catch (const CException& e)

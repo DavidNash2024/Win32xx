@@ -850,13 +850,13 @@ namespace Win32xx
         switch (msg)
         {
         case WM_SIZE:
+        {
             OnSize(LOWORD(lparam), HIWORD(lparam));
-            break;
-
-        default: break;
+            return CWnd::WndProcDefault(msg, wparam, lparam);
         }
 
-        return CWnd::WndProcDefault(msg, wparam, lparam);
+        default: return CWnd::WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     //////////////////////////////////////////////////
