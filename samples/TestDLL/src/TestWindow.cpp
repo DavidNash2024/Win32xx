@@ -22,10 +22,8 @@ BOOL CTestWindow::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_EXIT:     return OnFileExit();
     case IDM_VIEW_DIALOG:   return OnViewDialog();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate is called automatically during window creation when a

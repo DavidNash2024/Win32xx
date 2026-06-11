@@ -32,10 +32,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_HELP_ABOUT:      return OnHelp();
     case IDM_FILE_EXIT:       return OnFileExit();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called during window creation.

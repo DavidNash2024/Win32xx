@@ -101,10 +101,8 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
             return TRUE;
         }
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called before the dialog is displayed.
@@ -132,19 +130,11 @@ LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
     LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
     switch (pHeader->code)
     {
-    case DTN_DATETIMECHANGE:
-        // Stop the timer when the DataeTime's time is changed
-        KillTimer(ID_TIMER);
-        break;
-    case NM_KILLFOCUS:
-        // Set timer for 1000 milliseconds
-        SetTimer(ID_TIMER, 1000, 0);
-        break;
+    case DTN_DATETIMECHANGE:   return KillTimer(ID_TIMER);
+    case NM_KILLFOCUS:         return SetTimer(ID_TIMER, 1000, 0);
 
-    default: break;
+    default: return 0;
     }
-
-    return 0;
 }
 
 // Called when the enter key is pressed.

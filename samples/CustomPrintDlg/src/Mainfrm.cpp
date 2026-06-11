@@ -206,10 +206,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_FILE_MRU_FILE4:
     case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate controls the way the frame is created.
@@ -730,10 +728,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
         return TRUE;
     }
 
-    default: break;
+    default: return CFrame::OnNotify(wparam, lparam);
     }
-
-    return CFrame::OnNotify(wparam, lparam);
 }
 
 // Select a font for the document.

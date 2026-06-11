@@ -67,10 +67,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_TOOLBAR_BIGICONS:  return OnTBBigIcons();
     case IDM_HELP_ABOUT:        return OnHelp();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate controls the way the frame is created.
@@ -189,11 +187,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     case TBN_TOOLBARCHANGE: return OnToolBarChange(pNMTB);
     case TBN_RESET:         return OnReset(pNMTB);
 
-    default: break;
+    // Some notifications should return a value when handled.
+    default: return CFrame::OnNotify(wparam, lparam);
     }
-
-    // Some notifications should return a value when handled
-    return CFrame::OnNotify(wparam, lparam);
 }
 
 // Called once for each button during toolbar customization to populate the list

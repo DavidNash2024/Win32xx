@@ -135,9 +135,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         case IDW_FILE_MRU_FILE4:
         case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
 
-        default: break;
+        default: return FALSE;
     }
-    return FALSE;
 }
 
 // This member controls the way the frame is created.
@@ -346,13 +345,10 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     NMHDR* pNMH = reinterpret_cast<LPNMHDR>(lparam);
     switch (pNMH->code)
     {
-        case EN_DROPFILES:
-            DropFiles(lparam);
-            return TRUE;
+        case EN_DROPFILES:  return DropFiles(lparam);
 
-        default: break;
+        default: return CFrame::OnNotify(wparam, lparam);
     }
-    return CFrame::OnNotify(wparam, lparam);
 }
 
 // Display the open file dialog to obtain the path of an existing document

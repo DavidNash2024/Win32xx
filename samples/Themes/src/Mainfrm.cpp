@@ -236,6 +236,16 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UINT id = LOWORD(wparam);
 
+    // Handle WM_COMMAND from ComboboxEx.
+    if (reinterpret_cast<HWND>(lparam) == m_comboBoxEx.GetHwnd())
+    {
+        if (HIWORD(wparam) == CBN_SELCHANGE)   // User made selection from list.
+        {
+            ::SetFocus(0);  // Remove focus from the ComboBoxEx to hide the selection rectangle.
+            return TRUE;
+        }
+    }
+
     switch(id)
     {
     case IDM_FILE_EXIT:      return OnFileExit();
@@ -263,20 +273,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
     case IDM_HELP_ABOUT:     return OnHelp();
 
-    default: break;
+    default: return FALSE;
     }
-
-    // Handle WM_COMMAND from ComboboxEx.
-    if (reinterpret_cast<HWND>(lparam) == m_comboBoxEx.GetHwnd())
-    {
-        if (HIWORD(wparam) == CBN_SELCHANGE)   // User made selection from list.
-        {
-            ::SetFocus(0);  // Remove focus from the ComboBoxEx to hide the selection rectangle.
-            return TRUE;
-        }
-    }
-
-    return FALSE;
 }
 
 // OnCreate controls the way the frame is created.

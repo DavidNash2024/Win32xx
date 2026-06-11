@@ -104,10 +104,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:  return OnFileOpenMRU(wparam, lparam);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate controls the way the frame is created.

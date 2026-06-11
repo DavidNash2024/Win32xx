@@ -100,10 +100,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_RIGHT:     OnRight();      return TRUE;
     case IDM_BOTTOM:    OnBottom();     return TRUE;
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called when the window is created.

@@ -71,9 +71,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         case IDW_VIEW_TOOLBAR:   OnViewToolBar();   return TRUE;
         case IDW_VIEW_STATUSBAR: OnViewStatusBar(); return TRUE;
 
-        default: break;
+        default: return FALSE;
     }
-    return FALSE;
 }
 
 

@@ -106,11 +106,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         case IDC_RADIO_B:
         case IDC_RADIO_C:          return OnRadioButton(id);
 
-        default: break;
+        // Indicate not processed here.
+        default: return FALSE;
     }
-
-    // Indicate not processed here.
-    return FALSE;
 }
 
 // Define the way the frame is created.

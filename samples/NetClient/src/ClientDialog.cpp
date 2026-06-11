@@ -104,10 +104,8 @@ BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM)
         GotoDlgCtrl(m_editSend);
         return TRUE;
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called when the effective dots per inch (dpi) for a window has changed.

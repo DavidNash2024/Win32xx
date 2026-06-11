@@ -128,10 +128,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_HELP_ABOUT:        return OnHelp();
     case IDM_HIDE_SINGLE_TAB:   return OnHideSingleTab();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Reposition the tabs in the containers.

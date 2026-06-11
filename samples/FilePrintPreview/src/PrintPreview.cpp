@@ -211,9 +211,8 @@ BOOL CPrintPreviewEx::OnCommand(WPARAM wparam, LPARAM lparam)
         case IDC_PREVIEW_CLOSE:     return ClosePreview();
         case IDC_PREVIEW_HELP:      return OnPreviewHelp();
 
-        default: break;
+        default: return FALSE;;
     }
-    return FALSE;
 }
 
 // Attach control IDs to the objects they identify, set up the  automatic

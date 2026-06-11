@@ -103,10 +103,8 @@ BOOL CViewDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO2:
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called before the dialog is displayed.

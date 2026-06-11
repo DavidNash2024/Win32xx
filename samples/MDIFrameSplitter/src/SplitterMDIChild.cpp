@@ -195,10 +195,8 @@ BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM)
     case IDM_COLOR_BLUE:    return OnColor(blue);
     case IDM_COLOR_WHITE:   return OnColor(white);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Sets the text color in the simple view.

@@ -68,10 +68,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         return TRUE;
     }
 
-    default: break;
+    default: return FALSE;
     }
-
-  return FALSE;
 }
 
 // OnCreate controls the way the frame is created.

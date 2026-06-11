@@ -546,8 +546,9 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
         || (ctl == BN_SETFOCUS && IDC_RADIO_A <= id && id <= IDC_CHECK_C))
     {
         m_focusID = id;
-        return FALSE;
+        return TRUE;
     }
+
     return FALSE;
 }
 
@@ -742,10 +743,8 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
         return TRUE;
     }
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Toggle the check box control whose ID is(IDC_CHECK_A + check).

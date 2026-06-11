@@ -1224,11 +1224,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
         GetViewList().SetLastColumnWidth();
         return 0;
 
-    default: break;
-    }
-
     // Call the base class function.
-    return CDockFrame::OnNotify(wparam, lparam);
+    default: return CDockFrame::OnNotify(wparam, lparam);
+    }
 }
 
 // Called in response to toolbar input or a context menu on

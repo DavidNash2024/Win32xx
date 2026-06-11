@@ -159,10 +159,8 @@ BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_NEW:      return OnFileNew();
     case IDM_HELP_ABOUT:    return OnHelpAbout();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Demonstrates responding to the container's toolbar.

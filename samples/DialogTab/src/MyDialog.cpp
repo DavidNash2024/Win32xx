@@ -72,10 +72,8 @@ BOOL CButtonDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO2:    // intentionally blank
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called when the button is pressed.

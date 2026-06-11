@@ -39,11 +39,9 @@ BOOL CViewText::OnCommand(WPARAM wparam, LPARAM)
     case IDM_EDIT_REDO:     return OnEditRedo();
     case IDM_EDIT_UNDO:     return OnEditUndo();
 
-    default: break;
+    // return FALSE for unhandled commands.
+    default: return FALSE;
     }
-
-    // return FALSE for unhandled commands
-    return FALSE;
 }
 
 // Copies the selected text to the windows clipboard.

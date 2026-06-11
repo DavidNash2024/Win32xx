@@ -90,10 +90,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_SHOW_HIDDEN:       return OnShowHidden();
     case IDM_VIEWMENU:          return OnViewMenu();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate controls the way the frame is created.

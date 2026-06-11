@@ -306,10 +306,8 @@ LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
     {
     case NM_CUSTOMDRAW:          return OnCustomDraw(pCustomDraw);
 
-    default: break;
+    default: return 0;
     }
-
-    return 0;
 }
 
 // Called when the framework reflects the WM_NOTIFY message

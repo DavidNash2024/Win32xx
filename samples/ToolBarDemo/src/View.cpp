@@ -49,10 +49,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case IDM_RIGHT:     return OnRight();
     case IDM_BOTTOM:    return OnBottom();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called during frame creation.
@@ -159,10 +157,8 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
     // Pass the ToolBar's ToolTip info up to the frame
     case TTN_GETDISPINFO: return GetParent().SendMessage(WM_NOTIFY, wparam, lparam);
 
-    default: break;
+    default: return 0;
     }
-
-    return 0;
 }
 
 // Position the toolbar on the right.

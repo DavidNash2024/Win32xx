@@ -3452,7 +3452,7 @@ namespace Win32xx
             case UWN_DOCKMOVE:      return OnDockMove(pdp);
             case UWN_DOCKEND:       return OnDockEnd(pdp);
 
-            default: break;
+            default: return 0;
             }
         }
 

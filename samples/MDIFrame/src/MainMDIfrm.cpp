@@ -46,11 +46,12 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
         {
             // Pass to active child...
             if (GetActiveMDIChild())
-                GetActiveMDIChild()->SendMessage(WM_COMMAND, wparam, lparam);
+                return GetActiveMDIChild()->SendMessage(WM_COMMAND, wparam,
+                    lparam) ? TRUE : FALSE;
+
+            return FALSE;
         }
-        break ;
     }
-    return FALSE;
 }
 
 // Called when the window is created.

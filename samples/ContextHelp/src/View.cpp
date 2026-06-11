@@ -116,10 +116,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case ID_RADIO_B:    // intentionally blank
     case ID_RADIO_C:    return OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called before the dialog (view window) is displayed.

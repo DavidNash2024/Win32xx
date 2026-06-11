@@ -196,11 +196,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     default:
     {
         // Pass the command on to the view of the active docker
-        m_pActiveDocker->GetActiveView()->SendMessage(WM_COMMAND, wparam, lparam);
+        return m_pActiveDocker->GetActiveView()->SendMessage(WM_COMMAND,
+            wparam, lparam) ? TRUE : FALSE;
     }
     }
-
-    return FALSE;
 }
 
 // Reposition the tabs in the containers.

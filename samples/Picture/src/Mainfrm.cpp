@@ -66,10 +66,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_FILE_MRU_FILE4:
     case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called when the window is created.

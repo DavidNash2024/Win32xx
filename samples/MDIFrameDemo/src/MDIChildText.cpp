@@ -88,10 +88,8 @@ BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM)
         GetView().SendMessage(WM_PASTE, 0, 0);
         return TRUE;
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called when the window is created.

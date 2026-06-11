@@ -162,10 +162,8 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
             SendMessage(m_parent, WM_NOTIFY, wparam, lparam);
             return TRUE;
 
-        default: break;
+        default:  return CDialog::OnNotify(wparam, lparam);
     }
-
-    return CDialog::OnNotify(wparam, lparam);
 }
 
 // Invoke the page setup dialog box and set printer parameters.

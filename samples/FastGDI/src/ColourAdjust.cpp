@@ -111,13 +111,13 @@ BOOL CColorAdjust::OnCommand(WPARAM wparam, LPARAM lparam)
     switch (LOWORD(wparam))
     {
     case IDC_CHECK1:   return OnGrayScale();
+    default: break;
     }
 
     // Notifications of text change for the edit controls.
     switch (HIWORD(wparam))
     {
     case EN_CHANGE:    return OnTextChange(HWND(lparam));
-
     default: break;
     }
 

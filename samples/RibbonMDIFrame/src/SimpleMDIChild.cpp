@@ -123,10 +123,8 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM)
         Invalidate();
         return TRUE;
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 LRESULT CSimpleMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

@@ -876,6 +876,8 @@ namespace Win32xx
 
     // This method handles the WM_NOTIFY message loop functions of the hook
     // procedure.
+    // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result)
+    // for non-zero returns.
     inline LRESULT CFileDialog::OnNotify(WPARAM, LPARAM lparam)
     {
         OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lparam);
@@ -910,12 +912,8 @@ namespace Win32xx
                 OnTypeChange();
                 return TRUE;
 
-            default: break;
+            default: return FALSE;   // not handled
         }
-
-        // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result)
-        // for non-zero returns.
-        return FALSE;   // not handled
     }
 
     // Override this function to provide custom handling of share violations.

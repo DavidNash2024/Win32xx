@@ -75,10 +75,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_EXIT:     return OnFileExit();
     case IDM_HELP_ABOUT:    return OnAbout();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 void CView::OnDestroy()

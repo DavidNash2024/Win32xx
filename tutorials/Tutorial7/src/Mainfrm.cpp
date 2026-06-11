@@ -31,10 +31,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called during window creation.

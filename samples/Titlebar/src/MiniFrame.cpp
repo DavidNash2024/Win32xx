@@ -319,10 +319,8 @@ BOOL CMiniFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_EXIT:       return OnFileExit();
     case IDM_HELP_ABOUT:      return OnHelp();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate is called automatically during window creation when a
@@ -609,14 +607,11 @@ LRESULT CMiniFrame::OnNotify(WPARAM, LPARAM lparam)
             COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
             CBrush brush(titlebarColor);
             FillRect(pCustomDraw->nmcd.hdc, rect, brush);
+            return CDRF_DODEFAULT;   // Do default drawing.
         }
 
-        return CDRF_DODEFAULT;   // Do default drawing.
-
-    default: break;
+    default: return 0;
     }
-
-    return 0;
 }
 
 // Called when any part of the window is repainted.

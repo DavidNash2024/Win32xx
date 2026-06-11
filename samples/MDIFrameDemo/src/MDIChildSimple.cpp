@@ -137,10 +137,8 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM)
         Invalidate();
         return TRUE;
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Process the simple MDI child's window messages.

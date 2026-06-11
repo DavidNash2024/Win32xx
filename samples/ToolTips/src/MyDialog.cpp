@@ -116,10 +116,8 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO2:
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 BOOL CMyDialog::OnInitDialog()
@@ -235,13 +233,11 @@ LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lparam)
                 lpnmtdi->lpszText = const_cast<LPWSTR>(m_str.c_str());
             }
 
-            break;
+            return 0;
         }
 
-        default: break;
+        default: return 0;
     }
-
-    return 0;
 }
 
 void CMyDialog::OnOK()

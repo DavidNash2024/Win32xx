@@ -393,10 +393,10 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
             // Get the optimum width of the toolbar.
             CSize size = m_toolbar.GetMaxSize();
             pCalcSize->iWidth = size.cx;
+            break;
         }
         default: break;
         }
-        break;
     }
 
     case PGN_SCROLL:

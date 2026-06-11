@@ -48,11 +48,9 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     case IDM_COLOR:     return OnColor();
     case IDM_EXIT:      return OnExit();
 
-    default: break;
-    }
-
     // Return FALSE for unhandled commands.
-    return FALSE;
+    default: return FALSE;
+    }
 }
 
 // OnCreate is called automatically during window creation when a

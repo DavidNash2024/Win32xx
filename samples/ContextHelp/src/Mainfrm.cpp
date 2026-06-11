@@ -187,10 +187,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_SHIFT_F1:      return OnShiftF1();               // Accelerator
     case IDM_F1:            return OnF1();                    // Accelerator
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate controls the way the frame is created.

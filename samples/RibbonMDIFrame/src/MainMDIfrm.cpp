@@ -115,10 +115,8 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)

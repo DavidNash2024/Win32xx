@@ -107,10 +107,8 @@ BOOL CNewDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_RADIO10:   // intentionally blank
     case IDC_RADIO11:   return OnRangeOfColorBits(IDC_RADIO10, IDC_RADIO11, id);
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called before the dialog is displayed.

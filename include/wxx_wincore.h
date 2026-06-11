@@ -823,7 +823,7 @@ namespace Win32xx
         //      OnFileNew();
         //      TRUE;   // return TRUE for handled commands
         //
-        //  default: break;
+        //  default: return FALSE;
         //  }
 
         // Return FALSE for unhandled commands.

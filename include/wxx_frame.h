@@ -2595,10 +2595,8 @@ namespace Win32xx
         case TTN_GETDISPINFO:     return OnTTNGetDispInfo(reinterpret_cast<LPNMTTDISPINFO>(lparam));
         case UWN_UNDOCKED:        return OnUndocked();
 
-        default: break;
+        default: return 0;
         }
-
-        return 0;
     }
 
     // Called when the rebar's height changes.

@@ -82,10 +82,8 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM)
         Send();
         return TRUE;
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called when the dialog window is destroyed.
@@ -223,10 +221,8 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
     case IDC_BUTTON_START:      return OnStartServer();
     case IDC_BUTTON_SEND:       return OnSend();
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // Called when the effective dots per inch (dpi) for a window has changed.

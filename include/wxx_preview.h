@@ -396,10 +396,8 @@ namespace Win32xx
         case IDW_PREVIEWNEXT:    return OnNextButton();
         case IDW_PREVIEWCLOSE:   return OnCloseButton();
 
-        default: break;
+        default: return FALSE;
         }
-
-        return FALSE;
     }
 
     // Called when the dialog is initialized.

@@ -87,9 +87,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
         case IDM_WRAP_PRINTER:
             return OnOptionsWrap((WordWrapType)(id - IDM_WRAP_NONE));
 
-        default: break;
+        default:return FALSE;;
     }
-    return FALSE;
 }
 
 // Specify values that control the way the frame is created.Overriding
@@ -395,9 +394,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
             return TRUE;
         }
 
-        default: break;
+        default: return CFrame::OnNotify(wparam, lparam);
     }
-    return CFrame::OnNotify(wparam, lparam);
 }
 
 BOOL CMainFrame::OnOptionsFont()

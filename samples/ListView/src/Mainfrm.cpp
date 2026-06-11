@@ -45,10 +45,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_TOOLBAR:      OnViewToolBar();   return TRUE;
     case IDM_HELP_ABOUT:        OnHelp();          return TRUE;
 
-    default: break;
+    default: return FALSE;
     }
-
-    return FALSE;
 }
 
 // OnCreate controls the way the frame is created.
