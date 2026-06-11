@@ -12,10 +12,9 @@
 #include "Doc.h"
 
 
-////////////////////////////////////////////////////////
-// The CView class manages the view of the application. It is derived
-// from CDialog, and is responsible for the dialog's appearance and
-// view related actions.
+/////////////////////////////////////////////////////////////
+// CView manages dialog used as the main frame's view window.
+//
 class CView : public CDialog
 {
 public:
@@ -28,15 +27,11 @@ public:
     BOOL    GetCheckC() const       { return m_checkVal[2]; }
     int     GetRadio() const        { return m_radioA; }
     void    SetCheck(UINT);
-    void    SetRadio(UINT);
-    void    SetCheckAStatus();
-    void    SetCheckBStatus();
-    void    SetCheckCStatus();
     void    SetFocusID(int value)   { m_focusID = value; }
     void    SetProgress(int value)  { m_progressVal = value; }
-    void    SetRadioAStatus();
     void    SetScrollBar(int value) { m_scrollBarVal = value; }
     void    SetSlider(int value)    { m_sliderVal = value; }
+    void    SetRadio(UINT);
     CDoc&   TheDoc()                { return m_doc; }
     BOOL    UpdateDialog(BOOL bReadFromControl);
     void    UpdateDocument();
@@ -58,82 +53,86 @@ private:
     BOOL    AddToolTip(UINT id, const CString & s);
     void    AssignToolTips();
     void    GetDocumentValues();
-    void    OnBitmap();
-    void    OnButton();
-    INT_PTR OnCtlColor(HDC, HWND, UINT);
+    BOOL    OnCheckAButton();
+    BOOL    OnCheckBButton();
+    BOOL    OnCheckCButton();
+    INT_PTR OnCtlColor(UINT msg, WPARAM wparam, LPARAM lparam);
+    INT_PTR OnDrawItem(WPARAM wparam, LPARAM lparam);
+    INT_PTR OnHScroll(WPARAM wparam, LPARAM lparam);
+    BOOL    OnPushMeButton(int id);
+    BOOL    OnRadioButton();
+    BOOL    OnRoseBitmap(int id);
     void    SetControlPositions(int pos);
 
-    // DDX/DDV variables that are connected.
-    int         m_sliderVal;
-    int         m_progressVal;
-    int         m_scrollBarVal;
-    int         m_focusID;  // The control with current focus.
+    // DDX/DDV variables for controls in the dialog.
+    BYTE       m_byteVal;
+    BOOL       m_checkVal[3];
+    double     m_doubleVal;
+    float      m_floatVal;
+    long       m_longVal;
+    WCHAR      m_LPWSTRVal[256];
+    short      m_shortVal;
+    UINT       m_UINTVal;
+    DWORD      m_ULongVal;
 
-    // DDX/DDV variables for controls on the form.
-    CDataExchange m_dx;
-    BYTE        m_byteVal;
-    short       m_shortVal;
-    UINT        m_UINTVal;
-    long        m_longVal;
-    DWORD       m_ULongVal;
-    float       m_floatVal;
-    double      m_doubleVal;
-    int         m_intVal;
-    BOOL        m_checkVal[3];
-    int         m_comboBoxIndx;
-    int         m_listBoxIndx;
-    int         m_radioA;
-    CString     m_comboBoxVal;
-    CString     m_listBoxVal;
-    CString     m_editVal;
-    CString     m_richEditVal;
-    CString     m_statusBoxVal;
-    WCHAR       m_LPWSTRVal[256];
-    SYSTEMTIME  m_dateSysTime;
-    SYSTEMTIME  m_calDateSysTime;
+    int        m_comboBoxIndx;
+    int        m_intVal;
+    int        m_listBoxIndx;
+    int        m_progressVal;
+    int        m_radioA;
+    int        m_sliderVal;
+    int        m_scrollBarVal;
 
-    // Controls on the form that need to be attached.
+    CString    m_comboBoxVal;
+    CString    m_editVal;
+    CString    m_listBoxVal;
+    CString    m_richEditVal;
+    CString    m_statusBoxVal;
+   
+    SYSTEMTIME m_calDateSysTime;
+    SYSTEMTIME m_dateSysTime;
+
+    // Controls on the form that are attached to CWnd objects.
     CComboBox      m_comboBox;
     CDateTime      m_dateTime;
     CListBox       m_listBox;
     CMonthCalendar m_monthCal;
     CProgressBar   m_progressBar;
+    CMyButton      m_pushButton;
     CRichEdit      m_richEdit;
     CMyScrollBar   m_scrollBar;
-    CMyButton      m_statusButton;
-    CMyButton      m_pushButton;
     CSlider        m_slider;
+    CMyButton      m_statusButton;
 
-    // form control display colors
-    COLORREF        m_buttonFgClr;
-    COLORREF        m_buttonBgClr;
-    COLORREF        m_editFgClr;
-    COLORREF        m_editBgClr;
-    COLORREF        m_richEditFgClr;
-    COLORREF        m_richEditBgClr;
-    COLORREF        m_richEditClientBgClr;
-    COLORREF        m_dialogFgClr;
-    COLORREF        m_dialogBgClr;
-    COLORREF        m_listBoxFgClr;
-    COLORREF        m_listBoxBgClr;
-    COLORREF        m_scrollFgClr;
-    COLORREF        m_scrollBgClr;
-    COLORREF        m_staticBoxFgClr;
-    COLORREF        m_staticBoxBgClr;
+    // Form control colors.
+    COLORREF m_buttonBgClr;
+    COLORREF m_buttonFgClr;
+    COLORREF m_dialogBgClr;
+    COLORREF m_dialogFgClr;
+    COLORREF m_editBgClr;
+    COLORREF m_editFgClr;
+    COLORREF m_listBoxBgClr;
+    COLORREF m_listBoxFgClr;
+    COLORREF m_richEditBgClr;
+    COLORREF m_richEditClientBgClr;
+    COLORREF m_richEditFgClr;
+    COLORREF m_scrollBgClr;
+    COLORREF m_scrollFgClr;
+    COLORREF m_staticBoxBgClr;
+    COLORREF m_staticBoxFgClr;
 
-    // Form display background brushes.
-    CBrush          m_buttonBgBrush;
-    CBrush          m_editBgBrush;
-    CBrush          m_dialogBgBrush;
-    CBrush          m_listBoxBgBrush;
-    CBrush          m_scrollBgBrush;
-    CBrush          m_staticBoxBgBrush;
+    // Form background brushes.
+    CBrush   m_buttonBgBrush;
+    CBrush   m_dialogBgBrush;
+    CBrush   m_editBgBrush;
+    CBrush   m_listBoxBgBrush;
+    CBrush   m_scrollBgBrush;
+    CBrush   m_staticBoxBgBrush;
 
-    // Form tool tips.
-    CToolTip        m_toolTip;
-
-    // The document.
-    CDoc            m_doc;
+    CDataExchange m_dx;  // The DDV/DDX data exchange object.
+    CToolTip m_toolTip;  // The dialog's tooltips control.
+    CDoc m_doc;          // The document that store's the dialog's values.
+    int  m_focusID;      // The control with current focus.
 };
 
 #endif //SDI_VIEW_H

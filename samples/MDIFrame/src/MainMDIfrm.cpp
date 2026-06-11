@@ -42,15 +42,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDW_MDI_TILE:          return OnMDITile();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDM_HELP_ABOUT:        return OnHelp();
-    default:
-        {
-            // Pass to active child...
-            if (GetActiveMDIChild())
-                return GetActiveMDIChild()->SendMessage(WM_COMMAND, wparam,
-                    lparam) ? TRUE : FALSE;
-
-            return FALSE;
-        }
+    default:                    return OnDefaultCommand(wparam, lparam);
     }
 }
 
@@ -74,6 +66,16 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 
     // call the base class function
     return CMDIFrame::OnCreate(cs);
+}
+
+// Pass keyboard accelerator messages on to the active MDI child.
+BOOL CMainMDIFrame::OnDefaultCommand(WPARAM wparam, LPARAM lparam)
+{
+    if (GetActiveMDIChild())
+        return GetActiveMDIChild()->SendMessage(WM_COMMAND, wparam,
+            lparam) ? TRUE : FALSE;
+
+    return FALSE;
 }
 
 // Close the active MDI child.

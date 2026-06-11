@@ -28,6 +28,9 @@ private:
     CMyDialog(const CMyDialog&) = delete;
     CMyDialog& operator=(const CMyDialog&) = delete;
 
+    BOOL OnButtonCancel();
+    BOOL OnButtonSet();
+
     // Member variables
     CDateTime       m_dateTime;
     CMonthCalendar  m_monthCal;

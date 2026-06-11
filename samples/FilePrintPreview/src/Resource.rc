@@ -81,7 +81,6 @@ IDI_PRINTPREVIEW        ICON                    "../src/res/Print Preview.ico"
 IDI_QUICKPRINT          ICON                    "../src/res/Quick Print.ico"
 IDI_PRINT               ICON                    "../src/res/Print.ico"
 IDI_FONT_OPTION         ICON                    "../src/res/FontsS.ico"
-IDI_CHECKBOX_OFF        ICON                    "../src/res/CheckBoxOff.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

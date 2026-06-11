@@ -28,6 +28,10 @@ protected:
     virtual void OnOK() override;
 
 private:
+    BOOL OnCheckActors();
+    BOOL OnCheckInfo();
+    BOOL OnCheckTitle();
+
     CButton m_titleButton;
     CButton m_actorsButton;
     CButton m_infoButton;

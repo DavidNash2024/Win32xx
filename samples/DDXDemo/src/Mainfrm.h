@@ -10,9 +10,9 @@
 #include "View.h"
 #include "AboutDialog.h"
 
-////////////////////////////////////////////////////////
-// The CMainFrame class manages the frame window of the
-// application.
+////////////////////////////////////////////////////////////////////
+// The CMainFrame class manages the frame window of the application.
+//
 class CMainFrame : public CFrame
 {
 public:

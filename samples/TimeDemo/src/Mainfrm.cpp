@@ -75,7 +75,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     }
 }
 
-
 // This method controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {

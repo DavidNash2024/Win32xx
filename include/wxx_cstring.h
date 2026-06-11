@@ -845,7 +845,7 @@ namespace Win32xx
 
         // As of C++11, std::string is guaranteed to store its characters in
         // contiguous memory.
-        m_str.assign(size_t(minBufLength), ch);
+        m_str.assign(size_t(minBufLength + 1), ch);
 
         return &m_str.front();
     }

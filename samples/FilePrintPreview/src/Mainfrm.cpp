@@ -84,8 +84,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
         case IDM_HELP_ABOUT:        return OnHelp();
         case IDM_WRAP_NONE:
         case IDM_WRAP_WINDOW:
-        case IDM_WRAP_PRINTER:
-            return OnOptionsWrap((WordWrapType)(id - IDM_WRAP_NONE));
+        case IDM_WRAP_PRINTER:      return OnOptionsWrap(id - IDM_WRAP_NONE);
 
         default:return FALSE;;
     }
@@ -403,9 +402,11 @@ BOOL CMainFrame::OnOptionsFont()
     return GetRichView().GetNewFont();
 }
 
-BOOL CMainFrame::OnOptionsWrap(WordWrapType option)
+BOOL CMainFrame::OnOptionsWrap(UINT option)
 {
-    m_richView.WordWrap(m_wrapOption = option);
+    WordWrapType wrapOption = static_cast<WordWrapType>(option);
+    m_wrapOption = wrapOption;
+    m_richView.WordWrap(m_wrapOption);
     return TRUE;
 }
 
@@ -465,16 +466,6 @@ void CMainFrame::SetupMenuIcons()
 
     // Options menu font dialog icon.
     AddMenuIcon(IDM_OPTIONS_FONT,    GetApp()->LoadIcon(IDI_FONT_OPTION));
-
-    // Set options menu radio button unselected icon.
-    HICON check_box_unselected =     GetApp()->LoadIcon(IDI_CHECKBOX_OFF);
-    AddMenuIcon(IDM_WRAP_NONE,       check_box_unselected);
-    AddMenuIcon(IDM_WRAP_WINDOW,     check_box_unselected);
-    AddMenuIcon(IDM_WRAP_PRINTER,    check_box_unselected);
-
-    // Set toolbar and status bar check boxes unselected icons.
-    AddMenuIcon(IDW_VIEW_TOOLBAR,    check_box_unselected);
-    AddMenuIcon(IDW_VIEW_STATUSBAR,  check_box_unselected);
 }
 
 // Assigns images and command IDs to the toolbar buttons.
@@ -519,22 +510,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-        switch (msg)
-        {
-            case WM_SYSCOMMAND:
-            {
-                switch (LOWORD(wparam))
-                {
-                    case SC_CLOSE:
-                    m_printPreview.Destroy();
-                    break;  // let default process this further
-
-                    default: break;
-                }
-            }
-
-            default: return WndProcDefault(msg, wparam, lparam);
-        }
+        // Do default processing for all messages.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all CException types.

@@ -20,7 +20,7 @@ CMyScrollBar::CMyScrollBar()
 
 // Respond to WM_HSCROLL messages and return the current position of the
 // scroll bar.
-int CMyScrollBar::GetHScrollPos(UINT, WPARAM wparam, LPARAM)
+int CMyScrollBar::GetHScrollPos(WPARAM wparam, LPARAM)
 {
     GetScrollInfo(m_scrollInfo);
     switch (LOWORD (wparam))
@@ -47,7 +47,8 @@ int CMyScrollBar::GetHScrollPos(UINT, WPARAM wparam, LPARAM)
 
         default: break;
     }
-    return m_scrollInfo.nPos;
+
+    return m_scrollInfo.nPos; 
 }
 
 void CMyScrollBar::SetScrollInfo(int lo, int hi, int pos, int page)

@@ -42,7 +42,7 @@ public:
     BOOL    OnFileSave();
     BOOL    OnFileSaveAs();
     BOOL    OnOptionsFont();
-    BOOL    OnOptionsWrap(WordWrapType);
+    BOOL    OnOptionsWrap(UINT);
     void    QuickPrint(CPrintDialog& printDlg);
     BOOL    ReadFile(LPCWSTR path);
     void    SaveModifiedText();

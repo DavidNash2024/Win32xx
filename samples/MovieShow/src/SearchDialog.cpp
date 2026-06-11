@@ -53,30 +53,39 @@ BOOL CSearchDialog::OnCommand(WPARAM wparam, LPARAM /*lparam*/)
     UINT nID = LOWORD(wparam);
     switch (nID)
     {
-    case IDC_CHECKTITLE:
-    {
-        UINT state = m_titleButton.GetState();
-        m_titleWindow.EnableWindow(state & BST_CHECKED);
-        m_titleWindow.SetFocus();
-        return TRUE;
-    }
-    case IDC_CHECKACTORS:
-    {
-        UINT state = m_actorsButton.GetState();
-        m_actorsWindow.EnableWindow(state & BST_CHECKED);
-        m_actorsWindow.SetFocus();
-        return TRUE;
-    }
-    case IDC_CHECKINFO:
-    {
-        UINT state = m_infoButton.GetState();
-        m_infoWindow.EnableWindow(state & BST_CHECKED);
-        m_infoWindow.SetFocus();
-        return TRUE;
-    }
+    case IDC_CHECKACTORS:  return OnCheckActors();
+    case IDC_CHECKINFO:    return OnCheckInfo();
+    case IDC_CHECKTITLE:   return OnCheckTitle();
 
     default: return FALSE;
     }
+}
+
+// The Search Actors checkbox has been toggled.
+BOOL CSearchDialog::OnCheckActors()
+{
+    UINT state = m_actorsButton.GetState();
+    m_actorsWindow.EnableWindow(state & BST_CHECKED);
+    m_actorsWindow.SetFocus();
+    return TRUE;
+}
+
+// The Search Description checkbox has been toggled.
+BOOL CSearchDialog::OnCheckInfo()
+{
+    UINT state = m_infoButton.GetState();
+    m_infoWindow.EnableWindow(state & BST_CHECKED);
+    m_infoWindow.SetFocus();
+    return TRUE;
+}
+
+// The Search Title checkbox has been toggled.
+BOOL CSearchDialog::OnCheckTitle()
+{
+    UINT state = m_titleButton.GetState();
+    m_titleWindow.EnableWindow(state & BST_CHECKED);
+    m_titleWindow.SetFocus();
+    return TRUE;
 }
 
 // Called before the dialog is displayed.

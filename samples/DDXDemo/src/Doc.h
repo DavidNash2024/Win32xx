@@ -7,9 +7,9 @@
 #ifndef SDI_DOC_H
 #define SDI_DOC_H
 
-////////////////////////////////////////////////////////
-// The CDoc class manages the document data, which is
-// stored in the registry.
+/////////////////////////////////////////////////////////////////////////////
+// The CDoc class manages the document data, which is stored in the registry.
+//
 class CDoc    : public CObject
 {
 public:

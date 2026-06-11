@@ -983,6 +983,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     UINT nID = LOWORD(wparam);
 
+    if (nID >= IDM_BOXSET_0)  // The box sets have the highest IDs
+        return OnBoxSet(nID);
+
     switch (nID)
     {
     case IDM_EDIT_COPY:     GetFocus().SendMessage(WM_COPY);    return TRUE;
@@ -1009,13 +1012,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
 
-    default: break;
+    default: return FALSE;
     }
-
-    if (nID >= IDM_BOXSET_0)
-        return OnBoxSet(nID);
-
-    return FALSE;
 }
 
 // Called during window creation. Override this functions to perform tasks,

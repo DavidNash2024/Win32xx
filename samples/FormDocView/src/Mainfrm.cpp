@@ -56,17 +56,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case ID_RADIO_B:        // intentionally blank
     case ID_RADIO_C:        return m_formView.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
 
-    case IDM_EDIT_COPY:
-    {
-        GetFocus().SendMessage(WM_COPY);
-        return TRUE;
-    }
-
-    case IDM_EDIT_PASTE:
-    {
-        GetFocus().SendMessage(WM_PASTE);
-        return TRUE;
-    }
+    case IDM_EDIT_COPY:     return GetFocus().SendMessage(WM_COPY) ? TRUE : FALSE;
+    case IDM_EDIT_PASTE:    return GetFocus().SendMessage(WM_PASTE) ? TRUE : FALSE;
 
     default: return FALSE;
     }

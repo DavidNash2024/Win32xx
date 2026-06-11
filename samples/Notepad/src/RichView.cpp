@@ -121,11 +121,10 @@ void CRichView::OnAttach()
     DWORD mask = ENM_KEYEVENTS | ENM_DROPFILES;
     SetEventMask(mask);
 
-    // Advises the control to be per-monitor DPI aware.
-    // This affects the initial font size on a second monitor with different DPI.
-    SendMessage(WM_DPICHANGED_BEFOREPARENT);
-
     SetFontDefaults();
+
+    // Call the base class function.
+    CRichEdit::OnAttach();
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.

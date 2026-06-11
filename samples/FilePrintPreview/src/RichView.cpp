@@ -21,6 +21,9 @@ void CRichView::OnAttach()
     DWORD mask = ENM_KEYEVENTS | ENM_DROPFILES;
     SetEventMask(mask);
     SetFontDefaults();
+
+    // Call the base class function.
+    CRichEdit::OnAttach();
 }
 
 // Bring up the font choice dialog and choose a new font.

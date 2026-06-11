@@ -131,6 +131,9 @@ void CRichView::OnAttach()
 
     // Support Drag and Drop on this window
     DragAcceptFiles(TRUE);
+
+    // Call the base class function.
+    CRichEdit::OnAttach();
 }
 
 // Called when a file is dropped on the view window.

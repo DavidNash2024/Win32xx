@@ -7,15 +7,16 @@
 #ifndef MYSCROLLBAR_H
 #define MYSCROLLBAR_H
 
-////////////////////////////////////////////////////////
-// The CMyScrollBar class manages the scoll bar controls on dialog forms.
+/////////////////////////////////////////////////////////
+// CMyScrollBar manages the scroll bar control in dialog.
+//
 class CMyScrollBar : public CScrollBar
 {
     public:
         CMyScrollBar();
         virtual ~CMyScrollBar() override = default;
 
-        int     GetHScrollPos(UINT, WPARAM, LPARAM);
+        int     GetHScrollPos(WPARAM, LPARAM);
         void    SetScrollInfo(int lo, int hi, int pos, int page);
 
     private:
@@ -25,5 +26,4 @@ class CMyScrollBar : public CScrollBar
         SCROLLINFO m_scrollInfo;
 };
 
-/*----------------------------------------------------------------------------*/
 #endif  // MYSCROLLBAR_H

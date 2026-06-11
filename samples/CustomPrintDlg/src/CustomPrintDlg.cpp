@@ -469,8 +469,14 @@ void CCustomPrintDlg::OnClose()
 // is made.
 BOOL CCustomPrintDlg::OnCommand(WPARAM wparam, LPARAM)
 {
-    UINT id = LOWORD(wparam);
+    UINT msg = HIWORD(wparam);
+    switch (msg)
+    {
+    case CBN_SELCHANGE:    return OnComboSelection();
+    default: break;
+    }
 
+    UINT id = LOWORD(wparam);
     switch (id)
     {
     case IDB_HELP:               return OnHelp();
@@ -480,18 +486,8 @@ BOOL CCustomPrintDlg::OnCommand(WPARAM wparam, LPARAM)
     case IDB_RADIORANGE:         // Intentionally blank
     case IDB_RADIOSELECTION:     return OnRadioSelection(id);
 
-    default: break;
+    default: return FALSE;
     }
-
-    UINT msg = HIWORD(wparam);
-    switch (msg)
-    {
-    case CBN_SELCHANGE:    return OnComboSelection();
-
-    default: break;
-    }
-
-    return FALSE;
 }
 
 // Called when the dialog's help button is pressed.

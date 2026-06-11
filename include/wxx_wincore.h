@@ -792,9 +792,12 @@ namespace Win32xx
         return 0;
     }
 
-    // This function is called when a window is attached to the CWnd.
+    // This function is called when a window is attached to this CWnd object.
     // Override it to automatically perform tasks when the window is attached.
-    // Note:  Window controls are attached.
+    // Either OnAttach or OnCreate will be called when a window is created, 
+    // but not both.
+    // Note:  Window controls are attached. OnAttach is called when they are
+    //        created.
     inline void CWnd::OnAttach()
     {
     }
@@ -832,6 +835,7 @@ namespace Win32xx
 
     // Called during window creation. Override this functions to perform tasks
     // such as creating child windows.
+    // Either OnAttach or OnCreate will be called, but not both.
     inline int CWnd::OnCreate(CREATESTRUCT&)
     {
         // This function is called when a WM_CREATE message is received

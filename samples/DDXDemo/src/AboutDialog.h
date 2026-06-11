@@ -8,9 +8,10 @@
 
 #include "resource.h"
 
-////////////////////////////////////////////////////////
-// CAboutDialog manages the dialog which displays
-// information about this program.
+///////////////////////////////////////////////////////////////////
+// CAboutDialog manages the dialog which displays information about
+// this program.
+//
 class CAboutDialog : public CDialog
 {
 public:

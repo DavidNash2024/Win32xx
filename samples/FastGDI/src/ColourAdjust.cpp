@@ -118,11 +118,8 @@ BOOL CColorAdjust::OnCommand(WPARAM wparam, LPARAM lparam)
     switch (HIWORD(wparam))
     {
     case EN_CHANGE:    return OnTextChange(HWND(lparam));
-    default: break;
+    default: return FALSE;
     }
-
-    // return FALSE for unhandled commands.
-    return FALSE;
 }
 
 // Respond to a change in DPI. This function is only called when using

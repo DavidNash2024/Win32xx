@@ -77,32 +77,35 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
 
     switch(id)
     {
-    case IDC_BUTTONSET:
-        {
-            SYSTEMTIME month = m_monthCal.GetCurSel();
-            SYSTEMTIME all   = m_dateTime.GetTime();
-
-            all.wDay = month.wDay;
-            all.wMonth = month.wMonth;
-            all.wYear = month.wYear;
-
-            if (!SetLocalTime(&all))
-            {
-                MessageBox(L"Failed to set the time\nRun app as Administrator",
-                    L"Set Time Failed", MB_OK);
-            }
-            return TRUE;
-        }
-
-    case IDC_BUTTONCANCEL:
-        {
-            TRACE(L"Cancel Button Pressed\n");
-            OnCancel();
-            return TRUE;
-        }
+    case IDC_BUTTONCANCEL:  return OnButtonCancel();
+    case IDC_BUTTONSET:     return OnButtonSet();
 
     default: return FALSE;
     }
+}
+
+BOOL CMyDialog::OnButtonCancel()
+{
+    TRACE(L"Cancel Button Pressed\n");
+    OnCancel();
+    return TRUE;
+}
+
+BOOL CMyDialog::OnButtonSet()
+{
+    SYSTEMTIME month = m_monthCal.GetCurSel();
+    SYSTEMTIME all = m_dateTime.GetTime();
+
+    all.wDay = month.wDay;
+    all.wMonth = month.wMonth;
+    all.wYear = month.wYear;
+
+    if (!SetLocalTime(&all))
+    {
+        MessageBox(L"Failed to set the time\nRun app as Administrator",
+            L"Set Time Failed", MB_OK);
+    }
+    return TRUE;
 }
 
 // Called before the dialog is displayed.

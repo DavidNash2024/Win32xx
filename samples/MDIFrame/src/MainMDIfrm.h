@@ -29,6 +29,7 @@ private:
     CMainMDIFrame(const CMainMDIFrame&) = delete;
     CMainMDIFrame& operator=(const CMainMDIFrame&) = delete;
 
+    BOOL OnDefaultCommand(WPARAM wparam, LPARAM lparam);
     BOOL OnFileClose();
     BOOL OnFileExit();
     BOOL OnFileNew();

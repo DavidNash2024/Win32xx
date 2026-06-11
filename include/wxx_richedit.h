@@ -146,6 +146,7 @@ namespace Win32xx
         BOOL    Undo() const;
 
     protected:
+        virtual void OnAttach() override;
         virtual void PreCreate(CREATESTRUCT& cs) override;
         virtual void PreRegisterClass(WNDCLASS& wc) override;
 
@@ -709,6 +710,15 @@ namespace Win32xx
         assert(IsWindow());
         LPARAM lparam = static_cast<LPARAM>(lines);
         SendMessage(EM_LINESCROLL, 0, lparam);
+    }
+
+    // Called when the RichEdit control's window handle (HWND) is attached to
+    // this object. 
+    inline void CRichEdit::OnAttach()
+    {
+        // Advises the control to be per-monitor DPI aware.
+        // This affects the initial font size on a second monitor with different DPI.
+        SendMessage(WM_DPICHANGED_BEFOREPARENT);
     }
 
     // Inserts the contents of the Clipboard.

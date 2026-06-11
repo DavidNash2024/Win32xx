@@ -168,9 +168,8 @@ void CRichView::OnAttach()
     // Set rich text mode.
     SetTextMode(TM_RICHTEXT);
 
-    // Advises the control to be per-monitor DPI aware.
-    // This affects the initial font size on a second monitor with different DPI.
-    SendMessage(WM_DPICHANGED_BEFOREPARENT);
+    // Call the base class function.
+    CRichEdit::OnAttach();
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.

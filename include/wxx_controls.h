@@ -440,14 +440,14 @@ namespace Win32xx
         CScrollBar() = default;
         virtual ~CScrollBar() override = default;
 
-        BOOL EnableScrollBar( UINT arrowFlags = ESB_ENABLE_BOTH )  const;
-        BOOL GetScrollInfo(SCROLLINFO& si)  const;
-        int  GetScrollPos()  const;
-        BOOL GetScrollRange(int& minPos, int& maxPos)  const;
-        BOOL SetScrollInfo(const SCROLLINFO& si, BOOL redraw = TRUE )  const;
-        int  SetScrollPos(int pos, BOOL redraw)  const;
-        BOOL SetScrollRange( int minPos, int maxPos, BOOL redraw = TRUE )  const;
-        BOOL ShowScrollBar(BOOL show)  const;
+        BOOL EnableScrollBar(UINT arrowFlags = ESB_ENABLE_BOTH) const;
+        BOOL GetScrollInfo(SCROLLINFO& si) const;
+        int  GetScrollPos() const;
+        BOOL GetScrollRange(int& minPos, int& maxPos) const;
+        BOOL SetScrollInfo(const SCROLLINFO& si, BOOL redraw = TRUE ) const;
+        int  SetScrollPos(int pos, BOOL redraw) const;
+        BOOL SetScrollRange(int minPos, int maxPos, BOOL redraw = TRUE) const;
+        BOOL ShowScrollBar(BOOL show) const;
 
     protected:
         // Overridables

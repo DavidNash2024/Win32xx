@@ -87,26 +87,6 @@ BOOL CMainFrame::OnBack()
 // Respond to menu, toolbar or accelerator key input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UINT id = LOWORD(wparam);
-    switch (id)
-    {
-    case IDM_BACK:           return OnBack();
-    case IDM_EDIT_CUT:       return OnEditCut();
-    case IDM_EDIT_COPY:      return OnEditCopy();
-    case IDM_EDIT_PASTE:     return OnEditPaste();
-    case IDM_EDIT_DELETE:    return OnEditDelete();
-    case IDM_FILE_EXIT:      return OnFileExit();
-    case IDM_FORWARD:        return OnForward();
-    case IDM_HELP_ABOUT:     return OnHelp();
-    case IDM_HOME:           return OnHome();
-    case IDM_REFRESH:        return OnReload();
-    case IDM_STOP:           return OnStop();
-    case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
-
-    default: break;
-    }
-
     // Handle notification WM_COMMAND from ComboboxEx.
     if (reinterpret_cast<HWND>(lparam) == m_combo.GetHwnd())
     {
@@ -126,7 +106,25 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
         }
     }
 
-    return FALSE;
+    UINT id = LOWORD(wparam);
+    switch (id)
+    {
+    case IDM_BACK:           return OnBack();
+    case IDM_EDIT_CUT:       return OnEditCut();
+    case IDM_EDIT_COPY:      return OnEditCopy();
+    case IDM_EDIT_PASTE:     return OnEditPaste();
+    case IDM_EDIT_DELETE:    return OnEditDelete();
+    case IDM_FILE_EXIT:      return OnFileExit();
+    case IDM_FORWARD:        return OnForward();
+    case IDM_HELP_ABOUT:     return OnHelp();
+    case IDM_HOME:           return OnHome();
+    case IDM_REFRESH:        return OnReload();
+    case IDM_STOP:           return OnStop();
+    case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
+
+    default: return FALSE;
+    }
 }
 
 // Called during the window's creation.

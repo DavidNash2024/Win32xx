@@ -8,9 +8,9 @@
 #define CMyButton_H
 
 
-////////////////////////////////////////////////////////
-// The CMyButton class manages the owner-drawn button controls
-// on dialog forms.
+/////////////////////////////////////////////////////////////////////
+// The CMyButton class manages the owner-drawn buttons in the dialog.
+//
 class CMyButton : public CButton
 {
 public:
