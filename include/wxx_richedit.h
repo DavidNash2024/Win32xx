@@ -713,7 +713,7 @@ namespace Win32xx
     }
 
     // Called when the RichEdit control's window handle (HWND) is attached to
-    // this object. 
+    // this object.
     inline void CRichEdit::OnAttach()
     {
         // Advises the control to be per-monitor DPI aware.

@@ -579,7 +579,6 @@ BOOL CMainFrame::OnFixFiles()
         }
     }
 
-
     m_view.AppendSmallText(L"Done\n");
     m_fileContents.clear();
     m_filesWithTabs.clear();
@@ -596,40 +595,60 @@ void CMainFrame::ReadFile(const CString& fileName)
     CFile file(fileName, OPEN_EXISTING);
     ULONGLONG fileSize = file.GetLength();
 
-    if (fileSize >= UINT_MAX -2)
+    // Prevent 32-bit overflow boundaries.
+    if (fileSize >= UINT_MAX)
         throw CUserException(L"File too large");
 
-    // Fill the local buffer with the file's contents.
-    std::vector<char> buffer;
-    buffer.assign(static_cast<UINT>(fileSize +1), 0);
+    m_fileContents.clear();
+    if (fileSize == 0)
+        return;
+
+    // Read the file entirely in one step.
+    std::vector<char> buffer(static_cast<size_t>(fileSize));
     file.Read(buffer.data(), static_cast<UINT>(fileSize));
     file.Close();
 
-    std::vector<char>::iterator it;
-    for (it = buffer.begin(); it != buffer.end(); ++it)
+    // Estimate line count to minimize vector reallocations (approx 40 chars/line)
+    m_fileContents.reserve(buffer.size() / 40);
+
+    size_t lineStart = 0;
+    size_t i = 0;
+
+    // Single-pass linear scan: O(N) complexity
+    while (i < buffer.size())
     {
-        // Check for line ending in \r\n, throw exception if not found.
-        // Replace \r\n with \0\0
-        if ((*it) == '\n')
+        // Look for the end of a line
+        if (buffer[i] == '\n')
         {
-            if (it == buffer.begin() || *(it - 1) != '\r')
-                throw CUserException(L"Not a Windows text file");
-            *(it - 1) = '\0';
-            *it = '\0';
+            // Enforce Windows CRLF style validation
+            if (i == 0 || buffer[i - 1] != '\r')
+                throw CUserException(L"Not a Windows text file (missing CR before LF)");
+
+            size_t lineLength = (i - 1) - lineStart;
+
+            // Forward raw parameters directly to construct CStringA in-place
+            m_fileContents.emplace_back(buffer.data() + lineStart, static_cast<int>(lineLength));
+
+            lineStart = i + 1;
         }
+        ++i;
     }
 
-    // Assign each line of text to a CStringA, stored in m_fileContents.
-    m_fileContents.clear();
-    size_t pos = 0;
-    LPCSTR s = buffer.data();
-    while (pos <= fileSize)
+    // Handle the end of the file gracefully.
+    if (lineStart < buffer.size())
     {
-        // Assign string, stripping out carriage return.
-        CStringA str = s + pos;
-        m_fileContents.push_back(str);
-        pos += str.GetLength() + size_t(2);
+        // Treat remaining bytes as the final line (no trailing CRLF)
+        size_t lineLength = buffer.size() - lineStart;
+        m_fileContents.emplace_back(buffer.data() + lineStart, static_cast<int>(lineLength));
     }
+    else if (buffer.size() > 0 && buffer.back() == '\n')
+    {
+        // File ended exactly with a CRLF, add final blank line
+        m_fileContents.emplace_back("");
+    }
+
+    if (m_fileContents.empty())
+        throw CUserException(L"Not a Windows text file (empty or invalid)");
 }
 
 // Writes the contents of m_fileContents to the specified file.

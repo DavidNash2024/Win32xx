@@ -610,14 +610,14 @@ INT_PTR CView::OnDrawItem(WPARAM wparam, LPARAM lparam)
 {
     LPDRAWITEMSTRUCT lpDrawItemStruct =
         reinterpret_cast<LPDRAWITEMSTRUCT>(lparam);
-    
+
     UINT id = static_cast<UINT>(wparam);
     if (id == IDOK)
         m_statusButton.DrawItem(lpDrawItemStruct);
 
     if (id == IDC_PUSH_ME_BUTTON)
         m_pushButton.DrawItem(lpDrawItemStruct);
-    
+
     return TRUE;
 }
 
@@ -742,7 +742,7 @@ BOOL CView::OnRadioButton()
     return TRUE;
 }
 
-// Respond to a press of the rose bitmap. 
+// Respond to a press of the rose bitmap.
 BOOL CView::OnRoseBitmap(int id)
 {
     // Save current contents of controls.

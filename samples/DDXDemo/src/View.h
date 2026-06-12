@@ -88,7 +88,7 @@ private:
     CString    m_listBoxVal;
     CString    m_richEditVal;
     CString    m_statusBoxVal;
-   
+
     SYSTEMTIME m_calDateSysTime;
     SYSTEMTIME m_dateSysTime;
 

@@ -48,7 +48,7 @@ int CMyScrollBar::GetHScrollPos(WPARAM wparam, LPARAM)
         default: break;
     }
 
-    return m_scrollInfo.nPos; 
+    return m_scrollInfo.nPos;
 }
 
 void CMyScrollBar::SetScrollInfo(int lo, int hi, int pos, int page)

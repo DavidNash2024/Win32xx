@@ -794,7 +794,7 @@ namespace Win32xx
 
     // This function is called when a window is attached to this CWnd object.
     // Override it to automatically perform tasks when the window is attached.
-    // Either OnAttach or OnCreate will be called when a window is created, 
+    // Either OnAttach or OnCreate will be called when a window is created,
     // but not both.
     // Note:  Window controls are attached. OnAttach is called when they are
     //        created.

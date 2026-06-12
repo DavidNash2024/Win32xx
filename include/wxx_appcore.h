@@ -146,12 +146,26 @@ namespace Win32xx
 
 #ifndef WIN32_LEAN_AND_MEAN
 
+    template <class T>
+    inline LPCTSTR CGlobalLock<T>::c_str() const
+    {
+        static_assert(std::is_same_v<T, CDevNames>,
+            "c_str() is only supported for CDevNames.");
+    }
+
     // Returns a const TCHAR* for the DEVNAMES in the global memory.
     template <>
     inline LPCTSTR CDevNames::c_str() const
     {
         assert(m_p != nullptr);
         return reinterpret_cast<LPCTSTR>(m_p);
+    }
+
+    template <class T>
+    inline LPTSTR CGlobalLock<T>::GetString() const
+    {
+        static_assert(std::is_same_v<T, CDevNames>,
+            "GetString() is only supported for CDevNames.");
     }
 
     // Returns a TCHAR* for the DEVNAMES in global the memory.
@@ -162,12 +176,26 @@ namespace Win32xx
         return reinterpret_cast<LPTSTR>(m_p);
     }
 
+    template <class T>
+    inline CString CGlobalLock<T>::GetDeviceName() const
+    {
+        static_assert(std::is_same_v<T, CDevNames>,
+            "GetDeviceName() is only supported for CDevNames.");
+    }
+
     // Returns a CString containing the DeviceName from the DEVNAMES
     // in global the memory.
     template<>
     inline CString CDevNames::GetDeviceName() const
     {
         return (m_p != nullptr) ? c_str() + (*this)->wDeviceOffset : _T("");
+    }
+
+    template<class T>
+    inline CString CGlobalLock<T>::GetDriverName() const
+    {
+        static_assert(std::is_same_v<T, CDevNames>,
+            "GetDriverName() is only supported for CDevNames.");
     }
 
     // Returns a CString containing the GetDriverName from the DEVNAMES
@@ -178,12 +206,26 @@ namespace Win32xx
         return (m_p != nullptr) ? c_str() + (*this)->wDriverOffset : _T("");
     }
 
+    template<class T>
+    inline CString CGlobalLock<T>::GetPortName() const
+    {
+        static_assert(std::is_same_v<T, CDevNames>,
+            "GetPortName() is only supported for CDevNames.");
+    }
+
     // Returns a CString containing the GetPortName from the DEVNAMES
     // in global the memory.
     template<>
     inline CString CDevNames::GetPortName() const
     {
         return (m_p != nullptr) ? c_str() + (*this)->wOutputOffset : _T("");
+    }
+
+    template<class T>
+    inline bool CGlobalLock<T>::IsDefaultPrinter() const
+    {
+        static_assert(std::is_same_v<T, CDevNames>,
+            "IsDefaultPrinter() is only supported for CDevNames.");
     }
 
     // Returns true if the DEVNAMES in the global memory is for the
