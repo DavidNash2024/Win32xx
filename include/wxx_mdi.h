@@ -723,45 +723,40 @@ namespace Win32xx
     template <class T>
     inline BOOL CMDIFrameT<T>::RemoveAllMDIChildren()
     {
-        // Collect the CMDIChild pointers in reverse order.
         std::vector<CMDIChild*> mdiChildren;
-        for (auto it = m_mdiChildren.rbegin(); it != m_mdiChildren.rend(); ++it)
+        mdiChildren.reserve(m_mdiChildren.size());
+
+        for (const auto& child : m_mdiChildren)
         {
-            mdiChildren.push_back((*it).get());
+            mdiChildren.insert(mdiChildren.begin(), child.get());
         }
 
-        // Ask each MDIChild to close.
-        // An element is removed from m_mdiChildren when the MDIChild is closed.
-        for (auto pMDIChild : mdiChildren)
+        // Request windows to close
+        for (CMDIChild* pMDIChild : mdiChildren)
         {
             pMDIChild->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
         }
 
-        return m_mdiChildren.size() == 0 ? TRUE : FALSE;
+        return m_mdiChildren.empty();
     }
 
     // Removes an individual MDI child.
     template <class T>
     inline void CMDIFrameT<T>::RemoveMDIChild(CMDIChild* pChild)
     {
-        for (auto it = m_mdiChildren.begin(); it!= m_mdiChildren.end(); ++it)
-        {
-            if ((*it).get() == pChild)
-            {
-                m_mdiChildren.erase(it);
-                break;
-            }
-        }
+        auto it = std::find_if(m_mdiChildren.begin(), m_mdiChildren.end(),
+            [pChild](const auto& childPtr) { return childPtr.get() == pChild; });
 
-        if (GetActiveMDIChild())
-        {
-            // Update the "Window" menu items.
-            if (GetActiveMDIChild()->GetChildMenu())
-                UpdateFrameMenu(GetActiveMDIChild()->GetChildMenu());
+        if (it != m_mdiChildren.end())
+            m_mdiChildren.erase(it);
 
-            // Update the accelerators.
-            if (GetActiveMDIChild()->GetChildAccel())
-                GetApp()->SetAccelerators(GetActiveMDIChild()->GetChildAccel(), *this);
+        if (CMDIChild* pActiveChild = GetActiveMDIChild())
+        {
+            if (pActiveChild->GetChildMenu())
+                UpdateFrameMenu(pActiveChild->GetChildMenu());
+
+            if (pActiveChild->GetChildAccel())
+                GetApp()->SetAccelerators(pActiveChild->GetChildAccel(), *this);
             else
                 GetApp()->SetAccelerators(T::GetFrameAccel(), *this);
         }

@@ -1338,7 +1338,7 @@ namespace Win32xx
         }
 
         default: break;
-        } // switch (msg)
+        }
 
         // Now hand all messages to the default procedure.
         return FinalWindowProc(msg, wparam, lparam);

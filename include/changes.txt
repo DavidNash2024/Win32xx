@@ -1,8 +1,11 @@
 Version 10.3
 ============
 This version uses features from C++17 and updates the Win32++ framework.
-Some Win32++ classes have been depreciated. The samples that ship with
-Win32++ have been updated.
+Some Win32++ classes have been depreciated.
+
+The samples that ship with Win32++ have also been updated. Samples with an
+internet browser now use the Microsoft's Edge Browser WebView2 control.
+The Help About in most of the samples display the Win32++ version.
 
 New Features and Enhancements
 -----------------------------
@@ -52,11 +55,13 @@ Added BrowserEx                   - sample
 Added CRibbonT                    - class template
 Deprecated CPrintDialogEx         - class
 Deprecated CWebBrowser            - class
+Modified CStatusBar::GetParts     - added optional parameters
 Removed Browser                   - sample
 Removed BrowserATL                - sample
 Removed CRibbon                   - class
 Removed CWinApp::MsgCWinApp       - member function
 Removed CWinApp::MsgTlsIndexe     - member function
+Renamed CStatusBar::CreateParts  to  CStatusBar::SetParts
 
 Added VS2026 project files to samples
 Removed VS2015 project files from samples

@@ -26,7 +26,7 @@ HRESULT Tab::Init(ICoreWebView2Environment* env, bool shouldBeActive)
         [this, shouldBeActive](HRESULT result, ICoreWebView2Controller* host) -> HRESULT {
         if (!SUCCEEDED(result))
         {
-            OutputDebugString(L"Tab WebView creation failed\n");
+            Trace(L"Tab WebView creation failed\n");
             return result;
         }
         m_contentController = host;

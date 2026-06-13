@@ -2138,14 +2138,11 @@ namespace Win32xx
         assert(pHeader);
         if (pHeader != nullptr)
         {
-
             switch(pHeader->code)
             {
-
             case UMN_TABCHANGED:
                 RecalcLayout();
                 break;
-
             case UWN_TABDRAGGED:
                 {
                     CPoint pt = GetCursorPos();
@@ -2162,20 +2159,16 @@ namespace Win32xx
                             SetActiveMDITab(tab);
                         }
                     }
-
                     break;
                 }
-
             case UWN_TABCLOSE:
                 {
                     TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(pHeader);
                     return !OnTabClose(pTabNMHDR->page);
                 }
-
             default: break;
-            }   // switch(pnmhdr->code)
-
-        }   // if (pHeader == nullptr)
+            }
+        }
 
         return 0;
     }

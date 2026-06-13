@@ -1325,10 +1325,10 @@ namespace Win32xx
         case UWM_GETCMENUBAR:       return reinterpret_cast<LRESULT>(this);
 
         default: break;
-        } // switch (msg)
+        }
 
         return CToolBar::WndProcDefault(msg, wparam, lparam);
-    } // LRESULT CMenuBar::WndProcDefault(...)
+    }
 
 }
 

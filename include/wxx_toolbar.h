@@ -914,7 +914,7 @@ namespace Win32xx
             if (stringIndex != -1)
             {
                 // Save the string its index in our map.
-                m_stringMap.emplace(std::make_pair(string, stringIndex));
+                m_stringMap.emplace(string, stringIndex);
 
                 succeeded = TRUE;
             }

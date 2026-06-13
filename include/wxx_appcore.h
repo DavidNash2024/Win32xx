@@ -151,6 +151,8 @@ namespace Win32xx
     {
         static_assert(std::is_same_v<T, CDevNames>,
             "c_str() is only supported for CDevNames.");
+
+        return nullptr;
     }
 
     // Returns a const TCHAR* for the DEVNAMES in the global memory.
@@ -166,6 +168,8 @@ namespace Win32xx
     {
         static_assert(std::is_same_v<T, CDevNames>,
             "GetString() is only supported for CDevNames.");
+
+        return nullptr;
     }
 
     // Returns a TCHAR* for the DEVNAMES in global the memory.
@@ -181,6 +185,8 @@ namespace Win32xx
     {
         static_assert(std::is_same_v<T, CDevNames>,
             "GetDeviceName() is only supported for CDevNames.");
+
+        return _T("");
     }
 
     // Returns a CString containing the DeviceName from the DEVNAMES
@@ -196,6 +202,8 @@ namespace Win32xx
     {
         static_assert(std::is_same_v<T, CDevNames>,
             "GetDriverName() is only supported for CDevNames.");
+
+        return _T("");
     }
 
     // Returns a CString containing the GetDriverName from the DEVNAMES
@@ -211,6 +219,8 @@ namespace Win32xx
     {
         static_assert(std::is_same_v<T, CDevNames>,
             "GetPortName() is only supported for CDevNames.");
+
+        return _T("");
     }
 
     // Returns a CString containing the GetPortName from the DEVNAMES
@@ -226,6 +236,8 @@ namespace Win32xx
     {
         static_assert(std::is_same_v<T, CDevNames>,
             "IsDefaultPrinter() is only supported for CDevNames.");
+
+        return _T("");
     }
 
     // Returns true if the DEVNAMES in the global memory is for the
@@ -317,28 +329,28 @@ namespace Win32xx
     inline void CWinApp::AddCDCDataToMap(HDC dc, std::weak_ptr<CDC_Data> pData)
     {
         CThreadLock mapLock(m_gdiLock);
-        m_mapCDCData.emplace(std::make_pair(dc, pData));
+        m_mapCDCData.emplace(dc, pData);
     }
 
     // Adds a HGDIOBJ and CGDI_Data* pair to the map.
     inline void CWinApp::AddCGDIDataToMap(HGDIOBJ gdi, std::weak_ptr<CGDI_Data> pData)
     {
         CThreadLock mapLock(m_gdiLock);
-        m_mapCGDIData.emplace(std::make_pair(gdi, pData));
+        m_mapCGDIData.emplace(gdi, pData);
     }
 
     // Adds a HIMAGELIST and CIml_Data* pair to the map.
     inline void CWinApp::AddCImlDataToMap(HIMAGELIST images, std::weak_ptr<CIml_Data> pData)
     {
         CThreadLock mapLock(m_gdiLock);
-        m_mapCImlData.emplace(std::make_pair(images, pData));
+        m_mapCImlData.emplace(images, pData);
     }
 
     // Adds a HMENU and CMenu_Data* to the map.
     inline void CWinApp::AddCMenuDataToMap(HMENU menu, std::weak_ptr<CMenu_Data> pData)
     {
         CThreadLock mapLock(m_wndLock);
-        m_mapCMenuData.emplace(std::make_pair(menu, pData));
+        m_mapCMenuData.emplace(menu, pData);
     }
 
     // Adds the window handle and CWnd pointer in the HWND map.
@@ -353,7 +365,7 @@ namespace Win32xx
         RemoveCWndFromMap(pWnd);
 
         // Add the (HWND, CWnd*) pair to the map
-        m_mapHWND.emplace(std::make_pair(wnd, pWnd));
+        m_mapHWND.emplace(wnd, pWnd);
     }
 
     // Retrieves a pointer to CDC_Data from the map.
@@ -521,13 +533,12 @@ namespace Win32xx
     {
         CThreadLock mapLock(m_wndLock);
 
-        // Erase the CWnd pointer entry from the map.
         auto& map = GetApp()->m_mapHWND;
-        for (auto it = map.begin(); it != map.end(); ++it)
+        for (auto [hwnd, wndPtr] : map)
         {
-            if (pWnd == it->second)
+            if (pWnd == wndPtr)
             {
-                map.erase(it);
+                map.erase(hwnd);
                 break;
             }
         }

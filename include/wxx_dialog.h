@@ -818,22 +818,13 @@ namespace Win32xx
         rd.childRect = childRect;
         rd.wnd = wnd;
 
-        auto it = m_resizeData.begin();
-        while (it != m_resizeData.end())
-        {
-            if ( it->wnd == wnd)
-            {
-                // Replace the value.
-                *it = rd;
-                break;
-            }
+        auto it = std::find_if(m_resizeData.begin(), m_resizeData.end(),
+            [wnd](const auto& item) { return item.wnd == wnd; });
 
-            ++it;
-        }
-
-        // Add the value.
-        if (it == m_resizeData.end())
-            m_resizeData.push_back(rd);
+        if (it != m_resizeData.end())
+            *it = rd; // Update existing
+        else
+            m_resizeData.push_back(rd); // Add new
     }
 
     // A callback function used by EnumChildWindows.

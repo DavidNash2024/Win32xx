@@ -2455,19 +2455,23 @@ namespace Win32xx
     // Call this when the DPI changes.
     inline void CDocker::DpiUpdateDockerSizes()
     {
-        std::vector<CDocker*> v(m_allDockers.begin(), m_allDockers.end());
-        for (CDocker* docker : v)
+        CDocker* const topDocker = GetTopmostDocker();
+        if (!topDocker) return;
+
+        for (CDocker* docker : m_allDockers)
         {
-            if (docker->IsWindow() && (docker->GetTopmostDocker() == this))
+            if (docker->IsWindow() && (docker->GetTopmostDocker() == topDocker))
             {
-                // Reset the docker size.
-                int size = (docker->GetDockSize() * GetWindowDpi(*GetTopmostDocker())) /
-                    GetTopmostDocker()->m_oldDpi;
-                docker->SetDockSize(size);
+                const int currentDpi = GetWindowDpi(*topDocker);
+                if (topDocker->m_oldDpi != 0)
+                {
+                    int size = (docker->GetDockSize() * currentDpi) / topDocker->m_oldDpi;
+                    docker->SetDockSize(size);
+                }
             }
         }
 
-        GetTopmostDocker()->m_oldDpi = GetWindowDpi(*GetTopmostDocker());
+        topDocker->m_oldDpi = GetWindowDpi(*topDocker);
         RecalcDockLayout();
     }
 

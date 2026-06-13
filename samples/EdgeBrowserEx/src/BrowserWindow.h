@@ -65,6 +65,28 @@ private:
     HRESULT ClearContentCookies();
     HRESULT ClearControlsCookies();
 
+    // Messages handlers called in SetUIMessageBroker.
+    HRESULT OnMGCreateTab(nlohmann::json args);
+    HRESULT OnMGNavigate(nlohmann::json args);
+    HRESULT OnMGGoForward(nlohmann::json args);
+    HRESULT OnMGGoBack(nlohmann::json args);
+    HRESULT OnMGReload(nlohmann::json args);
+    HRESULT OnMGCancel(nlohmann::json args);
+    HRESULT OnMGSwitchTab(nlohmann::json args);
+    HRESULT OnMGCloseTab(nlohmann::json args);
+    HRESULT OnMGCloseWindow(nlohmann::json args);
+    HRESULT OnMGShowOptions(nlohmann::json args);
+    HRESULT OnMGHideOptions(nlohmann::json args);
+    HRESULT OnMGOptionSelected(nlohmann::json args);
+    HRESULT OnMGHistory(nlohmann::json args, nlohmann::json jsonObj);
+
+    // Messages handlers called in HandleTabMessageReceived.
+    HRESULT OnTabFavourites(size_t tabId, ICoreWebView2* webview, nlohmann::json jsonObj);
+    HRESULT OnTabSettings(size_t tabId, ICoreWebView2* webview, nlohmann::json jsonObj);
+    HRESULT OnTabClearCache(size_t tabId, ICoreWebView2* webview, nlohmann::json jsonObj);
+    HRESULT OnTabClearCookies(size_t tabId, ICoreWebView2* webview, nlohmann::json jsonObj);
+    HRESULT OnTabHistory(size_t tabId, ICoreWebView2* webview, nlohmann::json jsonObj);
+
     void SetUIMessageBroker();
     HRESULT ResizeUIWebViews();
     void UpdateMinWindowSize();

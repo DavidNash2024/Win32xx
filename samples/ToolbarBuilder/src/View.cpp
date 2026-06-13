@@ -377,36 +377,31 @@ void CView::OnInitialUpdate()
 LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
-    switch (pHeader->code)
+    if (pHeader != nullptr)
     {
-    // PGN_CALCSIZE is a Notification sent by a pager control to obtain
-    // the scrollable dimensions of the contained window.
-    case PGN_CALCSIZE:
-    {
-        LPNMPGCALCSIZE   pCalcSize = (LPNMPGCALCSIZE)lparam;
-        switch (pCalcSize->dwFlag)
+        switch (pHeader->code)
         {
-        // Used by the pager control to calculate the scrollable area of the
-        // contained window.
-        case PGF_CALCWIDTH:
+            // PGN_CALCSIZE is a Notification sent by a pager control to obtain
+            // the scrollable dimensions of the contained window.
+        case PGN_CALCSIZE:
         {
-            // Get the optimum width of the toolbar.
-            CSize size = m_toolbar.GetMaxSize();
-            pCalcSize->iWidth = size.cx;
+            LPNMPGCALCSIZE pCalcSize = reinterpret_cast<LPNMPGCALCSIZE>(pHeader);
+            if (pCalcSize->dwFlag == PGF_CALCWIDTH)
+            {
+                // Get the optimum width of the toolbar.
+                CSize size = m_toolbar.GetMaxSize();
+                pCalcSize->iWidth = size.cx;
+            }
+            break;
+        }
+        case PGN_SCROLL:
+        {
+            LPNMPGSCROLL pScroll = (LPNMPGSCROLL)lparam;
+            pScroll->iScroll = m_toolbar.GetButtonSize().cx;
             break;
         }
         default: break;
         }
-    }
-
-    case PGN_SCROLL:
-    {
-        LPNMPGSCROLL pScroll = (LPNMPGSCROLL)lparam;
-        pScroll->iScroll = m_toolbar.GetButtonSize().cx;
-        break;
-    }
-
-    default: break;
     }
 
     // Some notifications should return a value when handled

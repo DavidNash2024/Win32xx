@@ -556,10 +556,10 @@ namespace Win32xx
             m_menuImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
 
             // Add the resource IDs to the m_menuIcons vector.
-            for (auto it = menuData.begin(); it != menuData.end(); ++it)
+            for (UINT id : menuData)
             {
-                if ((*it) != 0)
-                    m_menuItemIDs.push_back(*it);
+                if (id != 0)
+                    m_menuItemIDs.push_back(id);
             }
 
             // Add the images to the imageList.
@@ -615,20 +615,18 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::AddMRUEntry(LPCTSTR mruEntry)
     {
-        // Erase possible duplicate entries from vector.
-        RemoveMRUEntry(mruEntry);
-
-        // Insert the entry at the beginning of the vector.
-        m_mruEntries.insert(m_mruEntries.begin(), mruEntry);
-
-        // Delete excessive MRU entries.
-        if (m_mruEntries.size() > m_maxMRU)
+        if (mruEntry)
         {
-            m_mruEntries.erase(m_mruEntries.begin() +
-                static_cast<int>(m_maxMRU), m_mruEntries.end());
-        }
+            RemoveMRUEntry(mruEntry);
+            m_mruEntries.insert(m_mruEntries.begin(), mruEntry);
+            if (m_mruEntries.size() > m_maxMRU)
+            {
+                m_mruEntries.erase(m_mruEntries.begin() + static_cast<
+                    std::size_t>(m_maxMRU), m_mruEntries.end());
+            }
 
-        UpdateMRUMenu();
+            UpdateMRUMenu();
+        }
     }
 
     // Adds a ToolBar to the rebar control.
@@ -2882,14 +2880,10 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::RemoveMRUEntry(LPCTSTR MRUEntry)
     {
-        for (auto it = m_mruEntries.begin(); it != m_mruEntries.end(); ++it)
-        {
-            if ((*it) == MRUEntry)
-            {
-                m_mruEntries.erase(it);
-                break;
-            }
-        }
+        auto it = std::find(m_mruEntries.begin(), m_mruEntries.end(), MRUEntry);
+
+        if (it != m_mruEntries.end())
+            m_mruEntries.erase(it);
 
         UpdateMRUMenu();
     }
@@ -3191,12 +3185,8 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::SetMRULimit(UINT mruLimit)
     {
-        // Remove any excess MRU entries.
-        if (mruLimit < m_mruEntries.size())
-        {
-            m_mruEntries.erase(m_mruEntries.begin() + static_cast<int>(mruLimit),
-                m_mruEntries.end());
-        }
+        if (m_mruEntries.size() > m_maxMRU)
+            m_mruEntries.resize(m_maxMRU);
 
         m_maxMRU = mruLimit;
         UpdateMRUMenu();
@@ -3949,7 +3939,7 @@ namespace Win32xx
         case UWM_GETCFRAMET:        return reinterpret_cast<LRESULT>(this);
 
         default: return CWnd::WndProcDefault(msg, wparam, lparam);
-        } // switch msg
+        }
     }
 
 

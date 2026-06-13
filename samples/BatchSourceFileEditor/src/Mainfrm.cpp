@@ -28,15 +28,6 @@ CMainFrame::~CMainFrame()
 {
 }
 
-// Returns true if the file's extension is cpp, h, or rc.
-bool CMainFrame::IsSourceFile(const CString& fileName) const
-{
-    int dot = fileName.ReverseFind(L'.');
-    CString ext = fileName.Mid(dot + 1, lstrlen(fileName));
-
-    return (ext == L"cpp" || ext == L"h" || ext == L"rc" );
-}
-
 // Searches source files the specified folder and any sub folder.
 // Checks each source file for lines ending with training spaces.
 void CMainFrame::CheckForEndSpace(const CString& folder)
@@ -122,54 +113,6 @@ void CMainFrame::CheckForTabs(const CString& folder)
     }
 }
 
-bool CMainFrame::PickFolder(const CString& startFolder)
-{
-    bool result = false;
-    IFileDialog* pfd;
-    if (SUCCEEDED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd))))
-    {
-        LPWSTR path;
-        DWORD dwOptions;
-        if (SUCCEEDED(pfd->GetOptions(&dwOptions)))
-        {
-            pfd->SetOptions(dwOptions | FOS_PICKFOLDERS);
-        }
-
-        PIDLIST_ABSOLUTE pidl;
-        HRESULT hresult = ::SHParseDisplayName(startFolder, nullptr, &pidl, SFGAO_FOLDER, 0);
-        if (SUCCEEDED(hresult))
-        {
-            IShellItem* psi;
-            hresult = ::SHCreateShellItem(nullptr, nullptr, pidl, &psi);
-            if (SUCCEEDED(hresult))
-            {
-                pfd->SetFolder(psi);
-            }
-            ILFree(pidl);
-            psi->Release();
-        }
-
-        if (S_OK == pfd->Show(nullptr))
-        {
-            IShellItem* psi;
-            if (SUCCEEDED(pfd->GetResult(&psi)))
-            {
-                if (SUCCEEDED(psi->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &path)))
-                {
-                    m_folder = path;
-                    result = true;
-                }
-
-                CoTaskMemFree(path);
-                psi->Release();
-            }
-        }
-        pfd->Release();
-    }
-
-    return result;
-}
-
 CString CMainFrame::GetStartFolder()
 {
     CString str = GetCommandLineArgs()[0];
@@ -196,6 +139,18 @@ bool CMainFrame::HasEndSpace(const CString& fileName)
     return false;
 }
 
+bool CMainFrame::HasNonAscii(const CString& fileName)
+{
+    std::ifstream file(WtoA(fileName.c_str()));
+    char c;
+    while (file.get(c)) {
+        if (c < 0)  // Check for non-ascii.
+            return true;
+    }
+
+    return false;
+}
+
 // Returns true if the specified file contains tabs.
 bool CMainFrame::HasTabs(const CString& fileName)
 {
@@ -209,17 +164,72 @@ bool CMainFrame::HasTabs(const CString& fileName)
     return false;
 }
 
-bool CMainFrame::HasNonAscii(const CString& fileName)
+// Returns true if the file's extension is cpp, h, or rc.
+bool CMainFrame::IsSourceFile(const CString& fileName) const
 {
-    std::ifstream file(WtoA(fileName.c_str()));
-    char c;
-    while (file.get(c)) {
-        if (c < 0)  // Check for non-ascii.
-            return true;
+    int dot = fileName.ReverseFind(L'.');
+    CString ext = fileName.Mid(dot + 1, lstrlen(fileName));
+
+    return (ext == L"cpp" || ext == L"h" || ext == L"rc");
+}
+
+// Check source files for tabs and trailing white space.
+BOOL CMainFrame::OnCheckFiles()
+{
+    // Clear any previous searches.
+    m_filesWithEndSpace.clear();
+    m_filesWithNonAscii.clear();
+    m_filesWithTabs.clear();
+
+    // Check file for tabs
+    m_view.AppendBigText(L"Source files with tabs\n");
+    CheckForTabs(m_folder);
+    if (m_filesWithTabs.size() == 0)
+        m_view.AppendSmallText(L"None\n");
+    else
+    {
+        CString str = L"Files with tabs: " +
+            ToCString(m_filesWithTabs.size()) + L"\n";
+        m_view.AppendSmallText(str);
     }
 
+    // Check files for trailing white space
+    m_view.AppendBigText(L"Source files with trailing white space\n");
+    CheckForEndSpace(m_folder);
+    if (m_filesWithEndSpace.size() == 0)
+        m_view.AppendSmallText(L"None\n");
+    else
+    {
+        CString str = L"Files with trailing white space: " +
+            ToCString(m_filesWithEndSpace.size()) + L"\n";
+        m_view.AppendSmallText(str);
+    }
 
-    return false;
+    m_view.AppendBigText(L"Source files with non-ascii characters\n");
+    CheckForNonAscii(m_folder);
+    if (m_filesWithNonAscii.size() == 0)
+        m_view.AppendSmallText(L"None\n");
+    else
+    {
+        CString str = L"Files with non-ascii characters: " +
+            ToCString(m_filesWithNonAscii.size()) + L"\n";
+        m_view.AppendSmallText(str);
+    }
+
+    SetStatusText(L"Done");
+
+    return TRUE;
+}
+
+BOOL CMainFrame::OnChooseFolder()
+{
+    if (PickFolder(m_folder))
+    {
+        m_view.AppendBigText(L"The folder selected is:\n");
+        m_view.AppendBigText(m_folder + L"\n");
+    }
+
+    return TRUE;
 }
 
 // OnCommand responds to menu and and toolbar input.
@@ -267,54 +277,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 BOOL CMainFrame::OnFileExit()
 {
     Close();
-    return TRUE;
-}
-
-// Display the help about dialog.
-BOOL CMainFrame::OnHelp()
-{
-    // Ensure only one dialog displayed even for multiple hits of the F1 button.
-    if (!m_aboutDialog.IsWindow())
-    {
-        m_aboutDialog.DoModal(*this);
-    }
-
-    return TRUE;
-}
-
-// Called after the window is created.
-void CMainFrame::OnInitialUpdate()
-{
-    // The frame is now created.
-    // Place any additional startup code here.
-
-    m_view.AppendBigText(L"Instructions\n\n");
-    m_view.AppendSmallText(L"This program searches all source files within the selected folder\n");
-    m_view.AppendSmallText(L"for lines containing tabs, trailing spaces and non-ascii characters.\n");
-    m_view.AppendSmallText(L"Source files in any subfolders are searched as well.\n");
-    m_view.AppendSmallText(L"When fixed, tabs are replaced with 4 space characters,\n");
-    m_view.AppendSmallText(L"trailing spaces are removed from the end of lines,\n");
-    m_view.AppendSmallText(L"and non-ascii characters are removed from lines.\n\n");
-
-    m_view.AppendSmallText(L"Select the Folder button to choose the folder containing the source files.\n");
-    m_view.AppendSmallText(L"Select the Search button to list the files which will be modified.\n");
-    m_view.AppendSmallText(L"Select the Edit button to fix the listed files.\n\n");
-
-    m_view.AppendBigWarning(L"Warning:\n");
-    m_view.AppendSmallWarning(L"This will modify source files in the selected folder and any subfolders.\n");
-    m_view.AppendSmallWarning(L"All non-ascii characters will be removed from source files.\n");
-    m_view.AppendSmallWarning(L"Make a backup copy of your source files before modifying them.\n");
-    m_view.AppendSmallWarning(L"Choose the folder containing the source files carefully.\n\n");
-}
-
-BOOL CMainFrame::OnChooseFolder()
-{
-    if (PickFolder(m_folder))
-    {
-        m_view.AppendBigText(L"The folder selected is:\n");
-        m_view.AppendBigText(m_folder + L"\n");
-    }
-
     return TRUE;
 }
 
@@ -385,104 +347,6 @@ BOOL CMainFrame::OnFilePrint()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
-
-    return TRUE;
-}
-
-// Called when the Print Preview's "Close" button is pressed.
-BOOL CMainFrame::OnPreviewClose()
-{
-    // Swap the view.
-    SetView(m_view);
-
-    // Show the menu and toolbar.
-    ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(m_isToolbarShown);
-
-    SetStatusText(LoadString(IDW_READY));
-
-    return TRUE;
-}
-
-// Called when the Print Preview's "Print Now" button is pressed.
-BOOL CMainFrame::OnPreviewPrint()
-{
-    m_view.QuickPrint(L"Batch Editor");
-    return TRUE;
-}
-
-// Called when the Print Preview's "Print Setup" button is pressed.
-BOOL CMainFrame::OnPreviewSetup()
-{
-    // Call the print setup dialog.
-    CPrintDialog printDlg(PD_PRINTSETUP);
-    try
-    {
-        // Display the print dialog.
-        if (printDlg.DoModal(*this) == IDOK)
-        {
-            CString status = L"Printer: " + printDlg.GetDeviceName();
-            SetStatusText(status);
-        }
-    }
-
-    catch (const CException& e)
-    {
-        // An exception occurred. Display the relevant information.
-        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
-    }
-
-    // Initiate the print preview.
-    UINT maxPage = m_view.CollatePages();
-    m_preview.DoPrintPreview(*this, maxPage);
-
-    return TRUE;
-}
-
-// Check source files for tabs and trailing white space.
-BOOL CMainFrame::OnCheckFiles()
-{
-    // Clear any previous searches.
-    m_filesWithEndSpace.clear();
-    m_filesWithNonAscii.clear();
-    m_filesWithTabs.clear();
-
-    // Check file for tabs
-    m_view.AppendBigText(L"Source files with tabs\n");
-    CheckForTabs(m_folder);
-    if (m_filesWithTabs.size() == 0)
-        m_view.AppendSmallText(L"None\n");
-    else
-    {
-        CString str = L"Files with tabs: " +
-        ToCString(m_filesWithTabs.size()) + L"\n";
-        m_view.AppendSmallText(str);
-    }
-
-    // Check files for trailing white space
-    m_view.AppendBigText(L"Source files with trailing white space\n");
-    CheckForEndSpace(m_folder);
-    if (m_filesWithEndSpace.size() == 0)
-        m_view.AppendSmallText(L"None\n");
-    else
-    {
-        CString str = L"Files with trailing white space: " +
-            ToCString(m_filesWithEndSpace.size()) + L"\n";
-        m_view.AppendSmallText(str);
-    }
-
-    m_view.AppendBigText(L"Source files with non-ascii characters\n");
-    CheckForNonAscii(m_folder);
-    if (m_filesWithNonAscii.size() == 0)
-        m_view.AppendSmallText(L"None\n");
-    else
-    {
-        CString str = L"Files with non-ascii characters: " +
-            ToCString(m_filesWithNonAscii.size()) + L"\n";
-        m_view.AppendSmallText(str);
-    }
-
-    SetStatusText(L"Done");
 
     return TRUE;
 }
@@ -588,22 +452,159 @@ BOOL CMainFrame::OnFixFiles()
     return TRUE;
 }
 
+// Display the help about dialog.
+BOOL CMainFrame::OnHelp()
+{
+    // Ensure only one dialog displayed even for multiple hits of the F1 button.
+    if (!m_aboutDialog.IsWindow())
+    {
+        m_aboutDialog.DoModal(*this);
+    }
+
+    return TRUE;
+}
+
+// Called after the window is created.
+void CMainFrame::OnInitialUpdate()
+{
+    // The frame is now created.
+    // Place any additional startup code here.
+
+    m_view.AppendBigText(L"Instructions\n\n");
+    m_view.AppendSmallText(L"This program searches all source files within the selected folder\n");
+    m_view.AppendSmallText(L"for lines containing tabs, trailing spaces and non-ascii characters.\n");
+    m_view.AppendSmallText(L"Source files in any subfolders are searched as well.\n");
+    m_view.AppendSmallText(L"When fixed, tabs are replaced with 4 space characters,\n");
+    m_view.AppendSmallText(L"trailing spaces are removed from the end of lines,\n");
+    m_view.AppendSmallText(L"and non-ascii characters are removed from lines.\n\n");
+
+    m_view.AppendSmallText(L"Select the Folder button to choose the folder containing the source files.\n");
+    m_view.AppendSmallText(L"Select the Search button to list the files which will be modified.\n");
+    m_view.AppendSmallText(L"Select the Edit button to fix the listed files.\n\n");
+
+    m_view.AppendBigWarning(L"Warning:\n");
+    m_view.AppendSmallWarning(L"This will modify source files in the selected folder and any subfolders.\n");
+    m_view.AppendSmallWarning(L"All non-ascii characters will be removed from source files.\n");
+    m_view.AppendSmallWarning(L"Make a backup copy of your source files before modifying them.\n");
+    m_view.AppendSmallWarning(L"Choose the folder containing the source files carefully.\n\n");
+}
+
+
+
+// Called when the Print Preview's "Close" button is pressed.
+BOOL CMainFrame::OnPreviewClose()
+{
+    // Swap the view.
+    SetView(m_view);
+
+    // Show the menu and toolbar.
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(m_isToolbarShown);
+
+    SetStatusText(LoadString(IDW_READY));
+
+    return TRUE;
+}
+
+// Called when the Print Preview's "Print Now" button is pressed.
+BOOL CMainFrame::OnPreviewPrint()
+{
+    m_view.QuickPrint(L"Batch Editor");
+    return TRUE;
+}
+
+// Called when the Print Preview's "Print Setup" button is pressed.
+BOOL CMainFrame::OnPreviewSetup()
+{
+    // Call the print setup dialog.
+    CPrintDialog printDlg(PD_PRINTSETUP);
+    try
+    {
+        // Display the print dialog.
+        if (printDlg.DoModal(*this) == IDOK)
+        {
+            CString status = L"Printer: " + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+    }
+
+    // Initiate the print preview.
+    UINT maxPage = m_view.CollatePages();
+    m_preview.DoPrintPreview(*this, maxPage);
+
+    return TRUE;
+}
+
+bool CMainFrame::PickFolder(const CString& startFolder)
+{
+    bool result = false;
+    IFileDialog* pfd;
+    if (SUCCEEDED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd))))
+    {
+        LPWSTR path;
+        DWORD dwOptions;
+        if (SUCCEEDED(pfd->GetOptions(&dwOptions)))
+        {
+            pfd->SetOptions(dwOptions | FOS_PICKFOLDERS);
+        }
+
+        PIDLIST_ABSOLUTE pidl;
+        HRESULT hresult = ::SHParseDisplayName(startFolder, nullptr, &pidl, SFGAO_FOLDER, 0);
+        if (SUCCEEDED(hresult))
+        {
+            IShellItem* psi;
+            hresult = ::SHCreateShellItem(nullptr, nullptr, pidl, &psi);
+            if (SUCCEEDED(hresult))
+            {
+                pfd->SetFolder(psi);
+            }
+            ILFree(pidl);
+            psi->Release();
+        }
+
+        if (S_OK == pfd->Show(nullptr))
+        {
+            IShellItem* psi;
+            if (SUCCEEDED(pfd->GetResult(&psi)))
+            {
+                if (SUCCEEDED(psi->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &path)))
+                {
+                    m_folder = path;
+                    result = true;
+                }
+
+                CoTaskMemFree(path);
+                psi->Release();
+            }
+        }
+        pfd->Release();
+    }
+
+    return result;
+}
+
 // Fills m_fileContents with the contents of the specified file.
 // Throws a CUserException if text lines don't end with CRLF.
 void CMainFrame::ReadFile(const CString& fileName)
 {
+    m_fileContents.clear();
     CFile file(fileName, OPEN_EXISTING);
     ULONGLONG fileSize = file.GetLength();
+
+    if (fileSize == 0)
+        throw CUserException(L"Invalid source file (empty)");
 
     // Prevent 32-bit overflow boundaries.
     if (fileSize >= UINT_MAX)
         throw CUserException(L"File too large");
 
-    m_fileContents.clear();
-    if (fileSize == 0)
-        return;
-
-    // Read the file entirely in one step.
+    // Read the file into a vector of char.
     std::vector<char> buffer(static_cast<size_t>(fileSize));
     file.Read(buffer.data(), static_cast<UINT>(fileSize));
     file.Close();
@@ -614,19 +615,19 @@ void CMainFrame::ReadFile(const CString& fileName)
     size_t lineStart = 0;
     size_t i = 0;
 
-    // Single-pass linear scan: O(N) complexity
+    // Scan the file for new lines.
     while (i < buffer.size())
     {
-        // Look for the end of a line
+        // Look for the line feed character.
         if (buffer[i] == '\n')
         {
-            // Enforce Windows CRLF style validation
+            // Enforce Windows CRLF style validation.
             if (i == 0 || buffer[i - 1] != '\r')
                 throw CUserException(L"Not a Windows text file (missing CR before LF)");
 
             size_t lineLength = (i - 1) - lineStart;
 
-            // Forward raw parameters directly to construct CStringA in-place
+            // Forward raw parameters directly to construct CStringA in-place.
             m_fileContents.emplace_back(buffer.data() + lineStart, static_cast<int>(lineLength));
 
             lineStart = i + 1;
@@ -637,34 +638,18 @@ void CMainFrame::ReadFile(const CString& fileName)
     // Handle the end of the file gracefully.
     if (lineStart < buffer.size())
     {
-        // Treat remaining bytes as the final line (no trailing CRLF)
+        // Treat remaining bytes as the final line (no trailing CRLF).
         size_t lineLength = buffer.size() - lineStart;
         m_fileContents.emplace_back(buffer.data() + lineStart, static_cast<int>(lineLength));
     }
     else if (buffer.size() > 0 && buffer.back() == '\n')
     {
-        // File ended exactly with a CRLF, add final blank line
+        // File ended exactly with a CRLF, add final blank line.
         m_fileContents.emplace_back("");
     }
 
     if (m_fileContents.empty())
-        throw CUserException(L"Not a Windows text file (empty or invalid)");
-}
-
-// Writes the contents of m_fileContents to the specified file.
-void CMainFrame::WriteFile(const CString& fileName)
-{
-    CFile file(fileName, CREATE_ALWAYS);  // Truncates existing file to zero.
-
-    // Write each line of text to the file.
-    for (auto it = m_fileContents.begin(); it != m_fileContents.end(); ++it)
-    {
-        file.Write((*it).c_str(), (*it).GetLength());
-        if (it + 1 != m_fileContents.end())
-            file.Write("\r\n", 2);
-    }
-
-    file.Close();
+        throw CUserException(L"Failed to parse the source file");
 }
 
 // Configure the menu icons.
@@ -682,16 +667,16 @@ void CMainFrame::SetupToolBar()
     // This function is called when the toobar is created.
 
     // Set the resource IDs for the toolbar buttons.
-    AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_CHOOSE );
-    AddToolBarButton( IDM_FILE_CHECK);
-    AddToolBarButton( IDM_FILE_FIX );
+    AddToolBarButton(IDM_FILE_NEW);
+    AddToolBarButton(IDM_FILE_CHOOSE);
+    AddToolBarButton(IDM_FILE_CHECK);
+    AddToolBarButton(IDM_FILE_FIX);
 
-    AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
+    AddToolBarButton(0);                      // Separator
+    AddToolBarButton(IDM_FILE_PRINT);
 
-    AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_HELP_ABOUT );
+    AddToolBarButton(0);                      // Separator
+    AddToolBarButton(IDM_HELP_ABOUT);
 }
 
 // Handle the frame's messages.
@@ -709,3 +694,21 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Writes the contents of m_fileContents to the specified file.
+void CMainFrame::WriteFile(const CString& fileName)
+{
+    CFile file(fileName, CREATE_ALWAYS);  // Truncates existing file to zero.
+
+    // Write each line of text to the file.
+    bool first = true;
+    for (const auto& line : m_fileContents)
+    {
+        if (!first)
+            file.Write("\r\n", 2);
+
+        first = false;
+        file.Write(line.c_str(), line.GetLength());
+    }
+
+    file.Close();
+}
