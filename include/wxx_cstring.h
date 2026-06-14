@@ -462,7 +462,14 @@ namespace Win32xx
     {
         assert(index >= 0);
         assert(index < GetLength());
-        return m_str[static_cast<size_t>(index)];
+
+        if ((index >= 0) && (index < GetLength()))
+            return m_str[static_cast<size_t>(index)];
+        else
+        {
+            static T ch = T();
+            return ch;
+        }
     }
 
     // Subscript operator. Returns the T character at the specified index.
@@ -471,7 +478,14 @@ namespace Win32xx
     {
         assert(index >= 0);
         assert(index < GetLength());
-        return m_str[index];
+
+        if ((index >= 0) && (index < GetLength()))
+            return m_str[static_cast<size_t>(index)];
+        else
+        {
+            static T ch = T();
+            return ch;
+        }
     }
 
     // Addition assignment. Appends CStringT<T>.
@@ -499,27 +513,22 @@ namespace Win32xx
     }
 
     // Allocates a BSTR from the CStringT content.
-    // Note: Ensure the returned BSTR is freed later with SysFreeString to
-    // avoid a memory leak.
-    template <>
-    inline BSTR CStringA::AllocSysString() const
-    {
-        CStringW wide(AtoW(m_str.c_str()));
-        BSTR bstr = ::SysAllocStringLen(wide, wide.GetLength());
-        if (bstr == nullptr)
-            throw std::bad_alloc();
-
-        return bstr;
-    }
-
-    // Allocates a BSTR from the CStringT content.
     // Note: Free the returned string later with SysFreeString to avoid a
     // memory leak.
     template <class T>
     inline BSTR CStringT<T>::AllocSysString() const
     {
-        BSTR bstr = ::SysAllocStringLen(m_str.c_str(), static_cast<UINT>(m_str.size()));
-        if (bstr == 0)
+        BSTR bstr = nullptr;
+
+        if constexpr (std::is_same_v<T, char>)
+        {
+            CStringW wide(AtoW(m_str.c_str()));
+            bstr = ::SysAllocStringLen(wide.c_str(), static_cast<UINT>(wide.GetLength()));
+        }
+        else // T is wchar_t (WCHAR)
+            bstr = ::SysAllocStringLen(m_str.c_str(), static_cast<UINT>(m_str.size()));
+
+        if (bstr == nullptr)
             throw std::bad_alloc();
 
         return bstr;
@@ -554,21 +563,6 @@ namespace Win32xx
         m_str.assign(text, static_cast<size_t>(count));
     }
 
-    // Performs a case sensitive comparison of the two strings using
-    // locale-specific information.
-    template <>
-    inline int CStringA::Collate(const CHAR* text) const
-    {
-        assert(text != nullptr);
-        int res = ::CompareStringA(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
-
-        assert(res);
-        if      (res == CSTR_LESS_THAN) return -1;
-        else if (res == CSTR_GREATER_THAN) return 1;
-
-        return 0;
-    }
-
     // Provides an alternative for casting to LPCTSTR.
     template <class T>
     inline const T* CStringT<T>::c_str() const
@@ -582,24 +576,22 @@ namespace Win32xx
     inline int CStringT<T>::Collate(const T* text) const
     {
         assert(text != nullptr);
-        int res = ::CompareStringW(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
+        int res = 0;
 
-        assert(res);
-        if      (res == CSTR_LESS_THAN) return -1;
-        else if (res == CSTR_GREATER_THAN) return 1;
+        if (text != nullptr)
+        {
+            if constexpr (std::is_same_v<T, char>)
+            {
+                res = ::CompareStringA(LOCALE_USER_DEFAULT, 0,
+                    m_str.c_str(), -1, text, -1);
+            }
+            else // T is wchar_t (WCHAR)
+            {
+                res = ::CompareStringW(LOCALE_USER_DEFAULT, 0,
+                    m_str.c_str(), -1, text, -1);
+            }
+        }
 
-        return 0;
-    }
-
-    // Performs a case insensitive comparison of the two strings using
-    // locale-specific information.
-    template <>
-    inline int CStringA::CollateNoCase(const CHAR* text) const
-    {
-        assert(text != nullptr);
-        int res = ::CompareStringA(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
-
-        assert(res);
         if      (res == CSTR_LESS_THAN) return -1;
         else if (res == CSTR_GREATER_THAN) return 1;
 
@@ -612,9 +604,22 @@ namespace Win32xx
     inline int CStringT<T>::CollateNoCase(const T* text) const
     {
         assert(text != nullptr);
-        int res = ::CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
+        int res = 0;
 
-        assert(res);
+        if (text != nullptr)
+        {
+            if constexpr (std::is_same_v<T, char>)
+            {
+                res = ::CompareStringA(LOCALE_USER_DEFAULT,
+                    NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
+            }
+            else // T is wchar_t (WCHAR)
+            {
+                res = ::CompareStringW(LOCALE_USER_DEFAULT,
+                    NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
+            }
+        }
+
         if      (res == CSTR_LESS_THAN) return -1;
         else if (res == CSTR_GREATER_THAN) return 1;
 
@@ -626,7 +631,7 @@ namespace Win32xx
     inline int CStringA::Compare(const CHAR* text) const
     {
         assert(text != nullptr);
-        return ::lstrcmpA(m_str.c_str(), text);
+        return m_str.compare(text);
     }
 
     // Performs a case sensitive comparison of the two strings.
@@ -634,7 +639,7 @@ namespace Win32xx
     inline int CStringT<T>::Compare(const T* text) const
     {
         assert(text != nullptr);
-        return ::lstrcmpW(m_str.c_str(), text);
+        return m_str.compare(text);
     }
 
     // Performs a case insensitive comparison of the two strings.
@@ -642,7 +647,8 @@ namespace Win32xx
     inline int CStringA::CompareNoCase(const CHAR* text) const
     {
         assert(text != nullptr);
-        return ::lstrcmpiA(m_str.c_str(), text);
+
+        return ::_stricmp(m_str.c_str(), text);
     }
 
     // Performs a case insensitive comparison of the two strings.
@@ -650,7 +656,8 @@ namespace Win32xx
     inline int CStringT<T>::CompareNoCase(const T* text) const
     {
         assert(text != nullptr);
-        return ::lstrcmpiW(m_str.c_str(), text);
+
+        return ::_wcsicmp(m_str.c_str(), text);
     }
 
     // Deletes a character or characters from the string.
@@ -659,8 +666,9 @@ namespace Win32xx
     {
         assert(index >= 0);
         assert(count >= 0);
+        assert(index < GetLength());
 
-        if (index < GetLength())
+        if ((index >= 0) && (count >= 0) && (index < GetLength()))
             m_str.erase(static_cast<size_t>(index), static_cast<size_t>(count));
 
         return static_cast<int>(m_str.size());
@@ -678,9 +686,12 @@ namespace Win32xx
     inline int CStringT<T>::Find(T ch, int index /* = 0 */) const
     {
         assert(index >= 0);
+        size_t pos = std::basic_string<T>::npos;
 
-        size_t s = m_str.find(ch, static_cast<size_t>(index));
-        return static_cast<int>(s);
+        if (index >= 0)
+            pos = m_str.find(ch, static_cast<size_t>(index));
+
+        return (pos != std::basic_string<T>::npos) ? static_cast<int>(pos) : -1;
     }
 
     // Finds a substring within the string, starting from the specified index.
@@ -689,9 +700,12 @@ namespace Win32xx
     {
         assert(text != nullptr);
         assert(index >= 0);
+        size_t pos = std::basic_string<T>::npos;
 
-        size_t s = m_str.find(text, static_cast<size_t>(index));
-        return static_cast<int>(s);
+        if ((text != nullptr) && (index >= 0))
+            pos = m_str.find(text, static_cast<size_t>(index));
+
+        return (pos != std::basic_string<T>::npos) ? static_cast<int>(pos) : -1;
     }
 
     // Finds the first matching character from a set.
@@ -699,9 +713,12 @@ namespace Win32xx
     inline int CStringT<T>::FindOneOf(const T* text) const
     {
         assert(text != nullptr);
+        size_t pos = std::basic_string<T>::npos;
 
-        size_t s = m_str.find_first_of(text);
-        return static_cast<int>(s);
+        if (text != nullptr)
+            pos = m_str.find_first_of(text);
+
+        return (pos != std::basic_string<T>::npos) ? static_cast<int>(pos) : -1;
     }
 
     // Formats the string as sprintf does.
@@ -718,27 +735,23 @@ namespace Win32xx
     template <>
     inline void CStringA::FormatV(const CHAR*  format, va_list args)
     {
+        assert(format != nullptr);
 
-        if (format)
+        if (format != nullptr)
         {
-            int result = -1;
-            size_t length = 256;
+            va_list argsCopy;
+            va_copy(argsCopy, args); // Protect the original va_list state
 
-            // A vector is used to store the CHAR array.
-            std::vector<CHAR> buffer;
+            int length = ::vsnprintf(nullptr, 0, format, argsCopy);
+            va_end(argsCopy);
 
-            while (result == -1)
+            if (length > 0)
             {
-                buffer.assign( size_t(length)+1, 0 );
-
-#if defined(_MSC_VER)  // For Microsoft compilers.
-                result = _vsnprintf_s(buffer.data(), length, length - 1, format, args);
-#else
-                result = _vsnprintf(buffer.data(), length, format, args);
-#endif
-                length *= 2;
+                m_str.resize(static_cast<size_t>(length));
+                ::vsnprintf(m_str.data(), m_str.size() + 1, format, args);
             }
-            m_str.assign(buffer.data());
+            else
+                m_str.clear();
         }
     }
 
@@ -746,26 +759,22 @@ namespace Win32xx
     template <class T>
     inline void CStringT<T>::FormatV(const T*  format, va_list args)
     {
-        if (format)
+        assert(format != nullptr);
+
+        if (format != nullptr)
         {
-            int result = -1;
-            size_t length = 256;
+            va_list argsCopy;
+            va_copy(argsCopy, args);
+            int length = ::_vscwprintf(format, argsCopy);
+            va_end(argsCopy);
 
-            // A vector is used to store the WCHAR array.
-            std::vector<WCHAR> buffer;
-
-            while (result == -1)
+            if (length > 0)
             {
-                buffer.assign( size_t(length)+1, 0 );
-
-#if defined(_MSC_VER)  // For Microsoft compilers.
-                result = _vsnwprintf_s(buffer.data(), length, length - 1, format, args);
-#else
-                result = _vsnwprintf(buffer.data(), length, format, args);
-#endif
-                length *= 2;
+                m_str.resize(static_cast<size_t>(length));
+                ::_vsnwprintf_s(m_str.data(), m_str.size() + 1, length, format, args);
             }
-            m_str.assign(buffer.data());
+            else
+                m_str.clear();
         }
     }
 
@@ -783,38 +792,46 @@ namespace Win32xx
     template <>
     inline void CStringA::FormatMessageV(const CHAR* format, va_list args)
     {
-        LPSTR temp = nullptr;
-        if (format)
-        {
-            DWORD result = ::FormatMessageA(
-                FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                format, 0, 0, reinterpret_cast<LPSTR>(&temp), 0, &args);
+        assert(format != nullptr);
 
-            if ( result == 0 || temp == nullptr )
+        if (format != nullptr)
+        {
+            LPSTR temp = nullptr;
+            const DWORD flags = FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ALLOCATE_BUFFER;
+            DWORD result = ::FormatMessageA(flags, format, 0, 0,
+                reinterpret_cast<LPSTR>(&temp), 0, &args);
+
+            if (result == 0 || temp == nullptr)
                 throw std::bad_alloc();
 
             m_str = temp;
             ::LocalFree(temp);
         }
+        else
+            m_str.clear();
     }
 
     // Formats a message string using a variable argument list.
     template <class T>
     inline void CStringT<T>::FormatMessageV(const T* format, va_list args)
     {
-        LPWSTR temp = 0;
-        if (format)
-        {
-            DWORD result = ::FormatMessageW(
-                FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                format, 0, 0, reinterpret_cast<LPWSTR>(&temp), 0, &args);
+        assert(format != nullptr);
 
-            if ( result == 0 || temp == 0 )
+        if (format != nullptr)
+        {
+            LPWSTR temp = 0;
+            const DWORD flags = FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ALLOCATE_BUFFER;
+            DWORD result = ::FormatMessageW(flags, format, 0, 0,
+                reinterpret_cast<LPWSTR>(&temp), 0, &args);
+
+            if (result == 0 || temp == 0)
                 throw std::bad_alloc();
 
             m_str = temp;
             ::LocalFree(temp);
         }
+        else
+            m_str.clear();
     }
 
     // Returns the character at the specified location within the string.
@@ -840,6 +857,7 @@ namespace Win32xx
     inline T* CStringT<T>::GetBuffer(int minBufLength)
     {
         assert (minBufLength >= 0);
+        if (minBufLength < 0) minBufLength = 0;
 
         T ch = 0;
 
@@ -854,51 +872,56 @@ namespace Win32xx
     template <>
     inline bool CStringA::GetEnvironmentVariable(const CHAR* var)
     {
-        assert(var);
-        Empty();
+        assert(var != nullptr);
 
-        // Returns text length including the null character.
         DWORD length = ::GetEnvironmentVariableA(var, nullptr, 0);
         if (length > 0)
         {
-            int size = static_cast<int>(length);
-            ::GetEnvironmentVariableA(var, GetBuffer(size), length);
+            char* buffer = GetBuffer(static_cast<int>(length));
+            ::GetEnvironmentVariableA(var, buffer, length);
             ReleaseBuffer();
+            return true;
         }
 
-        return (length != 0);
+        Empty();
+        return false;
     }
 
     // Sets the string to the value of the specified environment variable.
     template <class T>
     inline bool CStringT<T>::GetEnvironmentVariable(const T* var)
     {
-        assert(var);
-        Empty();
+        assert(var != nullptr);
 
-        // Returns text length including the null character.
         DWORD length = ::GetEnvironmentVariableW(var, nullptr, 0);
         if (length > 0)
         {
-            ::GetEnvironmentVariableW(var, GetBuffer(length), length);
+            wchar_t* buffer = GetBuffer(static_cast<int>(length));
+            ::GetEnvironmentVariableW(var, buffer, length);
             ReleaseBuffer();
+            return true;
         }
 
-        return (length != 0);
+        Empty();
+        return false;
     }
 
     // Retrieves the a window's text.
     template <>
     inline void CStringA::GetWindowText(HWND wnd)
     {
-        Empty();
+        assert(::IsWindow(wnd));
 
-        // Returns text length NOT including the null character.
-        int length = ::GetWindowTextLengthA(wnd);
-        if (length > 0)
+        Empty();
+        if (::IsWindow(wnd))
         {
-            ::GetWindowTextA(wnd, GetBuffer(length + 1), length + 1);
-            ReleaseBuffer();
+            // Returns text length NOT including the null character.
+            int length = ::GetWindowTextLengthA(wnd);
+            if (length > 0)
+            {
+                ::GetWindowTextA(wnd, GetBuffer(length + 1), length + 1);
+                ReleaseBuffer();
+            }
         }
     }
 
@@ -906,32 +929,18 @@ namespace Win32xx
     template <class T>
     inline void CStringT<T>::GetWindowText(HWND wnd)
     {
-        Empty();
+        assert(::IsWindow(wnd));
 
-        // Returns text length NOT including the null character.
-        int length = ::GetWindowTextLengthW(wnd);
-        if (length > 0)
-        {
-            ::GetWindowTextW(wnd, GetBuffer(length +1), length + 1);
-            ReleaseBuffer();
-        }
-    }
-
-    // Returns the error string for the specified System Error Code from
-    // GetLastError.
-    template <>
-    inline void CStringA::GetErrorString(DWORD error)
-    {
         Empty();
-        CHAR* buffer = nullptr;
-        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER |
-            FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageA(flags, nullptr, error, 0,
-            reinterpret_cast<LPSTR>(&buffer), 1, nullptr);
-        if (buffer != nullptr)
+        if (::IsWindow(wnd))
         {
-            m_str.assign(buffer);
-            ::LocalFree(buffer);
+            // Returns text length NOT including the null character.
+            int length = ::GetWindowTextLengthW(wnd);
+            if (length > 0)
+            {
+                ::GetWindowTextW(wnd, GetBuffer(length + 1), length + 1);
+                ReleaseBuffer();
+            }
         }
     }
 
@@ -942,19 +951,33 @@ namespace Win32xx
     {
         Empty();
         WCHAR* buffer = nullptr;
-        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER |
+        const DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER |
             FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageW(flags, nullptr, error, 0,
-            reinterpret_cast<LPWSTR>(&buffer), 1, nullptr);
-        if (buffer != nullptr)
+        DWORD length = ::FormatMessageW(flags, nullptr, error, 0,
+            reinterpret_cast<LPWSTR>(&buffer), 0, nullptr);
+
+        if (length > 0 && buffer != nullptr)
         {
-            m_str.assign(buffer);
+            std::basic_string_view<WCHAR> view(buffer, length);
+            if constexpr (std::is_same_v<T, char>)
+            {
+                m_str.assign(WtoA(view.data()));
+            }
+            else // T is wchar_t (WCHAR)
+            {
+                m_str.assign(view.data(), view.length());
+            }
+
             ::LocalFree(buffer);
         }
+        else
+        {
+            if constexpr (std::is_same_v<T, char>)
+                m_str.assign("Unknown System Error");
+            else
+                m_str.assign(L"Unknown System Error");
+        }
     }
-
-
-
 
     // Returns the length in characters.
     template <class T>
@@ -975,10 +998,11 @@ namespace Win32xx
     inline int CStringT<T>::Insert(int index, T ch)
     {
         assert(index >= 0);
-        assert(ch);
 
-        index = std::min(index, GetLength());
-        m_str.insert(index, &ch, 1);
+        const size_t safeIndex = (index < 0) ? 0 : std::min(static_cast<size_t>(
+            index), m_str.size());
+
+        m_str.insert(safeIndex, 1, ch);
 
         return static_cast<int>(m_str.size());
     }
@@ -989,8 +1013,10 @@ namespace Win32xx
     {
         assert(index >= 0);
 
-        index = std::min(index, GetLength());
-        m_str.insert(index, str);
+        const size_t safeIndex = (index < 0) ? 0 : std::min(static_cast<size_t>(
+            index), m_str.size());
+
+        m_str.insert(safeIndex, str.m_str);
 
         return static_cast<int>(m_str.size());
     }
@@ -1007,10 +1033,15 @@ namespace Win32xx
     template <class T>
     inline CStringT<T> CStringT<T>::Left(int count) const
     {
-        assert(count >= 0);
+        // Production safety check for invalid or negative counts
+        assert(count > 0);
+        if (count <= 0)
+            return CStringT{};
 
+        const size_t uCount = std::min(static_cast<size_t>(count), m_str.size());
         CStringT str;
-        str.m_str.assign(m_str, 0, static_cast<size_t>(count));
+        str.m_str.assign(m_str, 0, uCount);
+
         return str;
     }
 
@@ -1018,14 +1049,24 @@ namespace Win32xx
     template <>
     inline void CStringA::MakeLower()
     {
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ToLower);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(),
+            [](unsigned char c)
+            {
+                return static_cast<char>(std::tolower(c));
+            }
+        );
     }
 
     // Converts all the characters in this string to lowercase characters.
     template <class T>
     inline void CStringT<T>::MakeLower()
     {
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towlower);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(),
+            [](wchar_t c)
+            {
+                return static_cast<wchar_t>(::towlower(static_cast<wint_t>(c)));
+            }
+        );
     }
 
     // Reverses the string.
@@ -1039,14 +1080,24 @@ namespace Win32xx
     template <>
     inline void CStringA::MakeUpper()
     {
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ToUpper);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(),
+            [](unsigned char c) 
+            {
+                return static_cast<char>(std::toupper(c));
+            }
+        );
     }
 
     // Converts all the characters in this string to uppercase characters.
     template <class T>
     inline void CStringT<T>::MakeUpper()
     {
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towupper);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(),
+            [](wchar_t c) 
+            {
+                return static_cast<wchar_t>(::towupper(static_cast<wint_t>(c)));
+            }
+        );
     }
 
     // Retrieves the middle part of a string.
@@ -1064,10 +1115,11 @@ namespace Win32xx
     inline CStringT<T> CStringT<T>::Mid(int first, int count) const
     {
         assert(first >= 0);
-        assert(count >= 0);
+        assert(count > 0);
+        assert(first <= GetLength());
 
         CStringT str;
-        if (first <= GetLength())
+        if ((first >= 0) && (count > 0) && (first <= GetLength()))
             str.m_str.assign(m_str, static_cast<size_t>(first),
                 static_cast<size_t>(count));
 
@@ -1100,7 +1152,7 @@ namespace Win32xx
         size_t count = 0;
         size_t pos = 0;
         size_t len = strlenT(text);
-        if (len > 0)
+        if ((text != nullptr) && (len > 0))
         {
             while ((pos = m_str.find(text, pos)) != std::string::npos)
             {
@@ -1150,14 +1202,14 @@ namespace Win32xx
     template <class T>
     inline int CStringT<T>::Replace(const T* oldText, const T* newText)
     {
-        assert(oldText);
-        assert(newText);
+        assert(oldText != nullptr);
+        assert(newText != nullptr);
 
         size_t count = 0;
         size_t pos = 0;
         size_t lenOld = strlenT(oldText);
         size_t lenNew = strlenT(newText);
-        if (lenOld > 0 && lenNew > 0)
+        if ((lenOld > 0 && lenNew > 0))
         {
             while ((pos = m_str.find(oldText, pos)) != std::string::npos)
             {
@@ -1174,8 +1226,8 @@ namespace Win32xx
     template <class T>
     inline int CStringT<T>::ReverseFind(T ch, int end /* -1 */) const
     {
-        size_t found = m_str.rfind(ch, static_cast<size_t>(end));
-        return static_cast<int>(found);
+        size_t pos = m_str.rfind(ch, static_cast<size_t>(end));
+        return (pos != std::basic_string<T>::npos) ? static_cast<int>(pos) : -1;
     }
 
     // Search for a substring within the string, starting from the end.
@@ -1183,12 +1235,12 @@ namespace Win32xx
     inline int CStringT<T>::ReverseFind(const T* text, int end /* = -1 */) const
     {
         assert(text != nullptr);
-        if (!text) return -1;
+        size_t pos = std::basic_string<T>::npos;
 
-        if (strlenT(text) == 1)
-            return ReverseFind(text[0], end);
-        else
-            return static_cast<int>(m_str.rfind(text, static_cast<size_t>(end)));
+        if (text != nullptr)
+            pos = m_str.rfind(text, static_cast<size_t>(end));
+
+        return (pos != std::basic_string<T>::npos) ? static_cast<int>(pos) : -1;
     }
 
     // Retrieves count characters from the right part of the string.
@@ -1196,13 +1248,16 @@ namespace Win32xx
     template <class T>
     inline CStringT<T> CStringT<T>::Right(int count) const
     {
-        assert(count >= 0);
+        assert(count > 0);
+
+        if (count <= 0) {
+            return CStringT{};
+        }
+
+        const size_t uCount = std::min(static_cast<size_t>(count), m_str.size());
 
         CStringT str;
-        count = std::min(count, GetLength());
-        str.m_str.assign(m_str, m_str.size() - static_cast<size_t>(count),
-            static_cast<size_t>(count));
-
+        str.m_str.assign(m_str, m_str.size() - uCount, uCount);
         return str;
     }
 
@@ -1228,7 +1283,7 @@ namespace Win32xx
         if ( !::SysReAllocStringLen(pBstr, wide, wide.GetLength()) )
             throw std::bad_alloc();
 
-        return pBstr? *pBstr : nullptr;
+        return *pBstr;
     }
 
     // Sets an existing BSTR object to the string.
@@ -1239,14 +1294,11 @@ namespace Win32xx
 
         if ((pBstr) != nullptr)
         {
-            if (!::SysReAllocStringLen(pBstr, m_str.c_str(),
-                static_cast<UINT>(m_str.length())))
-            {
+            if (!::SysReAllocStringLen(pBstr, m_str.c_str(), GetLength()))
                 throw std::bad_alloc();
-            }
         }
 
-        return pBstr ? *pBstr : nullptr;
+        return *pBstr;
     }
 
     // Extracts characters from the string, starting with the first character,
@@ -1254,14 +1306,16 @@ namespace Win32xx
     template <class T>
     inline CStringT<T> CStringT<T>::SpanExcluding(const T* text) const
     {
-        assert (text);
+        assert (text != nullptr);
 
         CStringT str;
-        size_t pos = 0;
-
-        while ((pos = m_str.find_first_not_of(text, pos)) != std::string::npos)
+        if (text != nullptr)
         {
-            str.m_str.append(1, m_str[pos++]);
+            size_t pos = 0;
+            while ((pos = m_str.find_first_not_of(text, pos)) != std::string::npos)
+            {
+                str.m_str.append(1, m_str[pos++]);
+            }
         }
 
         return str;
@@ -1271,14 +1325,16 @@ namespace Win32xx
     template <class T>
     inline CStringT<T> CStringT<T>::SpanIncluding(const T* text) const
     {
-        assert (text);
+        assert (text != nullptr);
 
         CStringT str;
-        size_t pos = 0;
-
-        while ((pos = m_str.find_first_of(text, pos)) != std::string::npos)
+        if (text != nullptr)
         {
-            str.m_str.append(1, m_str[pos++]);
+            size_t pos = 0;
+            while ((pos = m_str.find_first_of(text, pos)) != std::string::npos)
+            {
+                str.m_str.append(1, m_str[pos++]);
+            }
         }
 
         return str;
@@ -1288,10 +1344,10 @@ namespace Win32xx
     template <class T>
     inline CStringT<T> CStringT<T>::Tokenize(const T* tokens, int& start) const
     {
-        assert(tokens);
+        assert(tokens != nullptr);
 
         CStringT str;
-        if (start >= 0)
+        if ((tokens != nullptr) && (start >= 0))
         {
             size_t pos1 = m_str.find_first_not_of(tokens, static_cast<size_t>(start));
             size_t pos2 = m_str.find_first_of(tokens, pos1);
@@ -1319,79 +1375,81 @@ namespace Win32xx
     template <>
     inline void CStringA::TrimLeft()
     {
-        auto it = m_str.begin();
-        while (it != m_str.end())
-        {
-            if (!::isspace(static_cast<unsigned char>(*it)))
-                break;
+        auto nonSpaceIt = std::find_if_not(m_str.begin(), m_str.end(),
+            [](unsigned char c)
+            {
+                return std::isspace(c);
+            });
 
-            ++it;
-        }
-
-        m_str.erase(m_str.begin(), it);
+        m_str.erase(m_str.begin(), nonSpaceIt);
     }
 
     // Trims leading white-space characters from the string.
     template <class T>
     inline void CStringT<T>::TrimLeft()
     {
-        auto it = m_str.begin();
-        while (it != m_str.end())
-        {
-            if (!iswspace(*it))
-                break;
+        auto nonSpaceIt = std::find_if_not(m_str.begin(), m_str.end(),
+            [](wchar_t c)
+            {
+                return std::iswspace(static_cast<wint_t>(c));
+            });
 
-            ++it;
-        }
-
-        m_str.erase(m_str.begin(), it);
+        m_str.erase(m_str.begin(), nonSpaceIt);
     }
 
     // Trims the specified character from the beginning of the string.
     template <class T>
     inline void CStringT<T>::TrimLeft(T target)
     {
-        m_str.erase(0, m_str.find_first_not_of(target));
+        const size_t firstNonTarget = m_str.find_first_not_of(target);
+
+        if (firstNonTarget != std::basic_string<T>::npos)
+            m_str.erase(0, firstNonTarget);
+        else
+            m_str.clear(); // The string was made entirely of target characters.
     }
 
     // Trims the specified set of characters from the beginning of the string.
     template <class T>
     inline void CStringT<T>::TrimLeft(const T* targets)
     {
-        assert(targets);
-        m_str.erase(0, m_str.find_first_not_of(targets));
+        assert(targets != nullptr);
+
+        std::basic_string_view<T> targetView(targets);
+        if (targetView.empty() || m_str.empty())
+            return;
+
+        const size_t firstNonTarget = m_str.find_first_not_of(targetView);
+        if (firstNonTarget != std::basic_string<T>::npos)
+            m_str.erase(0, firstNonTarget);
+        else
+            m_str.clear(); // Every character in the string was a target match.
     }
 
     // Trims trailing white-space characters from the string.
     template <>
     inline void CStringA::TrimRight()
     {
-        auto it = m_str.rbegin();
-        while (it != m_str.rend())
-        {
-            if (!::isspace(static_cast<unsigned char>(*it)))
-                break;
+        auto nonSpaceIt = std::find_if_not(m_str.rbegin(), m_str.rend(),
+            [](unsigned char c)
+            {
+                return std::isspace(c);
+            });
 
-            ++it;
-        }
-
-        m_str.erase(it.base(), m_str.end());
+        m_str.erase(nonSpaceIt.base(), m_str.end());
     }
 
     // Trims trailing white-space characters from the string.
     template <class T>
     inline void CStringT<T>::TrimRight()
     {
-        auto it = m_str.rbegin();
-        while (it != m_str.rend())
-        {
-            if (!iswspace(*it))
-                break;
+        auto nonSpaceIt = std::find_if_not(m_str.rbegin(), m_str.rend(),
+            [](wchar_t c)
+            {
+                return std::iswspace(static_cast<wint_t>(c));
+            });
 
-            ++it;
-        }
-
-        m_str.erase(it.base(), m_str.end());
+        m_str.erase(nonSpaceIt.base(), m_str.end());
     }
 
     // Trims the specified character from the end of the string.
@@ -1401,28 +1459,31 @@ namespace Win32xx
         size_t pos = m_str.find_last_not_of(target);
         if (pos != std::string::npos)
             m_str.erase(++pos);
+        else
+            m_str.clear();
     }
 
     // Trims the specified set of characters from the end of the string.
     template <class T>
     inline void CStringT<T>::TrimRight(const T* targets)
     {
-        assert(targets);
+        assert(targets != nullptr);
 
         size_t pos = m_str.find_last_not_of(targets);
         if (pos != std::string::npos)
             m_str.erase(++pos);
+        else
+            m_str.clear();
     }
 
     // Reduces the length of the string to the specified amount.
     template <class T>
     inline void CStringT<T>::Truncate(int newLength)
     {
-        if (newLength < GetLength())
-        {
-            assert(newLength >= 0);
+        assert(newLength >= 0);
+
+        if ((newLength >= 0) && newLength < GetLength())
             m_str.erase(newLength);
-        }
     }
 
     /////////////////////////////

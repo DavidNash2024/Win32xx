@@ -121,7 +121,7 @@ namespace Win32xx
     {
     public:
         CAtoW(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1);
-        ~CAtoW();
+        ~CAtoW() = default;
         operator LPCWSTR() { return m_str? &m_wideArray[0] : nullptr; }
         operator LPOLESTR() { return m_str? reinterpret_cast<LPOLESTR>(
             &m_wideArray[0]) : nullptr; }
@@ -139,7 +139,7 @@ namespace Win32xx
     {
     public:
         CWtoA(LPCWSTR str, UINT codePage = CP_ACP, int charCount = -1);
-        ~CWtoA();
+        ~CWtoA() = default;
         operator LPCSTR() { return m_str? &m_ansiArray[0] : nullptr; }
         LPCSTR c_str() { return m_str ? &m_ansiArray[0] : nullptr; }
 
@@ -218,17 +218,11 @@ namespace Win32xx
         // Resize the vector and assign null WCHAR to each element.
         int charSize = static_cast<int>(sizeof(CHAR));
         int charBytes = (charCount == -1) ? -1 : charSize * charCount;
-        int length = MultiByteToWideChar(codePage, 0, str, charBytes, nullptr, 0) + 1;
-        m_wideArray.assign(static_cast<size_t>(length), L'\0');
+        int length = MultiByteToWideChar(codePage, 0, str, charBytes, nullptr, 0);
+        m_wideArray.assign(static_cast<size_t>(length) + 1, L'\0');
 
         // Fill our vector with the converted WCHAR array.
-        MultiByteToWideChar(codePage, 0, str, charBytes, &m_wideArray[0], length);
-    }
-
-    inline CAtoW::~CAtoW()
-    {
-        // Clear the array.
-        std::fill(m_wideArray.begin(), m_wideArray.end(), L'\0');
+        MultiByteToWideChar(codePage, 0, str, charBytes, m_wideArray.data(), length);
     }
 
     // Usage:
@@ -240,23 +234,17 @@ namespace Win32xx
     inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/,
         int charCount /*= -1*/) : m_str(str)
     {
-        // Resize the vector and assign null char to each element
+        // Resize the vector and assign null char to each element.
         int charSize = static_cast<int>(sizeof(WCHAR));
         int charBytes = (charCount == -1) ? -1 : charSize * charCount;
         int length = WideCharToMultiByte(codePage, 0, str, charBytes, nullptr,
-            0, nullptr, nullptr) + 1;
+            0, nullptr, nullptr);
 
-        m_ansiArray.assign(static_cast<size_t>(length), '\0');
+        m_ansiArray.assign(static_cast<size_t>(length) + 1, '\0');
 
-        // Fill our vector with the converted char array
-        WideCharToMultiByte(codePage, 0, str, charCount, &m_ansiArray[0],
+        // Fill our vector with the converted char array.
+        WideCharToMultiByte(codePage, 0, str, charCount, m_ansiArray.data(),
             length, nullptr, nullptr);
-    }
-
-    inline CWtoA::~CWtoA()
-    {
-        // Clear the array.
-        std::fill(m_ansiArray.begin(), m_ansiArray.end(), '\0');
     }
 
     inline CWtoW::CWtoW(LPCWSTR str, UINT /*codePage = CP_ACP*/,
