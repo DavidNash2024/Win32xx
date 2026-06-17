@@ -36,6 +36,8 @@ HWND CMainFrame::Create(HWND parent)
 // that is displayed in the rich edit view.
 void CMainFrame::DialogFromTemplateText()
 {
+    m_dialogArray.clear();
+
     // Retrieve the text from the rich edit window.
     CString templateText = m_richView.GetWindowText();
 
@@ -53,16 +55,15 @@ void CMainFrame::DialogFromTemplateText()
         // Fill array vector with values from arrayText.
         CString resToken;
         int curPos = 0;
-        std::vector<unsigned char> array;
         resToken = arrayText.Tokenize(L",", curPos);
         while (resToken != L"")
         {
             long value = strtol(WtoA(resToken), nullptr, 0);
-            array.push_back(static_cast<byte>(value));
+            m_dialogArray.push_back(static_cast<byte>(value));
             resToken = arrayText.Tokenize(L",", curPos);
         };
 
-        m_holder.ShowDialog(this, array.data());
+        m_holder.ShowDialog(this, m_dialogArray.data());
     }
 }
 
@@ -512,6 +513,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWCLOSE:         OnPreviewClose();   break;
         case UWM_PREVIEWPRINT:         OnPreviewPrint();   break;
         case UWM_PREVIEWSETUP:         OnPreviewSetup();   break;
+
+        case WM_WINDOWPOSCHANGED:      return OnWindowPosChanged(msg, wparam, lparam);
 
         default: return WndProcDefault(msg, wparam, lparam);
         }

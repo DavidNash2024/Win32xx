@@ -25,6 +25,7 @@ private:
     CDialogHolder(const CDialogHolder&) = delete;
     CDialogHolder& operator=(const CDialogHolder&) = delete;
 
+public:
     CDialog m_dialog;
 };
 
