@@ -49,6 +49,7 @@
 // Include the C++ headers.
 #include <algorithm>
 #include <cassert>
+#include <cstring>
 #include <cwctype>
 #include <map>
 #include <memory>

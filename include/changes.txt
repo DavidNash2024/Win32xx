@@ -53,6 +53,12 @@ Changes in detail
 -----------------
 Added BrowserEx                   - sample
 Added CRibbonT                    - class template
+Added CAtoA::GetLength            - member function
+Added CAtoBSTR::GetLength         - member function
+Added CAtoW::GetLength            - member function
+Added CWtoA::GetLength            - member function
+Added CWtoBSTR:: GetLength        - member function
+Added CWtoW::GetLength            - member function
 Deprecated CPrintDialogEx         - class
 Deprecated CWebBrowser            - class
 Modified CStatusBar::GetParts     - added optional parameters

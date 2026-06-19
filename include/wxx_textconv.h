@@ -117,6 +117,37 @@ namespace Win32xx
     using OLEtoT = WtoT;
     using OLEtoW = CWtoW;
 
+    class CAtoA
+    {
+    public:
+        CAtoA(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1);
+        operator LPCSTR() { return m_str; }
+        LPCSTR c_str() const { return m_str; }
+        int GetLength() const { return m_length; }
+
+    private:
+        CAtoA(const CAtoA&) = delete;
+        CAtoA& operator= (const CAtoA&) = delete;
+
+        LPCSTR m_str;
+        int m_length;
+    };
+
+    class CAtoBSTR
+    {
+    public:
+        CAtoBSTR(LPCSTR str);
+        ~CAtoBSTR() { ::SysFreeString(m_bstrString); }
+        operator BSTR() { return m_bstrString; }
+        int GetLength() const { return m_length; }
+
+    private:
+        CAtoBSTR(const CAtoBSTR&) = delete;
+        CAtoBSTR& operator= (const CAtoBSTR&) = delete;
+        BSTR m_bstrString;
+        int m_length;
+    };
+
     class CAtoW
     {
     public:
@@ -127,12 +158,14 @@ namespace Win32xx
             &m_wideArray[0]) : nullptr; }
 
         LPCWSTR c_str() { return m_str ? &m_wideArray[0] : nullptr; }
+        int GetLength() const { return m_length; }
 
     private:
         CAtoW(const CAtoW&) = delete;
         CAtoW& operator= (const CAtoW&) = delete;
         std::vector<wchar_t> m_wideArray;
         LPCSTR m_str;
+        int m_length;
     };
 
     class CWtoA
@@ -142,12 +175,29 @@ namespace Win32xx
         ~CWtoA() = default;
         operator LPCSTR() { return m_str? &m_ansiArray[0] : nullptr; }
         LPCSTR c_str() { return m_str ? &m_ansiArray[0] : nullptr; }
+        int GetLength() const { return m_length; }
 
     private:
         CWtoA(const CWtoA&) = delete;
         CWtoA& operator= (const CWtoA&) = delete;
         std::vector<char> m_ansiArray;
         LPCWSTR m_str;
+        int m_length;
+    };
+
+    class CWtoBSTR
+    {
+    public:
+        CWtoBSTR(LPCWSTR pWStr);
+        ~CWtoBSTR() { ::SysFreeString(m_bstrString); }
+        operator BSTR() { return m_bstrString;}
+        int GetLength() const { return m_length; }
+
+    private:
+        CWtoBSTR(const CWtoBSTR&) = delete;
+        CWtoBSTR& operator= (const CWtoBSTR&) = delete;
+        BSTR m_bstrString;
+        int m_length;
     };
 
     class CWtoW
@@ -157,52 +207,14 @@ namespace Win32xx
         operator LPCWSTR() { return m_str; }
         operator LPOLESTR() { return const_cast<LPOLESTR>(m_str); }
         LPCWSTR c_str() const { return m_str; }
+        int GetLength() const { return m_length; }
 
     private:
         CWtoW(const CWtoW&) = delete;
         CWtoW& operator= (const CWtoW&) = delete;
 
         LPCWSTR m_str;
-    };
-
-    class CAtoA
-    {
-    public:
-        CAtoA(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1);
-        operator LPCSTR() { return m_str; }
-        LPCSTR c_str() const { return m_str; }
-
-    private:
-        CAtoA(const CAtoA&) = delete;
-        CAtoA& operator= (const CAtoA&) = delete;
-
-        LPCSTR m_str;
-    };
-
-    class CWtoBSTR
-    {
-    public:
-        CWtoBSTR(LPCWSTR pWStr) { m_bstrString = ::SysAllocString(pWStr); }
-        ~CWtoBSTR() { ::SysFreeString(m_bstrString); }
-        operator BSTR() { return m_bstrString;}
-
-    private:
-        CWtoBSTR(const CWtoBSTR&) = delete;
-        CWtoBSTR& operator= (const CWtoBSTR&) = delete;
-        BSTR m_bstrString;
-    };
-
-    class CAtoBSTR
-    {
-    public:
-        CAtoBSTR(LPCSTR str) { m_bstrString = ::SysAllocString(AtoW(str)); }
-        ~CAtoBSTR() { ::SysFreeString(m_bstrString); }
-        operator BSTR() { return m_bstrString;}
-
-    private:
-        CAtoBSTR(const CAtoBSTR&) = delete;
-        CAtoBSTR& operator= (const CAtoBSTR&) = delete;
-        BSTR m_bstrString;
+        int m_length;
     };
 
 }
@@ -211,11 +223,34 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
-    inline CAtoW::CAtoW(LPCSTR str, UINT codePage /*= CP_ACP*/,
-        int charCount /*= -1*/) : m_str(str)
+    inline CAtoBSTR::CAtoBSTR(LPCSTR str) : m_bstrString(nullptr), m_length(0)
     {
-        // Resize the vector and assign null WCHAR to each element.
+        if (str != nullptr)
+        {
+            // Explicit conversion ensures safe lifetime management
+            CAtoW wideConv(str);
+            m_bstrString = ::SysAllocString(wideConv.c_str());
+            if (m_bstrString != nullptr)
+                m_length = static_cast<int>(::SysStringLen(m_bstrString));
+        }
+    }
+
+    // Usage:
+    //   CAtoW wideString("Some Text");
+    //   CAtoW utf8String("Some Text", CP_UTF8);
+    //
+    // or
+    //   SetWindowTextW( WtoA("Some Text") ); The Wide version of SetWindowText
+    inline CAtoW::CAtoW(LPCSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/)
+        : m_str(str)
+    {
+        if (str == nullptr)
+        {
+            m_length = 0;
+            m_wideArray.assign(1, L'\0');
+            return;
+        }
+
         int charSize = static_cast<int>(sizeof(CHAR));
         int charBytes = (charCount == -1) ? -1 : charSize * charCount;
         int length = MultiByteToWideChar(codePage, 0, str, charBytes, nullptr, 0);
@@ -223,6 +258,11 @@ namespace Win32xx
 
         // Fill our vector with the converted WCHAR array.
         MultiByteToWideChar(codePage, 0, str, charBytes, m_wideArray.data(), length);
+
+        if (charCount == -1)
+            m_length = (length > 0) ? static_cast<size_t>(length - 1) : 0;
+        else
+            m_length = static_cast<size_t>(length);
     }
 
     // Usage:
@@ -231,30 +271,57 @@ namespace Win32xx
     //
     // or
     //   SetWindowTextA( WtoA(L"Some Text") ); The ANSI version of SetWindowText
-    inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/,
-        int charCount /*= -1*/) : m_str(str)
+    inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/)
+        : m_str(str)
     {
-        // Resize the vector and assign null char to each element.
-        int charSize = static_cast<int>(sizeof(WCHAR));
-        int charBytes = (charCount == -1) ? -1 : charSize * charCount;
+        if (str == nullptr)
+        {
+            m_length = 0;
+            m_ansiArray.assign(1, '\0'); // Fixed: standard '\0'
+            return;
+        }
+
+        int charBytes = charCount;
         int length = WideCharToMultiByte(codePage, 0, str, charBytes, nullptr,
             0, nullptr, nullptr);
 
         m_ansiArray.assign(static_cast<size_t>(length) + 1, '\0');
 
         // Fill our vector with the converted char array.
-        WideCharToMultiByte(codePage, 0, str, charCount, m_ansiArray.data(),
+        WideCharToMultiByte(codePage, 0, str, charBytes, m_ansiArray.data(),
             length, nullptr, nullptr);
+
+        if (charCount == -1)
+            m_length = (length > 0) ? (length - 1) : 0;
+        else
+            m_length = length;
+    }
+
+    inline CWtoBSTR::CWtoBSTR(LPCWSTR pWStr) : m_bstrString(nullptr), m_length(0)
+    {
+        if (pWStr != nullptr)
+        {
+            m_bstrString = ::SysAllocString(pWStr);
+            if (m_bstrString != nullptr)
+                m_length = static_cast<int>(::SysStringLen(m_bstrString));
+        }
     }
 
     inline CWtoW::CWtoW(LPCWSTR str, UINT /*codePage = CP_ACP*/,
-        int /*charCount = -1*/) : m_str(str)
+        int charCount /*= -1*/) : m_str(str)
     {
+        if (str == nullptr)
+            m_length = 0;
+        else
+            m_length = (charCount == -1) ? static_cast<int>(std::wcslen(str)) : charCount;
     }
 
-    inline CAtoA::CAtoA(LPCSTR str, UINT /*codePage = CP_ACP*/,
-        int /*charCount = -1*/) : m_str(str)
+    inline CAtoA::CAtoA(LPCSTR str, UINT /*codePage = CP_ACP*/, int charCount) : m_str(str)
     {
+        if (str == nullptr)
+            m_length = 0;
+        else
+            m_length = (charCount == -1) ? static_cast<int>(std::strlen(str)) : charCount;
     }
 
 
