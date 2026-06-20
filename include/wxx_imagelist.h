@@ -79,7 +79,7 @@ namespace Win32xx
         ~CImageList();
 
         // Operators
-        CImageList& operator=(const CImageList& rhs);
+        CImageList& operator=(const CImageList rhs);
         CImageList& operator=(HIMAGELIST rhs);
         operator HIMAGELIST () const;
 
@@ -173,14 +173,9 @@ namespace Win32xx
     }
 
     // Note: A copy of a CImageList is a clone of the original.
-    inline CImageList& CImageList::operator=(const CImageList& rhs)
+    inline CImageList& CImageList::operator=(CImageList rhs)
     {
-        if (this != &rhs)
-        {
-            Release();
-            m_pData = rhs.m_pData;
-        }
-
+        std::swap(m_pData, rhs.m_pData);
         return *this;
     }
 
@@ -250,29 +245,29 @@ namespace Win32xx
 
         if (images != m_pData->images)
         {
-            // Release any existing ImageList.
-            if (m_pData->images)
-            {
-                Release();
-                m_pData = std::make_shared<CIml_Data>();
-            }
+            // Release any existing imagelist.
+            Release();
 
             if (images != nullptr)
             {
-                // Add the image list to this CImageList.
-                std::shared_ptr<CIml_Data> pCImlData =
-                    GetApp()->GetCImlData(images).lock();
-
+                // Add the imagelist to this CImageList.
+                std::shared_ptr<CIml_Data> pCImlData = GetApp()->GetCImlData(images).lock();
                 if (pCImlData)
                 {
-                    m_pData = std::move(pCImlData);
+                    m_pData = pCImlData;
                 }
                 else
                 {
-                    // Add the ImageList Data to the map.
+                    // Add the images to the map.
+                    m_pData = std::make_shared<CIml_Data>();
                     m_pData->images = images;
-                    GetApp()->AddCImlDataToMap(m_pData->images, m_pData);
+                    GetApp()->AddCImlDataToMap(images, m_pData);
                 }
+            }
+            else
+            {
+                // Attach a null handle.
+                m_pData = std::make_shared<CIml_Data>();
             }
         }
     }
@@ -478,16 +473,16 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (m_pData && m_pData->images != nullptr)
+        if (m_pData->images != nullptr)
         {
-            if (IsAppRunning()) // Is the CWinApp object still valid?
-                GetApp()->RemoveImageListFromMap(m_pData->images);
-
             if (m_pData->isManagedHiml)
+            {
+                GetApp()->RemoveImageListFromMap(m_pData->images);
                 ::ImageList_Destroy(m_pData->images);
+            }
 
-            // Nullify all copies of m_pData.
-            *m_pData.get() = {};
+            m_pData->images = nullptr;
+            m_pData->isManagedHiml = false;
         }
     }
 
@@ -499,12 +494,16 @@ namespace Win32xx
         assert(m_pData);
 
         HIMAGELIST images = m_pData->images;
-        GetApp()->RemoveImageListFromMap(images);
+        if (images != nullptr)
+        {
+            GetApp()->RemoveImageListFromMap(images);
 
-        // Nullify all copies of m_pData.
-        *m_pData.get() = {};
+            // Sever the ties for this instance and all shared copies safely.
+            m_pData->images = nullptr;
+            m_pData->isManagedHiml = false;
+        }
 
-        // Make a new shared_ptr for this object.
+        // Provision a clean state for this specific instance wrapper.
         m_pData = std::make_shared<CIml_Data>();
 
         return images;
@@ -675,12 +674,7 @@ namespace Win32xx
     // Destroys m_pData if this is the only copy of the CImageList.
     inline void CImageList::Release()
     {
-        assert(m_pData);
-
-        if (m_pData.use_count() == 1)
-        {
-            Destroy();
-        }
+        m_pData.reset();
     }
 
     // Removes an image from an image list.

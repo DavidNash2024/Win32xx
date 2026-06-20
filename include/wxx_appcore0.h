@@ -87,6 +87,9 @@ namespace Win32xx
     class CWindowDC;
     class CWnd;
     struct CDC_Data;
+    struct CGDI_Data;
+    struct CMenu_Data;
+    struct CIml_Data;
     struct EnhMetaFileData;
     struct MenuItemData;
     struct MetaFileData;
@@ -106,36 +109,6 @@ namespace Win32xx
     using WinThreadPtr = std::unique_ptr<CWinThread>;
     using WorkThreadPtr = std::unique_ptr<CWorkThread>;
     using WndPtr = std::unique_ptr<CWnd>;
-
-    // A structure that contains the data members for CGDIObject.
-    struct CGDI_Data
-    {
-        // Constructor
-        CGDI_Data() : hGDIObject(nullptr), isManagedObject(false) {}
-
-        HGDIOBJ hGDIObject;
-        bool    isManagedObject;
-    };
-
-    // A structure that contains the data members for CImageList.
-    struct CIml_Data
-    {
-        // Constructor
-        CIml_Data() : images(nullptr), isManagedHiml(false) {}
-
-        HIMAGELIST  images;
-        bool        isManagedHiml;
-    };
-
-    // A structure that contains the data members for CMenu.
-    struct CMenu_Data
-    {
-        // Constructor
-        CMenu_Data() : menu(nullptr), isManagedMenu(false) {}
-
-        HMENU menu;
-        bool isManagedMenu;
-    };
 
     // Used for Thread Local Storage (TLS)
     struct TLSData
@@ -217,6 +190,10 @@ namespace Win32xx
         friend class CPropertyPage;
         friend class CWinThread;
         friend class CWnd;
+        friend struct CDC_Data;
+        friend struct CGDI_Data;
+        friend struct CIml_Data;
+        friend struct CMenu_Data;
         friend CWinApp* GetApp();
         friend BOOL IsAppRunning();
 
@@ -386,6 +363,69 @@ namespace Win32xx
     {
         return  (CWinApp::m_pCWinApp != nullptr);
     }
+
+    // A structure that contains the data members for CGDIObject.
+    struct CGDI_Data
+    {
+        // Constructor and destructor.
+        CGDI_Data() : hGDIObject(nullptr), isManagedObject(false) {}
+        ~CGDI_Data()
+        {
+            if (hGDIObject != nullptr)
+            {
+                GetApp()->RemoveGDIObjectFromMap(hGDIObject);
+                if (isManagedObject)
+                {
+                    ::DeleteObject(hGDIObject);
+                }
+            }
+        }
+
+        HGDIOBJ hGDIObject;
+        bool    isManagedObject;
+    };
+
+    // A structure that contains the data members for CImageList.
+    struct CIml_Data
+    {
+        // Constructor and destructor.
+        CIml_Data() : images(nullptr), isManagedHiml(false) {}
+        ~CIml_Data()
+        {
+            if (images != nullptr)
+            {
+                GetApp()->RemoveImageListFromMap(images);
+                if (isManagedHiml)
+                {
+                    ::ImageList_Destroy(images);
+                }
+            }
+        }
+
+        HIMAGELIST  images;
+        bool        isManagedHiml;
+    };
+
+    // A structure that contains the data members for CMenu.
+    struct CMenu_Data
+    {
+        // Constructor and destructor.
+        CMenu_Data() : menu(nullptr), isManagedMenu(false) {}
+        ~CMenu_Data()
+        {
+            if (menu != nullptr)
+            {
+                GetApp()->RemoveMenuFromMap(menu);
+                if (isManagedMenu)
+                {
+                    ::DestroyMenu(menu);
+                }
+            }
+        }
+
+        HMENU menu;
+        bool isManagedMenu;
+    };
 
 } // namespace Win32xx
 

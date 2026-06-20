@@ -74,8 +74,21 @@ namespace Win32xx
     // wchar_t (or WCHAR) character types are Unicode (16 bits).
     // TCHAR characters are Unicode if the _UNICODE macro is defined, otherwise
     //       they are ANSI.
-    // BSTR (Basic String) is a type of string used in Visual Basic and COM programming.
+    // BSTR (Basic String) is a string type used in Visual Basic and COM programming.
     // OLE is the same as WCHAR. It is used in Visual Basic and COM programming.
+
+    // Usage:
+    //   CAtoW wideString("Some Text");
+    //   CAtoW utf8String("Some Text", CP_UTF8);
+    //
+    // or
+    //   SetWindowTextW( WtoA("Some Text") ); The Wide version of SetWindowText
+    //
+    //   CWtoA ansiString(L"Some Text");
+    //   CWtoA utf8String(L"Some Text", CP_UTF8);
+    //
+    // or
+    //   SetWindowTextA( WtoA(L"Some Text") ); The ANSI version of SetWindowText
 
 
     // Forward declarations of our classes. They are defined later.
@@ -86,7 +99,7 @@ namespace Win32xx
     class CAtoBSTR;
     class CWtoBSTR;
 
-    // using declarations for the well known text conversions
+    // The using declarations for the well known text conversions.
     using AtoW = CAtoW;
     using WtoA = CWtoA;
     using WtoBSTR  = CWtoBSTR;
@@ -117,6 +130,11 @@ namespace Win32xx
     using OLEtoT = WtoT;
     using OLEtoW = CWtoW;
 
+
+    ///////////////////////////////////////
+    // The CAtoA class doesn't modify text.
+    // It is used by AtoT and TtoA.
+    //
     class CAtoA
     {
     public:
@@ -133,6 +151,9 @@ namespace Win32xx
         int m_length;
     };
 
+    /////////////////////////////////////////////////////////////////
+    // The CAtoBSTR class creates a BSTR from a char character array.
+    //
     class CAtoBSTR
     {
     public:
@@ -148,6 +169,10 @@ namespace Win32xx
         int m_length;
     };
 
+    ///////////////////////////////////////////////////////
+    // The CAtoW class creates a wchar_t character array from
+    // a char character array.
+    //
     class CAtoW
     {
     public:
@@ -168,6 +193,10 @@ namespace Win32xx
         int m_length;
     };
 
+    ////////////////////////////////////////////////////////
+    // The CWtoA class creates a char character array from a
+    // wchar_t character array.
+    //
     class CWtoA
     {
     public:
@@ -185,6 +214,9 @@ namespace Win32xx
         int m_length;
     };
 
+    //////////////////////////////////////////////////////////////////
+    // The CWtoBSTR class creates a BSTR from a wchar_t character array.
+    //
     class CWtoBSTR
     {
     public:
@@ -200,6 +232,10 @@ namespace Win32xx
         int m_length;
     };
 
+    ///////////////////////////////////////
+    // The CWtoW class doesn't modify text.
+    // It is used by WtoT and TtoW.
+    //
     class CWtoW
     {
     public:
@@ -227,20 +263,15 @@ namespace Win32xx
     {
         if (str != nullptr)
         {
-            // Explicit conversion ensures safe lifetime management
             CAtoW wideConv(str);
+
+            // Create the BSTR from the wide character array.
             m_bstrString = ::SysAllocString(wideConv.c_str());
             if (m_bstrString != nullptr)
                 m_length = static_cast<int>(::SysStringLen(m_bstrString));
         }
     }
 
-    // Usage:
-    //   CAtoW wideString("Some Text");
-    //   CAtoW utf8String("Some Text", CP_UTF8);
-    //
-    // or
-    //   SetWindowTextW( WtoA("Some Text") ); The Wide version of SetWindowText
     inline CAtoW::CAtoW(LPCSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/)
         : m_str(str)
     {
@@ -251,13 +282,10 @@ namespace Win32xx
             return;
         }
 
-        int charSize = static_cast<int>(sizeof(CHAR));
-        int charBytes = (charCount == -1) ? -1 : charSize * charCount;
-        int length = MultiByteToWideChar(codePage, 0, str, charBytes, nullptr, 0);
-        m_wideArray.assign(static_cast<size_t>(length) + 1, L'\0');
-
         // Fill our vector with the converted WCHAR array.
-        MultiByteToWideChar(codePage, 0, str, charBytes, m_wideArray.data(), length);
+        int length = MultiByteToWideChar(codePage, 0, str, charCount, nullptr, 0);
+        m_wideArray.assign(static_cast<size_t>(length) + 1, L'\0');
+        MultiByteToWideChar(codePage, 0, str, charCount, m_wideArray.data(), length);
 
         if (charCount == -1)
             m_length = (length > 0) ? static_cast<size_t>(length - 1) : 0;
@@ -265,30 +293,21 @@ namespace Win32xx
             m_length = static_cast<size_t>(length);
     }
 
-    // Usage:
-    //   CWtoA ansiString(L"Some Text");
-    //   CWtoA utf8String(L"Some Text", CP_UTF8);
-    //
-    // or
-    //   SetWindowTextA( WtoA(L"Some Text") ); The ANSI version of SetWindowText
     inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/)
         : m_str(str)
     {
         if (str == nullptr)
         {
             m_length = 0;
-            m_ansiArray.assign(1, '\0'); // Fixed: standard '\0'
+            m_ansiArray.assign(1, '\0');
             return;
         }
 
-        int charBytes = charCount;
-        int length = WideCharToMultiByte(codePage, 0, str, charBytes, nullptr,
-            0, nullptr, nullptr);
-
-        m_ansiArray.assign(static_cast<size_t>(length) + 1, '\0');
-
         // Fill our vector with the converted char array.
-        WideCharToMultiByte(codePage, 0, str, charBytes, m_ansiArray.data(),
+        int length = WideCharToMultiByte(codePage, 0, str, charCount, nullptr,
+            0, nullptr, nullptr);
+        m_ansiArray.assign(static_cast<size_t>(length) + 1, '\0');
+        WideCharToMultiByte(codePage, 0, str, charCount, m_ansiArray.data(),
             length, nullptr, nullptr);
 
         if (charCount == -1)
@@ -301,6 +320,7 @@ namespace Win32xx
     {
         if (pWStr != nullptr)
         {
+            // Create the BSTR from the wide character array.
             m_bstrString = ::SysAllocString(pWStr);
             if (m_bstrString != nullptr)
                 m_length = static_cast<int>(::SysStringLen(m_bstrString));

@@ -195,7 +195,7 @@ namespace Win32xx
         CGDIObject();
         CGDIObject(const CGDIObject& rhs);
         virtual ~CGDIObject();
-        CGDIObject& operator=(const CGDIObject& rhs);
+        CGDIObject& operator=(CGDIObject rhs);
         CGDIObject& operator=(HGDIOBJ object);
 
         void    Attach(HGDIOBJ object);
@@ -414,6 +414,29 @@ namespace Win32xx
             ps = {};
         }
 
+        // Destructor handles the actual resource cleanup safely.
+        ~CDC_Data()
+        {
+            if (dc != nullptr)
+            {
+                GetApp()->RemoveDCFromMap(dc);
+                if (isManagedHDC)
+                {
+                    // We need to release a window DC, end a paint DC,
+                    // and delete a memory DC.
+                    if (wnd != nullptr)
+                    {
+                        if (isPaintDC)
+                            ::EndPaint(wnd, &ps);
+                        else
+                            ::ReleaseDC(wnd, dc);
+                    }
+                    else
+                        ::DeleteDC(dc);
+                }
+            }
+        }
+
         CBitmap bitmap;
         CBrush  brush;
         CFont   font;
@@ -448,7 +471,7 @@ namespace Win32xx
         CDC(const CDC& rhs);                    // Constructs a new copy of the CDC.
         virtual ~CDC();
         operator HDC() const { return GetHDC(); }   // Converts a CDC to a HDC.
-        CDC& operator=(const CDC& rhs);         // Assigns a CDC to an existing CDC.
+        CDC& operator=(CDC rhs);                // Assigns a CDC to an existing CDC.
         CDC& operator=(HDC dc);
 
         void Attach(HDC dc);
@@ -934,14 +957,9 @@ namespace Win32xx
 
     // Note: A copy of a CGDIObject is a clone of the original.
     //       Both objects manipulate the one HGDIOBJ.
-    inline CGDIObject& CGDIObject::operator=( const CGDIObject& rhs )
+    inline CGDIObject& CGDIObject::operator=(CGDIObject rhs)
     {
-        if (this != &rhs)
-        {
-            Release();
-            m_pData = rhs.m_pData;
-        }
-
+        std::swap(m_pData, rhs.m_pData);
         return *this;
     }
 
@@ -963,29 +981,31 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (m_pData && object != m_pData->hGDIObject)
+        if (object != m_pData->hGDIObject)
         {
             // Release any existing GDI object.
-            if (m_pData->hGDIObject != nullptr)
-            {
-                Release();
-                m_pData = std::make_shared<CGDI_Data>();
-            }
+            Release();
 
             if (object != nullptr)
             {
-                // Add the GDI object to this CCGDIObject.
+                // Add the object to this CGDIObject.
                 std::shared_ptr<CGDI_Data> pCGDIData = GetApp()->GetCGDIData(object).lock();
                 if (pCGDIData)
                 {
-                    m_pData = std::move(pCGDIData);
+                    m_pData = pCGDIData;
                 }
                 else
                 {
                     // Add the GDI object data to the map.
+                    m_pData = std::make_shared<CGDI_Data>();
                     m_pData->hGDIObject = object;
                     GetApp()->AddCGDIDataToMap(object, m_pData);
                 }
+            }
+            else
+            {
+                // Attach a null handle
+                m_pData = std::make_shared<CGDI_Data>();
             }
         }
     }
@@ -996,16 +1016,16 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (m_pData && m_pData->hGDIObject != nullptr)
+        if (m_pData->hGDIObject != nullptr)
         {
-            if (IsAppRunning()) // Is the CWinApp object still valid?
-                GetApp()->RemoveGDIObjectFromMap(m_pData->hGDIObject);
-
             if (m_pData->isManagedObject)
+            {
+                GetApp()->RemoveGDIObjectFromMap(m_pData->hGDIObject);
                 ::DeleteObject(m_pData->hGDIObject);
+            }
 
-            // Nullify all copies of m_pData.
-            *m_pData.get() = {};
+            m_pData->hGDIObject = nullptr;
+            m_pData->isManagedObject = false;
         }
     }
 
@@ -1019,15 +1039,18 @@ namespace Win32xx
     inline HGDIOBJ CGDIObject::Detach()
     {
         assert(m_pData);
-        assert(m_pData->hGDIObject);
 
         HGDIOBJ object = m_pData->hGDIObject;
-        GetApp()->RemoveGDIObjectFromMap(object);
+        if (object != nullptr)
+        {
+            GetApp()->RemoveGDIObjectFromMap(object);
 
-        // Nullify all copies of m_pData.
-        *m_pData.get() = {};
+            // Sever the ties for this instance and all shared copies safely.
+            m_pData->hGDIObject = nullptr;
+            m_pData->isManagedObject = false;
+        }
 
-        // Make a new shared_ptr for this object.
+        // Provision a clean state for this specific instance wrapper.
         m_pData = std::make_shared<CGDI_Data>();
 
         return object;
@@ -1051,12 +1074,7 @@ namespace Win32xx
     // Destroys m_pData if this is the only copy of the CGDIObject.
     inline void CGDIObject::Release()
     {
-        assert(m_pData);
-
-        if (m_pData.use_count() == 1)
-        {
-            Destroy();
-        }
+        m_pData.reset();
     }
 
 
@@ -2293,14 +2311,9 @@ namespace Win32xx
 
     // Note: A copy of a CDC is a clone of the original.
     //       Both objects manipulate the one HDC
-    inline CDC& CDC::operator=(const CDC& rhs)
+    inline CDC& CDC::operator=(CDC rhs)
     {
-        if (this != &rhs)
-        {
-            Release();
-            m_pData = rhs.m_pData;
-        }
-
+        std::swap(m_pData, rhs.m_pData);
         return *this;
     }
 
@@ -2327,32 +2340,64 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (m_pData && dc != m_pData->dc)
+        if (dc != m_pData->dc)
         {
-            if (m_pData->dc)
-            {
-                Release();
-
-                // Assign values to our data members.
-                m_pData = std::make_shared<CDC_Data>();
-            }
+            // Release any existing dc.
+            Release();
 
             if (dc != nullptr)
             {
+                // Add the dc to this CDC.
                 std::shared_ptr<CDC_Data> pCDCData = GetApp()->GetCDCData(dc).lock();
                 if (pCDCData)
                 {
-                    m_pData = std::move(pCDCData);
+                    m_pData = pCDCData;
                 }
                 else
                 {
+                    // Add the menu data to the map.
+                    m_pData = std::make_shared<CDC_Data>();
                     m_pData->dc = dc;
-
-                    // Add the CDC data to the map.
                     GetApp()->AddCDCDataToMap(dc, m_pData);
                     m_pData->savedDCState = SaveDC();
                 }
             }
+            else
+            {
+                // Attach a null handle
+                m_pData = std::make_shared<CDC_Data>();
+            }
+        }
+    }
+
+    // Deletes or releases the device context if managed and returns this
+    // object to its default state.
+    inline void CDC::Destroy()
+    {
+        if (m_pData->dc != nullptr)
+        {
+            // Return the DC back to its initial state.
+            HDC dc = m_pData->dc;
+            ::RestoreDC(dc, m_pData->savedDCState);
+
+            if (m_pData->isManagedHDC)
+            {
+                GetApp()->RemoveDCFromMap(m_pData->dc);
+                // We need to release a window DC, end a paint DC,
+                // and delete a memory DC.
+                if (m_pData->wnd != nullptr)
+                {
+                    if (m_pData->isPaintDC)
+                        ::EndPaint(m_pData->wnd, &m_pData->ps);
+                    else
+                        ::ReleaseDC(m_pData->wnd, dc);
+                }
+                else
+                    ::DeleteDC(dc);
+            }
+
+            m_pData->dc = nullptr;
+            m_pData->isManagedHDC = false;
         }
     }
 
@@ -2368,15 +2413,18 @@ namespace Win32xx
     inline HDC CDC::Detach()
     {
         assert(m_pData);
-        assert(m_pData->dc != nullptr);
 
         HDC dc = m_pData->dc;
-        GetApp()->RemoveDCFromMap(dc);
+        if (dc != nullptr)
+        {
+            GetApp()->RemoveDCFromMap(dc);
 
-        // Nullify all copies of m_pData.
-        *m_pData.get() = {};
+            // Sever the ties for this instance and all shared copies safely.
+            m_pData->dc = nullptr;
+            m_pData->isManagedHDC = false;
+        }
 
-        // Make a new shared_ptr for this object.
+        // Provision a clean state for this specific instance wrapper.
         m_pData = std::make_shared<CDC_Data>();
 
         return dc;
@@ -2496,12 +2544,7 @@ namespace Win32xx
     // Destroys m_pData if this is the only copy of the CDC object.
     inline void CDC::Release()
     {
-        assert(m_pData);
-
-        if (m_pData.use_count() == 1)
-        {
-            Destroy();
-        }
+        m_pData.reset();
     }
 
     // Restores a device context (DC) to the specified state.
@@ -2700,41 +2743,6 @@ namespace Win32xx
         bitmap.CreateBitmap(1, 1, 1, 1, nullptr);
 
         return SelectObject(bitmap);
-    }
-
-    // Deletes or releases the device context if managed and returns this
-    // object to its default state.
-    inline void CDC::Destroy()
-    {
-        assert(m_pData);
-
-        if (m_pData->dc != nullptr)
-        {
-            // Return the DC back to its initial state.
-            HDC dc = m_pData->dc;
-            ::RestoreDC(dc, m_pData->savedDCState);
-
-            if (IsAppRunning()) // Is the CWinApp object still valid?
-                GetApp()->RemoveDCFromMap(dc);
-
-            if (m_pData->isManagedHDC)
-            {
-                // We need to release a window DC, end a paint DC,
-                // and delete a memory DC.
-                if (m_pData->wnd != nullptr)
-                {
-                    if (m_pData->isPaintDC)
-                        ::EndPaint(m_pData->wnd, &m_pData->ps);
-                    else
-                        ::ReleaseDC(m_pData->wnd, dc);
-                }
-                else
-                    ::DeleteDC(dc);
-            }
-
-            // Nullify all copies of m_pData.
-            *m_pData.get() = {};
-        }
     }
 
     // Retrieves the BITMAP information for the current HBITMAP.

@@ -41,11 +41,14 @@ protected:
     // Called when the mainframe window's DPI has changed.
     virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override
     {
+        bool recreateDialog = m_holder.IsWindow();
+        m_holder.Destroy();
+
         // Let the mainframe window process its own DPI change first.
         LRESULT result = CDockFrame::OnDpiChanged(msg, wparam, lparam);
 
-        // Destroy and recreate the dialog with the new DPI.
-        if (m_holder.IsWindow() && m_holder.m_dialog.IsWindow())
+        // Recreate the dialog with the new DPI.
+        if (recreateDialog)
             m_holder.ShowDialog(this, m_dialogArray.data());
 
         return result;

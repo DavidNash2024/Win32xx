@@ -387,7 +387,6 @@ namespace Win32xx
     //  Then use pDevMode as if it were a LPDEVMODE.
     inline CDevMode CPrintDialog::GetDevMode() const
     {
-
         if (GetApp()->GetHDevMode().Get() == nullptr)
             GetApp()->UpdateDefaultPrinter();
 
@@ -517,7 +516,6 @@ namespace Win32xx
     //////////////////////////////////////////////
     // Definitions for the CPageSetupDialog class.
     //
-
 
     // Constructor for CPageSetupDialog class. The flags parameter specifies the
     // flags for the PAGESETUPDLG structure. Refer to the description of the
