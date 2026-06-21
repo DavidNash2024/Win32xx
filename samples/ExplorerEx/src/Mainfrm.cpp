@@ -121,54 +121,26 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
-void CMainFrame::LoadListViewRegistrySettings()
+void CMainFrame::LoadListViewRegistrySettings() 
 {
     CString appName = GetRegistryKeyName();
+    if (appName.IsEmpty())
+        return;
 
-    if (!appName.IsEmpty())
+    CString keyName = L"Software\\" + appName + L"\\ListView Settings";
+    CRegKey key;
+    if (key.Open(HKEY_CURRENT_USER, keyName, KEY_READ) != ERROR_SUCCESS)
+        return; 
+
+    int columnCount = GetListView().GetListHeader().GetItemCount(); 
+    for (int i = 0; i < columnCount; i++)
     {
-        CString listViewKeyName = L"\\ListView Settings";
-        try
-        {
-            CString keyName = L"Software\\" + appName + listViewKeyName;
-            CRegKey key;
+        CString valueName;
+        valueName.Format(L"Column%d", i);
 
-            if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
-                throw CUserException(L"RegCreateKeyEx failed");
-            if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
-                throw CUserException(L"RegCreateKeyEx failed");
-
-            DWORD columns[4];
-
-            if (ERROR_SUCCESS != key.QueryDWORDValue(L"Column0", columns[0]))
-                throw CUserException();
-            if (ERROR_SUCCESS != key.QueryDWORDValue(L"Column1", columns[1]))
-                throw CUserException();
-            if (ERROR_SUCCESS != key.QueryDWORDValue(L"Column2", columns[2]))
-                throw CUserException();
-            if (ERROR_SUCCESS != key.QueryDWORDValue(L"Column3", columns[3]))
-                throw CUserException();
-
-            for (int i = 0; i < 4; i++)
-            {
-                HDITEM headerItem{};
-                headerItem.mask = HDI_WIDTH;
-                headerItem.cxy = columns[i];
-                GetListView().GetListHeader().SetItem(i, headerItem);
-            }
-        }
-
-        catch (const  CUserException&)
-        {
-            CString keyName = L"Software\\" + appName;
-            CRegKey key;
-
-            if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName))
-            {
-                // Roll back the registry changes by deleting this subkey.
-                key.DeleteSubKey(listViewKeyName);
-            }
-        }
+        DWORD columnWidth = 0;
+        if (key.QueryDWORDValue(valueName, columnWidth) == ERROR_SUCCESS)
+            GetListView().SetColumnWidth(i, static_cast<int>(columnWidth));
     }
 }
 
@@ -317,62 +289,34 @@ BOOL CMainFrame::OnViewSmallIcon()
 
 BOOL CMainFrame::SaveRegistrySettings()
 {
-    if (CFrame::SaveRegistrySettings())
+    if (!CFrame::SaveRegistrySettings()) 
+        return FALSE;
+
+    if (!m_rightPane.SaveDockRegistrySettings(GetRegistryKeyName())) 
+        return FALSE;
+
+    CString appName = GetRegistryKeyName();
+    if (appName.IsEmpty())
+        return FALSE;
+
+    CString keyName = L"Software\\" + appName + L"\\ListView Settings";
+    CRegKey key;
+
+    // Create opens or creates the key automatically. 
+    if (key.Create(HKEY_CURRENT_USER, keyName) != ERROR_SUCCESS)
+        return FALSE; 
+
+    int columnCount = GetListView().GetListHeader().GetItemCount();
+    for (int i = 0; i < columnCount; i++)
     {
-        if (m_rightPane.SaveDockRegistrySettings(GetRegistryKeyName()))
-        {
-            CString appName = GetRegistryKeyName();
-
-            if (!appName.IsEmpty())
-            {
-                CString listViewKeyName = L"\\ListView Settings";
-                try
-                {
-                    CString keyName = L"Software\\" + appName + listViewKeyName;
-                    CRegKey key;
-
-                    if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
-                        throw CUserException(L"RegCreateKeyEx failed");
-                    if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
-                        throw CUserException(L"RegCreateKeyEx failed");
-
-                    DWORD columns[4];
-                    for (int i = 0; i < 4; i++)
-                    {
-                        HDITEM headerItem{};
-                        headerItem.mask = HDI_WIDTH;
-                        GetListView().GetListHeader().GetItem(i, headerItem);
-                        columns[i] = headerItem.cxy;
-                    }
-
-                    if (ERROR_SUCCESS != key.SetDWORDValue(L"Column0", columns[0]))
-                        throw CUserException();
-                    if (ERROR_SUCCESS != key.SetDWORDValue(L"Column1", columns[1]))
-                        throw CUserException();
-                    if (ERROR_SUCCESS != key.SetDWORDValue(L"Column2", columns[2]))
-                        throw CUserException();
-                    if (ERROR_SUCCESS != key.SetDWORDValue(L"Column3", columns[3]))
-                        throw CUserException();
-
-                    return TRUE;
-                }
-
-                catch (const  CUserException&)
-                {
-                    CString keyName = L"Software\\" + appName;
-                    CRegKey key;
-
-                    if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName))
-                    {
-                        // Roll back the registry changes by deleting this subkey.
-                        key.DeleteSubKey(listViewKeyName);
-                    }
-                }
-            }
-        }
+        CString valueName;
+        valueName.Format(L"Column%d", i);
+        int columnWidth = GetListView().GetColumnWidth(i);
+        if (key.SetDWORDValue(valueName, static_cast<DWORD>(columnWidth)) != ERROR_SUCCESS)
+            return FALSE;
     }
 
-    return FALSE;
+    return TRUE;
 }
 
 // Specifies the images for some of the menu items.

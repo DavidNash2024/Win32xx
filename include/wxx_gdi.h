@@ -984,7 +984,8 @@ namespace Win32xx
         if (object != m_pData->hGDIObject)
         {
             // Release any existing GDI object.
-            Release();
+            if (m_pData->hGDIObject)
+               Release();
 
             if (object != nullptr)
             {
@@ -996,15 +997,15 @@ namespace Win32xx
                 }
                 else
                 {
-                    // Add the GDI object data to the map.
-                    m_pData = std::make_shared<CGDI_Data>();
                     m_pData->hGDIObject = object;
+
+                    // Add the CGDIObject data to the map.
                     GetApp()->AddCGDIDataToMap(object, m_pData);
                 }
             }
             else
             {
-                // Attach a null handle
+                // Provision a clean state for this specific instance wrapper.
                 m_pData = std::make_shared<CGDI_Data>();
             }
         }
@@ -2343,7 +2344,8 @@ namespace Win32xx
         if (dc != m_pData->dc)
         {
             // Release any existing dc.
-            Release();
+            if (m_pData->dc)
+                Release();
 
             if (dc != nullptr)
             {
@@ -2355,16 +2357,16 @@ namespace Win32xx
                 }
                 else
                 {
-                    // Add the menu data to the map.
-                    m_pData = std::make_shared<CDC_Data>();
                     m_pData->dc = dc;
+
+                    // Add the CDC data to the map.
                     GetApp()->AddCDCDataToMap(dc, m_pData);
                     m_pData->savedDCState = SaveDC();
                 }
             }
             else
             {
-                // Attach a null handle
+                // Provision a clean state for this specific instance wrapper.
                 m_pData = std::make_shared<CDC_Data>();
             }
         }

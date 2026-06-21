@@ -272,7 +272,8 @@ namespace Win32xx
         if (menu != m_pData->menu)
         {
             // Release any existing menu.
-            Release();
+            if (m_pData->menu)
+                Release();
 
             if (menu != nullptr)
             {
@@ -284,15 +285,15 @@ namespace Win32xx
                 }
                 else
                 {
-                    // Add the menu data to the map.
-                    m_pData = std::make_shared<CMenu_Data>();
                     m_pData->menu = menu;
+
+                    // Add the CMenu data to the map.
                     GetApp()->AddCMenuDataToMap(menu, m_pData);
                 }
             }
             else
             {
-                // Attach a null handle.
+                // Provision a clean state for this specific instance wrapper.
                 m_pData = std::make_shared<CMenu_Data>();
             }
         }
@@ -658,7 +659,6 @@ namespace Win32xx
     inline BOOL CMenu::LoadMenu(LPCTSTR resourceName)
     {
         assert(m_pData);
-        assert(m_pData->menu == nullptr);
         assert(resourceName);
 
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), resourceName);
@@ -675,7 +675,6 @@ namespace Win32xx
     inline BOOL CMenu::LoadMenu(UINT resourceID)
     {
         assert(m_pData);
-        assert(m_pData->menu == nullptr);
 
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resourceID));
         if (menu != nullptr)
@@ -691,7 +690,6 @@ namespace Win32xx
     inline BOOL CMenu::LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate)
     {
         assert(m_pData);
-        assert(m_pData->menu == nullptr);
         assert(pMenuTemplate);
 
         HMENU menu = ::LoadMenuIndirect(pMenuTemplate);

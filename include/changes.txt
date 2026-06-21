@@ -56,6 +56,8 @@ Added CRibbonT                    - class template
 Added CAtoA::GetLength            - member function
 Added CAtoBSTR::GetLength         - member function
 Added CAtoW::GetLength            - member function
+Added CRegKey::QueryBOOLValue     - member function
+Added CRegKey::SetBOOLValue       - member function
 Added CWtoA::GetLength            - member function
 Added CWtoBSTR:: GetLength        - member function
 Added CWtoW::GetLength            - member function

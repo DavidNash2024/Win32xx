@@ -29,7 +29,10 @@ void CFormDoc::LoadSettings(LPCWSTR keyName)
         key.QueryBoolValue(L"CheckA", m_isCheckA);
         key.QueryBoolValue(L"CheckB", m_isCheckB);
         key.QueryBoolValue(L"CheckC", m_isCheckC);
-        key.QueryDWORDValue(L"Radio", m_radio);
+
+        DWORD dwRadio = 0;
+        if (ERROR_SUCCESS == key.QueryDWORDValue(L"Radio", dwRadio))
+            m_radio = static_cast<UINT>(dwRadio);
     }
 }
 
@@ -40,15 +43,12 @@ void CFormDoc::SaveSettings(LPCWSTR keyName)
     settingsKeyName << L"Software\\" << keyName << L"\\Document Settings";
 
     CRegKey key;
-    if (ERROR_SUCCESS == key.Create(HKEY_CURRENT_USER, settingsKeyName))
+    if (ERROR_SUCCESS == key.Create(HKEY_CURRENT_USER, settingsKeyName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
     {
-        if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, settingsKeyName))
-        {
-            key.SetBoolValue(L"CheckA", m_isCheckA);
-            key.SetBoolValue(L"CheckB", m_isCheckB);
-            key.SetBoolValue(L"CheckC", m_isCheckC);
-            key.SetDWORDValue(L"Radio", m_radio);
-        }
+        key.SetBoolValue(L"CheckA", GetCheckA());
+        key.SetBoolValue(L"CheckB", GetCheckB());
+        key.SetBoolValue(L"CheckC", GetCheckC());
+        key.SetDWORDValue(L"Radio", static_cast<DWORD>(GetRadio()));
     }
 }
 

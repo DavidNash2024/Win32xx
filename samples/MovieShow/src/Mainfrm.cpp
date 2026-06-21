@@ -759,10 +759,11 @@ BOOL CMainFrame::LoadRegistrySettings(LPCWSTR szKeyName)
                 DWORD dwDialogHeight = 0;
                 DWORD dwTreeWidth = 0;
 
-                if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Dialog Width", dwDialogHeight))
-                    throw CUserException(L"QueryDWORDValue Failed");
-                if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Tree Height", dwTreeWidth))
-                    throw CUserException(L"QueryDWORDValue Failed");
+                if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Dialog Height", dwDialogHeight))
+                    throw CUserException(); // Replaced invalid string constructor parameter
+
+                if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Tree Width", dwTreeWidth))
+                    throw CUserException();
 
                 m_dialogHeight = dwDialogHeight;
                 m_treeWidth = dwTreeWidth;
@@ -771,6 +772,8 @@ BOOL CMainFrame::LoadRegistrySettings(LPCWSTR szKeyName)
 
             catch (const CUserException&)
             {
+                Key.Close();
+
                 m_dialogHeight = 0;
                 m_treeWidth = 0;
             }
@@ -1635,39 +1638,38 @@ BOOL CMainFrame::SaveRegistrySettings()
 {
     if (!GetRegistryKeyName().IsEmpty())
     {
+        const CString KeyName = L"Software\\" + GetRegistryKeyName() + L"\\Frame Settings";
+        CRegKey Key;
+
         try
         {
-            CString KeyName = L"Software\\" + GetRegistryKeyName() + L"\\Frame Settings";
-            CRegKey Key;
-
-            if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
-                throw CUserException(L"RegCreateKeyEx failed");
-            if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
+            if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
                 throw CUserException(L"RegCreateKeyEx failed");
 
-            DWORD cyDialog = DWORD(m_pDockDialog->GetDockSize());
-            DWORD cxTree = DWORD(m_pDockTree->GetDockSize());
+            DWORD cyDialog = static_cast<DWORD>(m_pDockDialog->GetDockSize());
+            DWORD cxTree = static_cast<DWORD>(m_pDockTree->GetDockSize());
 
-            if (ERROR_SUCCESS != Key.SetDWORDValue(L"Dialog Width", cyDialog))
+            if (ERROR_SUCCESS != Key.SetDWORDValue(L"Dialog Height", cyDialog))
                 throw CUserException(L"SetDWORDValue failed");
-            if (ERROR_SUCCESS != Key.SetDWORDValue(L"Tree Height", cxTree))
+            if (ERROR_SUCCESS != Key.SetDWORDValue(L"Tree Width", cxTree))
                 throw CUserException(L"SetDWORDValue failed");
+
+            Key.Close();
 
             return CDockFrame::SaveRegistrySettings();
         }
-
-        catch (const CUserException& e)
+        catch (const CUserException&)
         {
-            Trace("*** Failed to save registry settings. ***\n");
-            Trace(e.GetText()); Trace("\n");
+            TRACE(_T("*** Failed to save registry settings. ***\n"));
+            Key.Close();
 
-            CString KeyName = L"Software\\" + GetRegistryKeyName();
-            CRegKey Key;
+            const CString parentKeyName = L"Software\\" + GetRegistryKeyName();
+            CRegKey parentKey;
 
-            if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
+            if (ERROR_SUCCESS == parentKey.Open(HKEY_CURRENT_USER, parentKeyName, KEY_WRITE))
             {
                 // Roll back the registry changes by deleting this subkey.
-                Key.DeleteSubKey(L"Frame Settings");
+                parentKey.RecurseDeleteKey(L"Frame Settings");
             }
 
             return FALSE;

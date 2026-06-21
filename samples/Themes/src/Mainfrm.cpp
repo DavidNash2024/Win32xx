@@ -174,6 +174,21 @@ HWND CMainFrame::Create(HWND parent)
 // Loads the application's settings from the registry when the application starts.
 BOOL CMainFrame::LoadRegistrySettings(LPCWSTR keyName)
 {
+    // Always assign safe, healthy fallback defaults first 
+    // to ensure no member fields contain trash memory if registry loads fail
+    m_color = IDM_OLIVE;
+    m_useThemes = true;
+    m_useBandColors = true;
+    m_useFlatStyle = false;
+    m_keepBandsLeft = true;
+    m_lockMenuBand = true;
+    m_useRoundBorders = true;
+    m_useShortBands = true;
+    m_useLines = false;
+    m_showArrows = true;
+    m_showCards = true;
+    DWORD bands = 0;
+
     // Call the base class function.
     if (CFrame::LoadRegistrySettings(keyName))
     {
@@ -181,40 +196,25 @@ BOOL CMainFrame::LoadRegistrySettings(LPCWSTR keyName)
         settingsKeyName << L"Software\\" << keyName << L"\\Theme Settings";
         CRegKey settingsKey;
 
-        int result = settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName);
-        if (result == ERROR_SUCCESS)
+        if (ERROR_SUCCESS == settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName, KEY_READ))
         {
-            DWORD bands = 0;
-            result |= settingsKey.QueryDWORDValue(L"ColorStyle", m_color);
-            result |= settingsKey.QueryBoolValue(L"UseThemes", m_useThemes);
-            result |= settingsKey.QueryBoolValue(L"UseBandColors", m_useBandColors);
-            result |= settingsKey.QueryBoolValue(L"UseFlatStyle", m_useFlatStyle);
-            result |= settingsKey.QueryBoolValue(L"PutBandsLeft", m_keepBandsLeft);
-            result |= settingsKey.QueryBoolValue(L"LockMenuBand", m_lockMenuBand);
-            result |= settingsKey.QueryBoolValue(L"UseRoundBorders", m_useRoundBorders);
-            result |= settingsKey.QueryBoolValue(L"UseShortBands", m_useShortBands);
-            result |= settingsKey.QueryBoolValue(L"UseLines", m_useLines);
-            result |= settingsKey.QueryBoolValue(L"ShowArrows", m_showArrows);
-            result |= settingsKey.QueryBoolValue(L"ShowCards", m_showCards);
-            result |= settingsKey.QueryDWORDValue(L"NumBands", bands);
+            // Read DWORD values natively directly into your variables
+            settingsKey.QueryDWORDValue(L"ColorStyle", m_color);
+            settingsKey.QueryDWORDValue(L"NumBands", bands);
+
+            // Queries perfectly into your bool types since the signatures now align precisely
+            settingsKey.QueryBoolValue(L"UseThemes", m_useThemes);
+            settingsKey.QueryBoolValue(L"UseBandColors", m_useBandColors);
+            settingsKey.QueryBoolValue(L"UseFlatStyle", m_useFlatStyle);
+            settingsKey.QueryBoolValue(L"PutBandsLeft", m_keepBandsLeft);
+            settingsKey.QueryBoolValue(L"LockMenuBand", m_lockMenuBand);
+            settingsKey.QueryBoolValue(L"UseRoundBorders", m_useRoundBorders);
+            settingsKey.QueryBoolValue(L"UseShortBands", m_useShortBands);
+            settingsKey.QueryBoolValue(L"UseLines", m_useLines);
+            settingsKey.QueryBoolValue(L"ShowArrows", m_showArrows);
+            settingsKey.QueryBoolValue(L"ShowCards", m_showCards);
         }
     }
-    else
-    {
-        // Choose reasonable default values
-        m_color = IDM_OLIVE;
-        m_useThemes = true;
-        m_useBandColors = true;
-        m_useFlatStyle = false;
-        m_keepBandsLeft = true;
-        m_lockMenuBand = true;
-        m_useRoundBorders = true;
-        m_useShortBands = true;
-        m_useLines = false;
-        m_showArrows = true;
-        m_showCards = true;
-    }
-
 
     return TRUE;
 }
@@ -554,25 +554,31 @@ BOOL CMainFrame::SaveRegistrySettings()
     {
         CRegKey settingsKey;
         CString settingsKeyName;
-        settingsKeyName << L"Software\\" << GetRegistryKeyName() << L"\\Theme Settings";
-        int bands = GetReBar().GetBandCount();
+        settingsKeyName.Format(L"Software\\%s\\Theme Settings", GetRegistryKeyName().c_str());
 
-        settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName);
-        settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName);
+        int bandCount = GetReBar().GetBandCount();
+        DWORD bands = (bandCount > 0) ? static_cast<DWORD>(bandCount) : 0;
 
-        // Save the theme settings
-        settingsKey.SetDWORDValue(L"ColorStyle", m_color);
-        settingsKey.SetBoolValue(L"UseThemes", m_useThemes);
-        settingsKey.SetBoolValue(L"UseBandColors", m_useBandColors);
-        settingsKey.SetBoolValue(L"UseFlatStyle", m_useFlatStyle);
-        settingsKey.SetBoolValue(L"PutBandsLeft", m_keepBandsLeft);
-        settingsKey.SetBoolValue(L"LockMenuBand", m_lockMenuBand);
-        settingsKey.SetBoolValue(L"UseRoundBorders", m_useRoundBorders);
-        settingsKey.SetBoolValue(L"UseShortBands", m_useShortBands);
-        settingsKey.SetBoolValue(L"UseLines", m_useLines);
-        settingsKey.SetBoolValue(L"ShowArrows", m_showArrows);
-        settingsKey.SetBoolValue(L"ShowCards", m_showCards);
-        settingsKey.SetDWORDValue(L"NumBands", bands);
+        // Create opens and attaches the handle to 'settingsKey' automatically.
+        // Explicitly requesting KEY_WRITE prevents standard runtime access exceptions.
+        if (ERROR_SUCCESS == settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
+        {
+            // REMOVED: Redundant settingsKey.Open block
+
+            // These now save beautifully because types match and SetBoolValue accepts bool by value
+            settingsKey.SetDWORDValue(L"ColorStyle", m_color);
+            settingsKey.SetBoolValue(L"UseThemes", m_useThemes);
+            settingsKey.SetBoolValue(L"UseBandColors", m_useBandColors);
+            settingsKey.SetBoolValue(L"UseFlatStyle", m_useFlatStyle);
+            settingsKey.SetBoolValue(L"PutBandsLeft", m_keepBandsLeft);
+            settingsKey.SetBoolValue(L"LockMenuBand", m_lockMenuBand);
+            settingsKey.SetBoolValue(L"UseRoundBorders", m_useRoundBorders);
+            settingsKey.SetBoolValue(L"UseShortBands", m_useShortBands);
+            settingsKey.SetBoolValue(L"UseLines", m_useLines);
+            settingsKey.SetBoolValue(L"ShowArrows", m_showArrows);
+            settingsKey.SetBoolValue(L"ShowCards", m_showCards);
+            settingsKey.SetDWORDValue(L"NumBands", bands);
+        }
     }
 
     return TRUE;

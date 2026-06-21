@@ -115,14 +115,12 @@ protected:
     virtual void    DoPreparePreview();
     virtual INT_PTR DialogProc(UINT msg, WPARAM, LPARAM);
     virtual void    InitializeContexts();
-    virtual void    LoadSizesRegistry();
     virtual BOOL    OnCommand(WPARAM, LPARAM);
     virtual BOOL    OnInitDialog();
     virtual void    OnOK();
     virtual void    OnPrepareDC();
     virtual void    OnPreparePrintPreview();
     virtual void    OnPreviewPage(UINT);
-    virtual void    SaveSizesRegistry();
     virtual void    SetWindowSizes();
 
 private:
@@ -150,7 +148,6 @@ private:
     BOOL    OnPrintButton();
     BOOL    OnZoomChange();
     void    PopulateScaleBox();
-    CString RegQueryStringValue(CRegKey &key, LPCWSTR name);
     void    UpdateButtons();
 
     CDataExchange m_dx;

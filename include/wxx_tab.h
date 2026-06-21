@@ -2036,7 +2036,7 @@ namespace Win32xx
         {
             const CString mdiKeyName = _T("Software\\") + CString(keyName) + _T("\\MDI Children");
             CRegKey mdiChildKey;
-            if (ERROR_SUCCESS == mdiChildKey.Open(HKEY_CURRENT_USER, mdiKeyName))
+            if (ERROR_SUCCESS == mdiChildKey.Open(HKEY_CURRENT_USER, mdiKeyName, KEY_READ))
             {
                 DWORD dwTabID;
                 int i = 0;
@@ -2047,16 +2047,23 @@ namespace Win32xx
                 // Fill the DockList vector from the registry.
                 while (ERROR_SUCCESS == mdiChildKey.QueryDWORDValue(tabKeyName, dwTabID))
                 {
-                    tabKeyName.Format(_T("Text%d"), i);
-                    DWORD dwBufferSize = 0;
-                    if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(tabKeyName,
-                        nullptr, &dwBufferSize))
+                    TabText.Empty();
+                    CString textKeyName;
+                    textKeyName.Format(_T("Text%d"), i);
+                    ULONG charCount = 0;
+                    if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(textKeyName, nullptr, &charCount) && charCount > 0)
                     {
-                        int bufferSize = static_cast<int>(dwBufferSize);
-                        mdiChildKey.QueryStringValue(tabKeyName,
-                            TabText.GetBuffer(bufferSize), &dwBufferSize);
+                        LPTSTR pBuffer = TabText.GetBuffer(static_cast<int>(charCount));
 
-                        TabText.ReleaseBuffer();
+                        if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(textKeyName, pBuffer, &charCount))
+                        {
+                            TabText.ReleaseBuffer();
+                        }
+                        else
+                        {
+                            TabText.ReleaseBuffer();
+                            TRACE("Warning: Failed to read MDI tab text string data.\n");
+                        }
                     }
 
                     int tabID = static_cast<int>(dwTabID);
@@ -2070,7 +2077,7 @@ namespace Win32xx
                     }
                     else
                     {
-                        TRACE("Failed to get TabbedMDI info from registry");
+                        TRACE("Failed to get TabbedMDI info from registry\n");
                         isLoaded = FALSE;
                         break;
                     }
@@ -2205,22 +2212,20 @@ namespace Win32xx
         {
             const CString appKeyName = _T("Software\\") + CString(keyName);
             const CString mdiChildrenName = _T("MDI Children");
+            CRegKey appKey;
+            CRegKey mdiChildKey;
+
             try
             {
-                CRegKey appKey;
-                if (ERROR_SUCCESS != appKey.Create(HKEY_CURRENT_USER, appKeyName))
-                    throw CUserException();
-                if (ERROR_SUCCESS != appKey.Open(HKEY_CURRENT_USER, appKeyName))
+                if (ERROR_SUCCESS != appKey.Create(HKEY_CURRENT_USER, appKeyName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
                     throw CUserException();
 
-                appKey.DeleteSubKey(mdiChildrenName);
-                CRegKey mdiChildKey;
-                if (ERROR_SUCCESS != mdiChildKey.Create(appKey, mdiChildrenName))
-                    throw CUserException();
-                if (ERROR_SUCCESS != mdiChildKey.Open(appKey, mdiChildrenName))
+                appKey.RecurseDeleteKey(mdiChildrenName);
+                if (ERROR_SUCCESS != mdiChildKey.Create(appKey, mdiChildrenName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
                     throw CUserException();
 
-                for (int i = 0; i < GetMDIChildCount(); ++i)
+                int childCount = GetMDIChildCount();
+                for (int i = 0; i < childCount; ++i)
                 {
                     CString tabKeyName;
                     TabPageInfo pdi = GetTab().GetTabPageInfo(i);
@@ -2231,7 +2236,7 @@ namespace Win32xx
                         throw CUserException();
 
                     tabKeyName.Format(_T("Text%d"), i);
-                    CString TabText = GetTab().GetTabPageInfo(i).tabText;
+                    CString TabText = pdi.tabText;
                     if (ERROR_SUCCESS != mdiChildKey.SetStringValue(tabKeyName, TabText))
                         throw CUserException();
                 }
@@ -2246,12 +2251,13 @@ namespace Win32xx
             {
                 TRACE("*** Failed to save TabbedMDI settings in registry. ***\n");
 
-                // Roll back the registry changes by deleting the subkeys.
-                CRegKey appKey;
-                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName))
-                {
-                    appKey.DeleteSubKey(mdiChildrenName);
-                }
+                mdiChildKey.Close();
+                appKey.Close();
+
+                // Roll back the registry changes.
+                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_WRITE))
+                    appKey.RecurseDeleteKey(mdiChildrenName);
+
 
                 return FALSE;
             }

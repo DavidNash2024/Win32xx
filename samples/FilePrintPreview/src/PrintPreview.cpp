@@ -45,7 +45,6 @@ CPrintPreviewEx::CPrintPreviewEx(DWORD flags /* = HIDE_HELP */ )
 // window sizes.
 BOOL CPrintPreviewEx::ClosePreview()
 {
-    SaveSizesRegistry();
     m_previewPane.SetPaneZoomState(FIT_PAGE);
     Close();
     return TRUE;
@@ -63,12 +62,12 @@ INT_PTR CPrintPreviewEx::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
             switch (LOWORD(wparam))
             {
                 case SC_CLOSE: // Close the window.
-                    SaveSizesRegistry();
                     Destroy();
                     return TRUE;
 
                 default: break;
             }
+            break;
         }
 
         default: break;
@@ -177,22 +176,6 @@ void CPrintPreviewEx::InitializeToolTips()
     AddToolTip(IDC_PREVIEW_PANE);
 }
 
-// Load the saved screen and initial preview window size parameters from the
-// registry key labelled PREVIEW_REGISTRY_KEY.
-void CPrintPreviewEx::LoadSizesRegistry()
-{
-    CRegKey key;
-    CString strKey = PREVIEW_REGISTRY_KEY;
-    if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
-    {
-        LPWSTR p;
-        CString s = RegQueryStringValue(key, L"Init preview Width");
-        m_previewInches.cx = _tcstod(s, &p);
-        s = RegQueryStringValue(key, L"Init preview Height");
-        m_previewInches.cy = _tcstod(s, &p);
-    }
-}
-
 // Direct the command messages to their processing functions.
 BOOL CPrintPreviewEx::OnCommand(WPARAM wparam, LPARAM lparam)
 {
@@ -221,9 +204,6 @@ BOOL CPrintPreviewEx::OnCommand(WPARAM wparam, LPARAM lparam)
 // entities before the dialog becomes visible.
 BOOL CPrintPreviewEx::OnInitDialog()
 {
-    // Lload saved screen and initial preview window sizes.
-    LoadSizesRegistry();
-
     // Register controls,  attach controls to numeric identifiers.
     UpdateData(m_dx, SENDTOCONTROL);
 
@@ -470,45 +450,6 @@ void CPrintPreviewEx::PopulateScaleBox()
     for (UINT i = 0; i < scale.size(); i++)
         m_comboZoom.AddString(scale[i]);
     m_comboZoom.SetCurSel(0);
-}
-
-// Return the CString value of a specified value name found in the currently
-// open registry key.
-CString CPrintPreviewEx::RegQueryStringValue(CRegKey &key, LPCWSTR name)
-{
-    ULONG len = 256;
-    CString sValue;
-    if (ERROR_SUCCESS == key.QueryStringValue(name, sValue.GetBuffer(255), &len))
-    {
-        sValue.ReleaseBuffer();
-        return sValue;
-    }
-    else
-        return L"";
-}
-
-// Write the current preview size value into the registry key labelled
-// PREVIEW_REGISTRY_KEY.
-void CPrintPreviewEx::SaveSizesRegistry()
-{
-    // Get the current preview size.
-    m_previewInches = DSize(GetWindowRect().Size()) / m_screenPPI;
-
-    // Save the size in the registry.
-    CString strKey = PREVIEW_REGISTRY_KEY;
-    CRegKey key;
-    key.Create(HKEY_CURRENT_USER, strKey, nullptr, REG_OPTION_NON_VOLATILE,
-        KEY_ALL_ACCESS, nullptr, nullptr);
-
-    // Create() closes the key handle, so we have to reopen it.
-    if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_WRITE))
-    {
-        CString s;
-        s.Format(L"%.2f",  m_previewInches.cx);
-        key.SetStringValue(L"Init preview Width", s.c_str());
-        s.Format(L"%.2f",  m_previewInches.cy);
-        key.SetStringValue(L"Init preview Height", s.c_str());
-    }
 }
 
 // Set the preview window size using the current m_previewInches size.

@@ -1921,21 +1921,22 @@ namespace Win32xx
             CString fileKeyName;
             for (UINT i = 0; i < m_maxMRU; ++i)
             {
-                DWORD bufferSize = 0;
-                fileKeyName.Format(_T("File %d"), i+1);
+                ULONG charCount = 0;
+                fileKeyName.Format(_T("File %d"), i + 1);
+                LONG result = recentKey.QueryStringValue(fileKeyName, nullptr, &charCount);
 
-                if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName,
-                    nullptr, &bufferSize))
+                if (result == ERROR_FILE_NOT_FOUND)
+                    continue;
+
+                if (result == ERROR_SUCCESS && charCount > 0)
                 {
-                    // load the entry from the registry.
-                    int buffer = static_cast<int>(bufferSize);
-                    if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName,
-                        pathName.GetBuffer(buffer), &bufferSize))
+                    LPTSTR pBuffer = pathName.GetBuffer(static_cast<int>(charCount));
+                    if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, pBuffer, &charCount))
                     {
                         pathName.ReleaseBuffer();
 
                         if (pathName.GetLength() > 0)
-                            mruEntries.push_back( pathName );
+                            mruEntries.push_back(pathName);
                     }
                     else
                     {
@@ -1946,7 +1947,7 @@ namespace Win32xx
                 }
             }
 
-            // successfully loaded all MRU values, so store them.
+            // Successfully processed valid entries, so store them.
             m_mruEntries = std::move(mruEntries);
             loaded = TRUE;
         }
@@ -1958,7 +1959,7 @@ namespace Win32xx
     template <class T>
     inline BOOL CFrameT<T>::LoadRegistrySettings(LPCTSTR keyName)
     {
-        assert (keyName != nullptr);
+        assert(keyName != nullptr);
 
         m_keyName = keyName;
         const CString settingsKeyName = _T("Software\\") + m_keyName +
@@ -1972,48 +1973,51 @@ namespace Win32xx
             {
                 DWORD top, left, width, height, showCmd, statusBar, toolBar;
 
-                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Top"), top))
+                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Top"), top) ||
+                    ERROR_SUCCESS != key.QueryDWORDValue(_T("Left"), left) ||
+                    ERROR_SUCCESS != key.QueryDWORDValue(_T("Width"), width) ||
+                    ERROR_SUCCESS != key.QueryDWORDValue(_T("Height"), height) ||
+                    ERROR_SUCCESS != key.QueryDWORDValue(_T("ShowCmd"), showCmd))
+                {
                     throw CUserException();
-                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Left"), left))
-                    throw CUserException();
-                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Width"), width))
-                    throw CUserException();
-                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Height"), height))
-                    throw CUserException();
-                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("ShowCmd"), showCmd))
-                    throw CUserException();
-                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("StatusBar"), statusBar))
-                    throw CUserException();
-                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("ToolBar"), toolBar))
-                    throw CUserException();
+                }
+
+                // Soft requirements: Default to visible if UI state parameters are missing
+                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("StatusBar"), statusBar)) statusBar = 1;
+                if (ERROR_SUCCESS != key.QueryDWORDValue(_T("ToolBar"), toolBar)) toolBar = 1;
 
                 int l = static_cast<int>(left);
                 int t = static_cast<int>(top);
                 int r = static_cast<int>(left + width);
                 int b = static_cast<int>(top + height);
 
-                CPoint midpoint((l + r) / 2, (t + b) / 2);
-                CPoint midtop((l + r)/2, t);
-
-                HMONITOR monitor = ::MonitorFromPoint(midpoint, MONITOR_DEFAULTTONULL);
-                if (monitor == nullptr)
+                if (width <= 0 || height <= 0)
                     throw CUserException();
+
+                // Check if window coordinates are completely off-screen (e.g. disconnected monitor)
+                CRect targetRect(l, t, r, b);
+                HMONITOR monitor = ::MonitorFromRect(&targetRect, MONITOR_DEFAULTTONULL);
+
+                // Reposition safely to the primary monitor if offscreen 
+                if (monitor == nullptr)
+                    monitor = ::MonitorFromPoint(CPoint(0, 0), MONITOR_DEFAULTTOPRIMARY);
 
                 MONITORINFO mi = {};
                 mi.cbSize = sizeof(mi);
                 ::GetMonitorInfo(monitor, &mi);
                 CRect workArea = mi.rcWork;
 
-                // Check if window is mostly within work area.
-                if (!workArea.PtInRect(midpoint))
-                    throw CUserException();
-
-                // Check if the caption is within the work area.
-                if (!workArea.PtInRect(midtop))
-                    throw CUserException();
-
-                if (width <= 0 || height <= 0)
-                    throw CUserException();
+                // If the window position layout is invalid or completely outside bounds, clamp it
+                if (l < workArea.left || t < workArea.top || r > workArea.right || b > workArea.bottom)
+                {
+                    // Auto-adjust to fit work area bounds safely.
+                    if (width > (DWORD)workArea.Width()) width = workArea.Width();
+                    if (height > (DWORD)workArea.Height()) height = workArea.Height();
+                    l = workArea.left;
+                    t = workArea.top;
+                    r = l + width;
+                    b = t + height;
+                }
 
                 values.position = CRect(l, t, r, b);
                 values.showCmd = (SW_MAXIMIZE == showCmd) ? SW_MAXIMIZE : SW_SHOW;
@@ -2030,8 +2034,8 @@ namespace Win32xx
                 // Delete the bad key from the registry.
                 const CString appKeyName = _T("Software\\") + m_keyName;
                 CRegKey appKey;
-                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_READ))
-                    appKey.DeleteSubKey(_T("Frame Settings"));
+                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_WRITE))
+                    appKey.RecurseDeleteKey(_T("Frame Settings"));
 
                 values = {};
             }
@@ -2892,34 +2896,33 @@ namespace Win32xx
     template <class T>
     inline BOOL CFrameT<T>::SaveRegistryMRUSettings()
     {
-        // Store the MRU entries in the registry.
+        if (m_keyName.IsEmpty()) return FALSE;
+
         try
         {
             // Delete Old MRUs.
             const CString appKeyName = _T("Software\\") + m_keyName;
             CRegKey appKey;
-            if (ERROR_SUCCESS != appKey.Open(HKEY_CURRENT_USER, appKeyName))
+            if (ERROR_SUCCESS != appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_WRITE))
                 throw CUserException();
 
-            appKey.DeleteSubKey(_T("Recent Files"));
+            appKey.RecurseDeleteKey(_T("Recent Files"));
+            appKey.Close();
 
             if (m_maxMRU > 0)
             {
-                const CString recentKeyName = _T("Software\\") + m_keyName + _T("\\Recent Files");
+                const CString recentKeyName = appKeyName + _T("\\Recent Files");
                 CRegKey recentKey;
 
                 // Add Current MRUs.
-                if (ERROR_SUCCESS != recentKey.Create(HKEY_CURRENT_USER, recentKeyName))
-                    throw CUserException();
-
-                if (ERROR_SUCCESS != recentKey.Open(HKEY_CURRENT_USER, recentKeyName))
+                if (ERROR_SUCCESS != recentKey.Create(HKEY_CURRENT_USER, recentKeyName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
                     throw CUserException();
 
                 CString subKeyName;
                 CString pathName;
                 for (size_t i = 0; i < m_maxMRU; ++i)
                 {
-                    subKeyName.Format(_T("File %d"), i + 1);
+                    subKeyName.Format(_T("File %u"), static_cast<UINT>(i + 1));
 
                     if (i < m_mruEntries.size())
                     {
@@ -2939,10 +2942,10 @@ namespace Win32xx
             const CString appKeyName = _T("Software\\") + m_keyName;
             CRegKey appKey;
 
-            if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName))
+            if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_WRITE))
             {
                 // Roll back the registry changes by deleting this subkey.
-                appKey.DeleteSubKey(_T("Recent Files"));
+                appKey.RecurseDeleteKey(_T("Recent Files"));
             }
 
             return FALSE;
@@ -2957,14 +2960,12 @@ namespace Win32xx
     {
         if (!m_keyName.IsEmpty())
         {
+            const CString settingsKeyName = _T("Software\\") + m_keyName + _T("\\Frame Settings");
+            CRegKey settingsKey;
+
             try
             {
-                const CString settingsKeyName = _T("Software\\") + m_keyName + _T("\\Frame Settings");
-                CRegKey settingsKey;
-
-                if (ERROR_SUCCESS != settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName))
-                    throw CUserException();
-                if (ERROR_SUCCESS != settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName))
+                if (ERROR_SUCCESS != settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
                     throw CUserException();
 
                 // Store the window position in the registry.
@@ -2980,7 +2981,10 @@ namespace Win32xx
                     DWORD width = static_cast<DWORD>(rc.Width());
                     DWORD height = static_cast<DWORD>(rc.Height());
                     DWORD showCmd = wndpl.showCmd;
-
+                    if (showCmd == SW_SHOWMINIMIZED || showCmd == SW_MINIMIZE)
+                    {
+                        showCmd = SW_SHOWNORMAL;
+                    }
                     if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Top"), top))
                         throw CUserException();
                     if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Left"), left))
@@ -2993,7 +2997,7 @@ namespace Win32xx
                         throw CUserException();
                 }
 
-                // Store the ToolBar and statusbar states.
+                // Store the ToolBar and StatusBar visibility states.
                 DWORD showToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
                 DWORD showStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
 
@@ -3007,13 +3011,14 @@ namespace Win32xx
             {
                 TRACE("*** ERROR: Failed to save registry settings. ***\n");
 
+                settingsKey.Close();
                 const CString appKeyName = _T("Software\\") + m_keyName;
                 CRegKey appKey;
 
-                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName))
+                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_WRITE))
                 {
                     // Roll back the registry changes by deleting this subkey.
-                    appKey.DeleteSubKey(_T("Frame Settings"));
+                    appKey.RecurseDeleteKey(_T("Frame Settings"));
                 }
 
                 return FALSE;
@@ -3022,7 +3027,7 @@ namespace Win32xx
             return SaveRegistryMRUSettings();
         }
 
-        return TRUE;
+        return FALSE;
     }
 
     // Returns TRUE if this is a MDI frame. Returns FALSE otherwise.
