@@ -983,10 +983,6 @@ namespace Win32xx
 
         if (object != m_pData->hGDIObject)
         {
-            // Release any existing GDI object.
-            if (m_pData->hGDIObject)
-               Release();
-
             if (object != nullptr)
             {
                 // Add the object to this CGDIObject.
@@ -1006,6 +1002,7 @@ namespace Win32xx
             else
             {
                 // Provision a clean state for this specific instance wrapper.
+                Release();
                 m_pData = std::make_shared<CGDI_Data>();
             }
         }
@@ -2343,10 +2340,6 @@ namespace Win32xx
 
         if (dc != m_pData->dc)
         {
-            // Release any existing dc.
-            if (m_pData->dc)
-                Release();
-
             if (dc != nullptr)
             {
                 // Add the dc to this CDC.
@@ -2367,6 +2360,7 @@ namespace Win32xx
             else
             {
                 // Provision a clean state for this specific instance wrapper.
+                Release();
                 m_pData = std::make_shared<CDC_Data>();
             }
         }

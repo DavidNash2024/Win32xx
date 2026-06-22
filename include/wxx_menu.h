@@ -272,8 +272,7 @@ namespace Win32xx
         if (menu != m_pData->menu)
         {
             // Release any existing menu.
-            if (m_pData->menu)
-                Release();
+            Release();
 
             if (menu != nullptr)
             {
@@ -285,9 +284,8 @@ namespace Win32xx
                 }
                 else
                 {
+                    m_pData = std::make_shared<CMenu_Data>();
                     m_pData->menu = menu;
-
-                    // Add the CMenu data to the map.
                     GetApp()->AddCMenuDataToMap(menu, m_pData);
                 }
             }
