@@ -14,6 +14,16 @@ New Features and Enhancements
   and GNU compilers. GNU 32bit compilers can be used to compile Win32++
   applications for Windows XP.
 
+* Updated the CString class and the ToCString functions.
+  A CString can now also be constructed from a std::string and a std::wstring.
+  The ToCString functions can also be used to convert a std::string and a 
+  std::wstring to a CString.
+
+* Updated the CRegKey class.
+  QueryStringValue and SetStringValue now use a CString parameter.
+  QueryMultiStringValue and SetMultiStringValue now use a vector of CString
+  parameter.
+
 * Updated support for the Windows Ribbon Framework.
   The CRibbon class had been replaced by the CRibbonT class template. The code
   now uses the ComPtr included in the Windows Runtime C++ Template Library.
@@ -46,29 +56,41 @@ New Features and Enhancements
   CPrintDialog can be used instead as it displays the legacy print dialog that
   is suitable for Windows API applications.
 
-  Note that the CustomPrintDlg sample demonstrates how we can create our
-  own customized print dialog.
+  Note that the CustomPrintDlg sample demonstrates how we can create our own
+  customized print dialog, should we need to extend the capabilities of
+  CPrintDialog.
 
 Changes in detail
 -----------------
-Added BrowserEx                   - sample
-Added CRibbonT                    - class template
-Added CAtoA::GetLength            - member function
-Added CAtoBSTR::GetLength         - member function
-Added CAtoW::GetLength            - member function
-Added CRegKey::QueryBOOLValue     - member function
-Added CRegKey::SetBOOLValue       - member function
-Added CWtoA::GetLength            - member function
-Added CWtoBSTR:: GetLength        - member function
-Added CWtoW::GetLength            - member function
-Deprecated CPrintDialogEx         - class
-Deprecated CWebBrowser            - class
-Modified CStatusBar::GetParts     - added optional parameters
-Removed Browser                   - sample
-Removed BrowserATL                - sample
-Removed CRibbon                   - class
-Removed CWinApp::MsgCWinApp       - member function
-Removed CWinApp::MsgTlsIndexe     - member function
+Added BrowserEx                          - sample
+Added CRibbonT                           - class template
+Added CAtoA::GetLength                   - member function
+Added CAtoBSTR::GetLength                - member function
+Added CAtoW::GetLength                   - member function
+Added CRegKey::QueryBOOLValue            - member function
+Added CRegKey::SetBOOLValue              - member function
+Added CStringT(const std::string& str)   - constructor
+Added CStringT(const std::wstring& str)  - constructor
+Added CString(const std::string& str)    - constructor
+Added CString(const std::wstring& str)   - constructor
+Added ToCString(const std::string& str)  - global function
+Added ToCString(const std::wstring& str) - global function
+Added CWtoA::GetLength                   - member function
+Added CWtoBSTR:: GetLength               - member function
+Added CWtoW::GetLength                   - member function
+Deprecated CPrintDialogEx                - class
+Deprecated CWebBrowser                   - class
+Modified CRegKey::QueryMultiStringValue  - modified parameters
+Modified CRegKey::QueryStringValue       - modified parameters
+Modified CRegKey::SetMultiStringValue    - modified parameters
+Modified CRegKey::SetStringValue         - modified parameters
+Modified CStatusBar::GetParts            - added optional parameters
+Removed Browser                          - sample
+Removed BrowserATL                       - sample
+Removed CRibbon                          - class
+Removed CWinApp::MsgCWinApp              - member function
+Removed CWinApp::MsgTlsIndex             - member function
+Renamed the Explorer sample to ExplorerEx
 Renamed CStatusBar::CreateParts  to  CStatusBar::SetParts
 
 Added VS2026 project files to samples

@@ -92,9 +92,9 @@ namespace Win32xx
         LONG QueryBOOLValue(LPCTSTR valueName, BOOL& value) const;
         LONG QueryDWORDValue(LPCTSTR valueName, DWORD& value) const;
         LONG QueryGUIDValue(LPCTSTR valueName, GUID& value) const;
-        LONG QueryMultiStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
+        LONG QueryMultiStringValue(LPCTSTR valueName, std::vector<CString>& value) const;
         LONG QueryQWORDValue(LPCTSTR valueName, ULONGLONG& value) const;
-        LONG QueryStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
+        LONG QueryStringValue(LPCTSTR valueName, CString& value) const;
         LONG QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const;
 
         LONG SetBinaryValue(LPCTSTR valueName, const void* value, ULONG bytes) const;
@@ -103,9 +103,9 @@ namespace Win32xx
         LONG SetDWORDValue(LPCTSTR valueName, DWORD value) const;
         LONG SetGUIDValue(LPCTSTR valueName, REFGUID value) const;
         LONG SetKeySecurity(SECURITY_INFORMATION si, PSECURITY_DESCRIPTOR psd) const;
-        LONG SetMultiStringValue(LPCTSTR valueName, LPCTSTR value) const;
+        LONG SetMultiStringValue(LPCTSTR valueName, const std::vector<CString>& value) const;
         LONG SetQWORDValue(LPCTSTR valueName, ULONGLONG value) const;
-        LONG SetStringValue(LPCTSTR valueName, LPCTSTR value) const;
+        LONG SetStringValue(LPCTSTR valueName, const CString& value) const;
         LONG SetValue(LPCTSTR valueName, DWORD type, const void* value, ULONG bytes) const;
 
     private:
@@ -179,7 +179,7 @@ namespace Win32xx
 
         if (result == ERROR_SUCCESS)
         {
-            Close(); 
+            Close();
             m_key = key;
         }
 
@@ -267,7 +267,7 @@ namespace Win32xx
         LONG result = QueryDWORDValue(valueName, dwValue);
         if (result == ERROR_SUCCESS)
             value = (dwValue != 0);
- 
+
         return result;
     }
 
@@ -280,7 +280,7 @@ namespace Win32xx
         LONG result = QueryDWORDValue(valueName, dwValue);
         if (result == ERROR_SUCCESS)
             value = dwValue ? TRUE : FALSE;
-  
+
         return result;
     }
 
@@ -307,37 +307,51 @@ namespace Win32xx
         assert(m_key);
         value = GUID_NULL;
 
-        TCHAR szGUID[64] = { 0 };
-        ULONG count = 64;
-
-        LONG result = QueryStringValue(valueName, szGUID, &count);
+        CString guid;
+        LONG result = QueryStringValue(valueName, guid);
         if (result != ERROR_SUCCESS)
             return result;
 
-        HRESULT hr = ::CLSIDFromString(TtoOLE(szGUID), &value);
+        HRESULT hr = ::CLSIDFromString(TtoOLE(guid), &value);
         if (FAILED(hr))
             return ERROR_INVALID_DATA;
 
         return ERROR_SUCCESS;
     }
-
+ 
     // Retrieves the multi-string data for the specified value name.
-    inline LONG CRegKey::QueryMultiStringValue(LPCTSTR valueName, LPTSTR value,
-        ULONG* chars) const
+    inline LONG CRegKey::QueryMultiStringValue(LPCTSTR valueName, std::vector<CString>& value) const
     {
-        assert(m_key);
-        assert(chars);
+        assert(m_key);      
 
-        DWORD bytes = (*chars) * sizeof(TCHAR);
+        DWORD bytes = 0;
         DWORD type = 0;
+        value.clear();
+        LONG result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, nullptr, &bytes);
+        if (result == ERROR_SUCCESS && type == REG_MULTI_SZ)
+        {
+            int chars = bytes / sizeof(TCHAR);
+            CString multiString;
+            result = ::RegQueryValueEx(m_key, valueName, nullptr, &type,
+                reinterpret_cast<LPBYTE>(multiString.GetBuffer(chars)), &bytes);
 
-        LONG result = ::RegQueryValueEx(m_key, valueName, nullptr, &type,
-            reinterpret_cast<LPBYTE>(value), &bytes);
+            multiString.ReleaseBuffer(chars);
+            int totalLength = multiString.GetLength();
+            LPCTSTR pBuffer = multiString.c_str();
+            int currentPos = 0;
 
-        *chars = bytes / sizeof(TCHAR);
-
-        if (result == ERROR_SUCCESS && type != REG_MULTI_SZ)
-            return ERROR_INVALID_DATA;
+            while (currentPos < totalLength)
+            {
+                // Check for the double-null termination
+                if (pBuffer[currentPos] == _T('\0'))
+                    break;
+                
+                LPCTSTR pCurrentStart = pBuffer + currentPos;
+                CString subString(pCurrentStart);
+                value.push_back(subString);
+                currentPos += subString.GetLength() + 1;
+            }
+        }
 
         return result;
     }
@@ -360,17 +374,22 @@ namespace Win32xx
     }
 
     // Retrieves the string data for the specified value name.
-    inline LONG CRegKey::QueryStringValue(LPCTSTR valueName, LPTSTR value,
-        ULONG* chars) const
+    inline LONG CRegKey::QueryStringValue(LPCTSTR valueName, CString& value) const
     {
         assert(m_key);
-        assert(chars);
 
-        DWORD bytes = (*chars) * sizeof(TCHAR);
+        DWORD bytes = 0;
         DWORD type = 0;
 
-        LONG result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, reinterpret_cast<LPBYTE>(value), &bytes);
-        *chars = bytes / sizeof(TCHAR);
+        LONG result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, nullptr, &bytes);
+        int chars = bytes / sizeof(TCHAR);
+
+        if (result == ERROR_SUCCESS && type != REG_SZ && type != REG_EXPAND_SZ)
+            return ERROR_INVALID_DATA;
+
+        LPBYTE buffer = reinterpret_cast<LPBYTE>(value.GetBuffer(chars));
+        result = ::RegQueryValueEx(m_key, valueName, nullptr, &type, buffer, &bytes);
+        value.ReleaseBuffer();
 
         if (result == ERROR_SUCCESS && type != REG_SZ && type != REG_EXPAND_SZ)
             return ERROR_INVALID_DATA;
@@ -407,7 +426,7 @@ namespace Win32xx
 
             if (pfnSHDeleteKey != nullptr)
                 result = pfnSHDeleteKey(m_key, keyName);
- 
+
             ::FreeLibrary(hShlwapi);
         }
 
@@ -453,7 +472,10 @@ namespace Win32xx
         if (::StringFromGUID2(value, szGUID, 64) == 0)
             return ERROR_INSUFFICIENT_BUFFER;
         else
-            return SetStringValue(valueName, OLEtoT(szGUID));
+        {
+            CString guid(OLEtoT(szGUID).c_str());
+            return SetStringValue(valueName, guid);
+        }
     }
 
     // Sets the security of the registry key.
@@ -466,44 +488,44 @@ namespace Win32xx
 
     // Sets the multistring value of the registry key.
     // The value string should be double null terminated.
-    inline LONG CRegKey::SetMultiStringValue(LPCTSTR valueName, LPCTSTR value) const
+    inline LONG CRegKey::SetMultiStringValue(LPCTSTR valueName, const std::vector<CString>& value) const
     {
         assert(m_key);
-        assert(value);
-
-        // Specify a reasonable size limit of 64K for a registry multi-string.
-        constexpr size_t MAX_SAFE_CHARS = 65536;
-
-        LPCTSTR temp = value;
-        for (std::basic_string_view<TCHAR> view(temp); !view.empty(); view = std::basic_string_view<TCHAR>(temp)) 
+        assert(value.size() > 0);
+        
+        if (value.size() > 0)
         {
-            temp += view.length() + 1;
-            if (static_cast<size_t>(temp - value) >= MAX_SAFE_CHARS)
-                return ERROR_INVALID_DATA;
+            CString multiString;
+            for (auto str : value)
+            {
+                multiString += str;
+                multiString += _T('\0');
+            }
+            multiString += _T('\0');
+
+            ULONG bytes = static_cast<ULONG>(multiString.GetLength() * sizeof(TCHAR));
+            return ::RegSetValueEx(m_key, valueName, 0, REG_MULTI_SZ,
+                reinterpret_cast<const BYTE*>(multiString.c_str()), bytes);
         }
-
-    // Include the final, second terminating null character
-    size_t totalChars = static_cast<size_t>((temp - value) + 1); 
-    ULONG bytes = static_cast<ULONG>(totalChars * sizeof(TCHAR));
-
-        return ::RegSetValueEx(m_key, valueName, 0, REG_MULTI_SZ, reinterpret_cast<const BYTE*>(value), bytes);
+        else
+            return ERROR_INVALID_DATA;
     }
 
     // Sets the string value of the registry key.
-    inline LONG CRegKey::SetStringValue(LPCTSTR valueName, LPCTSTR value) const
+    inline LONG CRegKey::SetStringValue(LPCTSTR valueName, const CString& value) const
     {
         assert(m_key);
         assert(value);
         return ::RegSetValueEx(m_key, valueName, 0, REG_SZ,
-            reinterpret_cast<const BYTE*>(value),
-            (::lstrlen(value) + 1) * sizeof(TCHAR));
+            reinterpret_cast<const BYTE*>(value.c_str()),
+            (value.GetLength() + 1) * sizeof(TCHAR));
     }
 
     // Sets the QWORD value of the registry key.
     inline LONG CRegKey::SetQWORDValue(LPCTSTR valueName, ULONGLONG value) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, valueName, 0, REG_QWORD, 
+        return ::RegSetValueEx(m_key, valueName, 0, REG_QWORD,
             reinterpret_cast<const BYTE*>(&value), sizeof(ULONGLONG));
     }
 

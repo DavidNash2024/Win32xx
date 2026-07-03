@@ -983,9 +983,16 @@ namespace Win32xx
 
         if (object != m_pData->hGDIObject)
         {
+            // Release any existing CGDI_Data.
+            if (m_pData->hGDIObject != nullptr)
+            {
+                Release();
+                m_pData = std::make_shared<CGDI_Data>();
+            }
+
             if (object != nullptr)
             {
-                // Add the object to this CGDIObject.
+                // Assign the CGDI_Data to this CCGDIObject.
                 std::shared_ptr<CGDI_Data> pCGDIData = GetApp()->GetCGDIData(object).lock();
                 if (pCGDIData)
                 {
@@ -993,17 +1000,10 @@ namespace Win32xx
                 }
                 else
                 {
+                    // Add the CGDI_Data to the map.
                     m_pData->hGDIObject = object;
-
-                    // Add the CGDIObject data to the map.
                     GetApp()->AddCGDIDataToMap(object, m_pData);
                 }
-            }
-            else
-            {
-                // Provision a clean state for this specific instance wrapper.
-                Release();
-                m_pData = std::make_shared<CGDI_Data>();
             }
         }
     }
@@ -2340,9 +2340,18 @@ namespace Win32xx
 
         if (dc != m_pData->dc)
         {
+            // Release any existing CDC_Data.
+            if (m_pData->dc)
+            {
+                Release();
+
+                // Assign values to our data members.
+                m_pData = std::make_shared<CDC_Data>();
+            }
+
             if (dc != nullptr)
             {
-                // Add the dc to this CDC.
+                // Assign the CDC_Data to this CDC.
                 std::shared_ptr<CDC_Data> pCDCData = GetApp()->GetCDCData(dc).lock();
                 if (pCDCData)
                 {
@@ -2352,16 +2361,10 @@ namespace Win32xx
                 {
                     m_pData->dc = dc;
 
-                    // Add the CDC data to the map.
+                    // Add the CDC_Data to the map.
                     GetApp()->AddCDCDataToMap(dc, m_pData);
                     m_pData->savedDCState = SaveDC();
                 }
-            }
-            else
-            {
-                // Provision a clean state for this specific instance wrapper.
-                Release();
-                m_pData = std::make_shared<CDC_Data>();
             }
         }
     }

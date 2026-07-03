@@ -271,12 +271,16 @@ namespace Win32xx
 
         if (menu != m_pData->menu)
         {
-            // Release any existing menu.
-            Release();
+            // Release any existing CMenu_Data.
+            if (m_pData->menu != nullptr)
+            {
+                Release();
+                m_pData = std::make_shared<CMenu_Data>();
+            }
 
             if (menu != nullptr)
             {
-                // Add the menu to this CMenu.
+                // Assign the CMenu_Data to this CMenu.
                 std::shared_ptr<CMenu_Data> pCMenuData = GetApp()->GetCMenuData(menu).lock();
                 if (pCMenuData)
                 {
@@ -284,15 +288,10 @@ namespace Win32xx
                 }
                 else
                 {
-                    m_pData = std::make_shared<CMenu_Data>();
+                    // Add the CMenu_Data to the map.
                     m_pData->menu = menu;
                     GetApp()->AddCMenuDataToMap(menu, m_pData);
                 }
-            }
-            else
-            {
-                // Provision a clean state for this specific instance wrapper.
-                m_pData = std::make_shared<CMenu_Data>();
             }
         }
     }

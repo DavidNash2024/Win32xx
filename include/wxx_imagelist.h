@@ -245,12 +245,16 @@ namespace Win32xx
 
         if (images != m_pData->images)
         {
-            // Release any existing imagelist.
-            Release();
+            // Release any existing CIml_Data.
+            if (m_pData->images)
+            {
+                Release();
+                m_pData = std::make_shared<CIml_Data>();
+            }
 
             if (images != nullptr)
             {
-                // Add the imagelist to this CImageList.
+                // Assign the CIml_Data to this CImageList.
                 std::shared_ptr<CIml_Data> pCImlData = GetApp()->GetCImlData(images).lock();
                 if (pCImlData)
                 {
@@ -258,15 +262,10 @@ namespace Win32xx
                 }
                 else
                 {
-                    m_pData = std::make_shared<CIml_Data>();
+                    // Add the CIml_Data to the map.
                     m_pData->images = images;
                     GetApp()->AddCImlDataToMap(images, m_pData);
                 }
-            }
-            else
-            {
-                // Provision a clean state for this specific instance wrapper.
-                m_pData = std::make_shared<CIml_Data>();
             }
         }
     }

@@ -1921,29 +1921,16 @@ namespace Win32xx
             CString fileKeyName;
             for (UINT i = 0; i < m_maxMRU; ++i)
             {
-                ULONG charCount = 0;
                 fileKeyName.Format(_T("File %d"), i + 1);
-                LONG result = recentKey.QueryStringValue(fileKeyName, nullptr, &charCount);
-
-                if (result == ERROR_FILE_NOT_FOUND)
-                    continue;
-
-                if (result == ERROR_SUCCESS && charCount > 0)
+                if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, pathName))
                 {
-                    LPTSTR pBuffer = pathName.GetBuffer(static_cast<int>(charCount));
-                    if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, pBuffer, &charCount))
-                    {
-                        pathName.ReleaseBuffer();
-
-                        if (pathName.GetLength() > 0)
-                            mruEntries.push_back(pathName);
-                    }
-                    else
-                    {
-                        pathName.ReleaseBuffer();
-                        TRACE(_T("\n*** WARNING: LoadRegistryMRUSettings: \
-                            QueryStringValue failed. ***\n"));
-                    }
+                    if (pathName.GetLength() > 0)
+                        mruEntries.push_back(pathName);
+                }
+                else
+                {
+                    TRACE(_T("\n*** WARNING: LoadRegistryMRUSettings: \
+                        QueryStringValue failed. ***\n"));
                 }
             }
 
@@ -1998,7 +1985,7 @@ namespace Win32xx
                 CRect targetRect(l, t, r, b);
                 HMONITOR monitor = ::MonitorFromRect(&targetRect, MONITOR_DEFAULTTONULL);
 
-                // Reposition safely to the primary monitor if offscreen 
+                // Reposition safely to the primary monitor if offscreen
                 if (monitor == nullptr)
                     monitor = ::MonitorFromPoint(CPoint(0, 0), MONITOR_DEFAULTTOPRIMARY);
 

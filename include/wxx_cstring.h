@@ -156,9 +156,11 @@ namespace Win32xx
 
         public:
         CStringT() = default;
-        CStringT(const T * text);
-        CStringT(const T * text, int length);
+        CStringT(const T* text);
+        CStringT(const T* text, int length);
         CStringT(T ch, int repeat = 1);
+        explicit CStringT(const std::string& str);
+        explicit CStringT(const std::wstring& str);
         CStringT(const CStringT& str);
         CStringT(CStringT&& str) noexcept;
         ~CStringT() = default;
@@ -284,6 +286,8 @@ namespace Win32xx
         // Cross-class conversion constructors.
         CString(const CStringA& str);
         CString(const CStringW& str);
+        explicit CString(const std::string& str);
+        explicit CString(const std::wstring& str);
 
         // Raw character string constructors.
         CString(LPCSTR text);
@@ -348,6 +352,46 @@ namespace Win32xx
     {
         assert(repeat >= 0);
         m_str.assign(static_cast<size_t>(repeat), ch);
+    }
+
+    // Constructor. Assign from std::string.
+    template <class T>
+    inline CStringT<T>::CStringT(const std::string& str)
+    {
+        using CleanT = std::remove_cv_t<T>;
+        if constexpr (std::is_same_v<CleanT, char> || std::is_same_v<CleanT, CHAR>)
+        {
+            m_str = str;
+        }
+        else // T is wchar_t (WCHAR).
+        {
+            int length = static_cast<int>(str.size());
+            if (length > 0)
+            {
+                AtoT converted(str.c_str(), CP_ACP, length);
+                m_str.assign(converted.c_str(), static_cast<size_t>(length));
+            }
+        }
+    }
+
+    // Constructor. Assing from std::wstring.
+    template <class T>
+    inline CStringT<T>::CStringT(const std::wstring& str)
+    {
+        using CleanT = std::remove_cv_t<T>;
+        if constexpr (std::is_same_v<CleanT, char> || std::is_same_v<CleanT, CHAR>)
+        {
+            int length = static_cast<int>(str.size());
+            if (length > 0)
+            {
+                WtoT converted(str.c_str(), CP_ACP, length);
+                m_str.assign(converted.c_str(), static_cast<size_t>(length));
+            }
+        }
+        else // T is wchar_t (WCHAR).
+        {
+            m_str = str;
+        }
     }
 
     // Copy constructor.
@@ -1488,6 +1532,26 @@ namespace Win32xx
 #endif
     }
 
+    // Convert std::string to CString. Used by operator<<.
+    inline CString ToCString(const std::string& str)
+    {
+#ifdef _UNICODE
+        return CString(AtoW(str.c_str(), CP_ACP, static_cast<int>(str.size())), static_cast<int>(str.size()));
+#else
+        return CString(str.c_str(), static_cast<int>(str.size()));
+#endif
+     }
+
+    // Convert std::stringw to CString. Used by operator<<.
+    inline CString ToCString(const std::wstring& str)
+    {
+#ifdef _UNICODE
+        return CString(str.c_str(), static_cast<int>(str.size()));
+#else
+        return CString(WtoA(str.c_str(), CP_ACP, static_cast<int>(str.size())), static_cast<int>(str.size()));
+#endif
+    }
+
 
     //////////////////////////////////////
     // CStringT global operator functions
@@ -1780,6 +1844,28 @@ namespace Win32xx
     inline CString::CString(const CStringW& str) : CStringT<TCHAR>()
     {
         int length = str.GetLength();
+        if (length > 0)
+        {
+            WtoT converted(str.c_str(), CP_ACP, length);
+            m_str.assign(converted.c_str(), static_cast<size_t>(length));
+        }
+    }
+
+    // Construct CString from std::string.
+    inline CString::CString(const std::string& str)
+    {
+        int length = static_cast<int>(str.size());
+        if (length > 0)
+        {
+            AtoT converted(str.c_str(), CP_ACP, length);
+            m_str.assign(converted.c_str(), static_cast<size_t>(length));
+        }
+    }
+
+    // Construct CString from std::wstring.
+    inline CString::CString(const std::wstring& str)
+    {
+        int length = static_cast<int>(str.size());
         if (length > 0)
         {
             WtoT converted(str.c_str(), CP_ACP, length);
@@ -2158,7 +2244,12 @@ namespace Win32xx
     }
 
     // Appends the specified numeric value (int, float, double, bool, etc.)
-    template <class V, typename = std::enable_if_t<std::is_arithmetic_v<V>>>
+    // or std::string or std::wstring.
+    template <class V, typename = std::enable_if_t<
+        std::is_arithmetic_v<V> ||
+        std::is_same_v<std::decay_t<V>, std::string> ||
+        std::is_same_v<std::decay_t<V>, std::wstring>
+        >>
     inline CString& operator<<(CString& str, V value)
     {
         str += ToCString(value);

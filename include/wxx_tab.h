@@ -2050,21 +2050,9 @@ namespace Win32xx
                     TabText.Empty();
                     CString textKeyName;
                     textKeyName.Format(_T("Text%d"), i);
-                    ULONG charCount = 0;
-                    if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(textKeyName, nullptr, &charCount) && charCount > 0)
-                    {
-                        LPTSTR pBuffer = TabText.GetBuffer(static_cast<int>(charCount));
 
-                        if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(textKeyName, pBuffer, &charCount))
-                        {
-                            TabText.ReleaseBuffer();
-                        }
-                        else
-                        {
-                            TabText.ReleaseBuffer();
-                            TRACE("Warning: Failed to read MDI tab text string data.\n");
-                        }
-                    }
+                    if (ERROR_SUCCESS != mdiChildKey.QueryStringValue(textKeyName, TabText))
+                        TRACE("Warning: Failed to read MDI tab text string data.\n");
 
                     int tabID = static_cast<int>(dwTabID);
                     WndPtr child = NewMDIChildFromID(tabID);

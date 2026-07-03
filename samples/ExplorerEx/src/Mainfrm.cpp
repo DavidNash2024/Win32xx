@@ -121,7 +121,7 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
-void CMainFrame::LoadListViewRegistrySettings() 
+void CMainFrame::LoadListViewRegistrySettings()
 {
     CString appName = GetRegistryKeyName();
     if (appName.IsEmpty())
@@ -130,9 +130,9 @@ void CMainFrame::LoadListViewRegistrySettings()
     CString keyName = L"Software\\" + appName + L"\\ListView Settings";
     CRegKey key;
     if (key.Open(HKEY_CURRENT_USER, keyName, KEY_READ) != ERROR_SUCCESS)
-        return; 
+        return;
 
-    int columnCount = GetListView().GetListHeader().GetItemCount(); 
+    int columnCount = GetListView().GetListHeader().GetItemCount();
     for (int i = 0; i < columnCount; i++)
     {
         CString valueName;
@@ -289,10 +289,10 @@ BOOL CMainFrame::OnViewSmallIcon()
 
 BOOL CMainFrame::SaveRegistrySettings()
 {
-    if (!CFrame::SaveRegistrySettings()) 
+    if (!CFrame::SaveRegistrySettings())
         return FALSE;
 
-    if (!m_rightPane.SaveDockRegistrySettings(GetRegistryKeyName())) 
+    if (!m_rightPane.SaveDockRegistrySettings(GetRegistryKeyName()))
         return FALSE;
 
     CString appName = GetRegistryKeyName();
@@ -302,9 +302,9 @@ BOOL CMainFrame::SaveRegistrySettings()
     CString keyName = L"Software\\" + appName + L"\\ListView Settings";
     CRegKey key;
 
-    // Create opens or creates the key automatically. 
+    // Create opens or creates the key automatically.
     if (key.Create(HKEY_CURRENT_USER, keyName) != ERROR_SUCCESS)
-        return FALSE; 
+        return FALSE;
 
     int columnCount = GetListView().GetListHeader().GetItemCount();
     for (int i = 0; i < columnCount; i++)

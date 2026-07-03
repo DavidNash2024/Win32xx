@@ -174,7 +174,7 @@ HWND CMainFrame::Create(HWND parent)
 // Loads the application's settings from the registry when the application starts.
 BOOL CMainFrame::LoadRegistrySettings(LPCWSTR keyName)
 {
-    // Always assign safe, healthy fallback defaults first 
+    // Always assign safe, healthy fallback defaults first
     // to ensure no member fields contain trash memory if registry loads fail
     m_color = IDM_OLIVE;
     m_useThemes = true;

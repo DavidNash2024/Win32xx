@@ -59,7 +59,7 @@ void CDoc::LoadDocRegistry(LPCWSTR keyName)
         m_doubleVal = ::wcstod(s.c_str(), &p);
 
         s = RegQueryStringValue(key, L"LPWSTR1");
-        ::lstrcpynW(m_LPWSTRVal, s.c_str(), 256);
+        StrCopy(m_LPWSTRVal, s.c_str(), 256);
 
         m_checkVal[0] = RegQueryBOOLValue(key, L"CheckA");
         m_checkVal[1] = RegQueryBOOLValue(key, L"CheckB");
@@ -96,29 +96,18 @@ SYSTEMTIME CDoc::RegQuerySYSTEMTIMEValue(CRegKey& key, LPCWSTR pName)
     SYSTEMTIME value = {};
     ULONG size = sizeof(SYSTEMTIME);
     if (ERROR_SUCCESS != key.QueryBinaryValue(pName, &value, &size))
-    {
         ::GetLocalTime(&value);
-    }
+
     return value;
 }
 
 CString CDoc::RegQueryStringValue(CRegKey& key, LPCWSTR pName)
 {
-    ULONG charCount = 0;
     CString sValue;
+    if (ERROR_SUCCESS != key.QueryStringValue(pName, sValue))
+        return L"";
 
-    if (ERROR_SUCCESS == key.QueryStringValue(pName, nullptr, &charCount) && charCount > 0)
-    {
-        LPTSTR pBuffer = sValue.GetBuffer(static_cast<int>(charCount));
-        if (ERROR_SUCCESS == key.QueryStringValue(pName, pBuffer, &charCount))
-        {
-            sValue.ReleaseBuffer();
-            return sValue;
-        }
-        sValue.ReleaseBuffer();
-    }
-
-    return L"";
+    return sValue;
 }
 
 // Write document value parameters into the registry key labelled
@@ -151,11 +140,11 @@ void CDoc::SaveDocRegistry(LPCWSTR keyName)
         key.SetStringValue(L"Double1", s.c_str());
 
         key.SetStringValue(L"LPWSTR1", m_LPWSTRVal);
-        key.SetStringValue(L"Edit1", m_editVal.c_str());
-        key.SetStringValue(L"RichEdit1", m_richEditVal.c_str());
-        key.SetStringValue(L"ListBox1", m_listBoxVal.c_str());
+        key.SetStringValue(L"Edit1", m_editVal);
+        key.SetStringValue(L"RichEdit1", m_richEditVal);
+        key.SetStringValue(L"ListBox1", m_listBoxVal);
         key.SetDWORDValue(L"ListBox1x", m_listBoxIndx);
-        key.SetStringValue(L"ComboBox1", m_comboBoxVal.c_str());
+        key.SetStringValue(L"ComboBox1", m_comboBoxVal);
         key.SetDWORDValue(L"ComboBox1x", m_comboBoxIndx);
         key.SetDWORDValue(L"Slider1", m_sliderVal);
 
