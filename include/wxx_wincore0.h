@@ -335,12 +335,15 @@ namespace Win32xx
 
     protected:
         // Override these functions as required.
+        virtual CRect   GetViewRect() const { return GetClientRect(); }
         virtual LRESULT FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnActivate(UINT, WPARAM, LPARAM) { return 0; }
         virtual void    OnAttach();
         virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
         virtual void    OnClose();
         virtual int     OnCreate(CREATESTRUCT& cs);
         virtual void    OnDestroy();
+        virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM) { return 0; }
         virtual void    OnDraw(CDC& dc);
         virtual BOOL    OnEraseBkgnd(CDC& dc);
         virtual void    OnInitialUpdate();
@@ -349,6 +352,11 @@ namespace Win32xx
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSettingChange(UINT, WPARAM, LPARAM) { return 0; }
+        virtual LRESULT OnSize(UINT, WPARAM, LPARAM) { return 0; }
+        virtual LRESULT OnSysColorChange(UINT, WPARAM, LPARAM) { return 0; }
+        virtual LRESULT OnSysCommand(UINT, WPARAM, LPARAM) { return 0; }
+        virtual LRESULT OnWindowPosChanged(UINT, WPARAM, LPARAM) { return 0; }
         virtual void    PreCreate(CREATESTRUCT& cs);
         virtual void    PreRegisterClass(WNDCLASS& wc);
         virtual BOOL    PreTranslateMessage(MSG& msg);

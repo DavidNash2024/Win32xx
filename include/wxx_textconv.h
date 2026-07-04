@@ -178,11 +178,11 @@ namespace Win32xx
     public:
         CAtoW(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1);
         ~CAtoW() = default;
-        operator LPCWSTR() { return m_str? &m_wideArray[0] : nullptr; }
+        operator LPCWSTR() { return m_str? m_wideArray.data() : nullptr; }
         operator LPOLESTR() { return m_str? reinterpret_cast<LPOLESTR>(
-            &m_wideArray[0]) : nullptr; }
+            m_wideArray.data()) : nullptr; }
 
-        LPCWSTR c_str() { return m_str ? &m_wideArray[0] : nullptr; }
+        LPCWSTR c_str() { return m_str ? m_wideArray.data() : nullptr; }
         int GetLength() const { return m_length; }
 
     private:
@@ -202,8 +202,8 @@ namespace Win32xx
     public:
         CWtoA(LPCWSTR str, UINT codePage = CP_ACP, int charCount = -1);
         ~CWtoA() = default;
-        operator LPCSTR() { return m_str? &m_ansiArray[0] : nullptr; }
-        LPCSTR c_str() { return m_str ? &m_ansiArray[0] : nullptr; }
+        operator LPCSTR() { return m_str? m_ansiArray.data() : nullptr; }
+        LPCSTR c_str() { return m_str ? m_ansiArray.data() : nullptr; }
         int GetLength() const { return m_length; }
 
     private:
@@ -214,7 +214,7 @@ namespace Win32xx
         int m_length;
     };
 
-    //////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // The CWtoBSTR class creates a BSTR from a wchar_t character array.
     //
     class CWtoBSTR
@@ -259,6 +259,14 @@ namespace Win32xx
 
 namespace Win32xx
 {
+    inline CAtoA::CAtoA(LPCSTR str, UINT /*codePage = CP_ACP*/, int charCount) : m_str(str)
+    {
+        if (str == nullptr)
+            m_length = 0;
+        else
+            m_length = (charCount == -1) ? static_cast<int>(std::strlen(str)) : charCount;
+    }
+
     inline CAtoBSTR::CAtoBSTR(LPCSTR str) : m_bstrString(nullptr), m_length(0)
     {
         if (str != nullptr)
@@ -282,7 +290,7 @@ namespace Win32xx
             return;
         }
 
-        // Fill our vector with the converted WCHAR array.
+        // Fill our vector with the converted wchar_t array.
         int length = MultiByteToWideChar(codePage, 0, str, charCount, nullptr, 0);
         m_wideArray.assign(static_cast<size_t>(length) + 1, L'\0');
         MultiByteToWideChar(codePage, 0, str, charCount, m_wideArray.data(), length);
@@ -334,14 +342,6 @@ namespace Win32xx
             m_length = 0;
         else
             m_length = (charCount == -1) ? static_cast<int>(std::wcslen(str)) : charCount;
-    }
-
-    inline CAtoA::CAtoA(LPCSTR str, UINT /*codePage = CP_ACP*/, int charCount) : m_str(str)
-    {
-        if (str == nullptr)
-            m_length = 0;
-        else
-            m_length = (charCount == -1) ? static_cast<int>(std::strlen(str)) : charCount;
     }
 
 

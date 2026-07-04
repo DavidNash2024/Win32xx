@@ -202,7 +202,7 @@ namespace Win32xx
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
         virtual LRESULT OnDpiChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    NotifyChanged();
         virtual void    NotifyDragged();
@@ -278,7 +278,7 @@ namespace Win32xx
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
         virtual BOOL    OnTabClose(int tab);
-        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual void    RecalcLayout();
 
         // Not intended to be overwritten

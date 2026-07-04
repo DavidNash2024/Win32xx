@@ -25,7 +25,7 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
 
         CString str2;
         str2 << L"Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+    //    ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.

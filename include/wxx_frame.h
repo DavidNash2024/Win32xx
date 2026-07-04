@@ -92,11 +92,6 @@
 
 namespace Win32xx
 {
-// Disable false override warnings for Clang compilers.
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Winconsistent-missing-override"
-#endif
 
     ///////////////////////////////////////////////////////
     // CFrameT is the base class for all frames in Win32++.
@@ -206,16 +201,16 @@ namespace Win32xx
         virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDrawItem);
-        virtual CRect GetViewRect() const;
+        virtual CRect GetViewRect() const override;
         virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
         virtual BOOL LoadRegistryMRUSettings(UINT maxMRU = 0);
         virtual void MeasureMenuItem(MEASUREITEMSTRUCT* pMIS);
-        virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual void    OnClose() override;
         virtual int     OnCreate(CREATESTRUCT& cs) override;
         virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
         virtual void    OnDestroy() override;
-        virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDrawRBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDrawSBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -230,17 +225,17 @@ namespace Win32xx
         virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
         virtual LRESULT OnRBNLayoutChanged(LPNMHDR pNMHDR);
         virtual LRESULT OnRBNMinMax(LPNMHDR pNMHDR);
-        virtual LRESULT OnSettingChange(UINT, WPARAM, LPARAM);
-        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSettingChange(UINT, WPARAM, LPARAM) override;
+        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
+        virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam) override;
+        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnThemeChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
         virtual LRESULT OnUndocked();
         virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam);
         virtual BOOL    OnViewStatusBar();
         virtual BOOL    OnViewToolBar();
-        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual void PreCreate(CREATESTRUCT& cs) override;
         virtual void PreRegisterClass(WNDCLASS& wc) override;
         virtual void RecalcLayout();
@@ -353,9 +348,6 @@ namespace Win32xx
 
     };  // class CFrameT
 
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
 
     ///////////////////////////////////////////////////////////////
     // CFrame manages the frame window. CFrame also manages the

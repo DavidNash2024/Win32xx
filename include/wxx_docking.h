@@ -152,7 +152,7 @@ namespace Win32xx
             virtual int OnCreate(CREATESTRUCT& cs) override;
             virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
             virtual void PreRegisterClass(WNDCLASS& wc) override;
-            LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam) override;
+            LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
         private:
             CViewPage(const CViewPage&) = delete;
@@ -220,7 +220,7 @@ namespace Win32xx
         virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam) override;
-        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR) override;
         virtual LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs) override;
@@ -306,7 +306,7 @@ namespace Win32xx
             virtual LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
             virtual void PreCreate(CREATESTRUCT& cs) override;
             virtual void PreRegisterClass(WNDCLASS& wc) override;
-            virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam) override;
+            virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
         private:
             CDockBar(const CDockBar&) = delete;
@@ -353,10 +353,10 @@ namespace Win32xx
             virtual LRESULT OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam);
             virtual LRESULT OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
             virtual LRESULT OnNCPaint(UINT msg, WPARAM wparam, LPARAM lparam);
-            virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+            virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
             virtual void    PreRegisterClass(WNDCLASS& wc) override;
             virtual void    PreCreate(CREATESTRUCT& cs) override;
-            LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam) override;
+            virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
         private:
             CDockClient(const CDockClient&) = delete;
@@ -394,7 +394,8 @@ namespace Win32xx
 
         protected:
             virtual void PreCreate(CREATESTRUCT& cs) override;
-            void PreRegisterClass(WNDCLASS& wc) override;
+            virtual void PreRegisterClass(WNDCLASS& wc) override;
+            virtual LRESULT WndProc(UINT, WPARAM, LPARAM) override;
 
         private:
             CDockHint(const CDockHint&) = delete;
@@ -413,13 +414,13 @@ namespace Win32xx
         protected:
             virtual void OnDraw(CDC& dc) override;
             virtual void PreCreate(CREATESTRUCT& cs) override;
+            virtual LRESULT WndProc(UINT, WPARAM, LPARAM) override;
 
             CBitmap m_image;
 
         private:
             CTarget(const CTarget&) = delete;
             CTarget& operator=(const CTarget&) = delete;
-
         };
 
         // This nested class draws the a set of dock targets at the centre of
@@ -525,7 +526,7 @@ namespace Win32xx
         virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle,
             BOOL selectPage = TRUE);
         virtual void DpiUpdateDockerSizes();
-        virtual CRect GetViewRect() const { return GetClientRect(); }
+        virtual CRect GetViewRect() const override { return GetClientRect(); }
         virtual void Hide();
         virtual BOOL LoadContainerRegistrySettings(LPCTSTR registryKeyName);
         virtual BOOL LoadDockRegistrySettings(LPCTSTR registryKeyName);
@@ -602,20 +603,20 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
         // Message handlers
-        virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM) override;
         virtual LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual LRESULT OnExitSizeMove(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnGetDpiScaledSize(UINT, WPARAM, LPARAM);
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSettingChange(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSettingChange(UINT msg, WPARAM wparam, LPARAM lparam) override;
+        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
+        virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam) override;
+        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam) override;
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
     private:
         CDocker(const CDocker&) = delete;
@@ -797,18 +798,43 @@ namespace Win32xx
         m_brBackground.CreateSolidBrush(color);
     }
 
-    inline LRESULT CDocker::CDockBar::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::CDockBar::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (msg)
+        try
         {
-        case WM_SETCURSOR:      return OnSetCursor(msg, wparam, lparam);
-        case WM_ERASEBKGND:     return 0;
-        case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
-        case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
-        case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+            switch (msg)
+            {
+            case WM_SETCURSOR:      return OnSetCursor(msg, wparam, lparam);
+            case WM_ERASEBKGND:     return 0;
+            case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+            case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+            case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
 
-        default: return CWnd::WndProcDefault(msg, wparam, lparam);
+            default: return CWnd::WndProcDefault(msg, wparam, lparam);
+            }
         }
+
+        // Catch all unhandled CException types.
+        catch (const CException& e)
+        {
+            // Display the exception and continue.
+            CString str1;
+            str1 << L"Error: " << e.what();
+            CString str2;
+            str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+            Trace(str1 + "   " + str2 + "/ n");
+        }
+
+        // Catch all unhandled std::exception types.
+        catch (const std::exception& e)
+        {
+            // Display the exception and continue.
+            CString str1 = e.what();
+            Trace(str1 + "/ n");
+        }
+
+        return 0;
     }
 
 
@@ -1355,35 +1381,59 @@ namespace Win32xx
         }
     }
 
-    inline LRESULT CDocker::CDockClient::WndProcDefault(UINT msg, WPARAM wparam,
+    inline LRESULT CDocker::CDockClient::WndProc(UINT msg, WPARAM wparam,
         LPARAM lparam)
     {
-        switch (msg)
+        try
         {
-        case WM_LBUTTONUP:          return OnLButtonUp(msg, wparam, lparam);
-        case WM_MOUSEMOVE:          return OnMouseMove(msg, wparam, lparam);
-        case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
-        case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
-        case WM_NCLBUTTONDBLCLK:    // Intentionally blank.
-        case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
-        case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
-        case WM_NCPAINT:            return OnNCPaint(msg, wparam, lparam);
-        case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
-        case WM_NOTIFY:
+            switch (msg)
+            {
+            case WM_LBUTTONUP:          return OnLButtonUp(msg, wparam, lparam);
+            case WM_MOUSEMOVE:          return OnMouseMove(msg, wparam, lparam);
+            case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
+            case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
+            case WM_NCLBUTTONDBLCLK:    // Intentionally blank.
+            case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
+            case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
+            case WM_NCPAINT:            return OnNCPaint(msg, wparam, lparam);
+            case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
+            case WM_NOTIFY:
+            {
+                // Perform default handling for WM_NOTIFY.
+                LRESULT result = WndProcDefault(msg, wparam, lparam);
+
+                // Also forward WM_NOTIFY to the docker.
+                if (result == 0)
+                    result = m_pDocker->SendMessage(msg, wparam, lparam);
+
+                return result;
+            }
+            case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
+
+            default: return WndProcDefault(msg, wparam, lparam);
+            }
+        }
+
+        // Catch all unhandled CException types.
+        catch (const CException& e)
         {
-            // Perform default handling for WM_NOTIFY.
-            LRESULT result = CWnd::WndProcDefault(msg, wparam, lparam);
+            // Display the exception and continue.
+            CString str1;
+            str1 << L"Error: " << e.what();
+            CString str2;
+            str2 << e.GetText() << L'\n' << e.GetErrorString();
 
-            // Also forward WM_NOTIFY to the docker.
-            if (result == 0)
-                result = m_pDocker->SendMessage(msg, wparam, lparam);
-
-            return result;
+            Trace(str1 + "   " + str2 + "/ n");
         }
-        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
 
-        default: return CWnd::WndProcDefault(msg, wparam, lparam);
+        // Catch all unhandled std::exception types.
+        catch (const std::exception& e)
+        {
+            // Display the exception and continue.
+            CString str1 = e.what();
+            Trace(str1 + "/ n");
         }
+        return 0;
     }
 
 
@@ -1611,6 +1661,36 @@ namespace Win32xx
         wc.hbrBackground = m_brush;
     }
 
+    inline LRESULT CDocker::CDockHint::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        try
+        {
+            return WndProcDefault(msg, wparam, lparam);
+        }
+
+        // Catch all unhandled CException types.
+        catch (const CException& e)
+        {
+            // Display the exception and continue.
+            CString str1;
+            str1 << L"Error: " << e.what();
+            CString str2;
+            str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+            Trace(str1 + "   " + str2 + "/ n");
+        }
+
+        // Catch all unhandled std::exception types.
+        catch (const std::exception& e)
+        {
+            // Display the exception and continue.
+            CString str1 = e.what();
+            Trace(str1 + "/ n");
+        }
+
+        return 0;
+    }
+
 
     ////////////////////////////////////////////////////////////////
     // Definitions for the CTarget class nested within CDocker.
@@ -1641,6 +1721,36 @@ namespace Win32xx
         cs.style = WS_POPUP;
         cs.dwExStyle = WS_EX_TOPMOST | WS_EX_TOOLWINDOW;
         cs.lpszClass = _T("Win32++ DockTargeting");
+    }
+
+    inline LRESULT CDocker::CTarget::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        try
+        {
+            return WndProcDefault(msg, wparam, lparam);
+        }
+
+        // Catch all unhandled CException types.
+        catch (const CException& e)
+        {
+            // Display the exception and continue.
+            CString str1;
+            str1 << L"Error: " << e.what();
+            CString str2;
+            str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+            Trace(str1 + "   " + str2 + "/ n");
+        }
+
+        // Catch all unhandled std::exception types.
+        catch (const std::exception& e)
+        {
+            // Display the exception and continue.
+            CString str1 = e.what();
+            Trace(str1 + "/ n");
+        }
+
+        return 0;
     }
 
 
@@ -5607,16 +5717,38 @@ namespace Win32xx
     }
 
     // Process the window's messages.
-    inline LRESULT CDockContainer::CViewPage::WndProcDefault(UINT msg,
+    inline LRESULT CDockContainer::CViewPage::WndProc(UINT msg,
         WPARAM wparam, LPARAM lparam)
     {
-        switch (msg)
+        try
         {
-        case WM_SIZE:
-            RecalcLayout();
-            break;
+            switch (msg)
+            {
+            case WM_SIZE:
+                RecalcLayout();
+                return 0;;
 
-        default: return CWnd::WndProcDefault(msg, wparam, lparam);
+            default: return WndProcDefault(msg, wparam, lparam);
+            }
+        }
+        // Catch all unhandled CException types.
+        catch (const CException& e)
+        {
+            // Display the exception and continue.
+            CString str1;
+            str1 << L"Error: " << e.what();
+            CString str2;
+            str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+            Trace(str1 + "   " + str2 + "/ n");
+        }
+
+        // Catch all unhandled std::exception types.
+        catch (const std::exception& e)
+        {
+            // Display the exception and continue.
+            CString str1 = e.what();
+            Trace(str1 + "/ n");
         }
 
         return 0;

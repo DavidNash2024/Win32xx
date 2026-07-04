@@ -78,12 +78,12 @@ namespace Win32xx
         virtual LRESULT OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam) override;
-        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnSysKeyDown(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysKeyUp(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
         virtual LRESULT OnTBNHotItemChange(LPNMTBHOTITEM pNMHI);
-        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual void    PreCreate(CREATESTRUCT& cs) override;
         virtual void    PreRegisterClass(WNDCLASS& wc) override;

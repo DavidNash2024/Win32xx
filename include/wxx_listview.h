@@ -58,6 +58,7 @@ namespace Win32xx
         virtual void OnAttach() override;
         virtual void PreCreate(CREATESTRUCT& cs) override;
         virtual void PreRegisterClass(WNDCLASS& wc) override;
+        virtual CRect GetViewRect() const override { return GetClientRect(); }
 
         // Accessors and mutators
         CSize   ApproximateViewRect(CSize sz = CSize(-1, -1), int count = -1) const;

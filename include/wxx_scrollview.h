@@ -93,7 +93,7 @@ namespace Win32xx
         virtual LRESULT OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    PreCreate(CREATESTRUCT& cs) override;
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam) override;

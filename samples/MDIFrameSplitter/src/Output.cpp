@@ -36,17 +36,16 @@ LRESULT CViewOutput::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Pass unhandled messages on for default processing.
         return WndProcDefault(msg, wparam, lparam);
     }
-
     // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << L'\n' << e.GetErrorString();
-
+        str1 << L"Error: " << e.what();
         CString str2;
-        str2 << L"Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+        Trace(str1 + "   " + str2 + "/ n");
     }
 
     // Catch all unhandled std::exception types.
@@ -54,7 +53,7 @@ LRESULT CViewOutput::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        Trace(str1 + "/ n");
     }
 
     return 0;
@@ -95,11 +94,11 @@ LRESULT CDockOutput::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << L'\n' << e.GetErrorString();
-
+        str1 << L"Error: " << e.what();
         CString str2;
-        str2 << L"Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+        Trace(str1 + "   " + str2 + "/ n");
     }
 
     // Catch all unhandled std::exception types.
@@ -107,7 +106,7 @@ LRESULT CDockOutput::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        Trace(str1 + "/ n");
     }
 
     return 0;
@@ -141,11 +140,11 @@ LRESULT CContainOutput::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1;
-        str1 << e.GetText() << L'\n' << e.GetErrorString();
-
+        str1 << L"Error: " << e.what();
         CString str2;
-        str2 << L"Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+        Trace(str1 + "   " + str2 + "/ n");
     }
 
     // Catch all unhandled std::exception types.
@@ -153,7 +152,7 @@ LRESULT CContainOutput::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        Trace(str1 + "/ n");
     }
 
     return 0;

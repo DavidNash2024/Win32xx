@@ -178,11 +178,11 @@ namespace Win32xx
         virtual void UpdateButtons();
 
     protected:
+        virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
         virtual void OnCancel() override { OnCloseButton(); }
+        virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
         virtual BOOL OnInitDialog() override;
         virtual void OnOK() override { OnCloseButton(); }
-        virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
-        virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
 
     private:
         CPrintPreview(const CPrintPreview&) = delete;
@@ -363,16 +363,36 @@ namespace Win32xx
     template <typename T>
     inline INT_PTR CPrintPreview<T>::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        // Pass resizing messages on to the resizer
-        m_resizer.HandleMessage(msg, wparam, lparam);
+        try
+        {
+            // Pass resizing messages on to the resizer
+            m_resizer.HandleMessage(msg, wparam, lparam);
 
-        //  switch (msg)
-        //  {
-        //  Additional messages to be handled go here
-        //  }
+            // Pass unhandled messages on to parent DialogProc
+            return DialogProcDefault(msg, wparam, lparam);
+        }
 
-        // Pass unhandled messages on to parent DialogProc
-        return DialogProcDefault(msg, wparam, lparam);
+        // Catch all unhandled CException types.
+        catch (const CException& e)
+        {
+            // Display the exception and continue.
+            CString str1;
+            str1 << L"Error: " << e.what();
+            CString str2;
+            str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+            Trace(str1 + "   " + str2 + "/ n");
+        }
+
+        // Catch all unhandled std::exception types.
+        catch (const std::exception& e)
+        {
+            // Display the exception and continue.
+            CString str1 = e.what();
+            Trace(str1 + "/ n");
+        }
+
+        return 0;
     }
 
     // Called when the close button is pressed.

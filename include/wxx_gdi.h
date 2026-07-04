@@ -1395,7 +1395,7 @@ namespace Win32xx
         UINT scanLines = static_cast<UINT>(bmiHeader.biHeight);
         VERIFY(GetDIBits(memDC, 0, scanLines, nullptr, pbmi, DIB_RGB_COLORS));
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
-        byte* pByteArray = &vBits[0];
+        byte* pByteArray = vBits.data();
 
         memDC.GetDIBits(*this, 0, scanLines, pByteArray, pbmi, DIB_RGB_COLORS);
         UINT heightBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
@@ -1450,7 +1450,7 @@ namespace Win32xx
         UINT scanLines = static_cast<UINT>(bmiHeader.biHeight);
         VERIFY(GetDIBits(memDC, 0, scanLines, nullptr, pbmi, DIB_RGB_COLORS));
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
-        byte* pByteArray = &vBits[0];
+        byte* pByteArray = vBits.data();
 
         VERIFY(GetDIBits(memDC, 0, scanLines, pByteArray, pbmi, DIB_RGB_COLORS));
         UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;

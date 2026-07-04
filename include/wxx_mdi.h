@@ -112,7 +112,7 @@ namespace Win32xx
         virtual void OnClose() override;
         virtual int  OnCreate(CREATESTRUCT& cs) override;
         virtual LRESULT OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
         // Not intended to be overridden.
         LRESULT FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -910,14 +910,39 @@ namespace Win32xx
     template <class T>
     inline LRESULT CMDIClient<T>::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (msg)
+        try
         {
-        case WM_MDIACTIVATE:    return OnMDIActivate(msg, wparam, lparam);
-        case WM_MDIDESTROY:     return OnMDIDestroy(msg, wparam, lparam);
-        case WM_MDIGETACTIVE:   return OnMDIGetActive(msg, wparam, lparam);
+            switch (msg)
+            {
+            case WM_MDIACTIVATE:    return OnMDIActivate(msg, wparam, lparam);
+            case WM_MDIDESTROY:     return OnMDIDestroy(msg, wparam, lparam);
+            case WM_MDIGETACTIVE:   return OnMDIGetActive(msg, wparam, lparam);
 
-        default: return CWnd::WndProcDefault(msg, wparam, lparam);
+            default: return CWnd::WndProcDefault(msg, wparam, lparam);
+            }
         }
+
+        // Catch all unhandled CException types.
+        catch (const CException& e)
+        {
+            // Display the exception and continue.
+            CString str1;
+            str1 << L"Error: " << e.what();
+            CString str2;
+            str2 << e.GetText() << L'\n' << e.GetErrorString();
+
+            Trace(str1 + "   " + str2 + "/ n");
+        }
+
+        // Catch all unhandled std::exception types.
+        catch (const std::exception& e)
+        {
+            // Display the exception and continue.
+            CString str1 = e.what();
+            Trace(str1 + "/ n");
+        }
+
+        return 0;
     }
 
 
