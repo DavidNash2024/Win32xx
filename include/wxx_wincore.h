@@ -2107,7 +2107,7 @@ namespace Win32xx
     inline BOOL CWnd::MoveWindow(int x, int y, int width, int height, BOOL repaint /* = TRUE*/) const
     {
         assert(IsWindow());
-        return ::MoveWindow(*this, x, y, width, height, repaint = TRUE);
+        return ::MoveWindow(*this, x, y, width, height, repaint);
     }
 
     // The MoveWindow function changes the position and dimensions of the window.

@@ -15,7 +15,7 @@
 
 // Constructor.
 CMainFrame::CMainFrame() : m_preview(m_richView), m_pDockDialogsTree(nullptr),
-                           m_isTemplateShown(false)
+                           m_isTemplateShown(false), m_isPosChanging(false)
 {
 }
 
@@ -86,17 +86,24 @@ CDialogsTree* CMainFrame::GetTree()
 }
 
 // The stream out callback function. Used to writes the text to a file.
-DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb)
+DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD_PTR cookie, LPBYTE pBuffer, LONG cb, LONG* pcb)
 {
     // Required for StreamOut
     if (!cb)
         return 1;
 
-    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    HANDLE file = reinterpret_cast<HANDLE>(cookie);
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
     *bytesWritten = 0;
     if (!::WriteFile(file, pBuffer, cb, bytesWritten, nullptr))
         ::MessageBox(nullptr, L"WriteFile Failed", L"", MB_OK);
+    return 0;
+}
+
+// Called when a tree item is clicked.
+BOOL CMainFrame::OnClickTreeItem()
+{
+    m_holder.ShowDialog(this, m_dialogArray.data());
     return 0;
 }
 
@@ -138,6 +145,23 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // call the base class function
     return CDockFrame::OnCreate(cs);
+}
+
+// Called when the mainframe window's DPI has changed.
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    bool recreateDialog = m_holder.m_dialog.IsWindow();
+    m_holder.Destroy();
+
+    // Let the mainframe window process its own DPI change first.
+    LRESULT result = CDockFrame::OnDpiChanged(msg, wparam, lparam);
+
+    // Recreate the dialog with the new DPI.
+    if (recreateDialog)
+        m_holder.ShowDialog(this, m_dialogArray.data());
+
+    m_isPosChanging = false;
+    return result;
 }
 
 // Called in response to the UWM_DROPFILE user defined message.
@@ -187,6 +211,13 @@ BOOL CMainFrame::OnHelp()
     }
 
     return TRUE;
+}
+
+// Called before a WM_DPICHANGED message is sent.
+LRESULT CMainFrame::OnGetDpiScaledSize(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    m_isPosChanging = true;
+    return CDockFrame::OnGetDpiScaledSize(msg, wparam, lparam);
 }
 
 // Called after the window is created.
@@ -398,6 +429,57 @@ LRESULT CMainFrame::OnSelectTreeItem()
     return 0;
 }
 
+// Called when the mainframe's position changes. We lock the dialog in
+// place relative to the mainframe's position.
+LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Prevent recursive calls of OnWindowPosChanged.
+    if (m_isPosChanging) return 0;
+    m_isPosChanging = true;
+
+    // Allow the frame to finish processing its own position change first.
+    CDockFrame::OnWindowPosChanged(msg, wparam, lparam);
+
+    // Safely verify that the Dialog Holder and Dialog exist and are active.
+    if (m_holder.IsWindow() && m_holder.m_dialog.IsWindow())
+    {
+        // Recreate the dialog if it is on a different monitor.
+        HMONITOR frameMonitor = ::MonitorFromWindow(*this, MONITOR_DEFAULTTONEAREST);
+        HMONITOR dialogMonitor = ::MonitorFromWindow(m_holder.m_dialog, MONITOR_DEFAULTTONEAREST);
+        if (frameMonitor != dialogMonitor)
+            m_holder.ShowDialog(this, m_dialogArray.data());
+
+        // Extract the dimensions and shift coordinates dynamically.
+        DWORD style = m_holder.m_dialog.GetStyle();
+        LPWINDOWPOS lpwndpos = (LPWINDOWPOS)lparam;
+        if (style & WS_CHILD)
+        {
+            // Calculate the new positon of the dialog holder.
+            CRect holderRect = m_holder.GetWindowRect();
+            int left = lpwndpos->x + lpwndpos->cx - holderRect.Width();
+            int top = lpwndpos->y + lpwndpos->cy - holderRect.Height();
+
+            // Set the dialog holder's position.
+            m_holder.SetWindowPos(nullptr, left, top, 0, 0,
+                SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+        }
+        else
+        {
+            // Calculate the now position of the top level dialog.
+            CRect exactScaledRect = m_holder.m_dialog.GetWindowRect();
+            int left = lpwndpos->x + lpwndpos->cx - exactScaledRect.Width();
+            int top = lpwndpos->y + lpwndpos->cy - exactScaledRect.Height();
+
+            // Set the position of the top level dialog.
+            m_holder.m_dialog.SetWindowPos(nullptr, left, top, 0, 0,
+                SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+        }
+    }
+
+    m_isPosChanging = false;
+    return 0;
+}
+
 // Called by CFrameApp::OnIdle to update toolbar buttons
 void CMainFrame::UpdateToolbar()
 {
@@ -513,7 +595,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PREVIEWCLOSE:         OnPreviewClose();   break;
         case UWM_PREVIEWPRINT:         OnPreviewPrint();   break;
         case UWM_PREVIEWSETUP:         OnPreviewSetup();   break;
+        case UWM_ONCLICKTREEITEM:      return OnClickTreeItem();
 
+        case WM_GETDPISCALEDSIZE:      return OnGetDpiScaledSize(msg, wparam, lparam);
+        case WM_DPICHANGED:            return OnDpiChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:      return OnWindowPosChanged(msg, wparam, lparam);
 
         default: return WndProcDefault(msg, wparam, lparam);

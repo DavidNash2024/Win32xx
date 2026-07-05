@@ -572,7 +572,7 @@ namespace Win32xx
         WPARAM wparam = static_cast<WPARAM>(TDIE_ICON_FOOTER);
         LPARAM lparam = reinterpret_cast<LPARAM>(footerIcon);
         TASKDIALOG_FLAGS flags = GetOptions();
-        SetOptions(flags &= ~TDF_USE_HICON_FOOTER);
+        SetOptions(flags & ~TDF_USE_HICON_FOOTER);
 
         if (IsWindow())
             SendMessage(TDM_UPDATE_ICON, wparam, lparam);
@@ -618,7 +618,7 @@ namespace Win32xx
         WPARAM wparam = static_cast<WPARAM>(TDIE_ICON_MAIN);
         LPARAM lparam = reinterpret_cast<LPARAM>(mainIcon);
         TASKDIALOG_FLAGS flags = GetOptions();
-        SetOptions(flags &= ~TDF_USE_HICON_MAIN);
+        SetOptions(flags & ~TDF_USE_HICON_MAIN);
 
         if (IsWindow())
             SendMessage(TDM_UPDATE_ICON, wparam, lparam);

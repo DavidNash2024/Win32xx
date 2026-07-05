@@ -752,7 +752,6 @@ namespace Win32xx
         {
             ++count;
         }
-        count = 0;
 
         if (code == MSGF_DIALOGBOX)
         {

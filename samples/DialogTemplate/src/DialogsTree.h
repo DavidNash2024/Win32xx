@@ -23,6 +23,7 @@ public:
 
 protected:
     virtual void    OnAttach() override;
+    virtual LRESULT OnClickTreeItem(WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;

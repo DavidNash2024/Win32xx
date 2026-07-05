@@ -288,7 +288,7 @@ BOOL CRichView::WriteFile(LPCWSTR filePath)
 
 // Stream size bytes from the file handle into memory located by buffer.
 // On termination read contains the number actually entered.
-DWORD CALLBACK CRichView::RVStreamInCallback(DWORD handle, LPBYTE buffer,
+DWORD CALLBACK CRichView::RVStreamInCallback(DWORD_PTR handle, LPBYTE buffer,
     LONG size, LONG *read)
 {
     *read = 0;
@@ -299,7 +299,7 @@ DWORD CALLBACK CRichView::RVStreamInCallback(DWORD handle, LPBYTE buffer,
 
 // Stream size bytes of memory from buffer into the file handle.On
 // termination out contains the number actually written.
-DWORD CALLBACK CRichView::RVStreamOutCallback(DWORD handle, LPBYTE buffer,
+DWORD CALLBACK CRichView::RVStreamOutCallback(DWORD_PTR handle, LPBYTE buffer,
     LONG size, LONG *out)
 {
     *out = 0;

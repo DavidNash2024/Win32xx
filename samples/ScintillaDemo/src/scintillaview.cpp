@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "scintilla.h"
+#include "Scintilla.h"
 #include "scintillaview.h"
 
 // Constructor.

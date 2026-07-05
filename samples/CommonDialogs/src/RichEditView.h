@@ -45,9 +45,9 @@ private:
     void    OnPrint(CDC& DC, CPrintInfo& info);
     void    SetAppBanding(BOOL b) { m_isAppBanded = b;}
 
-    static  DWORD CALLBACK StreamInCallback(DWORD dwCookie, LPBYTE pbBuff,
+    static  DWORD CALLBACK StreamInCallback(DWORD_PTR dwCookie, LPBYTE pbBuff,
         LONG cb, LONG *pcb);
-    static  DWORD CALLBACK StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff,
+    static  DWORD CALLBACK StreamOutCallback(DWORD_PTR dwCookie, LPBYTE pbBuff,
         LONG cb, LONG *pcb);
 
     long    m_textLength;

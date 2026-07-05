@@ -6,7 +6,16 @@
 #include "stdafx.h"
 #include "DialogHolder.h"
 
+// Called when the dialog holder window's DPI has changed.
+LRESULT CDialogHolder::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
+{
+    CRect rc = *reinterpret_cast<RECT*>(lparam);
+    m_dialog.SetWindowPos(HWND_TOP, 0, 0, rc.Width(), rc.Height(), SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    return 0;
+}
 
+// This function provides an opportunity to modify the various CREATESTRUCT
+// parameters used before the window is created.
 void CDialogHolder::PreCreate(CREATESTRUCT& cs)
 {
     // Remove the visible style
@@ -28,7 +37,7 @@ void CDialogHolder::ShowDialog(CWnd* pFrame, unsigned char* dlgArray)
     Destroy();
 
     // Create the dialog holder window, initially hidden.
-    CreateEx(0, L"DialogHolder", L"", 0, CRect(), 0, 0);
+    CreateEx(0, L"DialogHolder", L"", WS_OVERLAPPEDWINDOW, CRect(), pFrame->GetHwnd(), 0);
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
     SetWindowText(L"Dialog Holder");
@@ -128,8 +137,13 @@ LRESULT CDialogHolder::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
+        switch (msg)
+        {
+        case WM_DPICHANGED:   return OnDpiChanged(msg, wparam, lparam);
+         
         // Pass unhandled messages on for default processing.
-        return WndProcDefault(msg, wparam, lparam);
+        default:   return WndProcDefault(msg, wparam, lparam);
+        }
     }
 
     catch (const CException& e)

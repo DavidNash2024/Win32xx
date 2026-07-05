@@ -18,6 +18,7 @@ public:
     void ShowDialog(CWnd* pFrame, unsigned char* dlg);
 
 protected:
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
     LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

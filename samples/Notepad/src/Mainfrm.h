@@ -42,8 +42,8 @@ private:
     CMainFrame& operator=(const CMainFrame&) = delete;
 
     // Static callback functions
-    static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
-    static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
+    static  DWORD CALLBACK MyStreamInCallback(DWORD_PTR cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
+    static  DWORD CALLBACK MyStreamOutCallback(DWORD_PTR cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
 
     // Command handlers
     void OnDropFiles(HDROP dropInfo);

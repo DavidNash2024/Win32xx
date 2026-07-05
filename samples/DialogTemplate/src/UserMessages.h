@@ -10,6 +10,7 @@
 
 // Messages called by CTreeList
 #define UWM_ONSELECTTREEITEM      (WM_APP + 0x0002)
+#define UWM_ONCLICKTREEITEM       (WM_APP + 0x0003)
 
 
 #endif  // _USER_MESSAGES_H_

@@ -43,9 +43,9 @@ private:
     CRichView& operator=(const CRichView&) = delete;
 
     // Static callback functions.
-    static  DWORD CALLBACK RVStreamInCallback(DWORD cookie, LPBYTE pbBuff,
+    static  DWORD CALLBACK RVStreamInCallback(DWORD_PTR cookie, LPBYTE pbBuff,
         LONG cb, LONG *pcb);
-    static  DWORD CALLBACK RVStreamOutCallback(DWORD cookie, LPBYTE pbBuff,
+    static  DWORD CALLBACK RVStreamOutCallback(DWORD_PTR cookie, LPBYTE pbBuff,
         LONG cb, LONG *pcb);
 
     CFont   m_font;

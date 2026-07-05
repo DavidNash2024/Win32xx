@@ -123,9 +123,9 @@ int CMainFrame::GetTextPartWidth(LPCWSTR text) const
 }
 
 // The stream in callback function. Reads from the file.
-DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
+DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD_PTR cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
-    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    HANDLE file = reinterpret_cast<HANDLE>(cookie);
     LPDWORD bytesRead = reinterpret_cast<LPDWORD>(pcb);
     *bytesRead = 0;
     DWORD bytesToRead = static_cast<DWORD>(cb);
@@ -136,9 +136,9 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
 }
 
 // The stream out callback function. Writes to the file.
-DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
+DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD_PTR cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
-    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    HANDLE file = reinterpret_cast<HANDLE>(cookie);
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
     *bytesWritten = 0;
     DWORD bytesToRead = static_cast<DWORD>(cb);

@@ -381,7 +381,6 @@ namespace Win32xx
         }
 
         DWORD create = openFlags & 0xF;
-        if (create & OPEN_ALWAYS) openFlags = OPEN_ALWAYS;
         if (create == 0) create = OPEN_EXISTING;
 
         m_file = ::CreateFile(fileName, access, share, nullptr, create, attributes, 0);

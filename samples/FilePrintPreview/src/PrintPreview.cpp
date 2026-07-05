@@ -19,11 +19,6 @@ static const int    FIT_WIDTH   = 1;
 static const LONG   BORDER      =   20;     // Pixels around rendered preview.
 static const double PREVIEW_MIN =  2.0;     // Minimum preview screen inches.
 
-// Registry key for saving print preview sizes. Note: this should match the
-// mainframe's registry key, but with "Software" prefixed, in order to place
-// these entries with the frame's entries.
-static const LPCWSTR PREVIEW_REGISTRY_KEY = L"Software\\"
-    L"Win32++\\FilePrintPreview" L"\\Sizes";
 
 ////////////////////////////////////////
 // CPrintPreviewEx function definitions.

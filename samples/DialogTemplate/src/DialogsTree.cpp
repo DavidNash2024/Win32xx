@@ -35,9 +35,7 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCWSTR fi
         CString prevType;
         ResourceInfo* prevInfo = (ResourceInfo*)GetItemData(prevItem);
         if (prevInfo != 0)
-        {
             prevType = prevInfo->typeName;
-        }
 
         CString dialogName("5");
         if (ri.typeName == dialogName)
@@ -48,9 +46,8 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCWSTR fi
             SetItemData(currentItem, (DWORD_PTR)&ri);
         }
 
-            prevItem = currentItem;
-        }
-
+        prevItem = currentItem;
+    }
 
     // Expand some tree-view items
     Expand(rootItem, TVE_EXPAND);
@@ -72,14 +69,43 @@ void CDialogsTree::OnAttach()
     SetStyle(dwStyle);
 }
 
+LRESULT CDialogsTree::OnClickTreeItem(WPARAM, LPARAM lparam)
+{    
+    // Get the window click point.
+    LPNMTREEVIEW pTreeView = (LPNMTREEVIEW)lparam;
+    assert(pTreeView);
+    HWND hTreeView = pTreeView->hdr.hwndFrom;
+    POINT pt = GetCursorPos();
+    ::ScreenToClient(hTreeView, &pt);
+
+    // Retrieve the hit test info.
+    TVHITTESTINFO tvht = {};
+    tvht.pt = pt;
+    HTREEITEM hClickedItem = TreeView_HitTest(hTreeView, &tvht);
+
+    // Ensure the click was actually on the item's text or its icon.
+    if (hClickedItem != NULL && (tvht.flags & (TVHT_ONITEMLABEL | TVHT_ONITEMICON)))
+    {
+        // Get the item that is CURRENTLY selected in the tree.
+        HTREEITEM hCurrentlySelectedItem = TreeView_GetSelection(hTreeView);
+
+        // Send the UWM_ONCLICKTREEITEM message to the frame.
+        if (hClickedItem == hCurrentlySelectedItem)
+            GetAncestor().SendMessage(UWM_ONCLICKTREEITEM, 0, 0);
+    }
+
+    return 0;
+}
+
 // Called when the WM_NOTIFY message is reflected back to CViewTree
 // by the framework.
-LRESULT CDialogsTree::OnNotifyReflect(WPARAM, LPARAM lparam)
+LRESULT CDialogsTree::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
 {
     LPNMTREEVIEW pTreeView = (LPNMTREEVIEW)lparam;
     switch (pTreeView->hdr.code)
     {
-    case TVN_SELCHANGED:       return OnSelChanged();
+    case NM_CLICK:        return OnClickTreeItem(wparam, lparam);
+    case TVN_SELCHANGED:  return OnSelChanged();
 
     default: break;
     }
@@ -90,7 +116,7 @@ LRESULT CDialogsTree::OnNotifyReflect(WPARAM, LPARAM lparam)
 // Called when a treeview item is selected.
 BOOL CDialogsTree::OnSelChanged()
 {
-    // Send the message to CMainFrame.
+    // Send the UWM_ONSELECTTREEITEM message to CMainFrame.
     GetAncestor().SendMessage(UWM_ONSELECTTREEITEM, 0, 0);
     return TRUE;
 }

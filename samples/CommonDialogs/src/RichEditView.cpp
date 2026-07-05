@@ -112,11 +112,11 @@ BOOL CRichEditView::StreamOutFile(const CFile& file)
 // stream. The parameter dwCookie holds the file handle. The pbuff parameter
 // points to the stream's buffer. The number of bytes streamed in is stored
 // in pch.
-DWORD CALLBACK CRichEditView::StreamInCallback(DWORD dwCookie, LPBYTE pbBuff,
+DWORD CALLBACK CRichEditView::StreamInCallback(DWORD_PTR dwCookie, LPBYTE pbBuff,
     LONG cb, LONG *pcb)
 {
     *pcb = 0;
-    if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb,
+    if (!::ReadFile((HANDLE)dwCookie, pbBuff, cb, (LPDWORD)pcb,
       nullptr))
         ::MessageBox(nullptr, L"StreamInFile Failed", L"", MB_OK);
 
@@ -126,11 +126,11 @@ DWORD CALLBACK CRichEditView::StreamInCallback(DWORD dwCookie, LPBYTE pbBuff,
 // Transfer data out of the rich edit view window. The dwCookie parameter holds
 // the file handle. The pbBuff parameter points to the stream's buffer. The
 // number of bytes streamed in is stored in pcb.
-DWORD CALLBACK CRichEditView::StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff,
+DWORD CALLBACK CRichEditView::StreamOutCallback(DWORD_PTR dwCookie, LPBYTE pbBuff,
     LONG cb, LONG *pcb)
 {
     *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb,
+    if (!::WriteFile((HANDLE)dwCookie, pbBuff, cb, (LPDWORD)pcb,
         nullptr))
     {
         ::MessageBox(nullptr, L"StreamOutFile Failed", L"", MB_OK);

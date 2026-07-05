@@ -3654,8 +3654,6 @@ namespace Win32xx
 
             if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
                 color = pTheme->clrBkgnd2;
-            else
-                color = GetSysColor(COLOR_BTNFACE);
 
             // Set the splitter bar color for each docker descendant.
             for (const DockPtr& dockPtr : GetAllChildren())
