@@ -92,7 +92,7 @@ private:
     BOOL OnStartServer();
 
     // Message handlers
-    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
+    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM) override;
     BOOL OnSocketAccept();
     BOOL OnSocketDisconnect(WPARAM wparam);
     BOOL OnSocketReceive(WPARAM wparam);

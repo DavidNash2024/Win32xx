@@ -318,11 +318,11 @@ namespace Win32xx
 
         return ERROR_SUCCESS;
     }
- 
+
     // Retrieves the multi-string data for the specified value name.
     inline LONG CRegKey::QueryMultiStringValue(LPCTSTR valueName, std::vector<CString>& value) const
     {
-        assert(m_key);      
+        assert(m_key);
 
         DWORD bytes = 0;
         DWORD type = 0;
@@ -345,7 +345,7 @@ namespace Win32xx
                 // Check for the double-null termination
                 if (pBuffer[currentPos] == _T('\0'))
                     break;
-                
+
                 LPCTSTR pCurrentStart = pBuffer + currentPos;
                 CString subString(pCurrentStart);
                 value.push_back(subString);
@@ -492,7 +492,7 @@ namespace Win32xx
     {
         assert(m_key);
         assert(value.size() > 0);
-        
+
         if (value.size() > 0)
         {
             CString multiString;

@@ -93,7 +93,7 @@ void CDialogHolder::ShowDialog(CWnd* pFrame, unsigned char* dlgArray)
             int holderFramePaddingX = holderRect.Width() - holderClientRect.Width();
 
             // Set the position of the dialog holder.
-            SetWindowPos(HWND_TOPMOST, left, top - holderFramePaddingY,
+            SetWindowPos(HWND_TOPMOST, left - holderFramePaddingX, top - holderFramePaddingY,
                 finalWidth + holderFramePaddingX, finalHeight + holderFramePaddingY,
                 SWP_SHOWWINDOW);
 
@@ -140,7 +140,7 @@ LRESULT CDialogHolder::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_DPICHANGED:   return OnDpiChanged(msg, wparam, lparam);
-         
+
         // Pass unhandled messages on for default processing.
         default:   return WndProcDefault(msg, wparam, lparam);
         }

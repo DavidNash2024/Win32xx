@@ -19,13 +19,13 @@ public:
     CClientDialog(UINT resID);
     virtual ~CClientDialog() override = default;
 
-    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
-
 protected:
     virtual void    OnClose() override;
     virtual BOOL    OnInitDialog() override;
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM) override;
 
 private:
     CClientDialog(const CClientDialog&) = delete;
@@ -45,9 +45,6 @@ private:
     class CRadioIP6 : public CButton {};
     class CRadioTCP : public CButton {};
     class CRadioUDP : public CButton {};
-
-    // Message handlers
-    LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Command handlers
     BOOL OnSocketDisconnect();

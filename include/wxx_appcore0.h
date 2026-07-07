@@ -361,7 +361,7 @@ namespace Win32xx
     // object, or an object inherited from CWinApp to start Win32++.
     inline BOOL IsAppRunning()
     {
-        return  (CWinApp::m_pCWinApp != nullptr);
+        return  (CWinApp::m_pCWinApp != nullptr) ? TRUE : FALSE;
     }
 
     // A structure that contains the data members for CGDIObject.

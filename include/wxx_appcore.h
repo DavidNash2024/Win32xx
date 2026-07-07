@@ -286,7 +286,7 @@ namespace Win32xx
                 CWinApp::m_pCWinApp = this;
             }
             else
-                throw CNotSupportedException(_T("No available Thread Local Storage Indexes."));
+                throw CResourceException(_T("No available Thread Local Storage Indexes."));
         }
         else
             // Throw an exception if we run more than one instance of CWinApp.
@@ -604,21 +604,7 @@ namespace Win32xx
     // address of CWnd::StaticWindowProc.
     inline void CWinApp::SetCallback()
     {
-        WNDCLASS defaultWC = {};
-        LPCTSTR className    = _T("Win32++ Temporary Window Class");
-        defaultWC.hInstance     = GetInstanceHandle();
-        defaultWC.lpfnWndProc   = CWnd::StaticWindowProc;
-        defaultWC.lpszClassName = className;
-        VERIFY(::RegisterClass(&defaultWC));
-
-        // Retrieve the class information.
-        defaultWC = {};
-        VERIFY(::GetClassInfo(GetInstanceHandle(), className, &defaultWC));
-
-        // Save the callback address of CWnd::StaticWindowProc.
-        assert(defaultWC.lpfnWndProc);  // Assert fails when running UNICODE build on ANSI OS.
-        m_callback = defaultWC.lpfnWndProc;
-        VERIFY(::UnregisterClass(className, GetInstanceHandle()));
+        m_callback = CWnd::StaticWindowProc;
     }
 
     // Sets the current cursor and returns the previous one.

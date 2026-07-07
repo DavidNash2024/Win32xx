@@ -43,7 +43,7 @@ LRESULT CDockSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         CString str2;
         str2 << e.GetText() << L'\n' << e.GetErrorString();
 
-        Trace(str1 + "   " + str2 + "/ n");
+        Trace(str1 + "   " + str2 + "\n");
     }
 
     // Catch all unhandled std::exception types.
@@ -51,7 +51,7 @@ LRESULT CDockSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        Trace(str1 + "/ n");
+        Trace(str1 + "\n");
     }
 
     return 0;
@@ -123,7 +123,7 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         CString str2;
         str2 << e.GetText() << L'\n' << e.GetErrorString();
 
-        Trace(str1 + "   " + str2 + "/ n");
+        Trace(str1 + "   " + str2 + "\n");
     }
 
     // Catch all unhandled std::exception types.
@@ -131,7 +131,7 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        Trace(str1 + "/ n");
+        Trace(str1 + "\n");
     }
 
     return 0;
@@ -241,7 +241,7 @@ LRESULT CSplitterMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         CString str2;
         str2 << e.GetText() << L'\n' << e.GetErrorString();
 
-        Trace(str1 + "   " + str2 + "/ n");
+        Trace(str1 + "   " + str2 + "\n");
     }
 
     // Catch all unhandled std::exception types.
@@ -249,7 +249,7 @@ LRESULT CSplitterMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        Trace(str1 + "/ n");
+        Trace(str1 + "\n");
     }
 
     return 0;

@@ -70,7 +70,7 @@ void CDialogsTree::OnAttach()
 }
 
 LRESULT CDialogsTree::OnClickTreeItem(WPARAM, LPARAM lparam)
-{    
+{
     // Get the window click point.
     LPNMTREEVIEW pTreeView = (LPNMTREEVIEW)lparam;
     assert(pTreeView);

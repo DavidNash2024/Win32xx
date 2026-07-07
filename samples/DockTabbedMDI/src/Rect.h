@@ -34,7 +34,7 @@ private:
 
     // Command handlers
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
