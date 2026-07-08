@@ -815,6 +815,9 @@ namespace Win32xx
     inline CString CWinApp::MsgFileUnlock() const
     { return _T("Failed to unlock the file."); }
 
+    inline CString CWinApp::MsgFileSeek() const
+    { return _T("File seek failed"); }
+
     inline CString CWinApp::MsgFileWrite() const
     { return _T("Failed to write to file."); }
 

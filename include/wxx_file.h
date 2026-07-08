@@ -52,62 +52,75 @@ namespace Win32xx
     class CFile
     {
     public:
-        // File open flags.
+        // File open configuration bit-flags
         enum OpenFlags
         {
-            modeCreate =        CREATE_ALWAYS,  // Creates a new file. Truncates existing file to length 0.
-            modeNoTruncate =    OPEN_ALWAYS, // Creates a new file or opens an existing one.
-            shareExclusive =    0x0010, // Denies read and write access to all others.
-            shareDenyWrite =    0x0020, // Denies write access to all others.
-            shareDenyRead =     0x0030, // Denies read access to all others.
-            shareDenyNone =     0x0040, // No sharing restrictions.
-            modeRead =          0x0100, // Requests read access only.
-            modeWrite =         0x0200, // Requests write access only.
-            modeReadWrite =     0x0300, // Requests read and write access.
-            modeNone =          0x0400  // Requests neither read nor write access.
+            modeCreate = CREATE_ALWAYS,    // Creates new file. Truncates existing file to length 0.
+            modeNoTruncate = OPEN_ALWAYS,  // Creates new file or opens existing one.
+            shareExclusive = 0x0010,       // Denies read/write access to all other processes.
+            shareDenyWrite = 0x0020,       // Denies write access to all other processes.
+            shareDenyRead = 0x0030,        // Denies read access to all other processes.
+            shareDenyNone = 0x0040,        // No sharing restrictions.
+            modeRead = 0x0100,             // Requests read access only.
+            modeWrite = 0x0200,            // Requests write access only.
+            modeReadWrite = 0x0300,        // Requests read and write access.
+            modeNone = 0x0400              // Requests neither read nor write access.
         };
 
+        // Lifecycle & Initialization
         CFile();
         CFile(HANDLE file);
         CFile(LPCTSTR fileName, UINT openFlags);
         CFile(LPCTSTR fileName, UINT openFlags, DWORD attributes);
         virtual ~CFile();
-        operator HANDLE() const;
 
+        // Implicit conversions and handles
+        operator HANDLE() const;
+        HANDLE GetHandle() const;
+
+        // Core File Actions
+        void Open(LPCTSTR fileName, UINT openFlags, DWORD attributes = FILE_ATTRIBUTE_NORMAL);
         void Close();
         void Flush() const;
+        UINT Read(void* buffer, UINT count) const;
+        void Write(const void* buffer, UINT count) const;
+
+        // File Position & Size Mechanics
+        ULONGLONG Seek(LONGLONG seekTo, UINT method) const;
+        void SeekToBegin() const;
+        ULONGLONG SeekToEnd() const;
+        ULONGLONG GetPosition() const;
+        ULONGLONG GetLength() const;
+        void SetLength(LONGLONG length) const;
+
+        // Concurrent File Locking
+        void LockRange(ULONGLONG pos, ULONGLONG count) const;
+        void UnlockRange(ULONGLONG pos, ULONGLONG count) const;
+
+        // File Path Utilities (Object-bound)
+        void SetFilePath(LPCTSTR fileName);
+        const CString& GetFilePath() const;
         CString GetFileDirectory() const;
         const CString& GetFileName() const;
         CString GetFileNameExt() const;
         CString GetFileNameWOExt() const;
-        const CString& GetFilePath() const;
+
 #ifndef WIN32_LEAN_AND_MEAN
         CString GetFileTitle() const;
 #endif
-        HANDLE GetHandle() const;
-        ULONGLONG GetLength() const;
-        ULONGLONG GetPosition() const;
-        void LockRange(ULONGLONG pos, ULONGLONG count) const;
-        void Open(LPCTSTR fileName, UINT openFlags,
-                  DWORD attributes = FILE_ATTRIBUTE_NORMAL);
-        UINT Read(void* buffer, UINT count) const;
-        void Remove(LPCTSTR fileName) const;
-        void Rename(LPCTSTR oldName, LPCTSTR newName) const;
-        ULONGLONG Seek(LONGLONG seekTo, UINT method) const;
-        void SeekToBegin() const;
-        ULONGLONG SeekToEnd() const;
-        void SetFilePath(LPCTSTR fileName);
-        void SetLength(LONGLONG length) const;
-        void UnlockRange(ULONGLONG pos, ULONGLONG count) const;
-        void Write(const void* buffer, UINT count) const;
+
+        // Static Filesystem Utilities
+        static void Rename(LPCTSTR oldName, LPCTSTR newName);
+        static void Remove(LPCTSTR fileName);
 
     private:
         CFile(const CFile&) = delete;
         CFile& operator=(const CFile&) = delete;
 
-        CString m_fileName;
-        CString m_filePath;
+        // Internal State Variables
         HANDLE m_file;
+        CString m_filePath;
+        CString m_fileName;
     };
 
 }
@@ -184,18 +197,19 @@ namespace Win32xx
     // Refer to CloseHandle in the Windows API documentation for more information.
     inline void CFile::Close()
     {
-        m_fileName.Empty();
-        m_filePath.Empty();
-
         if (m_file != INVALID_HANDLE_VALUE)
         {
             if (!::CloseHandle(m_file))
             {
                 m_file = INVALID_HANDLE_VALUE;
-                throw CFileException(GetFilePath(), GetApp()->MsgFileClose());
+                CString failedPath = m_filePath;
+                m_fileName.Empty();
+                m_filePath.Empty();
+                throw CFileException(failedPath, GetApp()->MsgFileClose());
             }
         }
-
+        m_fileName.Empty();
+        m_filePath.Empty();
         m_file = INVALID_HANDLE_VALUE;
     }
 
@@ -204,25 +218,22 @@ namespace Win32xx
     inline void CFile::Flush() const
     {
         assert(m_file != INVALID_HANDLE_VALUE);
-        if ( !::FlushFileBuffers(m_file))
+        if (!::FlushFileBuffers(m_file))
             throw CFileException(GetFilePath(), GetApp()->MsgFileFlush());
-    }
-
-    // Returns the file handle associated with this object.
-    inline HANDLE CFile::GetHandle() const
-    {
-        return m_file;
     }
 
     // Returns the directory of the file associated with this object.
     inline CString CFile::GetFileDirectory() const
     {
         CString directory;
-
         int sep = m_filePath.ReverseFind(_T('\\'));
         if (sep > 0)
-            directory = m_filePath.Left(sep);
-
+        {
+            if (sep == 2 && m_filePath.GetAt(1) == _T(':'))
+                directory = m_filePath.Left(sep + 1); // Preserves C:\ style structures
+            else
+                directory = m_filePath.Left(sep);
+        }
         return directory;
     }
 
@@ -240,7 +251,7 @@ namespace Win32xx
         CString extension;
         int dot = m_fileName.ReverseFind(_T('.'));
         if (dot >= 0)
-            extension = m_fileName.Mid(dot+1);
+            extension = m_fileName.Mid(dot + 1);
 
         return extension;
     }
@@ -251,9 +262,10 @@ namespace Win32xx
     {
         CString fileNameWOExt = m_fileName;
         int dot = m_fileName.ReverseFind(_T('.'));
-        if (dot >= 0)
-            fileNameWOExt = m_fileName.Left(dot);
+        int sep = m_fileName.ReverseFind(_T('\\'));
 
+        if (dot > sep)
+            fileNameWOExt = m_fileName.Left(dot);
         return fileNameWOExt;
     }
 
@@ -272,16 +284,24 @@ namespace Win32xx
     inline CString CFile::GetFileTitle() const
     {
         CString fileTitle;
-        int buffSize = m_filePath.GetLength();
-        if (buffSize > 0)
-        {
-            ::GetFileTitle(m_filePath, fileTitle.GetBuffer(buffSize), static_cast<WORD>(buffSize));
+        LPTSTR pBuffer = fileTitle.GetBuffer(MAX_PATH);
+        if (::GetFileTitle(m_filePath, pBuffer, MAX_PATH) == 0)
             fileTitle.ReleaseBuffer();
+        else
+        {
+            fileTitle.ReleaseBuffer();
+            fileTitle.Empty();
         }
-
         return fileTitle;
     }
 #endif
+
+
+    // Returns the file handle associated with this object.
+    inline HANDLE CFile::GetHandle() const
+    {
+        return m_file;
+    }
 
     // Returns the length of the file in bytes.
     // Refer to GetFileSizeEx in the Windows API documentation for more information.
@@ -290,7 +310,7 @@ namespace Win32xx
         assert(m_file != INVALID_HANDLE_VALUE);
 
         LARGE_INTEGER fileSize;
-        if (!GetFileSizeEx(m_file, &fileSize))
+        if (!::GetFileSizeEx(m_file, &fileSize))
             throw CFileException(m_fileName, GetApp()->MsgFileRead());
 
         return static_cast<ULONGLONG>(fileSize.QuadPart);
@@ -301,15 +321,7 @@ namespace Win32xx
     // Refer to SetFilePointer in the Windows API documentation for more information.
     inline ULONGLONG CFile::GetPosition() const
     {
-        assert(m_file != INVALID_HANDLE_VALUE);
-
-        LARGE_INTEGER distanceToMove;
-        distanceToMove.QuadPart = 0;
-        LARGE_INTEGER newFilePointer;
-        if (!SetFilePointerEx(m_file, distanceToMove, &newFilePointer, FILE_CURRENT))
-            throw CFileException(m_fileName, GetApp()->MsgFileRead());
-
-        return static_cast<ULONGLONG>(newFilePointer.QuadPart);
+        return Seek(0, FILE_CURRENT);
     }
 
     // Locks a range of bytes in and open file.
@@ -366,7 +378,6 @@ namespace Win32xx
         case modeRead:      access = GENERIC_READ;    break;
         case modeWrite:     access = GENERIC_WRITE;   break;
         case modeReadWrite: access = GENERIC_READ | GENERIC_WRITE; break;
-
         default:            access = GENERIC_READ | GENERIC_WRITE; break;
         }
 
@@ -385,16 +396,12 @@ namespace Win32xx
 
         m_file = ::CreateFile(fileName, access, share, nullptr, create, attributes, 0);
 
-        if (INVALID_HANDLE_VALUE == m_file)
+        if (m_file == INVALID_HANDLE_VALUE)
         {
             throw CFileException(fileName, GetApp()->MsgFileOpen());
         }
 
-        if (m_file != INVALID_HANDLE_VALUE)
-        {
-            SetFilePath(fileName);
-        }
-
+        SetFilePath(fileName);
     }
 
     // Reads from the file, storing the contents in the specified buffer.
@@ -409,14 +416,19 @@ namespace Win32xx
         DWORD read = 0;
 
         if (!::ReadFile(m_file, buffer, count, &read, nullptr))
-            throw CFileException(GetFilePath(), GetApp()->MsgFileRead());
-
+        {
+            DWORD error = ::GetLastError();
+            if (error != ERROR_IO_PENDING)
+            {
+                throw CFileException(GetFilePath(), GetApp()->MsgFileRead());
+            }
+        }
         return read;
     }
 
     // Renames the specified file.
     // Refer to MoveFile in the Windows API documentation for more information.
-    inline void CFile::Rename(LPCTSTR oldName, LPCTSTR newName) const
+    inline void CFile::Rename(LPCTSTR oldName, LPCTSTR newName)
     {
         if (!::MoveFile(oldName, newName))
             throw CFileException(oldName, GetApp()->MsgFileRename());
@@ -424,7 +436,7 @@ namespace Win32xx
 
     // Deletes the specified file.
     // Refer to DeleteFile in the Windows API documentation for more information.
-    inline void CFile::Remove(LPCTSTR fileName) const
+    inline void CFile::Remove(LPCTSTR fileName)
     {
         if (!::DeleteFile(fileName))
             throw CFileException(fileName, GetApp()->MsgFileRemove());
@@ -438,20 +450,20 @@ namespace Win32xx
         assert(m_file != INVALID_HANDLE_VALUE);
         assert(method == FILE_BEGIN || method == FILE_CURRENT || method == FILE_END);
 
-        LONG high = static_cast<LONG>(seekTo >> 32);
-        LONG low  = static_cast<LONG>(seekTo & 0xFFFFFFFF);
+        LARGE_INTEGER distanceToMove;
+        distanceToMove.QuadPart = seekTo;
+        LARGE_INTEGER newFilePointer;
 
-        DWORD lowPos = SetFilePointer(m_file, low, &high, method);
+        if (!::SetFilePointerEx(m_file, distanceToMove, &newFilePointer, method))
+            throw CFileException(GetFilePath(), GetApp()->MsgFileSeek());
 
-        ULONGLONG result = (static_cast<ULONGLONG>(high) << 32) + lowPos;
-        return result;
+        return static_cast<ULONGLONG>(newFilePointer.QuadPart);
     }
 
     // Sets the current file pointer to the beginning of the file.
     // Refer to Seek in the Windows API documentation for more information.
     inline void CFile::SeekToBegin() const
     {
-        assert(m_file != INVALID_HANDLE_VALUE);
         Seek(0, FILE_BEGIN);
     }
 
@@ -459,7 +471,6 @@ namespace Win32xx
     // Refer to Seek in the Windows API documentation for more information.
     inline ULONGLONG CFile::SeekToEnd() const
     {
-        assert(m_file != INVALID_HANDLE_VALUE);
         return Seek(0, FILE_END);
     }
 
@@ -470,19 +481,18 @@ namespace Win32xx
     inline void CFile::SetFilePath(LPCTSTR fileName)
     {
         LPTSTR pShortFileName = nullptr;
-
         DWORD buffSize = ::GetFullPathName(fileName, 0, nullptr, nullptr);
-        int buffer = static_cast<int>(buffSize);
-        if (buffer > 0)
+
+        if (buffSize > 0)
         {
-            ::GetFullPathName(fileName, buffSize, m_filePath.GetBuffer(buffer), &pShortFileName);
+            // Request safe internal buffer tracking from CString
+            ::GetFullPathName(fileName, buffSize, m_filePath.GetBuffer(static_cast<int>(buffSize)), &pShortFileName);
+            m_filePath.ReleaseBuffer();
 
             if (pShortFileName != nullptr)
                 m_fileName = pShortFileName;
             else
                 m_fileName = _T("");
-
-            m_filePath.ReleaseBuffer();
         }
     }
 
@@ -492,8 +502,13 @@ namespace Win32xx
     {
         assert(m_file != INVALID_HANDLE_VALUE);
 
+        ULONGLONG currentPos = GetPosition();
         Seek(length, FILE_BEGIN);
-        if (!::SetEndOfFile(m_file))
+
+        BOOL bSuccess = ::SetEndOfFile(m_file);
+        Seek(static_cast<LONGLONG>(currentPos), FILE_BEGIN);
+
+        if (!bSuccess)
             throw CFileException(GetFilePath(), GetApp()->MsgFileLength());
     }
 

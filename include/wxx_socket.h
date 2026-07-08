@@ -179,7 +179,9 @@ namespace Win32xx
         CSocket& operator=(const CSocket&) = delete;
 
         static UINT WINAPI EventThread(LPVOID pThis);
+        inline static int m_socketCount = 0;
 
+        CCriticalSection m_cs;
         SOCKET m_socket = INVALID_SOCKET;
         WorkThreadPtr m_threadPtr;          // Smart pointer to the worker thread for the events.
         CEvent m_stopRequest;               // A manual reset event to signal the event thread should stop.
@@ -197,18 +199,28 @@ namespace Win32xx
 
     inline CSocket::CSocket() : m_stopRequest(FALSE, TRUE)
     {
-        // Initialize the Windows Socket services.
-        WSADATA wsaData;
+        CThreadLock lock(m_cs);
+        if (m_socketCount == 0)
+        {
+            // Initialize the Windows Socket Services version 2.2 for the
+            // first socket.
+            WSADATA wsaData;
+            if (::WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+                throw CNotSupportedException(GetApp()->MsgSocWSAStartup());
+        }
 
-        if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
-            throw CNotSupportedException(GetApp()->MsgSocWSAStartup());
+        m_socketCount++;
     }
 
     inline CSocket::~CSocket()
     {
+        CThreadLock lock(m_cs);
         Disconnect();
-        // Terminate the  Windows Socket services.
-        ::WSACleanup();
+
+        // Terminate the  Windows Socket Services for the last socket.
+        m_socketCount--;
+        if (m_socketCount == 0)
+            ::WSACleanup();
     }
 
     // The accept function permits an incoming connection attempt on the socket.

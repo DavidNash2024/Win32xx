@@ -299,12 +299,13 @@ namespace Win32xx
         // Message strings used for files.
         virtual CString MsgFileClose() const;
         virtual CString MsgFileFlush() const;
+        virtual CString MsgFileLength() const;
         virtual CString MsgFileLock() const;
         virtual CString MsgFileOpen() const;
         virtual CString MsgFileRead() const;
         virtual CString MsgFileRename() const;
         virtual CString MsgFileRemove() const;
-        virtual CString MsgFileLength() const;
+        virtual CString MsgFileSeek() const;
         virtual CString MsgFileUnlock() const;
         virtual CString MsgFileWrite() const;
 
