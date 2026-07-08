@@ -776,7 +776,7 @@ namespace Win32xx
         }
 
         // Update pos to point to the next file.
-        int fileLength = lstrlen(fileName);
+        int fileLength = static_cast<int>(_tcslen(fileName));
         if (fileNames.GetAt(index + fileLength + 1) == _T('\0'))
             pos = -1;
         else

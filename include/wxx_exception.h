@@ -386,7 +386,7 @@ namespace Win32xx
     inline LPCTSTR CFileException::GetFileName() const noexcept
     {
         // Get the index of the first character after the last '\'.
-        int index = lstrlen(m_filePath);
+        int index = static_cast<int>(_tcslen(m_filePath));
         while ( index > 0  &&  m_filePath[index-1] != _T('\\') )
         {
             --index;
@@ -590,7 +590,8 @@ namespace Win32xx
     }
 
     // CWinException constructor.
-    inline CWinException::CWinException(LPCTSTR text, int messageID) noexcept
+    inline CWinException::CWinException(LPCTSTR text /*= nullptr*/,
+        int messageID /*= 0*/) noexcept
         : CException(text, messageID)
     {
         // Display some text in the debugger.
@@ -605,13 +606,13 @@ namespace Win32xx
             TRACE(GetErrorString());
     }
 
-    // CWinFileException copy constructor.
+    // CWinException copy constructor.
     inline CWinException::CWinException(const CWinException& rhs) noexcept
         : CException(rhs)
     {
     }
 
-    // CWinFileException assignment operator.
+    // CWinException assignment operator.
     inline CWinException& CWinException::operator=(const CWinException& rhs) noexcept
     {
         CException::operator =(rhs);

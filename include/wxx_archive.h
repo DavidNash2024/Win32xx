@@ -83,12 +83,13 @@ namespace Win32xx
     struct ArchiveObject
     {
         // member variables
-        UINT    m_size;     // not size_t as that is different in x86 and x64
-        LPVOID  m_pData;
+        UINT m_size;
+        LPVOID m_pData;
 
         // Constructor
         ArchiveObject(LPVOID pData, UINT size) : m_size(size), m_pData(pData) {}
     };
+
     // A typical usage of ArchiveObject would be of the form:
     //
     //  ArchiveObject ao(&Data, sizeof(Data));
@@ -113,7 +114,7 @@ namespace Win32xx
         virtual ~CArchive();
 
         // Method members
-        const CFile&    GetFile();
+        const CFile& GetFile() const;
         UINT    GetObjectSchema() const;
         bool    IsLoading() const;
         bool    IsStoring() const;
@@ -127,7 +128,7 @@ namespace Win32xx
         void    WriteStringA(LPCSTR string);
         void    WriteStringW(LPCWSTR string);
 
-        // Load operations
+        // Store operations (<< pushes data into the file)
         CArchive& operator<<(BYTE by);
         CArchive& operator<<(WORD w);
         CArchive& operator<<(LONG l);
@@ -151,7 +152,7 @@ namespace Win32xx
         CArchive& operator<<(const CObject& object);
         CArchive& operator<<(wchar_t ch);
 
-        // Store operations
+        // Load operations (>> extracts data out of the file)
         CArchive& operator>>(BYTE& by);
         CArchive& operator>>(WORD& w);
         CArchive& operator>>(DWORD& dw);
@@ -197,63 +198,45 @@ namespace Win32xx
     // Definitions for the CArchive class.
     //
 
-    // Constructs a CArchive object.
+    // Constructs a CArchive object from an unowned reference.
     // The specified file must already be open for loading or storing.
-    inline CArchive::CArchive(CFile& file, Mode mode) : m_schema(UINT(-1))
+    inline CArchive::CArchive(CFile& file, Mode mode)
+        : m_pFile(&file), m_schema(UINT(-1)), m_isStoring(mode == store)
     {
-        m_pFile = &file;
-
-        if (mode == load)
-        {
-            m_isStoring = false;
-        }
-        else
-        {
-            m_isStoring = true;
-        }
     }
 
-    // Constructs a CArchive object.
+    // Constructs an owned CArchive object.
     // A file with the specified name is created for storing (if required), and
-    // also opened. A failure to open the file will throw an exception.
-    inline CArchive::CArchive(LPCTSTR fileName, Mode mode) : m_pFile(nullptr),
-        m_schema(UINT(-1))
+    // also opened. A failure to open the file will throw an exception
+    inline CArchive::CArchive(LPCTSTR fileName, Mode mode)
+        : m_pFile(nullptr), m_schema(UINT(-1)), m_isStoring(mode == store)
     {
-
         if (mode == load)
         {
-            // Open the archive for loading.
             m_file = std::make_unique<CFile>(fileName, CFile::modeRead);
-            m_isStoring = false;
         }
         else
         {
-            // Open the archive for storing. Creates file if required.
             m_file = std::make_unique<CFile>(fileName, CFile::modeCreate);
-            m_isStoring = true;
         }
 
         m_pFile = m_file.get();
     }
 
+    // Destructor.
     inline CArchive::~CArchive()
     {
-        if (m_pFile)
+        if (m_file)
         {
-            // Test if the file is open.
-            if (m_pFile->GetHandle())
-            {
-                // Flush if in write mode.
-                if (IsStoring())
-                    m_pFile->Flush();
+            if (IsStoring())
+                m_file->Flush();
 
-                m_pFile->Close();
-            }
+            m_file->Close();
         }
     }
 
     // Returns the file associated with the archive.
-    inline const CFile& CArchive::GetFile()
+    inline const CFile& CArchive::GetFile() const
     {
         assert(m_pFile);
         return *m_pFile;
@@ -286,7 +269,6 @@ namespace Win32xx
     // Throws an exception if not successful.
     inline void CArchive::Read(void* buffer, UINT size)
     {
-        // read, simply and  in binary mode, the size into the buffer
         assert(m_pFile);
 
         if (m_pFile)
@@ -310,137 +292,33 @@ namespace Win32xx
     // Throws an exception if unsuccessful.
     inline void CArchive::Write(const void* buffer, UINT size)
     {
-        // write size characters in buffer to the  file
         assert(m_pFile);
-        m_pFile->Write(buffer, size);
+        if (m_pFile)
+        {
+            m_pFile->Write(buffer, size);
+        }
     }
 
-    // Writes the BYTE variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(BYTE b)
-    {
-        ArchiveObject ob(&b, sizeof(b));
-        *this << ob;
-        return *this;
-    }
+    // Primative store operations
+    inline CArchive& CArchive::operator<<(BYTE b)       { Write(&b, sizeof(b)); return *this; }
+    inline CArchive& CArchive::operator<<(WORD w)       { Write(&w, sizeof(w)); return *this; }
+    inline CArchive& CArchive::operator<<(LONG l)       { Write(&l, sizeof(l)); return *this; }
+    inline CArchive& CArchive::operator<<(LONGLONG ll)  { Write(&ll, sizeof(ll)); return *this; }
+    inline CArchive& CArchive::operator<<(ULONGLONG ull){ Write(&ull, sizeof(ull)); return *this; }
+    inline CArchive& CArchive::operator<<(DWORD dw)     { Write(&dw, sizeof(dw)); return *this; }
+    inline CArchive& CArchive::operator<<(float f)      { Write(&f, sizeof(f)); return *this; }
+    inline CArchive& CArchive::operator<<(double d)     { Write(&d, sizeof(d)); return *this; }
+    inline CArchive& CArchive::operator<<(int i)        { Write(&i, sizeof(i)); return *this; }
+    inline CArchive& CArchive::operator<<(short s)      { Write(&s, sizeof(s)); return *this; }
+    inline CArchive& CArchive::operator<<(char c)       { Write(&c, sizeof(c)); return *this; }
+    inline CArchive& CArchive::operator<<(wchar_t ch)   { Write(&ch, sizeof(ch)); return *this; }
+    inline CArchive& CArchive::operator<<(unsigned u)   { Write(&u, sizeof(u)); return *this; }
+    inline CArchive& CArchive::operator<<(bool b)       { Write(&b, sizeof(b)); return *this; }
 
-    // Writes the WORD variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(WORD w)
-    {
-        ArchiveObject ob(&w, sizeof(w));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the LONG variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(LONG l)
-    {
-        ArchiveObject ob(&l, sizeof(l));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the LONGLONG variable into the archive file.
-    // Throw an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(LONGLONG ll)
-
-    {
-        ArchiveObject ob(&ll, sizeof(ll));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the ULONGLONG variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(ULONGLONG ull)
-    {
-        ArchiveObject ob(&ull, sizeof(ull));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the DWORD variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(DWORD dw)
-    {
-        ArchiveObject ob(&dw, sizeof(dw));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the float variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(float f)
-    {
-        ArchiveObject ob(&f, sizeof(f));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the double variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(double d)
-    {
-        ArchiveObject ob(&d, sizeof(d));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the int variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(int i)
-    {
-        ArchiveObject ob(&i, sizeof(i));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the short variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(short s)
-    {
-        ArchiveObject ob(&s, sizeof(s));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the char variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(char c)
-    {
-        ArchiveObject ob(&c, sizeof(c));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the wchar_t variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(wchar_t ch)
-    {
-        ArchiveObject ob(&ch, sizeof(ch));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the unsigned variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(unsigned u)
-    {
-        ArchiveObject ob(&u, sizeof(u));
-        *this << ob;
-        return *this;
-    }
-
-    // Writes the bool variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(bool b)
-    {
-        ArchiveObject ob(&b, sizeof(b));
-        *this << ob;
-        return *this;
-    }
+    // Windows structures store operations
+    inline CArchive& CArchive::operator<<(POINT pt)     { Write(&pt, sizeof(pt)); return *this; }
+    inline CArchive& CArchive::operator<<(RECT rc)      { Write(&rc, sizeof(rc)); return *this; }
+    inline CArchive& CArchive::operator<<(SIZE sz)      { Write(&sz, sizeof(sz)); return *this; }
 
     // Writes the CStringA variable into the archive file.
     // The CStringA can contain any characters including embedded nulls.
@@ -490,36 +368,6 @@ namespace Win32xx
         return *this;
     }
 
-    // Writes the POINT variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(POINT pt)
-    {
-        UINT size = sizeof(pt);
-        Write(&size, sizeof(size));
-        Write(&pt, size);
-        return *this;
-    }
-
-    // Writes the RECT variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(RECT rc)
-    {
-        UINT size = sizeof(rc);
-        Write(&size, sizeof(size));
-        Write(&rc, size);
-        return *this;
-    }
-
-    // Writes the SIZE variable into the archive file.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(SIZE sz)
-    {
-        UINT size = sizeof(sz);
-        Write(&size, sizeof(size));
-        Write(&sz, size);
-        return *this;
-    }
-
     // Writes arbitrary CArchive object into this CArchive as bytes.
     // Throws an exception if an error occurs..
     inline CArchive& CArchive::operator<<(const ArchiveObject& ao)
@@ -529,129 +377,49 @@ namespace Win32xx
         return *this;
     }
 
-    // Reads a BYTE from the archive.
+    // Writes the CObject variable into the archive file.
     // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(BYTE& b)
+    inline CArchive& CArchive::operator<<(const CObject& object)
     {
-        ArchiveObject ob(&b, sizeof(b));
-        *this >> ob;
+        // Cast away const because Serialize is not const.
+        const_cast<CObject&>(object).Serialize(*this);
         return *this;
     }
 
-    // Reads a WORD from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(WORD& w)
-    {
-        ArchiveObject ob(&w, sizeof(w));
-        *this >> ob;
-        return *this;
-    }
+    // Load operations
+    inline CArchive& CArchive::operator>>(BYTE& b)       { Read(&b, sizeof(b)); return *this; }
+    inline CArchive& CArchive::operator>>(WORD& w)       { Read(&w, sizeof(w)); return *this; }
+    inline CArchive& CArchive::operator>>(LONG& l)       { Read(&l, sizeof(l)); return *this; }
+    inline CArchive& CArchive::operator>>(LONGLONG& ll)  { Read(&ll, sizeof(ll)); return *this; }
+    inline CArchive& CArchive::operator>>(ULONGLONG& ull){ Read(&ull, sizeof(ull)); return *this; }
+    inline CArchive& CArchive::operator>>(DWORD& dw)     { Read(&dw, sizeof(dw)); return *this; }
+    inline CArchive& CArchive::operator>>(float& f)      { Read(&f, sizeof(f)); return *this; }
+    inline CArchive& CArchive::operator>>(double& d)     { Read(&d, sizeof(d)); return *this; }
+    inline CArchive& CArchive::operator>>(int& i)        { Read(&i, sizeof(i)); return *this; }
+    inline CArchive& CArchive::operator>>(short& s)      { Read(&s, sizeof(s)); return *this; }
+    inline CArchive& CArchive::operator>>(char& c)       { Read(&c, sizeof(c)); return *this; }
+    inline CArchive& CArchive::operator>>(wchar_t& ch)   { Read(&ch, sizeof(ch)); return *this; }
+    inline CArchive& CArchive::operator>>(unsigned& u)   { Read(&u, sizeof(u)); return *this; }
+    inline CArchive& CArchive::operator>>(bool& b)       { Read(&b, sizeof(b)); return *this; }
 
-    // Reads a LONG from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(LONG& l)
-    {
-        ArchiveObject ob(&l, sizeof(l));
-        *this >> ob;
-        return *this;
-    }
+    inline CArchive& CArchive::operator>>(POINT& pt)     { Read(&pt, sizeof(pt)); return *this; }
+    inline CArchive& CArchive::operator>>(RECT& rc)      { Read(&rc, sizeof(rc)); return *this; }
+    inline CArchive& CArchive::operator>>(SIZE& sz)      { Read(&sz, sizeof(sz)); return *this; }
 
-    // Reads a LONGLONG from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(LONGLONG& ll)
-    {
-        ArchiveObject ob(&ll, sizeof(ll));
-        *this >> ob;
-        return *this;
-    }
+    // Data load operations
 
-    // Reads a ULONGLONG from the archive.
+    // Reads an ArchiveObject from the archive.
     // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(ULONGLONG& ull)
+    inline CArchive& CArchive::operator>>(ArchiveObject& ao)
     {
-        ArchiveObject ob(&ull, sizeof(ull));
-        *this >> ob;
-        return *this;
-    }
+        UINT fileStoredSize = 0;
+        Read(&fileStoredSize, sizeof(fileStoredSize));
 
-    // Reads a DWORD from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(DWORD& dw)
-    {
-        ArchiveObject ob(&dw, sizeof(dw));
-        *this >> ob;
-        return *this;
-    }
+        // Security check: Verify file contents match your allocated runtime buffer target
+        if (fileStoredSize != ao.m_size)
+            throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArReadFail());
 
-    // Reads a float from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(float& f)
-    {
-        ArchiveObject ob(&f, sizeof(f));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads a double from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(double& d)
-    {
-        ArchiveObject ob(&d, sizeof(d));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads an int from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(int& i)
-    {
-        ArchiveObject ob(&i, sizeof(i));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads a short from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(short& i)
-    {
-        ArchiveObject ob(&i, sizeof(i));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads a char from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(char& c)
-    {
-        ArchiveObject ob(&c, sizeof(c));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads a wchar_t from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(wchar_t& ch)
-    {
-        ArchiveObject ob(&ch, sizeof(ch));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads an unsigned int from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(unsigned& u)
-    {
-        ArchiveObject ob(&u, sizeof(u));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads an bool from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(bool& b)
-    {
-        ArchiveObject ob(&b, sizeof(b));
-        *this >> ob;
+        Read(ao.m_pData, ao.m_size);
         return *this;
     }
 
@@ -747,57 +515,6 @@ namespace Win32xx
         return *this;
     }
 
-    // Reads a POINT from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(POINT& pt)
-    {
-        ArchiveObject ob(&pt, sizeof(pt));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads a RECT from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(RECT& rc)
-    {
-        ArchiveObject ob(&rc, sizeof(rc));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads a SIZE from the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(SIZE& sz)
-    {
-        ArchiveObject ob(&sz, sizeof(sz));
-        *this >> ob;
-        return *this;
-    }
-
-    // Reads an arbitrary CArchive object into this CArchive as bytes.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator>>(ArchiveObject& ao)
-    {
-        assert(m_pFile);
-        UINT size;
-        Read(&size, sizeof(size));
-        if (size != ao.m_size)
-        {
-            throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArReadFail());
-        }
-
-        Read(ao.m_pData, ao.m_size);
-        return *this;
-    }
-
-    // Writes a CObject to the archive.
-    // Throws an exception if an error occurs.
-    inline CArchive& CArchive::operator<<(const CObject& object)
-    {
-        ((CObject&)object).Serialize(*this);
-        return *this;
-    }
-
     // Reads a CObject from the archive.
     // Throws an exception if an error occurs.
     inline CArchive& CArchive::operator>>(CObject& object)
@@ -856,7 +573,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline void CArchive::WriteString(LPCTSTR string)
     {
-        int chars = lstrlen(string);
+        int chars = static_cast<int>(_tcslen(string));
         bool isUnicode = (sizeof(TCHAR) == sizeof(WCHAR));
 
         // Store the Unicode state and number of characters in the archive
@@ -871,7 +588,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline void CArchive::WriteStringA(LPCSTR string)
     {
-        int chars = lstrlenA(string);
+        int chars = static_cast<int>(std::strlen(string));
         bool isUnicode = false;
 
         // Store the Unicode state and number of characters in the archive
@@ -886,7 +603,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline void CArchive::WriteStringW(LPCWSTR string)
     {
-        int chars = lstrlenW(string);
+        int chars = static_cast<int>(std::wcslen(string));
         bool isUnicode = true;
 
         // Store the Unicode state and number of characters in the archive

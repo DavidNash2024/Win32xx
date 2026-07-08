@@ -99,15 +99,6 @@
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="..\src\res\PerMonitorV2.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\src\res\MenuIcons.bmp" />
-    <Image Include="..\src\res\Toolbar.bmp" />
-    <Image Include="..\src\res\Toolbar_32.bmp" />
-    <Image Include="..\src\res\Win32xx.ico" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

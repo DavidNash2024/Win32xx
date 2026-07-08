@@ -1038,7 +1038,7 @@ namespace Win32xx
     // class prior to window creation.
     inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
     {
-        assert((wc.lpszClassName != nullptr) && (lstrlen(wc.lpszClassName) <=
+        assert((wc.lpszClassName != nullptr) && (_tcslen(wc.lpszClassName) <=
             WXX_MAX_STRING_SIZE));
 
         // Check to see if this classname is already registered.

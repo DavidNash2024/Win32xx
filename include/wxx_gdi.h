@@ -4678,7 +4678,7 @@ namespace Win32xx
         assert(m_pData->dc != nullptr);
 
         if (count == -1)
-            count = lstrlen (string);
+            count = static_cast<int>(_tcslen(string));
 
         return ::ExtTextOut(m_pData->dc, x, y, options, &rc, string,
                static_cast<UINT>(count), pDxWidths);
@@ -4835,7 +4835,7 @@ namespace Win32xx
     {
         assert(m_pData->dc != nullptr);
         assert(string != nullptr);
-        assert(count <= lstrlen(string));
+        assert(count <= static_cast<int>(_tcslen(string)));
         CSize sz;
         VERIFY(::GetTextExtentPoint32(m_pData->dc, string, count, &sz));
         return sz;
@@ -4846,7 +4846,7 @@ namespace Win32xx
     inline CSize CDC::GetTextExtentPoint32(LPCTSTR string) const
     {
         assert(string != nullptr);
-        return GetTextExtentPoint32(string, lstrlen(string));
+        return GetTextExtentPoint32(string, static_cast<int>(_tcslen(string)));
     }
 
     // Computes the width and height of a character string.

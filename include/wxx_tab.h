@@ -418,7 +418,7 @@ namespace Win32xx
         assert(IsWindow());
         CWnd* pView = view.get();
         assert(pView);
-        assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
+        assert(_tcslen(tabText) < WXX_MAX_STRING_SIZE);
         if (pView == nullptr)
             return nullptr;
 
@@ -820,7 +820,7 @@ namespace Win32xx
             tcItem.pszText = str.GetBuffer(WXX_MAX_STRING_SIZE);
             GetItem(i, &tcItem);
             str.ReleaseBuffer();
-            CSize TempSize = dcClient.GetTextExtentPoint32(str, lstrlen(str));
+            CSize TempSize = dcClient.GetTextExtentPoint32(str, static_cast<int>(_tcslen(str)));
 
             int imageSize = 0;
             int padding = DpiScaleInt(10);
@@ -850,7 +850,7 @@ namespace Win32xx
     {
         CClientDC dcClient(*this);
         dcClient.SelectObject(m_tabFont);
-        CSize szText = dcClient.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+        CSize szText = dcClient.GetTextExtentPoint32(_T("Text"), static_cast<int>(_tcslen(_T("Text"))));
         return szText.cy;
     }
 
@@ -1906,7 +1906,7 @@ namespace Win32xx
     inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID)
     {
         assert(pView); // Cannot add null CWnd*.
-        assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
+        assert(_tcslen(tabText) < WXX_MAX_STRING_SIZE);
 
         return AddMDIChild(WndPtr(pView), tabText, mdiChildID);
     }
@@ -1918,7 +1918,7 @@ namespace Win32xx
     {
         CWnd* pView = view.get();
         assert(pView); // Cannot add null CWnd*.
-        assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
+        assert(_tcslen(tabText) < WXX_MAX_STRING_SIZE);
 
         GetTab().AddTabPage(std::move(view), tabText, 0U, mdiChildID);
 
