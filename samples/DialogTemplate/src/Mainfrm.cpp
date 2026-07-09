@@ -499,7 +499,8 @@ void CMainFrame::Reset()
 
     CString text = "Choose a file to load dialog resources from.\n";
     text << "Use the menu or toolbar to open the file, \n";
-    text << "or drag and drop it onto this window.";
+    text << "or drag and drop it onto this window.\n";
+    text << "The file can be an executable (.exe) or a dll.";
     m_richView.SetWindowText(text);
 }
 
