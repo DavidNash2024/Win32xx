@@ -812,11 +812,11 @@ namespace Win32xx
     inline CString CWinApp::MsgFileLength() const
     { return _T("Failed to change the file length."); }
 
-    inline CString CWinApp::MsgFileUnlock() const
-    { return _T("Failed to unlock the file."); }
-
     inline CString CWinApp::MsgFileSeek() const
     { return _T("File seek failed"); }
+
+    inline CString CWinApp::MsgFileUnlock() const
+    { return _T("Failed to unlock the file."); }
 
     inline CString CWinApp::MsgFileWrite() const
     { return _T("Failed to write to file."); }
