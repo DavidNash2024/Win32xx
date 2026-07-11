@@ -28,7 +28,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED:     return OnDpiChanged();
+        case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case UWM_SETSTATIC:     return OnSetStatic(wparam);
 
         default: break;
@@ -89,7 +89,7 @@ void CMyDialog::OnDestroy()
 // Respond to a change in DPI. This function is only called when using
 // Per Monitor DPI Awareness, version 2. This is specified by loading
 // the appropriate manifest in the resource script (Resource.rc).
-INT_PTR CMyDialog::OnDpiChanged()
+LRESULT CMyDialog::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     SetURLFont();
     return 0;

@@ -19,17 +19,15 @@ public:
 
 protected:
     virtual void OnDraw(CDC& dc) override;
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CSimpleView(const CSimpleView&) = delete;
     CSimpleView& operator=(const CSimpleView&) = delete;
 
-    // Message handlers
-    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    // Member variables
+     // Member variables
     COLORREF m_color;
 };
 
@@ -71,6 +69,7 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnInitialUpdate() override;
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
@@ -79,9 +78,6 @@ private:
 
     // Command handlers
     BOOL    OnColor(COLORREF rgb);
-
-    // Message handlers
-    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
     CDockSimple m_view;

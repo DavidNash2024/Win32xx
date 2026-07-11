@@ -151,7 +151,7 @@ LRESULT CMainWindow::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 }
 
 // Called in the main window is resized.
-LRESULT CMainWindow::OnSize()
+LRESULT CMainWindow::OnSize(UINT, WPARAM, LPARAM)
 {
     m_edit.SetWindowPos(HWND_TOP, GetClientRect(), 0);
     return 0;
@@ -182,7 +182,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_CLOSETHREAD:    return OnCloseThread(wparam);
         case UWM_WINDOWCREATED:  return OnWindowCreated();
         case WM_DPICHANGED:      return OnDpiChanged(msg, wparam, lparam);
-        case WM_SIZE:            return OnSize();
+        case WM_SIZE:            return OnSize(msg, wparam, lparam);
 
         default: return WndProcDefault(msg, wparam, lparam);
         }

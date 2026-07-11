@@ -27,6 +27,7 @@ protected:
     virtual BOOL OnInitDialog() override;
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM) override;
     virtual void OnOK() override;
 
 private:
@@ -41,7 +42,6 @@ private:
     BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
     // Message handlers
-    INT_PTR OnDpiChanged();
     INT_PTR OnSetStatic(WPARAM wparam);
 
     // Member variables

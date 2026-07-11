@@ -30,7 +30,9 @@ public:
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDestroy() override;
+    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam) override;
     virtual void OnInitialUpdate() override;
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
@@ -38,8 +40,6 @@ private:
     CMainWindow& operator=(const CMainWindow&) = delete;
 
     // Message handlers
-    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
-    LRESULT OnSize();
     LRESULT OnWindowCreated();
 
     LONGLONG GetCounter() const;

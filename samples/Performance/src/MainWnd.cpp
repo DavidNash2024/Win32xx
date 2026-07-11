@@ -93,7 +93,7 @@ void CMainWindow::OnInitialUpdate()
 }
 
 // Called when the main window is resized.
-LRESULT CMainWindow::OnSize()
+LRESULT CMainWindow::OnSize(UINT, WPARAM, LPARAM)
 {
     CRect r = GetClientRect();
 
@@ -190,7 +190,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
-        case WM_SIZE:           return OnSize();
+        case WM_SIZE:           return OnSize(msg, wparam, lparam);
         case WM_WINDOWCREATED:  return OnWindowCreated();
 
         default: return WndProcDefault(msg, wparam, lparam);

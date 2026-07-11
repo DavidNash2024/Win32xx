@@ -26,9 +26,6 @@ public:
     BOOL OnCheckC();
     BOOL OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID);
 
-    // Command handlers
-    INT_PTR OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-
 protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void OnCancel() override;
@@ -36,6 +33,7 @@ protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual BOOL OnInitDialog() override;
     virtual void OnOK() override;
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CView(const CView&) = delete;

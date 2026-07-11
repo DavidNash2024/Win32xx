@@ -59,10 +59,11 @@ void CView::OnInitialUpdate()
 }
 
 // Called when the window is resized.
-void CView::OnSize()
+LRESULT CView::OnSize(UINT, WPARAM, LPARAM)
 {
     // Force the window to be repainted during resizing.
     Invalidate();
+    return 0;
 }
 
 // This function will be called automatically by Create. It provides an
@@ -87,9 +88,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch(msg)
     {
-    case WM_SIZE:
-        OnSize();
-        return WndProcDefault(msg, wparam, lparam);
+    case WM_SIZE:  return OnSize(msg, wparam, lparam);
 
     // Do default processing for other messages.
     default: return WndProcDefault(msg, wparam, lparam);

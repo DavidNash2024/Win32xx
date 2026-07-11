@@ -23,6 +23,7 @@ protected:
     virtual void OnDraw(CDC& dc) override;
     virtual void OnInitialUpdate() override;
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
     virtual void PreRegisterClass(WNDCLASS& wc) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -35,7 +36,6 @@ private:
     void SetWrapState(bool isWrapped);
 
     // MessageHandlers
-    LRESULT OnSize(UINT, WPARAM, LPARAM);
     LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
 
     // Command handlers

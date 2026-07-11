@@ -24,6 +24,8 @@ public:
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDestroy() override;
+    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam) override;
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
@@ -36,8 +38,6 @@ private:
     void    OnAllWindowsCreated();
     LRESULT OnAppendText(WPARAM wparam);
     LRESULT OnCloseThread(WPARAM wparam);
-    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
-    LRESULT OnSize();
     LRESULT OnWindowCreated();
 
     CCriticalSection m_cs;              // Used to ensure thread safe access to m_threads.

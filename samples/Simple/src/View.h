@@ -21,15 +21,13 @@ protected:
     virtual void OnDestroy() override;
     virtual void OnDraw(CDC& dc) override;
     virtual void OnInitialUpdate() override;
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CView(const CView&) = delete;
     CView& operator=(const CView&) = delete;
-
-    // Message handlers
-    void OnSize();
 };
 
 #endif

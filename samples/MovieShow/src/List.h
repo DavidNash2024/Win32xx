@@ -44,6 +44,7 @@ protected:
     virtual LRESULT OnNotify(WPARAM, LPARAM lparam) override;
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
@@ -56,7 +57,6 @@ private:
     LRESULT OnItemChanged(LPNMLISTVIEW pListView);
     LRESULT OnLVColumnClick(LPNMLISTVIEW pListView);
     LRESULT OnRClick();
-    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CHeader m_header;
     CString GetFileTime(FILETIME fileTime);

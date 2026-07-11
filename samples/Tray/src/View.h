@@ -19,8 +19,12 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnDestroy() override;
+    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam) override;
     virtual void    OnDraw(CDC& dc) override;
     virtual void    OnInitialUpdate() override;
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -34,12 +38,6 @@ private:
     // Command handlers
     BOOL    OnAbout();
     BOOL    OnFileExit();
-
-    // Message handlers
-    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
-    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
     CTaskDialog m_dialog;

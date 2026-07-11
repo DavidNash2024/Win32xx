@@ -20,6 +20,8 @@ public:
 
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnInitDialog() override;
     virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -27,10 +29,6 @@ protected:
 private:
     CColorAdjust(const CColorAdjust&) = delete;
     CColorAdjust& operator=(const CColorAdjust&) = delete;
-
-    // Message handlers.
-    LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member functions.
     void    CreateImagePreviews();

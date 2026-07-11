@@ -71,16 +71,14 @@ public:
 
 protected:
     virtual void    OnDraw(CDC& dc) override;
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CViewSimple(const CViewSimple&) = delete;
     CViewSimple& operator=(const CViewSimple&) = delete;
-
-    // Message handlers
-    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 

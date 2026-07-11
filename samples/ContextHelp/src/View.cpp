@@ -250,7 +250,7 @@ BOOL CView::OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID)
     return TRUE;
 }
 
-INT_PTR CView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Perform default processing first.
     FinalWindowProc(msg, wparam, lparam);

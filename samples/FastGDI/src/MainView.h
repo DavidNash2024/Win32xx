@@ -23,6 +23,8 @@ public:
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDraw(CDC& dc) override;
+    virtual LRESULT OnDropFiles(UINT, WPARAM, LPARAM);
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
     virtual void PreRegisterClass(WNDCLASS& wc) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
@@ -30,9 +32,6 @@ protected:
 private:
     CMainView(const CMainView&) = delete;
     CMainView& operator=(const CMainView&) = delete;
-
-    LRESULT OnDropFiles(UINT, WPARAM, LPARAM);
-    LRESULT OnSize(UINT, WPARAM, LPARAM);
 
 public:
     CImageView m_imageView;

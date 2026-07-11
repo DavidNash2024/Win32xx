@@ -21,17 +21,15 @@ public:
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM) override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT OnDropFiles(UINT, WPARAM, LPARAM);
     virtual void PreRegisterClass(WNDCLASS& wc) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CMainView(const CMainView&) = delete;
     CMainView& operator=(const CMainView&) = delete;
-
-    // Message Handlers.
-    LRESULT OnDropFiles(UINT, WPARAM, LPARAM);
-    LRESULT OnSize(UINT, WPARAM, LPARAM);
 
 public:
     CImageView m_imageView;

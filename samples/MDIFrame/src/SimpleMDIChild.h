@@ -19,16 +19,14 @@ public:
 
 protected:
     virtual void OnDraw(CDC& dc) override;
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CSimpleView(const CSimpleView&) = delete;
     CSimpleView& operator=(const CSimpleView&) = delete;
 
-    // Message handlers
-    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    COLORREF m_color;
+     COLORREF m_color;
 };
 
 //////////////////////////////////////////////

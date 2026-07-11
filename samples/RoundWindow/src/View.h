@@ -23,6 +23,7 @@ protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDestroy() override;
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void OnDraw(CDC& dc) override;
     virtual void OnInitialUpdate() override;
     virtual void PreCreate(CREATESTRUCT& cs) override;
@@ -38,7 +39,6 @@ private:
     BOOL OnExit();
 
     // Message handlers
-    LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);

@@ -19,15 +19,13 @@ public:
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs) override;
     virtual void OnDestroy() override;
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CViewRect(const CViewRect&) = delete;
     CViewRect& operator=(const CViewRect&) = delete;
-
-    // Message Handlers
-    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
     int m_cxClientMax;
