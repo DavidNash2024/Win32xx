@@ -69,7 +69,7 @@ void CEdgeView::StartBrowser()
                             m_controller = controller;
                             m_controller->get_CoreWebView2(&m_webView);
 
-                            // Resize WebView to fit the bounds of the parent window
+                            // Resize WebView to fit the bounds of the parent window.
                             CRect bounds = GetClientRect();
                             m_controller->put_Bounds(bounds);
 

@@ -145,7 +145,7 @@ LRESULT CDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
         CString str2;
         str2 << L"Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        MessageBox(str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -153,7 +153,7 @@ LRESULT CDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        MessageBox(str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;
@@ -190,7 +190,7 @@ LRESULT CDockDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
         CString str2;
         str2 << L"Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        MessageBox(str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -198,7 +198,7 @@ LRESULT CDockDialogsTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        MessageBox(str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

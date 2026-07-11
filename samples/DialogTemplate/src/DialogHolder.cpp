@@ -53,7 +53,7 @@ void CDialogHolder::ShowDialog(CWnd* pFrame, unsigned char* dlgArray)
 
         // Retrieve the frame window's DPI.
         HWND hFrameWnd = pFrame->GetHwnd();
-        UINT targetDpi = ::GetDpiForWindow(hFrameWnd);
+        UINT targetDpi = GetWindowDpi(hFrameWnd);
 
         // Fetch the target frame boundaries (native screen pixels)
         CRect frameRect = pFrame->GetWindowRect();
@@ -154,7 +154,7 @@ LRESULT CDialogHolder::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
         CString str2;
         str2 << L"Error: " << e.what();
-        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+        MessageBox(str1, str2, MB_ICONERROR);
     }
 
     // Catch all unhandled std::exception types.
@@ -162,7 +162,7 @@ LRESULT CDialogHolder::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Display the exception and continue.
         CString str1 = e.what();
-        ::MessageBox(nullptr, str1, L"Error: std::exception", MB_ICONERROR);
+        MessageBox(str1, L"Error: std::exception", MB_ICONERROR);
     }
 
     return 0;

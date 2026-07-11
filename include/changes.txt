@@ -95,7 +95,6 @@ Renamed CStatusBar::CreateParts  to  CStatusBar::SetParts
 
 Added VS2026 project files to samples
 Removed VS2015 project files from samples
-Renamed Explorer sample to ExplorerEx
 
 
 Version 10.2

@@ -226,8 +226,8 @@ void CMainFrame::OnInitialUpdate()
     // Add the docker for the tree view.
     DWORD style = DS_DOCKED_LEFT | DS_CLIENTEDGE | DS_NO_CLOSE | DS_NO_UNDOCK | DS_NO_CAPTION;
     const int width = DpiScaleInt(250);
-    m_pDockDialogsTree = static_cast<CDockDialogsTree*>
-                         (AddDockedChild(std::make_unique<CDockDialogsTree>(), style, width));
+    m_pDockDialogsTree = static_cast<CDockDialogsTree*>(
+        AddDockedChild(std::make_unique<CDockDialogsTree>(), style, width));
 
     Reset();
 }
@@ -443,10 +443,8 @@ LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     // Safely verify that the Dialog Holder and Dialog exist and are active.
     if (m_holder.IsWindow() && m_holder.m_dialog.IsWindow())
     {
-        // Recreate the dialog if it is on a different monitor.
-        HMONITOR frameMonitor = ::MonitorFromWindow(*this, MONITOR_DEFAULTTONEAREST);
-        HMONITOR dialogMonitor = ::MonitorFromWindow(m_holder.m_dialog, MONITOR_DEFAULTTONEAREST);
-        if (frameMonitor != dialogMonitor)
+        // Recreate the dialog if it has a different DPI.
+        if (GetWindowDpi(*this) != GetWindowDpi(m_holder.m_dialog))
             m_holder.ShowDialog(this, m_dialogArray.data());
 
         // Extract the dimensions and shift coordinates dynamically.
