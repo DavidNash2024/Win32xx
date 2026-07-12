@@ -53,17 +53,19 @@ void CView::OnDraw(CDC& dc)
     bool isPenDown = false;
 
     // Draw the lines.
-    for (const PlotPoint& p : *GetAllPoints())
+    for (const auto& point : *GetAllPoints())
     {
-        if (isPenDown)
-            dc.LineTo(p.x, p.y);
-        else
-            dc.MoveTo(p.x, p.y);
+        memDC.CreatePen(PS_SOLID, 1, point.penColor);
 
-        isPenDown = p.isPenDown;
+        if (isPenDown)
+            memDC.LineTo(point.x, point.y);
+        else
+            memDC.MoveTo(point.x, point.y);
+
+        isPenDown = point.isPenDown;
     }
 
-    // Copy from the memory DC to our painting dc
+    // Copy from the memory DC to our painting dc.
     dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
 }
 

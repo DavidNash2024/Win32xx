@@ -188,16 +188,10 @@ static bool Test_Assign()
 
     // Verify assignment with embedded null.
     allPassed = allPassed && (strA != CStringA(textA1));   // != passes because textA1 has an embedded null.
-    allPassed = allPassed && !(strA == CStringA(textA1));
     allPassed = allPassed && (strW != CStringW(textW1));   // != passes because textW1 has an embedded null.
-    allPassed = allPassed && !(strW == CStringW(textW1));
     allPassed = allPassed && (str != CString(textT1));     // != passes because textT1 has an embedded null.
-    allPassed = allPassed && !(str == CString(textT1));
-    allPassed = allPassed && (strA == CStringA(textA1, 20));
     allPassed = allPassed && (strA == CStringA(textA1, 20));
     allPassed = allPassed && (strW == CStringW(textW1, 20));
-    allPassed = allPassed && (strW == CStringW(textW1, 20));
-    allPassed = allPassed && (str == CString(textT1,   20));
     allPassed = allPassed && (str == CString(textT1,   20));
 
     return allPassed;

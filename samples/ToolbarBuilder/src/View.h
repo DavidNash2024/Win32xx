@@ -35,9 +35,11 @@ public:
 
 protected:
     virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM) override;
     virtual void    OnDraw(CDC& dc) override;
     virtual void    OnInitialUpdate() override;
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
@@ -48,10 +50,6 @@ private:
     CBitmap ResizeBitmap(const CBitmap& bitmap, double xScale, double yScale);
     void UpdateToolbar();
     bool WriteBitmapToFile(const CBitmap& bitmap, const CString& fileName);
-
-    // Message handlers.
-    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
-    LRESULT OnSize(UINT, WPARAM, LPARAM);
 
     CPager m_pager;
     CToolBar m_toolbar;
