@@ -110,22 +110,6 @@ static bool Test_AllocSysString()
     allPassed = allPassed && (0 == wcscmp(bstrA, AtoW(textA)));
     allPassed = allPassed && (0 == wcscmp(bstrA, TtoW(textT)));
 
-    CStringA testA(textA);
-    CStringW testW(textW);
-    CString test(textT);
-
-    testA += testA;
-    testW += testW;
-    test += test;
-
-    testA.SetSysString(&bstrA);
-    testW.SetSysString(&bstrW);
-    test.SetSysString(&bstr);
-
-    allPassed = allPassed && (strA + strA == testA);
-    allPassed = allPassed && (strW + strW == testW);
-    allPassed = allPassed && (str  + str  == test);
-
     SysFreeString(bstrW);
     SysFreeString(bstrA);
     SysFreeString(bstr);

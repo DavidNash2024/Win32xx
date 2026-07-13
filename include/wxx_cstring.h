@@ -537,7 +537,7 @@ namespace Win32xx
         {
             // Pass the string data and exact size to retain embedded nulls
             AtoW wideStr(m_str.data(), CP_ACP, static_cast<int>(m_str.size()));
-            const wchar_t* pWide = static_cast<const wchar_t*>(wideStr.c_str());
+            const wchar_t* pWide = wideStr.c_str();
 
             // Allocate BSTR using the calculated length from m_str
             bstr = ::SysAllocStringLen(pWide, static_cast<UINT>(m_str.size()));
@@ -1264,7 +1264,7 @@ namespace Win32xx
         if constexpr (std::is_same_v<CleanT, char> || std::is_same_v<CleanT, CHAR>)
         {
             AtoW wideStr(m_str.data(), static_cast<int>(m_str.size()));
-            const wchar_t* pWide = static_cast<const wchar_t*>(wideStr);
+            const wchar_t* pWide = wideStr;
             if (!::SysReAllocStringLen(pBstr, pWide, static_cast<UINT>(m_str.size())))
                 throw std::runtime_error("SetSysString failed");
         }

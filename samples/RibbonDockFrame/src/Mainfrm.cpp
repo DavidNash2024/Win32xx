@@ -31,7 +31,7 @@ HWND CMainFrame::Create(HWND parent)
 
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
-    LoadRegistrySettings(L"Win32++\\Ribbon Frame");
+    LoadRegistrySettings(L"Win32++\\Ribbon Dock Frame");
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);

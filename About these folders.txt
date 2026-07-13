@@ -6,4 +6,5 @@ output              A directory which contains the output of some tools.
 samples             A set of sample projects that demonstrate the various features of Win32++.
 tools               A set of useful batch files for Win32++.
 tutorials           The code for the tutorials described in the Win32++ documentation.
+UnitTests           A set of unit tests to verify parts of the Win32++ library.
 
