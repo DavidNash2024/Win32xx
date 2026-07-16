@@ -235,10 +235,13 @@ void RunTests()
     int cy = 40;
     CString str;
     CString T = "passed";
-    CString F = "failed";
+    CString F = "***failed***";
     std::cout << "\n\n***  Testing begins     ***\n";
     for (int i = 0; i < 1000; i++)
     {
+        // Set the font.
+        SetMyFont(memDC);
+
         // The detached bitmap should be valid and the correct size.
         SelectBitmapTest(memDC, cx, cy);
         CBitmap bitmap1 = memDC.DetachBitmap();

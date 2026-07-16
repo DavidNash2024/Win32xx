@@ -505,7 +505,6 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, lightgray, IDB_TOOLBAR16);
 
     // Add some extra icons for menu items
-    AddMenuIcon(IDM_FILE_NEWBROWSER, IDI_GLOBE);
     AddMenuIcon(IDM_FILE_NEWRECT, IDI_RECT);
     AddMenuIcon(IDM_FILE_NEWTEXT, IDI_TEXT);
     AddMenuIcon(IDM_FILE_NEWLIST, IDI_FILEVIEW);

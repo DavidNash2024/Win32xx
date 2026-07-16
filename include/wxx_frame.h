@@ -1973,9 +1973,9 @@ namespace Win32xx
                 if (width <= 0 || height <= 0)
                     throw CUserException();
 
-                // Check if window coordinates are completely off-screen (e.g. disconnected monitor)
-                CRect targetRect(l, t, r, b);
-                HMONITOR monitor = ::MonitorFromRect(&targetRect, MONITOR_DEFAULTTONULL);
+                CPoint midpoint((l + r) / 2, (t + b) / 2);
+                CPoint midtop((l + r) / 2, t);
+                HMONITOR monitor = ::MonitorFromPoint(midpoint, MONITOR_DEFAULTTONULL);
 
                 // Reposition safely to the primary monitor if offscreen
                 if (monitor == nullptr)
@@ -1986,8 +1986,10 @@ namespace Win32xx
                 ::GetMonitorInfo(monitor, &mi);
                 CRect workArea = mi.rcWork;
 
-                // If the window position layout is invalid or completely outside bounds, clamp it
-                if (l < workArea.left || t < workArea.top || r > workArea.right || b > workArea.bottom)
+                // Check if window is mostly within work area.
+                if ((!workArea.PtInRect(midpoint)) ||
+                    (!workArea.PtInRect(midtop)) ||
+                    (width <= 0 || height <= 0))
                 {
                     // Auto-adjust to fit work area bounds safely.
                     if (width > (DWORD)workArea.Width()) width = workArea.Width();
@@ -2013,7 +2015,7 @@ namespace Win32xx
                 // Delete the bad key from the registry.
                 const CString appKeyName = _T("Software\\") + m_keyName;
                 CRegKey appKey;
-                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_WRITE))
+                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_READ))
                     appKey.RecurseDeleteKey(_T("Frame Settings"));
 
                 values = {};

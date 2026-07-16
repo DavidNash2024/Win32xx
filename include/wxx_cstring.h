@@ -773,7 +773,7 @@ namespace Win32xx
             if constexpr (std::is_same_v<CleanT, char> || std::is_same_v<CleanT, CHAR>)
                 length = ::vsnprintf(nullptr, 0, format, argsCopy);
             else // T is wchar_t (WCHAR).
-                length = ::_vscwprintf(reinterpret_cast<const wchar_t*>(format), argsCopy);
+                length = ::_vscwprintf(format, argsCopy);
 
             va_end(argsCopy);
 
@@ -786,10 +786,16 @@ namespace Win32xx
                 }
                 else // T is wchar_t (WCHAR).
                 {
-                    ::_vsnwprintf_s(reinterpret_cast<wchar_t*>(m_str.data()),
+#if defined(_MSC_VER)  // For Microsoft compilers.
+                    ::_vsnwprintf_s(m_str.data(),
                         static_cast<size_t>(length) + 1,
                         static_cast<size_t>(length),
-                        reinterpret_cast<const wchar_t*>(format), args);
+                        format, args);
+#else
+                    ::_vsnwprintf(m_str.data(),
+                        static_cast<size_t>(length),
+                        format, args);
+#endif
                 }
             }
             else
@@ -833,7 +839,7 @@ namespace Win32xx
             else // T is WCHAR (wchar_t).
             {
                 LPWSTR temp = nullptr;
-                result = ::FormatMessageW(flags, reinterpret_cast<const wchar_t*>(format), 0, 0,
+                result = ::FormatMessageW(flags, format, 0, 0,
                     reinterpret_cast<LPWSTR>(&temp), 0, &args);
 
                 if (result == 0 || temp == nullptr)

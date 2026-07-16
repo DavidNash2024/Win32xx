@@ -31,7 +31,6 @@
 #define IDB_TOOLBAR16                   133
 
 // Icons for container tabs
-#define IDI_GLOBE                       133
 #define IDI_RECT                        134
 #define IDI_DIALOGVIEW                  135
 #define IDI_CLASSVIEW                   136
