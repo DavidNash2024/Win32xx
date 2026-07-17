@@ -52,7 +52,6 @@ namespace Win32xx
     public:
         CThreadT();
         CThreadT(PTHREADPROC pThreadProc, LPVOID pParam);
-        virtual ~CThreadT() override;
 
         // Operations
         HANDLE  CreateThread(unsigned initflag = 0, unsigned stack_size = 0,
@@ -66,6 +65,9 @@ namespace Win32xx
         BOOL    SetThreadPriority(int priority) const;
         DWORD   SuspendThread() const;
         operator HANDLE () const { return GetThread(); }
+
+    protected:
+        virtual ~CThreadT() override;
 
     private:
         CThreadT(const CThreadT&) = delete;
@@ -127,18 +129,22 @@ namespace Win32xx
 
     // CThreadT constructor.
     template <class T>
-    inline CThreadT<T>::CThreadT() : m_pThreadProc(0), m_pThreadParams(0),
-        m_thread(0), m_threadID(0)
+    inline CThreadT<T>::CThreadT() :
+        m_pThreadProc(nullptr), 
+        m_pThreadParams(nullptr),
+        m_thread(nullptr), 
+        m_threadID(0)
     {
     }
 
     // CThreadT constructor.
     template <class T>
     inline CThreadT<T>::CThreadT(PTHREADPROC pThreadProc, LPVOID pParam) :
-        m_pThreadProc(nullptr), m_pThreadParams(nullptr), m_thread(0), m_threadID(0)
+        m_pThreadProc(pThreadProc), 
+        m_pThreadParams(pParam), 
+        m_thread(nullptr), 
+        m_threadID(0)
     {
-        m_pThreadProc = pThreadProc;
-        m_pThreadParams = pParam;
     }
 
     // CThreadT destructor.
@@ -270,12 +276,18 @@ namespace Win32xx
     {
         if (GetThread() != nullptr)
         {
-            // Post a WM_QUIT to safely end the thread.
-            PostThreadMessage(WM_QUIT, 0, 0);
+            int retries = 0;
+            while (!PostThreadMessage(WM_QUIT, 0, 0) && retries < 10)
+            {
+                ::Sleep(10);
+                retries++;
+            }
         }
 
-        // Wait up to 1 second for the thread to end.
-        ::WaitForSingleObject(*this, 1000);
+            if (IsRunning())
+            {
+                ::WaitForSingleObject(*this, INFINITE); 
+            }
     }
 
     // When the GUI thread starts, it runs this function.

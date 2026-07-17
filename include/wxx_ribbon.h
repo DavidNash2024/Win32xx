@@ -91,8 +91,11 @@ namespace Win32xx
         // Other methods.
         STDMETHODIMP CreateRibbon(HWND wnd);
         void DestroyRibbon();
-        STDMETHODIMP_(Microsoft::WRL::ComPtr<IUIFramework>) GetRibbonFramework() const;
+        Microsoft::WRL::ComPtr<IUIFramework> GetRibbonFramework() const;
         STDMETHODIMP_(UINT32) GetRibbonHeight() const;
+
+    protected:
+        ~CRibbonT() = default;
 
     private:
         Microsoft::WRL::ComPtr<IUIFramework> m_pFramework = nullptr;
@@ -145,8 +148,8 @@ namespace Win32xx
         // Other methods.
         STDMETHODIMP CreateRibbon(HWND wnd);
         void DestroyRibbon();
-        CRibbonT<CRibbonFrameT> GetRibbon() const;
-        STDMETHODIMP_(Microsoft::WRL::ComPtr<IUIFramework>) GetRibbonFramework() const;
+        Microsoft::WRL::ComPtr<CRibbonT<CRibbonFrameT<T>>> GetRibbon() const;
+        Microsoft::WRL::ComPtr<IUIFramework> GetRibbonFramework() const;
         STDMETHODIMP_(UINT32) GetRibbonHeight() const;
 
     protected:
@@ -161,7 +164,7 @@ namespace Win32xx
         CRibbonFrameT& operator=(const CRibbonFrameT&) = delete;
 
         std::vector<Microsoft::WRL::ComPtr<CRecentFiles>> m_recentFiles;
-        CRibbonT<CRibbonFrameT> m_ribbon;
+        Microsoft::WRL::ComPtr<CRibbonT<CRibbonFrameT<T>>> m_ribbon; 
     };
 
     /////////////////////////////////////////////////
@@ -247,10 +250,6 @@ namespace Win32xx
     inline STDMETHODIMP CRibbonT<T>::OnCreateUICommand(UINT32 commandId,
         __in UI_COMMANDTYPE typeID, __deref_out IUICommandHandler** ppCommandHandler)
     {
-        // By default we use the single command handler provided as part of CRibbon.
-        // Override this function to account for multiple command handlers.
-
-
         return m_pWnd->OnCreateUICommand(commandId, typeID, ppCommandHandler);
     }
 
@@ -307,7 +306,8 @@ namespace Win32xx
     template <class T>
     inline void CRibbonT<T>::DestroyRibbon()
     {
-        if (m_pFramework) {
+        if (m_pFramework)
+        {
             m_pFramework->Destroy();
         }
 
@@ -318,19 +318,18 @@ namespace Win32xx
     // Retrieves a pointer to IUIFramework interface for the Windows Ribbon framework,
     // assigned when the ribbon is created.
     template <class T>
-    inline STDMETHODIMP_(Microsoft::WRL::ComPtr<IUIFramework>) CRibbonT<T>::GetRibbonFramework() const
+    inline Microsoft::WRL::ComPtr<IUIFramework> CRibbonT<T>::GetRibbonFramework() const
     {
-        return m_pFramework.Get();
+        return m_pFramework;
     }
 
-    // Retrieves the height of the ribbon.
     template <class T>
     inline STDMETHODIMP_(UINT32) CRibbonT<T>::GetRibbonHeight() const
     {
         Microsoft::WRL::ComPtr<IUIRibbon> pRibbon;
         UINT32 ribbonHeight = 0;
 
-        if (SUCCEEDED(m_pFramework->GetView(0, IID_PPV_ARGS(&pRibbon))))
+        if (m_pFramework && SUCCEEDED(m_pFramework->GetView(0, IID_PPV_ARGS(&pRibbon))))
         {
             if (FAILED(pRibbon->GetHeight(&ribbonHeight)))
                 ribbonHeight = 0;
@@ -349,27 +348,31 @@ namespace Win32xx
     template <class T>
     inline CRibbonFrameT<T>::CRibbonFrameT()
     {
-        m_ribbon.SetWindow(this);
+        m_ribbon = Microsoft::WRL::Make<CRibbonT<CRibbonFrameT<T>>>();
+        if (m_ribbon)
+        {
+            m_ribbon->SetWindow(this);
+        }
     }
 
     // Creates the ribbon.
     template <class T>
-    inline STDMETHODIMP CRibbonFrameT<T>::CreateRibbon(HWND wnd)
+    inline HRESULT CRibbonFrameT<T>::CreateRibbon(HWND wnd)
     {
-        return m_ribbon.CreateRibbon(wnd);
+        return m_ribbon ? m_ribbon->CreateRibbon(wnd) : E_FAIL;
     }
 
     // Destroys the ribbon.
     template <class T>
     inline void CRibbonFrameT<T>::DestroyRibbon()
     {
-        m_ribbon.DestroyRibbon();
+        if (m_ribbon) m_ribbon->DestroyRibbon();
     }
 
     // Retrieves a pointer to both the IUIApplication and IUICommandHandler
     // interfaces for the Windows Ribbon framework.
     template <class T>
-    inline CRibbonT<CRibbonFrameT<T>> CRibbonFrameT<T>::GetRibbon() const
+    inline Microsoft::WRL::ComPtr<CRibbonT<CRibbonFrameT<T>>> CRibbonFrameT<T>::GetRibbon() const
     {
         return m_ribbon;
     }
@@ -377,16 +380,16 @@ namespace Win32xx
     // Retrieves a pointer to IUIFramework interface for the Windows Ribbon framework,
     // assigned when the ribbon is created.
     template <class T>
-    inline STDMETHODIMP_(Microsoft::WRL::ComPtr<IUIFramework>) CRibbonFrameT<T>::GetRibbonFramework() const
+    inline Microsoft::WRL::ComPtr<IUIFramework> CRibbonFrameT<T>::GetRibbonFramework() const
     {
-        return m_ribbon.GetRibbonFramework();
+        return m_ribbon ? m_ribbon->GetRibbonFramework() : nullptr;
     }
 
     // Retrieves the height of the ribbon.
     template <class T>
-    inline STDMETHODIMP_(UINT32) CRibbonFrameT<T>::GetRibbonHeight() const
+    inline UINT32 CRibbonFrameT<T>::GetRibbonHeight() const
     {
-        return m_ribbon.GetRibbonHeight();
+        return m_ribbon ? m_ribbon->GetRibbonHeight() : 0;
     }
 
     // Responds to execute events on commands bound to the Command handler.
@@ -402,7 +405,6 @@ namespace Win32xx
     inline CRect CRibbonFrameT<T>::GetViewRect() const
     {
         CRect clientRect = T::GetClientRect();
-
         clientRect.top += GetRibbonHeight();
 
         if (T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible())
@@ -410,9 +412,8 @@ namespace Win32xx
 
         if (T::GetReBar().IsWindow() && T::GetReBar().IsWindowVisible())
             clientRect = T::ExcludeChildRect(clientRect, T::GetReBar());
-        else
-            if (T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible())
-                clientRect = T::ExcludeChildRect(clientRect, T::GetToolBar());
+        else if (T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible())
+            clientRect = T::ExcludeChildRect(clientRect, T::GetToolBar());
 
         return clientRect;
     }
@@ -424,7 +425,7 @@ namespace Win32xx
     template <class T>
     inline int CRibbonFrameT<T>::OnCreate(CREATESTRUCT& cs)
     {
-        if (GetWinVersion() >= 2601)    // WinVersion >= Windows 7
+        if (GetWinVersion() >= 2601) // Windows 7 or newer
         {
             if (SUCCEEDED(CreateRibbon(*this)))
             {
@@ -441,7 +442,7 @@ namespace Win32xx
         T::OnCreate(cs);
         if (GetRibbonFramework())
         {
-            T::SetMenu(nullptr);              // Disable the window menu.
+            T::SetMenu(nullptr); 
             T::SetFrameMenu(0);
         }
 
@@ -462,10 +463,10 @@ namespace Win32xx
     inline STDMETHODIMP CRibbonFrameT<T>::OnCreateUICommand(UINT32,
         __in UI_COMMANDTYPE, __deref_out IUICommandHandler** ppCommandHandler)
     {
-        // By default we use the single command handler provided as part of CRibbon.
-        // Override this function to account for multiple command handlers.
+        if (!m_ribbon) return E_FAIL;
 
-        return m_ribbon.QueryInterface(IID_PPV_ARGS(ppCommandHandler));
+        // Pass the request back to our WRL Ribbon instance
+        return m_ribbon.CopyTo(ppCommandHandler);
     }
 
     // // Called for each Command specified in the Windows Ribbon framework markup
@@ -480,7 +481,7 @@ namespace Win32xx
     // OnViewChanged is called when the ribbon has changed.
     template <class T>
     inline STDMETHODIMP CRibbonFrameT<T>::OnViewChanged(UINT32,
-        UI_VIEWTYPE typeId, IUIApplication::IUnknown*, UI_VIEWVERB verb, INT32)
+        UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32)
     {
         HRESULT result = E_NOTIMPL;
 

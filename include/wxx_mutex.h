@@ -105,8 +105,8 @@ namespace Win32xx
     class CMutex
     {
     public:
-        CMutex(BOOL isInitiallySignaled = FALSE, LPCTSTR name = nullptr,
-            LPSECURITY_ATTRIBUTES pAttributes = nullptr);
+        CMutex(BOOL isInitiallyOwned = FALSE, LPCTSTR name = nullptr,
+            LPSECURITY_ATTRIBUTES attributes = nullptr);
 
         HANDLE GetHandle() const { return m_mutex; }
         operator HANDLE() const  { return m_mutex; }
@@ -127,7 +127,7 @@ namespace Win32xx
     class CSemaphore
     {
     public:
-        CSemaphore(LONG initialCount, LONG maxCount, LPCTSTR name,
+        CSemaphore(LONG initialCount, LONG maxCount, LPCTSTR name = nullptr,
             LPSECURITY_ATTRIBUTES attributes = nullptr);
 
         HANDLE GetHandle() const { return m_semaphore; }
@@ -200,18 +200,18 @@ namespace Win32xx
     //  attributes - Pointer to a SECURITY_ATTRIBUTES structure that determines
     //               whether the returned handle can be inherited by child
     //               processes. If attributes is nullptr, the handle cannot be inherited.
-    inline CMutex::CMutex(BOOL isInitiallySignaled, LPCTSTR name,
-                            LPSECURITY_ATTRIBUTES attributes)
+    inline CMutex::CMutex(BOOL isInitiallyOwned, LPCTSTR name,
+        LPSECURITY_ATTRIBUTES attributes)
     : m_mutex(nullptr)
     {
-        m_mutex = ::CreateMutex(attributes, isInitiallySignaled, name);
+        m_mutex = ::CreateMutex(attributes, isInitiallyOwned, name);
         if (m_mutex == nullptr)
             throw CResourceException(GetApp()->MsgMtxMutex());
     }
 
 
     //////////////////////////////////////
-    // CMutex member function definitions.
+    // CSemaphore member function definitions.
     //
 
     // Creates a named or unnamed semaphore.

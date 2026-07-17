@@ -405,11 +405,11 @@ namespace Win32xx
 
             switch (result)
             {
-            case WSA_WAIT_EVENT_0 + 1: // Stop event signaled
+            case WSA_WAIT_EVENT_0 + 1: // Stop event signalled
                 keepRunning = false;
                 break;
 
-            case WSA_WAIT_EVENT_0:     // Network event signaled
+            case WSA_WAIT_EVENT_0:     // Network event signalled
                 if (SOCKET_ERROR == ::WSAEnumNetworkEvents(localSocket, allEvents[0], &networkEvents))
                 {
                     TRACE("WSAEnumNetworkEvents failed\n");
@@ -597,7 +597,7 @@ namespace Win32xx
     {
         ADDRINFOT hints = {};
         hints.ai_family = AF_UNSPEC;     // Automatically support both IPv4 and IPv6
-        hints.ai_socktype = SOCK_DGRAM;  // Default for SendTo/UDP topologies
+        hints.ai_socktype = SOCK_DGRAM;  // Default for SendTo/UDP typologies
         hints.ai_flags = AI_NUMERICHOST;
 
         CString portName;
