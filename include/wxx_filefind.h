@@ -80,7 +80,7 @@ namespace Win32xx
 {
 
     ////////////////////////////////////////////////////////
-    // CFindFile finds one or more files matching the string
+    // CFileFind finds one or more files matching the string
     // specified by FindFirstFile.
     class CFileFind
     {
