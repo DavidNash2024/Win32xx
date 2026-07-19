@@ -4915,7 +4915,7 @@ namespace Win32xx
     {
         assert(m_pData->dc != nullptr);
         if (count == -1)
-            count = lstrlen (string);
+            count = static_cast<int>(_tcslen(string));
 
         return ::TextOut(m_pData->dc, x, y, string, count);
     }

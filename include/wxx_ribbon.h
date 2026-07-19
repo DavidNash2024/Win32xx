@@ -94,9 +94,6 @@ namespace Win32xx
         Microsoft::WRL::ComPtr<IUIFramework> GetRibbonFramework() const;
         STDMETHODIMP_(UINT32) GetRibbonHeight() const;
 
-    protected:
-        ~CRibbonT() = default;
-
     private:
         Microsoft::WRL::ComPtr<IUIFramework> m_pFramework = nullptr;
         T* m_pWnd;
@@ -164,7 +161,7 @@ namespace Win32xx
         CRibbonFrameT& operator=(const CRibbonFrameT&) = delete;
 
         std::vector<Microsoft::WRL::ComPtr<CRecentFiles>> m_recentFiles;
-        Microsoft::WRL::ComPtr<CRibbonT<CRibbonFrameT<T>>> m_ribbon; 
+        Microsoft::WRL::ComPtr<CRibbonT<CRibbonFrameT<T>>> m_ribbon;
     };
 
     /////////////////////////////////////////////////
@@ -442,7 +439,7 @@ namespace Win32xx
         T::OnCreate(cs);
         if (GetRibbonFramework())
         {
-            T::SetMenu(nullptr); 
+            T::SetMenu(nullptr);
             T::SetFrameMenu(0);
         }
 

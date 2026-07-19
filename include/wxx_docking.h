@@ -2818,7 +2818,7 @@ namespace Win32xx
 
         CClientDC dc(*this);
         dc.CreateFontIndirect(lf);
-        CSize textSize = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
+        CSize textSize = dc.GetTextExtentPoint32(_T("Text"), static_cast<int>(_tcslen(_T("Text"))));
         return textSize.cy;
     }
 
@@ -4909,7 +4909,8 @@ namespace Win32xx
             CSize tempSize;
             CClientDC dc(*this);
             dc.SelectObject(GetTabFont());
-            tempSize = dc.GetTextExtentPoint32(it->tabText, lstrlen(it->tabText));
+            tempSize = dc.GetTextExtentPoint32(it->tabText,
+                static_cast<int>(_tcslen(it->tabText)));
             if (tempSize.cx > sz.cx)
                 sz = tempSize;
         }

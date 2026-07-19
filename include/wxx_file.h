@@ -480,19 +480,26 @@ namespace Win32xx
     // Note: this function does not open or create the specified file.
     inline void CFile::SetFilePath(LPCTSTR fileName)
     {
-        LPTSTR pShortFileName = nullptr;
+        LPTSTR pFileName = nullptr;
         DWORD buffSize = ::GetFullPathName(fileName, 0, nullptr, nullptr);
 
         if (buffSize > 0)
         {
-            // Request safe internal buffer tracking from CString
-            ::GetFullPathName(fileName, buffSize, m_filePath.GetBuffer(static_cast<int>(buffSize)), &pShortFileName);
-            m_filePath.ReleaseBuffer();
+            LPTSTR pBuffer = m_filePath.GetBuffer(buffSize);
+            ::GetFullPathName(fileName, buffSize, pBuffer, &pFileName);
 
-            if (pShortFileName != nullptr)
-                m_fileName = pShortFileName;
+            // Extract the filename before releasing the buffer.
+            if (pFileName != nullptr)
+                m_fileName = pFileName;
             else
                 m_fileName = _T("");
+
+            m_filePath.ReleaseBuffer();
+        }
+        else
+        {
+            m_filePath = _T("");
+            m_fileName = _T("");
         }
     }
 

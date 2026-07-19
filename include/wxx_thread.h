@@ -130,9 +130,9 @@ namespace Win32xx
     // CThreadT constructor.
     template <class T>
     inline CThreadT<T>::CThreadT() :
-        m_pThreadProc(nullptr), 
+        m_pThreadProc(nullptr),
         m_pThreadParams(nullptr),
-        m_thread(nullptr), 
+        m_thread(nullptr),
         m_threadID(0)
     {
     }
@@ -140,9 +140,9 @@ namespace Win32xx
     // CThreadT constructor.
     template <class T>
     inline CThreadT<T>::CThreadT(PTHREADPROC pThreadProc, LPVOID pParam) :
-        m_pThreadProc(pThreadProc), 
-        m_pThreadParams(pParam), 
-        m_thread(nullptr), 
+        m_pThreadProc(pThreadProc),
+        m_pThreadParams(pParam),
+        m_thread(nullptr),
         m_threadID(0)
     {
     }
@@ -286,7 +286,7 @@ namespace Win32xx
 
             if (IsRunning())
             {
-                ::WaitForSingleObject(*this, INFINITE); 
+                ::WaitForSingleObject(*this, INFINITE);
             }
     }
 

@@ -485,8 +485,8 @@ static bool Test_Format()
     testA.FormatMessage("int = %1!d!, text = %2!s!", 20,  "some text");
     strW.Format(L"int = %d, text = %s", 20,  L"some text");
     testW.FormatMessage(L"int = %1!d!, text = %2!s!", 20, L"some text");
-    str.Format(_T("int = %d, text = %s"), 20, "some text");
-    test.FormatMessage(_T("int = %1!d!, text = %2!s!"), 20, "some text");
+    str.Format(_T("int = %d, text = %s"), 20, _T("some text"));
+    test.FormatMessage(_T("int = %1!d!, text = %2!s!"), 20, _T("some text"));
 
     bool allPassed = true;
     allPassed = allPassed && (strA == testA);

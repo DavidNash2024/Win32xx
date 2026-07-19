@@ -1919,11 +1919,6 @@ namespace Win32xx
                     if (pathName.GetLength() > 0)
                         mruEntries.push_back(pathName);
                 }
-                else
-                {
-                    TRACE(_T("\n*** WARNING: LoadRegistryMRUSettings: \
-                        QueryStringValue failed. ***\n"));
-                }
             }
 
             // Successfully processed valid entries, so store them.

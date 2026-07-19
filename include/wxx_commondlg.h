@@ -1265,12 +1265,12 @@ namespace Win32xx
     // The parameters are set to sensible values.
     inline void CFindReplaceDialog::SetParameters(const FINDREPLACE& fr)
     {
-        int maxChars = 128;
+        size_t maxChars = 128;
 
         if (fr.lpstrFindWhat)
         {
             m_findWhat = fr.lpstrFindWhat;
-            maxChars = std::max(maxChars, lstrlen(fr.lpstrFindWhat));
+            maxChars = std::max(maxChars, _tcslen(fr.lpstrFindWhat));
         }
         else
             m_findWhat.Empty();
@@ -1278,7 +1278,7 @@ namespace Win32xx
         if (fr.lpstrReplaceWith)
         {
             m_replaceWith = fr.lpstrReplaceWith;
-            maxChars = std::max(maxChars, lstrlen(fr.lpstrReplaceWith));
+            maxChars = std::max(maxChars, _tcslen(fr.lpstrReplaceWith));
         }
         else
             m_replaceWith.Empty();
