@@ -31,16 +31,6 @@ CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
-[Unit5]
-FileName=..\src\Test.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit7]
 FileName=..\src\View.cpp
 CompileCpp=1
@@ -70,28 +60,8 @@ ProductVersion=
 AutoIncBuildNr=0
 SyncProduct=0
 
-[Unit8]
-FileName=..\src\View.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit9]
-FileName=..\src\Test.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit10]
-FileName=..\src\Test.cpp
+[Unit1]
+FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -110,18 +80,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit1]
-FileName=..\src\main.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit3]
-FileName=..\src\Resource.rc
+FileName=..\src\resource.rc
 Folder=Resource
 Compile=1
 Link=0
@@ -130,7 +90,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\src\stdafx.h
+FileName=..\src\pch.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -139,8 +99,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit5]
+FileName=..\src\test.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit6]
-FileName=..\src\Test.h
+FileName=..\src\test.h
 CompileCpp=1
 Folder=Header
 Compile=1

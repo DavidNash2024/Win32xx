@@ -72,9 +72,9 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../src/CRegkey Test.cpp" />
-		<Unit filename="../src/Test.h" />
-		<Unit filename="../src/stdafx.h" />
+		<Unit filename="../src/test.cpp" />
+		<Unit filename="../src/test.h" />
+		<Unit filename="../src/pch.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

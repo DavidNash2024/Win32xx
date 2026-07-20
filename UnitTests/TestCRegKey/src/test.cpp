@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include <iostream>  // defines std::wcout
 
 bool RunCreateKeyTest(CRegKey& key)
@@ -52,25 +52,25 @@ bool RunValueTests(CRegKey& workerKey)
     DWORD dwordValue = 256;
     ULONGLONG qwordValue = 0xFFFFFFFFFFFF;
 
-    LONG status = workerKey.SetBOOLValue(L"BOOL value", BOOLValue);
+    LONG status = workerKey.SetBOOLValue(_T("BOOL value"), BOOLValue);
     bool pass = (status == ERROR_SUCCESS);
-    status = workerKey.SetBoolValue(L"bool value", boolValue);
+    status = workerKey.SetBoolValue(_T("bool value"), boolValue);
     pass = pass && (status == ERROR_SUCCESS);
-    status = workerKey.SetDWORDValue(L"DWORD value", dwordValue);
+    status = workerKey.SetDWORDValue(_T("DWORD value"), dwordValue);
     pass = pass && (status == ERROR_SUCCESS);
-    status = workerKey.SetQWORDValue(L"QWORD value", qwordValue);
+    status = workerKey.SetQWORDValue(_T("QWORD value"), qwordValue);
     pass = pass && (status == ERROR_SUCCESS);
 
-    status = workerKey.QueryBOOLValue(L"BOOL value", BOOLValue);
+    status = workerKey.QueryBOOLValue(_T("BOOL value"), BOOLValue);
     pass = pass && (status == ERROR_SUCCESS);
     pass = pass && (BOOLValue == TRUE);
-    status = workerKey.QueryBoolValue(L"bool value", boolValue);
+    status = workerKey.QueryBoolValue(_T("bool value"), boolValue);
     pass = pass && (status == ERROR_SUCCESS);
     pass = pass && (boolValue == true);
-    status = workerKey.QueryDWORDValue(L"DWORD value", dwordValue);
+    status = workerKey.QueryDWORDValue(_T("DWORD value"), dwordValue);
     pass = pass && (status == ERROR_SUCCESS);
     pass = pass && (dwordValue == 256);
-    status = workerKey.QueryQWORDValue(L"QWORD Value", qwordValue);
+    status = workerKey.QueryQWORDValue(_T("QWORD Value"), qwordValue);
     pass = pass && (status == ERROR_SUCCESS);
     pass = pass && (qwordValue == 0xFFFFFFFFFFFF);
 

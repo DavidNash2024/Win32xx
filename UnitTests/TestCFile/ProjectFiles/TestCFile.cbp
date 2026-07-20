@@ -72,8 +72,9 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../src/Test.cpp" />
-		<Unit filename="../src/Test.h" />
+		<Unit filename="../src/pch.h" />
+		<Unit filename="../src/test.cpp" />
+		<Unit filename="../src/test.h" />
 		<Unit filename="../src/main.cpp" />
 		<Extensions />
 	</Project>

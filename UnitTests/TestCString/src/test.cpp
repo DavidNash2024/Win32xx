@@ -1,8 +1,8 @@
 
-#include "stdafx.h"
-#include <iostream>
-#include "Test.h"
+#include "pch.h"
 #include "resource.h"
+#include "test.h"
+#include <iostream>
 
 
 constexpr LPCWSTR textW =   L"0123456789abcdefg";

@@ -1,7 +1,7 @@
-//#include "stdafx.h"
-#include "wxx_wincore.h"
-#include <iostream>
+
+#include "pch.h"
 #include "Test.h"
+#include <iostream>
 
 #ifdef _UNICODE
 #define tcout std::wcout

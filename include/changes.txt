@@ -1,11 +1,12 @@
 Version 10.3
 ============
-This version uses features from C++17 and updates the Win32++ framework.
-Some Win32++ classes have been depreciated.
+This version uses features available in C++17 and updates the Win32++
+library. CRegKey, CString and support for the ribbon framework have
+been updated. CPrintDialogEx and CWebBroswer have been depreciated.
 
 The samples that ship with Win32++ have also been updated. Samples with an
 internet browser now use the Microsoft's Edge Browser WebView2 control.
-The Help About in most of the samples display the Win32++ version.
+The Help About in many of the samples also displays the Win32++ version.
 
 New Features and Enhancements
 -----------------------------
@@ -20,9 +21,9 @@ New Features and Enhancements
   std::wstring to a CString.
 
 * Updated the CRegKey class.
-  QueryStringValue and SetStringValue now use a CString parameter.
-  QueryMultiStringValue and SetMultiStringValue now use a vector of CString
-  parameter.
+  QueryStringValue and SetStringValue can now use a CString parameter.
+  QueryMultiStringValue and SetMultiStringValue can now use a vector of
+  CString parameter.
 
 * Updated support for the Windows Ribbon Framework.
   The CRibbon class had been replaced by the CRibbonT class template. The code
@@ -60,10 +61,14 @@ New Features and Enhancements
   customized print dialog, should we need to extend the capabilities of
   CPrintDialog.
 
+* Added a set of unit tests.
+  These test verify the correct operation of components of the Win32++ library.
+  They also demonstrate how these components can be used.
+
 Changes in detail
 -----------------
-Added BrowserEx                          - sample
-Added CRibbonT                           - class template
+Added BrowserEx                          - sample (replaces Browser)
+Added CRibbonT                           - class template (replaces CRibbon)
 Added CAtoA::GetLength                   - member function
 Added CAtoBSTR::GetLength                - member function
 Added CAtoW::GetLength                   - member function
@@ -78,12 +83,12 @@ Added ToCString(const std::wstring& str) - global function
 Added CWtoA::GetLength                   - member function
 Added CWtoBSTR:: GetLength               - member function
 Added CWtoW::GetLength                   - member function
+Added CRegKey::QueryMultiStringValue     - additional overload
+Added CRegKey::QueryStringValue          - additional overload
+Added CRegKey::SetMultiStringValue       - additional overload
+Added CRegKey::SetStringValue            - additional overload
 Deprecated CPrintDialogEx                - class
 Deprecated CWebBrowser                   - class
-Modified CRegKey::QueryMultiStringValue  - modified parameters
-Modified CRegKey::QueryStringValue       - modified parameters
-Modified CRegKey::SetMultiStringValue    - modified parameters
-Modified CRegKey::SetStringValue         - modified parameters
 Modified CStatusBar::GetParts            - added optional parameters
 Removed Browser                          - sample
 Removed BrowserATL                       - sample

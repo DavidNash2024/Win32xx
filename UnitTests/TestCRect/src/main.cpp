@@ -3,11 +3,10 @@
 // main.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
+#include "test.h"
 #include <iostream>
-#include "Test.h"
 
-//#include <vld.h>
 
 int main()
 {

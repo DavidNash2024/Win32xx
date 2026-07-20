@@ -1,7 +1,7 @@
 
-#include "stdafx.h"
-#include <iostream>
+#include "pch.h"
 #include "Test.h"
+#include <iostream>
 
 
 void RunTests()
