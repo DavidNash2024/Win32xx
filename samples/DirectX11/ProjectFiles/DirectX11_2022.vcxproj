@@ -429,7 +429,7 @@
     <ClInclude Include="..\src\DXApp.h" />
     <ClInclude Include="..\src\DXView.h" />
     <CLInclude Include="..\src\resource.h" />
-    <ResourceCompile Include="..\src\Resource.rc" />
+    <ResourceCompile Include="..\src\resource.rc" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

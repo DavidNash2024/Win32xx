@@ -134,14 +134,14 @@
 		<Unit filename="../src/MyButton.h" />
 		<Unit filename="../src/MyScrollbar.cpp" />
 		<Unit filename="../src/MyScrollbar.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/stdafx.cpp" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

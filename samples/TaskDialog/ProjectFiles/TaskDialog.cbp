@@ -122,7 +122,7 @@
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/MyTaskDialog.cpp" />
 		<Unit filename="../src/MyTaskDialog.h" />
-		<Unit filename="../src/stdafx.cpp" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/TaskDialog.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -130,7 +130,7 @@
 		<Unit filename="../src/TaskDialogApp.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

@@ -2,7 +2,7 @@
 // DockingApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DockingApp.h"
 
 ///////////////////////////////////

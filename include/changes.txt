@@ -697,7 +697,7 @@ New Features and Enhancements
 
 * The values for WINVER and related macros now default to values suitable for
   Windows 10 and Windows 11. Different values can be specified before including
-  wincore.h if required. These values can be specified in stdafx.h by including
+  wincore.h if required. These values can be specified in pch.h by including
   targetver.h as shown in the samples. Visual Studio 6 will require WINVER to
   be set to values appropriate for Win95 or Win98.
 

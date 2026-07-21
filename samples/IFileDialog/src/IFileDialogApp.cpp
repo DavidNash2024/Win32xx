@@ -2,7 +2,7 @@
 // IFileDialogApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "IFileDialogApp.h"
 #include "resource.h"
 

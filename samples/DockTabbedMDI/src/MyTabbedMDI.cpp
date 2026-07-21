@@ -2,7 +2,7 @@
 // MyTabbedMDI.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyTabbedMDI.h"
 #include "Classes.h"
 #include "Files.h"

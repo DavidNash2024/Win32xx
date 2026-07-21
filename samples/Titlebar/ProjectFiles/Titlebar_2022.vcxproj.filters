@@ -27,7 +27,7 @@
     <ClCompile Include="..\src\View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\stdafx.cpp">
+    <ClCompile Include="..\src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,7 +182,7 @@
     <ClInclude Include="..\src\View.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\stdafx.h">
+    <ClInclude Include="..\src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_menumetrics.h">
@@ -217,7 +217,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\src\Resource.rc">
+    <ResourceCompile Include="..\src\resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

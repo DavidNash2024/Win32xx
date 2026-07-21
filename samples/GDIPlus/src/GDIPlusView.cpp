@@ -2,7 +2,7 @@
 // GDIPlusView.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "GDIPlusView.h"
 
 using namespace Gdiplus;

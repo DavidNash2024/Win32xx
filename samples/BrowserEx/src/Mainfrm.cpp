@@ -2,7 +2,7 @@
 // Mainfrm.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Mainfrm.h"
 #include "resource.h"
 #include "UserMessages.h"
@@ -156,7 +156,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 // Respond to a change in DPI. This function is only called when using
 // Per Monitor DPI Awareness, version 2. This is specified by loading
-// the appropriate manifest in the resource script (Resource.rc).
+// the appropriate manifest in the resource script (resource.rc).
 LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Note: We destroy and recreate the ComboBoxEx control when the DPI changes.

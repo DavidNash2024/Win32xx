@@ -2,7 +2,7 @@
 // Splash.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Splash.h"
 #include "resource.h"
 

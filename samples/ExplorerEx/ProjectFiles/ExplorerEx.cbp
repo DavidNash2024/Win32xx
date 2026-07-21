@@ -131,7 +131,7 @@
 		<Unit filename="../src/MyListView.h" />
 		<Unit filename="../src/MyTreeView.cpp" />
 		<Unit filename="../src/MyTreeView.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/RightPane.cpp" />
@@ -140,7 +140,7 @@
 		<Unit filename="../src/ShellWrapper.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

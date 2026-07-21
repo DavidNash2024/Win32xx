@@ -2,7 +2,7 @@
 // CoverImage.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 
 #if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
 #pragma warning (disable : 4458) // disable warning: declaration hides class member.

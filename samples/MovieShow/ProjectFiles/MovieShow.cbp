@@ -87,7 +87,7 @@
 		<Unit filename="../src/MovieShowApp.h" />
 		<Unit filename="../src/MyDialog.cpp" />
 		<Unit filename="../src/MyDialog.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/SearchDialog.cpp" />
@@ -96,13 +96,13 @@
 		<Unit filename="../src/Splash.h" />
 		<Unit filename="../src/SplashThread.cpp" />
 		<Unit filename="../src/SplashThread.h" />
-		<Unit filename="../src/stdafx.cpp" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/Tree.cpp" />
 		<Unit filename="../src/Tree.h" />
 		<Unit filename="../src/UserMessages.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h" />
+		<Unit filename="../src/pch.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

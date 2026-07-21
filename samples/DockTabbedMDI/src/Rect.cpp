@@ -2,7 +2,7 @@
 // Rect.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Rect.h"
 #include "resource.h"
 

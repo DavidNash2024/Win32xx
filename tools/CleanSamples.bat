@@ -23,7 +23,7 @@ FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Embarcadero"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__astcache"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__recovery"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\%%f"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\src\stdafx.h.gch"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\src\pch.h.gch"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\src\__history"
 
 ::Remove files

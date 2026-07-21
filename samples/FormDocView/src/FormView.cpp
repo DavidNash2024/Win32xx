@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // FormView.cpp
 
-#include "stdafx.h"
+#include "pch.h"
 #include "FormView.h"
 #include "resource.h"
 

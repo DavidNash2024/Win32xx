@@ -92,7 +92,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\src\Resource.rc
+FileName=..\src\resource.rc
 CompileCpp=1
 Folder=Resource
 Compile=1
@@ -141,7 +141,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit10]
-FileName=..\src\stdafx.cpp
+FileName=..\src\pch.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -151,7 +151,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\src\stdafx.h
+FileName=..\src\pch.h
 CompileCpp=1
 Folder=Header
 Compile=1

@@ -2,7 +2,7 @@
 // SimpleMDIChild.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "SimpleMDIChild.h"
 #include "resource.h"
 

@@ -2,7 +2,7 @@
 // NewDialog.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "NewDialog.h"
 #include "resource.h"
 

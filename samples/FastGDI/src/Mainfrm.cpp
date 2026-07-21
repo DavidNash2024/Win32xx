@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////
 // Mainfrm.cpp
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Mainfrm.h"
 #include "ColourAdjust.h"
 #include "resource.h"
@@ -135,7 +135,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
 // This function is only called when using Per Monitor DPI Awareness. This is
-// specified by loading the appropriate manifest in the resource script (Resource.rc).
+// specified by loading the appropriate manifest in the resource script (resource.rc).
 LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     // Save the view's rectangle and disable scrolling.

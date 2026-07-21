@@ -65,7 +65,7 @@
 			<Add alias="All" targets="Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
 		<Unit filename="../src/main.cpp" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 		</Unit>
 		<Extensions />

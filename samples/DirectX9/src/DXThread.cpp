@@ -2,7 +2,7 @@
 // DXThread.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DXApp.h"
 
 

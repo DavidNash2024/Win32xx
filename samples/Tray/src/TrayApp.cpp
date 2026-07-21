@@ -2,7 +2,7 @@
 // SimpleApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "TrayApp.h"
 
 /////////////////////////////////

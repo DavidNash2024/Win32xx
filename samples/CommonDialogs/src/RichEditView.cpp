@@ -4,7 +4,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "RichEditView.h"
 #include "MyPrintDialog.h"
 #include "PrintInfo.h"

@@ -64,8 +64,6 @@
 #ifndef _WIN32XX_FOLDERDIALOGEX_H_
 #define _WIN32XX_FOLDERDIALOGEX_H_
 
-#include <wrl/client.h> // For Microsoft::WRL::ComPtr
-
 
 namespace Win32xx
 {
@@ -112,7 +110,7 @@ namespace Win32xx
         m_folderName.Empty();
 
         // Create the IFileDialog interface.
-        Microsoft::WRL::ComPtr<IFileOpenDialog> pFileDialog;
+        IFileDialog* pFileDialog;
         if (SUCCEEDED(::CoCreateInstance(CLSID_FileOpenDialog, nullptr,
             CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pFileDialog))))
         {
@@ -138,11 +136,12 @@ namespace Win32xx
 
                         if (pSHCreateItemFromParsingName != nullptr)
                         {
-                            Microsoft::WRL::ComPtr<IShellItem> pFolder;
+                            IShellItem* pFolder = nullptr;
                             if (SUCCEEDED(pSHCreateItemFromParsingName(m_initialFolderName,
                                 nullptr, IID_PPV_ARGS(&pFolder))))
                             {
-                                pFileDialog->SetFolder(pFolder.Get());
+                                pFileDialog->SetFolder(pFolder);
+                                pFolder->Release();
                             }
                         }
                     }
@@ -155,7 +154,7 @@ namespace Win32xx
                 // Display the dialog.
                 if (SUCCEEDED(pFileDialog->Show(hParent)))
                 {
-                    Microsoft::WRL::ComPtr<IShellItem> pShellItem;
+                    IShellItem* pShellItem;
                     if (SUCCEEDED(pFileDialog->GetResult(&pShellItem)))
                     {
                         PWSTR pFilePath = nullptr;
@@ -167,8 +166,12 @@ namespace Win32xx
                             result = IDOK;
                         }
                     }
+
+                    pShellItem->Release();
                 }
             }
+
+            pFileDialog->Release();
         }
         else
             throw CWinException(GetApp()->MsgWndDialog());

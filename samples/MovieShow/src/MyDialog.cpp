@@ -2,7 +2,7 @@
 // CViewDialog.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyDialog.h"
 #include "resource.h"
 
@@ -77,7 +77,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 // Respond to a change in DPI. This function is only called when using
 // Per Monitor DPI Awareness, version 2. This is specified by loading
-// the appropriate manifest in the resource script (Resource.rc).
+// the appropriate manifest in the resource script (resource.rc).
 LRESULT CViewDialog::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDialogFonts();

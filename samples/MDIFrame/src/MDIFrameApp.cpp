@@ -2,7 +2,7 @@
 // MDIFrameApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MDIFrameApp.h"
 
 ////////////////////////////////////

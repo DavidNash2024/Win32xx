@@ -2,7 +2,7 @@
 // D2DApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "D2DApp.h"
 
 

@@ -2,7 +2,7 @@
 // SplitterMDIChild.cpp
 //  Definitions for the CSimpleView and CSplitterMDIChild classes
 
-#include "stdafx.h"
+#include "pch.h"
 #include "SplitterMDIChild.h"
 #include "Files.h"
 #include "Output.h"

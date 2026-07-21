@@ -4,7 +4,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ListBoxDlg.h"
 #include "resource.h"
 

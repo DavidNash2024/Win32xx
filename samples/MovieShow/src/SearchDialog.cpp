@@ -2,7 +2,7 @@
 // SearchDialog.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "SearchDialog.h"
 #include "resource.h"
 

@@ -21,7 +21,7 @@
     <ClCompile Include="..\src\MyTaskDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\stdafx.cpp">
+    <ClCompile Include="..\src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\TaskDialogApp.cpp">
@@ -35,7 +35,7 @@
     <ClInclude Include="..\src\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\stdafx.h">
+    <ClInclude Include="..\src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TaskDialogApp.h">

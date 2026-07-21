@@ -2,7 +2,7 @@
 // Mainfrm.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include <dwmapi.h>
 #include "Mainfrm.h"
 #include "DarkMode.h"

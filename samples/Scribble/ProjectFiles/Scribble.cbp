@@ -125,7 +125,7 @@
 		<Unit filename="../src/Doc.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/ScribbleApp.cpp" />
@@ -134,7 +134,7 @@
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

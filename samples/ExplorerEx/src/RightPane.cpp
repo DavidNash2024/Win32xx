@@ -2,7 +2,7 @@
 // RightPane.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "LeftPane.h"
 #include "RightPane.h"
 

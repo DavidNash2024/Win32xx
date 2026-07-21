@@ -102,7 +102,7 @@
         <Manifest_File>(None)</Manifest_File>
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
-        <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>..\src\pch.h</BCC_PCHName_Clang>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
@@ -114,7 +114,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(None)</Manifest_File>
-        <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>..\src\pch.h</BCC_PCHName_Clang>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64x)'!=''">
@@ -126,7 +126,7 @@
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
-        <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>..\src\pch.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
@@ -385,14 +385,14 @@
         <None Include="..\src\resource.h">
             <BuildOrder>14</BuildOrder>
         </None>
-        <ResourceCompile Include="..\src\Resource.rc">
+        <ResourceCompile Include="..\src\resource.rc">
             <Form>Resource.res</Form>
             <BuildOrder>8</BuildOrder>
         </ResourceCompile>
-        <CppCompile Include="..\src\stdafx.cpp">
+        <CppCompile Include="..\src\pch.cpp">
             <BuildOrder>8</BuildOrder>
         </CppCompile>
-        <PCHCompile Include="..\src\stdafx.h">
+        <PCHCompile Include="..\src\pch.h">
             <BuildOrder>15</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>

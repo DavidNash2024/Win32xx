@@ -2,7 +2,7 @@
 // TestWindow.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "TestWindow.h"
 #include "TestApp.h"
 #include "resource.h"

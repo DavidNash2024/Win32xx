@@ -2,7 +2,7 @@
 // List.cpp - Definitions for the CViewList and CDockList classes
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include <Uxtheme.h>
 #include "List.h"
 #include "resource.h"
@@ -217,7 +217,7 @@ LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw)
 
 // Respond to a change in DPI. This function is only called when using
 // Per Monitor DPI Awareness, version 2. This is specified by loading
-// the appropriate manifest in the resource script (Resource.rc).
+// the appropriate manifest in the resource script (resource.rc).
 LRESULT CViewList::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Adjust the column width in response to window DPI changes.

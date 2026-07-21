@@ -2,7 +2,7 @@
 // TextApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "TextApp.h"
 #include "resource.h"
 

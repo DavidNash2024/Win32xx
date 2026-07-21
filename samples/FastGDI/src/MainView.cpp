@@ -2,7 +2,7 @@
 // MainView.cpp
 //  Definitions for the CMainView class.
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MainView.h"
 #include "resource.h"
 

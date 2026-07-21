@@ -2,7 +2,7 @@
 // View.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "View.h"
 
 constexpr COLORREF black = RGB(0, 0, 0);

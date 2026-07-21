@@ -42,7 +42,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit7]
-FileName=..\src\Resource.rc
+FileName=..\src\resource.rc
 CompileCpp=1
 Folder=Resource
 Compile=1

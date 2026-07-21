@@ -3,7 +3,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DialogHolder.h"
 
 // Called when the dialog holder window's DPI has changed.

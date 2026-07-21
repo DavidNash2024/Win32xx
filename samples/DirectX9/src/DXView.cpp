@@ -7,7 +7,7 @@
 //       for Dev-C++ you will need the DirecX v9.0c DevPak
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include <d3dx9.h>  // see the note above
 #include "DXApp.h"
 

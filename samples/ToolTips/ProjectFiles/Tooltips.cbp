@@ -124,13 +124,13 @@
 		<Unit filename="../src/DialogApp.h" />
 		<Unit filename="../src/MyDialog.cpp" />
 		<Unit filename="../src/MyDialog.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/stdafx.cpp" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

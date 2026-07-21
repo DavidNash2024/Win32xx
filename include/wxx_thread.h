@@ -276,18 +276,15 @@ namespace Win32xx
     {
         if (GetThread() != nullptr)
         {
-            int retries = 0;
-            while (!PostThreadMessage(WM_QUIT, 0, 0) && retries < 10)
-            {
-                ::Sleep(10);
-                retries++;
-            }
+            // Post a WM_QUIT to safely end the thread.
+            PostThreadMessage(WM_QUIT, 0, 0);
         }
 
-            if (IsRunning())
-            {
-                ::WaitForSingleObject(*this, INFINITE);
-            }
+        if (IsRunning())
+        {
+			// Wait for the thread to end.
+            ::WaitForSingleObject(*this, INFINITE);
+        }
     }
 
     // When the GUI thread starts, it runs this function.

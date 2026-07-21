@@ -2,7 +2,7 @@
 // Mainfrm.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 
 #include <UIRibbonPropertyHelpers.h>
 #include "RibbonUI.h"

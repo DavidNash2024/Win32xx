@@ -2,7 +2,7 @@
 //PictureApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "PictureApp.h"
 
 /////////////////////////////////

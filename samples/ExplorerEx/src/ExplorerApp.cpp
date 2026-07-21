@@ -2,7 +2,7 @@
 // ExplorerApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ExplorerApp.h"
 #include "resource.h"
 

@@ -131,11 +131,11 @@
 		<Unit filename="../src/MyDialog.h" />
 		<Unit filename="../src/MyWinThread.cpp" />
 		<Unit filename="../src/MyWinThread.h" />
-		<Unit filename="../src/ResourceDLL.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/stdafx.cpp" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.cpp" />
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

@@ -2,7 +2,7 @@
 // MyTab.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyTab.h"
 
 void CMyTab::UpdateTabs()

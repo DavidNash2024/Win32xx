@@ -2,7 +2,7 @@
 // SplitterApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "SplitterApp.h"
 
 /////////////////////////////////////

@@ -2,7 +2,7 @@
 // CMyEdit.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyEdit.h"
 
 ///////////////////////////////

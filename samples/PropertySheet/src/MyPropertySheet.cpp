@@ -2,7 +2,7 @@
 // MyPropertySheet.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyPropertySheet.h"
 #include "resource.h"
 

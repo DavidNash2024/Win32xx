@@ -2,7 +2,7 @@
 // Views.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Views.h"
 #include "resource.h"
 
@@ -116,7 +116,7 @@ void CViewList::OnAttach()
 
 // Respond to a change in DPI. This function is only called when using
 // Per Monitor DPI Awareness, version 2. This is specified by loading
-// the appropriate manifest in the resource script (Resource.rc).
+// the appropriate manifest in the resource script (resource.rc).
 LRESULT CViewList::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
@@ -237,7 +237,7 @@ void CViewTree::OnAttach()
 
 // Respond to a change in DPI. This function is only called when using
 // Per Monitor DPI Awareness, version 2. This is specified by loading
-// the appropriate manifest in the resource script (Resource.rc).
+// the appropriate manifest in the resource script (resource.rc).
 LRESULT CViewTree::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();

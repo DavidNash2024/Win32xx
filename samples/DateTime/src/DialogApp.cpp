@@ -2,7 +2,7 @@
 // DialogApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DialogApp.h"
 #include "resource.h"
 

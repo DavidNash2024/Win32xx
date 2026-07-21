@@ -2,7 +2,7 @@
 //MovieShowApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MovieShowApp.h"
 
 //////////////////////////////////////

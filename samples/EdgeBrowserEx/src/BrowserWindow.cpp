@@ -8,7 +8,7 @@
 // by Niels Lohmann <https://nlohmann.me>
 // https://github.com/nlohmann/json
 
-#include "stdafx.h"
+#include "pch.h"
 #include "BrowserWindow.h"
 #include "Tab.h"
 

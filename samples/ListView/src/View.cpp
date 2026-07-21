@@ -2,7 +2,7 @@
 // View.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "View.h"
 #include "UserMessages.h"
 
@@ -77,7 +77,7 @@ void CView::AddAllItems()
     AddItem(L"ListViewApp.h",    L"1 KB",   L"C++ Header file");
     AddItem(L"main.cpp",         L"1 KB",   L"C++ Source file");
     AddItem(L"ListViewApp.cpp",  L"3 KB",   L"C++ Source file");
-    AddItem(L"Resource.rc",      L"2 KB",   L"C++ Resource Script");
+    AddItem(L"resource.rc",      L"2 KB",   L"C++ Resource Script");
     AddItem(L"Readme.txt",       L"4 KB",   L"Text file");
 }
 

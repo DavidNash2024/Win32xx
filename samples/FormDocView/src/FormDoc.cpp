@@ -4,7 +4,7 @@
 // Based on code provided by Lynn Allan
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "FormDoc.h"
 #include "resource.h"
 

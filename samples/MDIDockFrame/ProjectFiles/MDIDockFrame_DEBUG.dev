@@ -81,7 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\stdafx.cpp
+FileName=..\src\pch.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -91,7 +91,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\..\DockContainer\src\Resource.rc
+FileName=..\..\DockContainer\src\resource.rc
 Folder=Resource
 Compile=1
 Link=0
@@ -110,7 +110,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\..\DockContainer\src\stdafx.cpp
+FileName=..\..\DockContainer\src\pch.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -200,7 +200,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\src\Resource.rc
+FileName=..\src\resource.rc
 Folder=Resource
 Compile=1
 Link=0
@@ -219,7 +219,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\src\stdafx.h
+FileName=..\src\pch.h
 CompileCpp=1
 Folder=Header
 Compile=1

@@ -2,7 +2,7 @@
 // Doc.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Doc.h"
 #include "resource.h"
 

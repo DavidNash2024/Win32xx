@@ -10,7 +10,7 @@
 #include "wxx_wincore.h"
 
 // Alternatively, include all library features.
-// #include "stdafx.h"
+// #include "pch.h"
 
 
 /////////////////////////////////////////////////

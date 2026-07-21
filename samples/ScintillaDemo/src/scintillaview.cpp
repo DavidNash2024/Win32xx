@@ -2,7 +2,7 @@
 // scintillaview.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Scintilla.h"
 #include "scintillaview.h"
 

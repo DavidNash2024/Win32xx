@@ -2,7 +2,7 @@
 // MyDialog.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyDialog.h"
 #include "PerfApp.h"
 #include "resource.h"

@@ -2,7 +2,7 @@
 // MainMDIfrm.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MainMDIfrm.h"
 #include "SimpleMDIChild.h"
 #include "resource.h"

@@ -2,7 +2,7 @@
 // Server.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Server.h"
 #include "DialogApp.h"
 

@@ -2,7 +2,7 @@
 // ImageView.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ImageView.h"
 #include "UserMessages.h"
 #include "resource.h"

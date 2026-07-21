@@ -4,7 +4,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "View.h"
 #include "Doc.h"
 

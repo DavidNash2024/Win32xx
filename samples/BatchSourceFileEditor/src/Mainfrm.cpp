@@ -2,7 +2,7 @@
 // Mainfrm.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "mainfrm.h"
 #include "resource.h"
 

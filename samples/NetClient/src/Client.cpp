@@ -2,7 +2,7 @@
 // Client.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Client.h"
 #include "DialogApp.h"
 

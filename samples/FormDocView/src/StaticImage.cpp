@@ -2,7 +2,7 @@
 // StaticImage.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "StaticImage.h"
 
 void CStaticImage::DpiScaleImage()

@@ -162,7 +162,7 @@
     <ClInclude Include="..\src\SimpleMDIChild.h">
       <Filter>Header File</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\stdafx.h">
+    <ClInclude Include="..\src\pch.h">
       <Filter>Header File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\default_resource.h">
@@ -209,12 +209,12 @@
     <ClCompile Include="..\src\SimpleMDIChild.cpp">
       <Filter>Source File</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\stdafx.cpp">
+    <ClCompile Include="..\src\pch.cpp">
       <Filter>Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\src\Resource.rc">
+    <ResourceCompile Include="..\src\resource.rc">
       <Filter>Resource File</Filter>
     </ResourceCompile>
   </ItemGroup>

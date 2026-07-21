@@ -2,7 +2,7 @@
 // TestWnd.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "TestWnd.h"
 #include "PerfApp.h"
 

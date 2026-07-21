@@ -2,7 +2,7 @@
 // SimpleMDIChild.cpp
 //  Definitions for the CSimpleView and CSimpleMDIChild classes
 
-#include "stdafx.h"
+#include "pch.h"
 #include "SimpleMDIChild.h"
 #include "resource.h"
 

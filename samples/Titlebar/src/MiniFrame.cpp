@@ -2,7 +2,7 @@
 // Miniframe.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include <dwmapi.h>
 #include <Uxtheme.h>
 #include <vsstyle.h>
@@ -365,7 +365,7 @@ void CMiniFrame::OnDestroy()
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
 // This function is only called when using Per Monitor DPI Awareness. This is
-// specified by loading the appropriate manifest in the resource script (Resource.rc).
+// specified by loading the appropriate manifest in the resource script (resource.rc).
 LRESULT CMiniFrame::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);

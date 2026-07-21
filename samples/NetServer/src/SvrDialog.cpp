@@ -2,7 +2,7 @@
 // SvrDialog.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "SvrDialog.h"
 #include "DialogApp.h"
 #include "resource.h"
@@ -230,7 +230,7 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
 // This function is only called when using Per Monitor DPI Awareness. This is
-// specified by loading the appropriate manifest in the resource script (Resource.rc).
+// specified by loading the appropriate manifest in the resource script (resource.rc).
 LRESULT CSvrDialog::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     CFont font = GetFont();

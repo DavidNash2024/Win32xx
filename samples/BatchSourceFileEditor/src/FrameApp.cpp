@@ -2,7 +2,7 @@
 //FrameApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "frameapp.h"
 
 /////////////////////////////////

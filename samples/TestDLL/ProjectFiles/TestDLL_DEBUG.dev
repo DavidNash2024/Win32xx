@@ -61,7 +61,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit2]
-FileName=..\src\ResourceTest.rc
+FileName=..\src\resource.rc
 Folder=Resource
 Compile=1
 Link=0
@@ -80,7 +80,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\src\stdafx.cpp
+FileName=..\src\pch.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -90,7 +90,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\src\stdafx.h
+FileName=..\src\pch.h
 CompileCpp=1
 Folder=Header
 Compile=1

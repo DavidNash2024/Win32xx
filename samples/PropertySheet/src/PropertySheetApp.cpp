@@ -1,7 +1,7 @@
 /////////////////////////////
 // PropertySheetApp.cpp
 //
-#include "stdafx.h"
+#include "pch.h"
 #include "PropertySheetApp.h"
 
 /////////////////////////////////////////

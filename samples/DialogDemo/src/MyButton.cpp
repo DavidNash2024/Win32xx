@@ -2,7 +2,7 @@
 // MyButton.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyButton.h"
 #include "DialogDemoApp.h"
 #include "UserMessages.h"

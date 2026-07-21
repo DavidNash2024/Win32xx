@@ -3,7 +3,7 @@
 //              and CDockText classes
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Text.h"
 #include "resource.h"
 

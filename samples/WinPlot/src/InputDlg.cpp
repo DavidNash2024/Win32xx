@@ -2,7 +2,7 @@
 // InputDlg.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "InputDlg.h"
 
 //////////////////////////////////

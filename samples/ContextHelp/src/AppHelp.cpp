@@ -2,7 +2,7 @@
 // AppHelp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "AppHelp.h"
 #include "resource.h"
 

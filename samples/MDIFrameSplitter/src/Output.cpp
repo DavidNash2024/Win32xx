@@ -3,7 +3,7 @@
 //              and CDockOutput classes
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Output.h"
 #include "resource.h"
 

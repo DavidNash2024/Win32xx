@@ -3,7 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "PrintUtil.h"
 
 const double inner_margin = 0.3;    // inches

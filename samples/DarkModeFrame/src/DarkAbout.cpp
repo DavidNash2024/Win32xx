@@ -2,7 +2,7 @@
 // DarkAbout.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include <dwmapi.h>
 #include "DarkMode.h"
 #include "DarkAbout.h"

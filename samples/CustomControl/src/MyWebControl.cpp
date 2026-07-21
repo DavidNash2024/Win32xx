@@ -2,7 +2,7 @@
 // MyWebControl.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyWebControl.h"
 #include "resource.h"
 

@@ -120,11 +120,11 @@
 		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
-		<Unit filename="../src/ResourceTest.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/stdafx.cpp" />
-		<Unit filename="../src/stdafx.h" />
+		<Unit filename="../src/pch.cpp" />
+		<Unit filename="../src/pch.h" />
 		<Unit filename="../src/TestApp.cpp" />
 		<Unit filename="../src/TestApp.h" />
 		<Unit filename="../src/TestWindow.cpp" />

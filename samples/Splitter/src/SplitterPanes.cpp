@@ -2,7 +2,7 @@
 // SplitterPanes.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "SplitterPanes.h"
 
 //////////////////////////////////

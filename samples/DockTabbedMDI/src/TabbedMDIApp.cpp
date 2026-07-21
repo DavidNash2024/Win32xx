@@ -2,7 +2,7 @@
 // TabbedMDIApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "TabbedMDIApp.h"
 
 /////////////////////////////////////////

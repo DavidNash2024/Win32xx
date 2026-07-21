@@ -31,7 +31,7 @@
 //    code and for his ongoing assistance in developing this sample.
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include <htmlhelp.h>  // load after windows.h to get system #defines
 
 #include "ContextHelp.h"

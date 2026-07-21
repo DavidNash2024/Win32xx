@@ -358,7 +358,7 @@
         <None Include="..\src\resource.h">
             <BuildOrder>1</BuildOrder>
         </None>
-        <ResourceCompile Include="..\src\Resource.rc">
+        <ResourceCompile Include="..\src\resource.rc">
             <Form>Resource.res</Form>
             <BuildOrder>2</BuildOrder>
         </ResourceCompile>

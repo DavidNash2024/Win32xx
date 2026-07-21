@@ -1,13 +1,13 @@
 /////////////////////////////
-// stdafx.h
+// pch.h
 //
 
 // This file is used for precompiled headers.
 // Rarely modified header files should be included.
 
 
-#ifndef STDAFX_H
-#define STDAFX_H
+#ifndef PCH_H_
+#define PCH_H_
 
 
 // Predefinitions for windows.h go here
@@ -84,4 +84,4 @@
 
 #endif  // define WIN32_LEAN_AND_MEAN
 
-#endif  // define STDAFX_H
+#endif  // define PCH_H_

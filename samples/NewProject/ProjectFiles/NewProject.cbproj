@@ -192,7 +192,7 @@
         <CppCompile Include="..\src\main.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
-        <None Include="..\src\stdafx.h">
+        <None Include="..\src\pch.h">
             <BuildOrder>1</BuildOrder>
         </None>
         <BuildConfiguration Include="Base">

@@ -8,7 +8,7 @@
 // https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/winui/shell/appplatform/CommonFileDialogModes
 // https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/winui/shell/appplatform/commonfiledialog
 
-#include "stdafx.h"           // Adds precompiled headers
+#include "pch.h"           // Adds precompiled headers
 #define STRICT_TYPED_ITEMIDS  // Improves the type safety of IDLists
 #include <knownfolders.h>     // for KnownFolder APIs/datatypes/function headers
 #include <propvarutil.h>      // for PROPVAR-related functions

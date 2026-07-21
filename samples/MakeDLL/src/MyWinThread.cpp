@@ -2,7 +2,7 @@
 // MyDWinThread.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyDialog.h"
 #include "MyWinThread.h"
 #include "resource.h"

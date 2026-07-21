@@ -2,7 +2,7 @@
 // Calculator.cpp:
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include <cmath>
 #include <float.h>
 #include <vector>

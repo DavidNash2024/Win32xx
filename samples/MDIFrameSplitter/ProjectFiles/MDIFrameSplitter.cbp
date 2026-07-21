@@ -129,14 +129,14 @@
 		<Unit filename="../src/MainMDIfrm.h" />
 		<Unit filename="../src/Output.cpp" />
 		<Unit filename="../src/Output.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/SplitterMDIChild.cpp" />
 		<Unit filename="../src/SplitterMDIChild.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

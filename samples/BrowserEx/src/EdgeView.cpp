@@ -2,7 +2,7 @@
 // EdgeView.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "EdgeView.h"
 #include "UserMessages.h"
 #include <urlmon.h>

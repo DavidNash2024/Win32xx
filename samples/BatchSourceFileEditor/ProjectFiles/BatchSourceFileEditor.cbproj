@@ -363,8 +363,8 @@
         <None Include="..\src\resource.h">
             <BuildOrder>60</BuildOrder>
         </None>
-        <ResourceCompile Include="..\src\Resource.rc">
-            <ModuleName>Resource.rc</ModuleName>
+        <ResourceCompile Include="..\src\resource.rc">
+            <ModuleName>resource.rc</ModuleName>
             <Form>Resource.res</Form>
             <BuildOrder>61</BuildOrder>
         </ResourceCompile>
@@ -377,7 +377,7 @@
         <CppCompile Include="..\src\StdAfx.cpp">
             <BuildOrder>64</BuildOrder>
         </CppCompile>
-        <None Include="..\src\stdafx.h">
+        <None Include="..\src\pch.h">
             <BuildOrder>65</BuildOrder>
         </None>
         <BuildConfiguration Include="Base">

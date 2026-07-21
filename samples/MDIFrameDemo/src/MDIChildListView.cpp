@@ -2,7 +2,7 @@
 // MDIChildListView.cpp
 //  Definitions for the CViewList and CMDIChildListView classes
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MDIChildListView.h"
 #include "resource.h"
 

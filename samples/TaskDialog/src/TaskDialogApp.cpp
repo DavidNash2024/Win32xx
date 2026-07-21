@@ -2,7 +2,7 @@
 // TaskDialogApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "TaskDialogApp.h"
 #include "MyTaskDialog.h"
 

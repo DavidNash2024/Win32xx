@@ -4,7 +4,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DialogsTree.h"
 #include "FrameApp.h"
 #include "UserMessages.h"

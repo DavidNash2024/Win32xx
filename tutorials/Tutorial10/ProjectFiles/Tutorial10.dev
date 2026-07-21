@@ -111,7 +111,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\src\Resource.rc
+FileName=..\src\resource.rc
 Folder=Resource
 Compile=1
 Link=0

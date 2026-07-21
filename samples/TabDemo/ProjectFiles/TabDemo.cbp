@@ -132,14 +132,14 @@
 		<Unit filename="../src/MyTab.cpp" />
 		<Unit filename="../src/MyTab.h" />
 		<Unit filename="../src/Readme.txt" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/TabDemoApp.cpp" />
 		<Unit filename="../src/TabDemoApp.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 		</Unit>
 		<Extensions />

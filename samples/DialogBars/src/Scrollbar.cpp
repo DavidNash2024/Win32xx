@@ -2,7 +2,7 @@
 // ScrollBar.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Scrollbar.h"
 #include "DialogApp.h"
 

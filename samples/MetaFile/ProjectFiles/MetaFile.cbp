@@ -120,7 +120,7 @@
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/MetaView.cpp" />
 		<Unit filename="../src/MetaView.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/main.cpp" />

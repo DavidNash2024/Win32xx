@@ -72,7 +72,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\src\Resource.rc
+FileName=..\src\resource.rc
 CompileCpp=1
 Folder=Resource
 Compile=1

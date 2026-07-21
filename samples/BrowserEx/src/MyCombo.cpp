@@ -2,7 +2,7 @@
 // ComboBoxEx.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyCombo.h"
 #include "resource.h"
 

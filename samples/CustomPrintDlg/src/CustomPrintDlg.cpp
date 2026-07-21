@@ -2,7 +2,7 @@
 // CustomPrintDialog.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "resource.h"
 #include "CustomPrintDlg.h"
 #include "UserMessages.h"

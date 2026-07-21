@@ -2,7 +2,7 @@
 // MyListView.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ExplorerApp.h"
 #include "MyListView.h"
 #include "resource.h"

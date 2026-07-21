@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Resource.rc
+// Used by resource.rc
 //
 #define IDW_MAIN                        41
 #define IDW_ABOUT                       42

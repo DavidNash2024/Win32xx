@@ -3,7 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "AboutBox.h"
 #include "resource.h"
 

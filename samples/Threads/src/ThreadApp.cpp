@@ -2,7 +2,7 @@
 //ThreadApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ThreadApp.h"
 
 ///////////////////////////////////

@@ -2,7 +2,7 @@
 // CustomControlApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "CustomControlApp.h"
 #include "resource.h"
 

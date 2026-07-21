@@ -2,7 +2,7 @@
 // D2DView.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "D2DApp.h"
 #include "D2DView.h"
 
@@ -102,7 +102,7 @@ LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 //  - The DPI of the monitor hosting the window changes.
 // This function is only called when using Per Monitor DPI Awareness,
 // version 2. This is specified by loading the appropriate manifest in the
-// resource script (Resource.rc).
+// resource script (resource.rc).
 LRESULT CD2DView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = (LPRECT)lparam;

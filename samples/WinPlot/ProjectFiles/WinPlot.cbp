@@ -130,10 +130,10 @@
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/Node.cpp" />
 		<Unit filename="../src/Node.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/stdafx.cpp" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/Table.cpp" />
 		<Unit filename="../src/Table.h" />
 		<Unit filename="../src/View.cpp" />
@@ -141,7 +141,7 @@
 		<Unit filename="../src/enums.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

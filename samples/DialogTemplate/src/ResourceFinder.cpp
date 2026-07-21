@@ -3,7 +3,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ResourceFinder.h"
 
 ///////////////////////////////////////

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////
 // Mainfrm.cpp
 
-#include "stdafx.h"
+#include "pch.h"
 #include "resource.h"
 #include "Mainfrm.h"
 

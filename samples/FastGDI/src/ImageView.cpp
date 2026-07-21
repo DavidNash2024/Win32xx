@@ -2,7 +2,7 @@
 // ImageView.cpp
 //  Definitions for the CImageView class
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ImageView.h"
 #include "resource.h"
 #include "UserMessages.h"

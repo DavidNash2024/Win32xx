@@ -103,7 +103,7 @@
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
-        <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>..\src\pch.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindcompvclsmp;bindcompvclwinx;bindengine;CloudService;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDAC;FireDACADSDriver;FireDACCommon;FireDACCommonDriver;FireDACCommonODBC;FireDACIBDriver;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;FireDACSqliteDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;vcl;vclactnband;vcldb;vcldsnap;vcledge;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -114,7 +114,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(None)</Manifest_File>
-        <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>..\src\pch.h</BCC_PCHName_Clang>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64x)'!=''">
@@ -126,7 +126,7 @@
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
-        <BCC_PCHName_Clang>..\src\stdafx.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>..\src\pch.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
@@ -424,7 +424,7 @@
         <None Include="..\src\resource.h">
             <BuildOrder>21</BuildOrder>
         </None>
-        <ResourceCompile Include="..\src\Resource.rc">
+        <ResourceCompile Include="..\src\resource.rc">
             <Form>Resource.res</Form>
             <BuildOrder>22</BuildOrder>
         </ResourceCompile>
@@ -434,10 +434,10 @@
         <None Include="..\src\RichEditView.h">
             <BuildOrder>24</BuildOrder>
         </None>
-        <CppCompile Include="..\src\stdafx.cpp">
+        <CppCompile Include="..\src\pch.cpp">
             <BuildOrder>25</BuildOrder>
         </CppCompile>
-        <PCHCompile Include="..\src\stdafx.h">
+        <PCHCompile Include="..\src\pch.h">
             <BuildOrder>26</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>

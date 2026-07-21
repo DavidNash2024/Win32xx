@@ -2,7 +2,7 @@
 // Files.cpp - Definitions for CViewFiles, CContainFiles
 //             and DockFiles classes
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Files.h"
 #include "resource.h"
 

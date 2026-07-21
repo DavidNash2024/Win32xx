@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////
 // Mainfrm.cpp  - definitions for the CMainFrame class.
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Mainfrm.h"
 #include "resource.h"
 

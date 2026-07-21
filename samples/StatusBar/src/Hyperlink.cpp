@@ -2,7 +2,7 @@
 // Hyperlink.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Hyperlink.h"
 
 ///////////////////////////////////

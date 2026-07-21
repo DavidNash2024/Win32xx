@@ -1,7 +1,7 @@
 //////////////////////////////////
 // ScribbleApp.cpp
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ScribbleApp.h"
 
 BOOL CScribbleApp::InitInstance()

@@ -2,7 +2,7 @@
 // MyThread.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "UserMessages.h"
 #include "MyThread.h"
 

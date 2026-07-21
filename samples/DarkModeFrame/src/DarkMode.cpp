@@ -2,7 +2,7 @@
 // DarkMode.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DarkMode.h"
 
 

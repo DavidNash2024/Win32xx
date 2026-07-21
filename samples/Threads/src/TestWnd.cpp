@@ -2,7 +2,7 @@
 // TestWnd.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "UserMessages.h"
 #include "TestWnd.h"
 

@@ -2,7 +2,7 @@
 // DialogDemoApp.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DialogDemoApp.h"
 #include "resource.h"
 

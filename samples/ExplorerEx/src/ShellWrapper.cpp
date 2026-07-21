@@ -1,7 +1,7 @@
 //////////////////////////////////////
 // ShellWrapper.cpp
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ShellWrapper.h"
 
 

@@ -4,7 +4,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ColorDefs.h"
 #include "Mainfrm.h"
 #include "MyFileDlg.h"

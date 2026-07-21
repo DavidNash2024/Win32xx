@@ -135,7 +135,7 @@
 		<Unit filename="../src/Output.h" />
 		<Unit filename="../src/Rect.cpp" />
 		<Unit filename="../src/Rect.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/TabbedMDIApp.cpp" />
@@ -144,7 +144,7 @@
 		<Unit filename="../src/Text.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>

@@ -2,7 +2,7 @@
 // HelpAbout.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "HelpAbout.h"
 #include "resource.h"
 

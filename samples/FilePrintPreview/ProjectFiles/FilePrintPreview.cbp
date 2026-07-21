@@ -128,15 +128,15 @@
 		<Unit filename="../src/PrintPreview.h" />
 		<Unit filename="../src/PrintUtil.cpp" />
 		<Unit filename="../src/PrintUtil.h" />
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/RichView.cpp" />
 		<Unit filename="../src/RichView.h" />
-		<Unit filename="../src/stdafx.cpp" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 		</Unit>
 		<Extensions />

@@ -1,7 +1,7 @@
 //////////////////////////////////
 // Doc.cpp
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Doc.h"
 
 

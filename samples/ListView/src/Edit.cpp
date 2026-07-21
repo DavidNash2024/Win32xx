@@ -2,7 +2,7 @@
 // Edit.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Edit.h"
 #include "UserMessages.h"
 

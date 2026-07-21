@@ -2,7 +2,7 @@
 // MyTreeView.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "MyTreeView.h"
 #include "ExplorerApp.h"
 #include "resource.h"

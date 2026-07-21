@@ -2,7 +2,7 @@
 // RichView.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "richview.h"
 
 //////////////////////////////////////

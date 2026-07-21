@@ -2,7 +2,7 @@
 // Mainfrm.cpp
 //
 
-#include "stdafx.h"
+#include "pch.h"
 #include "Mainfrm.h"
 #include "resource.h"
 #include "CustomPrintDlg.h"
@@ -251,7 +251,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 //  - The DPI of the monitor hosting the window changes.
 // This function is only called when using Per Monitor DPI Awareness,
 // version 2. This is specified by loading the appropriate manifest in the
-// resource script (Resource.rc).
+// resource script (resource.rc).
 LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CFrame::OnDpiChanged(msg, wparam, lparam);

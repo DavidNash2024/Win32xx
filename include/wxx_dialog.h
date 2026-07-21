@@ -46,7 +46,7 @@
 // list views, static text etc.
 
 // The layout of a dialog is typically defined in a resource script file
-// (often Resource.rc). While this script file can be constructed manually,
+// (often resource.rc). While this script file can be constructed manually,
 // it is often created using a resource editor.  A resource editor is included
 // with Microsoft's Visual Studio Studio Community.
 

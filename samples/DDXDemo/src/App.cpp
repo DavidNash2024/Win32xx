@@ -4,7 +4,7 @@
 //
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "App.h"
 
 // The WINAPI entry point for a graphical Windows-based application.

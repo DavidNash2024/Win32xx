@@ -135,7 +135,7 @@
 		<Unit filename="../src/TestWnd.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h">
+		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 		</Unit>
 		<Extensions />
