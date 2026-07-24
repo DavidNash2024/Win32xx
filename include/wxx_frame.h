@@ -75,8 +75,8 @@
 // to create a docking frame application.
 
 
-#ifndef _WIN32XX_FRAME_H_
-#define _WIN32XX_FRAME_H_
+#ifndef WIN32XX_FRAME_H_
+#define WIN32XX_FRAME_H_
 
 
 #include "wxx_dialog.h"
@@ -3926,4 +3926,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _WIN32XX_FRAME_H_
+#endif // WIN32XX_FRAME_H_

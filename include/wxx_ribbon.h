@@ -43,8 +43,8 @@
 //  CRibbonMDIFrame and CRibbonMDIDockFrame.
 //
 
-#ifndef _WIN32XX_RIBBON_H_
-#define _WIN32XX_RIBBON_H_
+#ifndef WIN32XX_RIBBON_H_
+#define WIN32XX_RIBBON_H_
 
 
 // Notes :
@@ -609,5 +609,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif  // _WIN32XX_RIBBON_H_
+#endif  // WIN32XX_RIBBON_H_
 

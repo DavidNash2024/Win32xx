@@ -36,8 +36,8 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef _WIN32XX_FILE_H_
-#define _WIN32XX_FILE_H_
+#ifndef WIN32XX_FILE_H_
+#define WIN32XX_FILE_H_
 
 
 #include "wxx_wincore.h"
@@ -551,6 +551,6 @@ namespace Win32xx
             throw CFileException(GetFilePath(), GetApp()->MsgFileWrite());
     }
 
-}   // namespace Win32xx
+} // namespace Win32xx
 
-#endif
+#endif // WIN32XX_FILE_H_

@@ -47,8 +47,8 @@
 // message. Newer controls send their notifications via a WM_NOTIFY message.
 
 
-#ifndef _WIN32XX_STDCONTROLS_H_
-#define _WIN32XX_STDCONTROLS_H_
+#ifndef WIN32XX_STDCONTROLS_H_
+#define WIN32XX_STDCONTROLS_H_
 
 #include "wxx_wincore.h"
 
@@ -1416,5 +1416,5 @@ namespace Win32xx
 
 }
 
-#endif  // _WIN32XX_STDCONTROLS_H_
+#endif  // WIN32XX_STDCONTROLS_H_
 

@@ -2,8 +2,7 @@
 // DXApp.h
 //
 
-#ifndef DXAPP_H
-#define DXAPP_H
+#pragma once
 
 #include "DXView.h"
 
@@ -29,4 +28,3 @@ private:
     CDXView m_dxView;
 };
 
-#endif // DXAPP_H

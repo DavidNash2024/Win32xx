@@ -36,8 +36,8 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef _WIN32XX_REBAR_H_
-#define _WIN32XX_REBAR_H_
+#ifndef WIN32XX_REBAR_H_
+#define WIN32XX_REBAR_H_
 
 #include "wxx_wincore.h"
 #include "wxx_themes.h"
@@ -637,4 +637,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _WIN32XX_REBAR_H_
+#endif // WIN32XX_REBAR_H_

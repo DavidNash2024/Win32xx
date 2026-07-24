@@ -51,8 +51,8 @@
 // can be used.
 
 
-#ifndef _WIN32XX_PROPERTYSHEET_H_
-#define _WIN32XX_PROPERTYSHEET_H_
+#ifndef WIN32XX_PROPERTYSHEET_H_
+#define WIN32XX_PROPERTYSHEET_H_
 
 #include "wxx_dialog.h"
 
@@ -921,4 +921,4 @@ namespace Win32xx
     }
 }
 
-#endif // _WIN32XX_PROPERTYSHEET_H_
+#endif // WIN32XX_PROPERTYSHEET_H_

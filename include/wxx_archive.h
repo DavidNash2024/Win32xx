@@ -69,8 +69,8 @@
 //    - LPCTSTR strings are terminated by a \r\n characters.
 
 
-#ifndef _WIN32XX_ARCHIVE_H_
-#define _WIN32XX_ARCHIVE_H_
+#ifndef WIN32XX_ARCHIVE_H_
+#define WIN32XX_ARCHIVE_H_
 
 #include "wxx_wincore.h"
 #include "wxx_file.h"
@@ -883,4 +883,4 @@ namespace Win32xx
 } // namespace Win32xx
 
 
-#endif // _WIN32XX_ARCHIVE_H_
+#endif // WIN32XX_ARCHIVE_H_

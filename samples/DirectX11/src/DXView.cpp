@@ -4,8 +4,8 @@
 
 #include "DXView.h"
 
-/////////////////////////////
-// Global helper function for compiling shaders with D3DCompile
+////////////////////////////////////////////////////////////////
+// Global helper function for compiling shaders with D3DCompile.
 //
 HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 {
@@ -197,7 +197,7 @@ HRESULT CDXView::InitDevice()
         hr = dxgiFactory->CreateSwapChain(m_pd3dDevice, &sd, &m_pSwapChain);
     }
 
-    // Note this tutorial doesn't handle full-screen swapchains so we block the ALT+ENTER shortcut
+    // Note this sample doesn't handle full-screen swapchains so we block the ALT+ENTER shortcut
     dxgiFactory->MakeWindowAssociation(*this, DXGI_MWA_NO_ALT_ENTER);
 
     dxgiFactory->Release();

@@ -88,8 +88,8 @@
 //                      modify the string directly.
 
 
-#ifndef _WIN32XX_CSTRING_H_
-#define _WIN32XX_CSTRING_H_
+#ifndef WIN32XX_CSTRING_H_
+#define WIN32XX_CSTRING_H_
 
 
 // The wxx_setup.h file defines the set of macros and includes the C, C++,
@@ -2306,4 +2306,4 @@ namespace Win32xx
 
 }   // namespace Win32xx
 
-#endif//_WIN32XX_CSTRING_H_
+#endif // WIN32XX_CSTRING_H_

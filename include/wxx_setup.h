@@ -43,8 +43,8 @@
 // used by Win32++.
 
 
-#ifndef _WIN32XX_SETUP_H_
-#define _WIN32XX_SETUP_H_
+#ifndef WIN32XX_SETUP_H_
+#define WIN32XX_SETUP_H_
 
 // Include the C++ headers.
 #include <algorithm>
@@ -59,7 +59,6 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <process.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <tchar.h>
@@ -365,4 +364,4 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_SETUP_H_
+#endif // WIN32XX_SETUP_H_

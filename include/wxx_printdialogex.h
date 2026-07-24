@@ -72,8 +72,8 @@
 //     CDC printerDC = printDialog.GetPrinterDC();
 //
 
-#ifndef _WIN32XX_PRINTDIALOGEX_H_
-#define _WIN32XX_PRINTDIALOGEX_H_
+#ifndef WIN32XX_PRINTDIALOGEX_H_
+#define WIN32XX_PRINTDIALOGEX_H_
 
 #include "wxx_wincore.h"
 #include "wxx_commondlg.h"
@@ -557,5 +557,5 @@ namespace Win32xx
 
 #endif  // define (__GNUC__) || (defined (__GNUC__) && defined (UNICODE))
 
-#endif  // define _WIN32XX_PRINTDIALOGEX_H_
+#endif  // define WIN32XX_PRINTDIALOGEX_H_
 

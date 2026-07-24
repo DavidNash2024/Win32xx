@@ -53,8 +53,8 @@
 
 
 
-#ifndef _WIN32XX_SCROLLVIEW_H_
-#define _WIN32XX_SCROLLVIEW_H_
+#ifndef WIN32XX_SCROLLVIEW_H_
+#define WIN32XX_SCROLLVIEW_H_
 
 #include "wxx_appcore0.h"
 
@@ -573,4 +573,4 @@ namespace Win32xx
     }
 }
 
-#endif // _WIN32XX_SCROLLVIEW_H_
+#endif // WIN32XX_SCROLLVIEW_H_

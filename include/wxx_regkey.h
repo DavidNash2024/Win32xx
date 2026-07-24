@@ -40,8 +40,8 @@
 // wxx_regkey.h
 //  Declaration of the CRegKey class
 
-#ifndef _WIN32XX_REGKEY_H_
-#define _WIN32XX_REGKEY_H_
+#ifndef WIN32XX_REGKEY_H_
+#define WIN32XX_REGKEY_H_
 
 namespace Win32xx
 {
@@ -636,4 +636,4 @@ namespace Win32xx
 }
 
 
-#endif // defined _WIN32XX_REGKEY_H_
+#endif // defined WIN32XX_REGKEY_H_

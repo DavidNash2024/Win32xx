@@ -41,8 +41,8 @@
 //  Definitions of the CSize, CPoint and CRect classes.
 
 
-#ifndef _WIN32XX_RECT_H_
-#define _WIN32XX_RECT_H_
+#ifndef WIN32XX_RECT_H_
+#define WIN32XX_RECT_H_
 
 
 namespace Win32xx
@@ -927,4 +927,4 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _WIN32XX_RECT_H_
+#endif // WIN32XX_RECT_H_

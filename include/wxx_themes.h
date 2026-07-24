@@ -42,8 +42,8 @@
 //  MenuTheme, ReBarTheme, StatusBarTheme and ToolBarTheme
 
 
-#ifndef _WIN32XX_THEMES_H_
-#define _WIN32XX_THEMES_H_
+#ifndef WIN32XX_THEMES_H_
+#define WIN32XX_THEMES_H_
 
 
 namespace Win32xx
@@ -129,5 +129,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _WIN32XX_THEMES_H_
+#endif // WIN32XX_THEMES_H_
 

@@ -87,8 +87,8 @@
 //     CDC printerDC = printDialog.GetDefaults();
 //
 
-#ifndef _WIN32XX_PRINTDIALOGS_H_
-#define _WIN32XX_PRINTDIALOGS_H_
+#ifndef WIN32XX_PRINTDIALOGS_H_
+#define WIN32XX_PRINTDIALOGS_H_
 
 #include "wxx_wincore.h"
 #include "wxx_commondlg.h"
@@ -770,4 +770,4 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_PRINTDIALOGS_H_
+#endif // WIN32XX_PRINTDIALOGS_H_

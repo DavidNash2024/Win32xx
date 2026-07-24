@@ -107,8 +107,8 @@
 //
 
 
-#ifndef _WIN32XX_SOCKET_H_
-#define _WIN32XX_SOCKET_H_
+#ifndef WIN32XX_SOCKET_H_
+#define WIN32XX_SOCKET_H_
 
 // CSocket requires features from the Win32++ framework.
 #include "wxx_wincore.h"
@@ -660,4 +660,4 @@ namespace Win32xx
     }
 }
 
-#endif // _WIN32XX_SOCKET_H_
+#endif // WIN32XX_SOCKET_H_

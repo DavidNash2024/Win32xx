@@ -44,8 +44,8 @@
 //  CSlider, CSpinButton, and CToolTip.
 
 
-#ifndef _WIN32XX_CONTROLS_H_
-#define _WIN32XX_CONTROLS_H_
+#ifndef WIN32XX_CONTROLS_H_
+#define WIN32XX_CONTROLS_H_
 
 
 #include "wxx_wincore0.h"
@@ -3015,5 +3015,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif //  define _WIN32XX_CONTROLS_H_
+#endif //  define WIN32XX_CONTROLS_H_
 

@@ -36,8 +36,10 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef _WIN32XX_THREAD_H_
-#define _WIN32XX_THREAD_H_
+#ifndef WIN32XX_THREAD_H_
+#define WIN32XX_THREAD_H_
+
+#include <process.h>
 
 namespace Win32xx
 {
@@ -282,7 +284,7 @@ namespace Win32xx
 
         if (IsRunning())
         {
-			// Wait for the thread to end.
+            // Wait for the thread to end.
             ::WaitForSingleObject(*this, INFINITE);
         }
     }
@@ -311,4 +313,4 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_THREAD_H_
+#endif // WIN32XX_THREAD_H_

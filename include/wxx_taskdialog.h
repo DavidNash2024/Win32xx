@@ -52,8 +52,8 @@
 //  Task dialogs require Unicode.
 
 
-#ifndef _WIN32XX_TASKDIALOG_H_
-#define _WIN32XX_TASKDIALOG_H_
+#ifndef WIN32XX_TASKDIALOG_H_
+#define WIN32XX_TASKDIALOG_H_
 
 #include "wxx_wincore.h"
 
@@ -856,4 +856,4 @@ namespace Win32xx
 }
 
 
-#endif // _WIN32XX_TASKDIALOG_H_
+#endif // WIN32XX_TASKDIALOG_H_

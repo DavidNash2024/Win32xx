@@ -41,8 +41,8 @@
 // This file contains the declaration of the CWnd class.
 //
 
-#ifndef _WIN32XX_WINCORE0_H_
-#define _WIN32XX_WINCORE0_H_
+#ifndef WIN32XX_WINCORE0_H_
+#define WIN32XX_WINCORE0_H_
 
 #include "wxx_appcore0.h"
 #include "wxx_rect.h"
@@ -379,9 +379,9 @@ namespace Win32xx
 
         HWND m_wnd;                    // Handle to this object's window.
         WNDPROC m_prevWindowProc;      // The old window procedure.
-    }; // class CWnd
+    };
 
 } // namespace Win32xx
 
-#endif // _WIN32XX_WINCORE0_H_
+#endif // WIN32XX_WINCORE0_H_
 

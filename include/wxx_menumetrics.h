@@ -42,8 +42,8 @@
 //  Margins, MenuItemData, and CMenuMetrics.
 
 
-#ifndef _WIN32XX_MENUMETRICS_H_
-#define _WIN32XX_MENUMETRICS_H_
+#ifndef WIN32XX_MENUMETRICS_H_
+#define WIN32XX_MENUMETRICS_H_
 
 #include "wxx_wincore.h"
 #include <uxtheme.h>
@@ -563,4 +563,4 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_MENUMETRICS_H_
+#endif // WIN32XX_MENUMETRICS_H_

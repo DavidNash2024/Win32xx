@@ -70,8 +70,8 @@ if (ff.FindFirstFile(_T("C:\\SomeFolder\\*.*")))
 */
 
 
-#ifndef _WIN32XX_FILEFIND_H_
-#define _WIN32XX_FILEFIND_H_
+#ifndef WIN32XX_FILEFIND_H_
+#define WIN32XX_FILEFIND_H_
 
 #include "wxx_wincore.h"
 
@@ -371,8 +371,6 @@ namespace Win32xx
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY) ? TRUE : FALSE;
     }
 
-
 }
 
-
-#endif // _WIN32XX_FILEFIND_H_
+#endif // WIN32XX_FILEFIND_H_

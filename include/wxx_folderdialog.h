@@ -71,8 +71,8 @@
 ////////////////////////////////////////////////////////////////////
 
 
-#ifndef _WIN32XX_FOLDERDIALOG_H_
-#define _WIN32XX_FOLDERDIALOG_H_
+#ifndef WIN32XX_FOLDERDIALOG_H_
+#define WIN32XX_FOLDERDIALOG_H_
 
 #include "wxx_dialog.h"
 
@@ -381,5 +381,5 @@ namespace Win32xx
     }
 
 }
-#endif // _WIN32XX_FOLDERDIALOG_H_
 
+#endif // WIN32XX_FOLDERDIALOG_H_

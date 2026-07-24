@@ -2,8 +2,7 @@
 // DXView.h
 //
 
-#ifndef DXVIEW_H
-#define DXVIEW_H
+#pragma once
 
 #include "wxx_wincore.h"
 
@@ -77,4 +76,3 @@ private:
     XMMATRIX                m_projection;
 };
 
-#endif  // DXVIEW_H

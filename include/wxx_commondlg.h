@@ -46,8 +46,8 @@
 //
 ////////////////////////////////////////////////////////
 
-#ifndef _WIN32XX_COMMONDLG_H_
-#define _WIN32XX_COMMONDLG_H_
+#ifndef WIN32XX_COMMONDLG_H_
+#define WIN32XX_COMMONDLG_H_
 
 #include "wxx_dialog.h"
 #include "wxx_richedit.h"
@@ -1644,4 +1644,4 @@ namespace Win32xx
 }
 
 
-#endif // _WIN32XX_COMMONDLG_H_
+#endif // WIN32XX_COMMONDLG_H_

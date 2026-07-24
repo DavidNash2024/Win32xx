@@ -86,8 +86,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 */
 
 
-#ifndef _WIN32XX_WINCORE_H_
-#define _WIN32XX_WINCORE_H_
+#ifndef WIN32XX_WINCORE_H_
+#define WIN32XX_WINCORE_H_
 
 
 // Include the necessary Win32++ header files.
@@ -2692,7 +2692,6 @@ namespace Win32xx
 
     #endif
 
-
 }
 
-#endif // _WIN32XX_WINCORE_H_
+#endif // WIN32XX_WINCORE_H_
