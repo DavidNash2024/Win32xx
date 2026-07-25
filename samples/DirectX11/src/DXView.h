@@ -45,6 +45,7 @@ public:
 
 protected:
     virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnDestroy() override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 

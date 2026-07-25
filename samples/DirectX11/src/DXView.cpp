@@ -369,10 +369,7 @@ HRESULT CDXView::InitDevice()
     return S_OK;
 }
 
-// OnCreate is called automatically during window creation when a
-// WM_CREATE message received.
-// Tasks such as setting the icon, creating child windows, or anything
-// associated with creating windows are normally performed here.
+// OnCreate is called when the window is created.
 int CDXView::OnCreate(CREATESTRUCT&)
 {
     // Set the window's icon
@@ -392,6 +389,12 @@ int CDXView::OnCreate(CREATESTRUCT&)
 
     TRACE("OnCreate\n");
     return 0;
+}
+
+// Called when the window is destroyed.
+void CDXView::OnDestroy()
+{
+    ::PostQuitMessage(0);
 }
 
 // Set the window creation parameters.
@@ -449,18 +452,11 @@ LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-        PAINTSTRUCT ps;
-
         switch (msg)
         {
         case WM_PAINT:
-            BeginPaint(ps);
-            EndPaint(ps);
-            break;
-
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            break;
+            ::ValidateRect(GetHwnd(), nullptr);
+            return 0;
 
         case WM_DPICHANGED:
         {

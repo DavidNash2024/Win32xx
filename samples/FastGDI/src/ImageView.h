@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////
 // ImageView.h
 
-#ifndef _IMAGEVIEW_H_
-#define _IMAGEVIEW_H_
+#ifndef IMAGEVIEW_H_
+#define IMAGEVIEW_H_
 
 
 /////////////////////////////////////////////////////////////
@@ -34,4 +34,4 @@ private:
 };
 
 
-#endif // _IMAGEVIEW_H_
+#endif // IMAGEVIEW_H_

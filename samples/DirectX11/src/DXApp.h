@@ -19,7 +19,7 @@ public:
 
 protected:
     virtual BOOL InitInstance() override;
-    virtual int MessageLoop() override;
+    virtual BOOL OnIdle(LONG) override;
 
 private:
     CDXApp(const CDXApp&) = delete;

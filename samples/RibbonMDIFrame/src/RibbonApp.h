@@ -2,11 +2,9 @@
 // RibbonApp.h
 //
 
-#ifndef RIBBONAPP_H
-#define RIBBONAPP_H
+#pragma once
 
 #include "MainMDIfrm.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CRibbonFrameApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMainMDIFrame m_Frame;
 };
 
-
-#endif

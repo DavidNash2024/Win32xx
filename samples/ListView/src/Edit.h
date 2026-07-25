@@ -2,8 +2,8 @@
 // Edit.h
 //
 
-#ifndef _EDIT_H_
-#define _EDIT_H_
+#ifndef EDIT_H_
+#define EDIT_H_
 
 
 ////////////////////////////////////////////
@@ -29,4 +29,4 @@ private:
 };
 
 
-#endif // _EDIT_H_
+#endif // EDIT_H_

@@ -11,8 +11,8 @@
 //  www.relisoft.com\book\index.htm
 //////////////////////////////////////////////////////////////////////
 
-#ifndef _CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
-#define _CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
+#ifndef CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
+#define CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
 
 #include <vector>
 #include <map>
@@ -102,4 +102,4 @@ namespace Calc
 } // namespace Calc
 
 
-#endif // #define _CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
+#endif // #define CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED

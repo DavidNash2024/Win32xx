@@ -17,25 +17,12 @@ BOOL CDXApp::InitInstance()
     return TRUE;
 }
 
-// Overrides the application's default message loop.
-// Calls Render during idle processing
-int CDXApp::MessageLoop()
+// OnIdle is called when the message queue is empty.
+// Return TRUE to continue idle processing or FALSE to end idle processing
+// until another message is queued.
+BOOL CDXApp::OnIdle(LONG)
 {
-    // Main message loop
-    MSG msg{};
-    while (WM_QUIT != msg.message)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-            m_dxView.Render();
-        }
-    }
-
-    return LOWORD(msg.wParam);
+    m_dxView.Render();
+    return TRUE;
 }
 

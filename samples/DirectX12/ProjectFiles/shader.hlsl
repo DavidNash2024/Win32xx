@@ -1,26 +1,29 @@
-struct PSInput {
+struct PSInput 
+{
     float4 position : SV_POSITION;
     float3 color : COLOR;
 };
 
-cbuffer cb0 : register(b0) {
+cbuffer cb0 : register(b0)
+{
     uint angle;
 }
 
 // Vertex Shader
-PSInput VSMain(unsigned int index : SV_VertexID) {
+PSInput VSMain(unsigned int index : SV_VertexID)
+{
     PSInput output;
     
     static float2 positions[3] = {
         float2(-0.43f, -0.25f),
-	    float2(0.0f, 0.5f),
-	    float2(0.43f, -0.25f)
+        float2(0.0f, 0.5f),
+        float2(0.43f, -0.25f)
     };
     
     static float3 colors[3] = {
         float3(1.0f, 0.0f, 0.0f),
-	    float3(0.0f, 1.0f, 0.0f),
-	    float3(0.0f, 0.0f, 1.0f)
+        float3(0.0f, 1.0f, 0.0f),
+        float3(0.0f, 0.0f, 1.0f)
     };
     
     float2 input_pos = positions[index];
@@ -41,6 +44,7 @@ PSInput VSMain(unsigned int index : SV_VertexID) {
 }
 
 // Pixel Shader
-float4 PSMain(PSInput input) : SV_TARGET {
+float4 PSMain(PSInput input) : SV_TARGET
+{
     return float4(input.color.r, input.color.g, input.color.b, 1.0);
 }

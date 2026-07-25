@@ -2,9 +2,7 @@
 // SimpleMDIChild.h
 //
 
-#ifndef MDICHILDVIEW_H
-#define MDICHILDVIEW_H
-
+#pragma once
 
 // User defined window message sent when the Simple MDI Child is created.
 // WPARAM is a pointer to the view window.
@@ -59,5 +57,3 @@ private:
     CMenu m_menu;
 };
 
-
-#endif  //MDICHILDVIEW_H

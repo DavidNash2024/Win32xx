@@ -1,5 +1,5 @@
-#ifndef __TEST_H__
-#define __TEST_H__
+#ifndef TEST_H__
+#define TEST_H__
 
 
 void RunTests();
@@ -30,4 +30,4 @@ bool UnlockRange();
 bool Write();
 
 
-#endif
+#endif // TEST_H__

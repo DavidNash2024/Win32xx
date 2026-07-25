@@ -2,8 +2,8 @@
 // ResourceFinder.h - Declaration of CResourceFinder
 //
 
-#ifndef _RESOURCE_FINDER_H_
-#define _RESOURCE_FINDER_H_
+#ifndef RESOURCE_FINDER_H_
+#define RESOURCE_FINDER_H_
 
 struct ResourceInfo
 {
@@ -48,4 +48,4 @@ private:
     CString m_fileName;
 };
 
-#endif // _RESOURCE_FINDER_H_
+#endif // RESOURCE_FINDER_H_

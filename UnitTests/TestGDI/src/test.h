@@ -1,7 +1,7 @@
-#ifndef __TEST_H__
-#define __TEST_H__
+#ifndef TEST_H__
+#define TEST_H__
 
 void RunTests();
 
 
-#endif
+#endif // TEST_H__

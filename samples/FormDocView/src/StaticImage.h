@@ -2,8 +2,8 @@
 // StaticImage.h
 //
 
-#ifndef _STATIC_IMAGE_H_
-#define _STATIC_IMAGE_H_
+#ifndef STATIC_IMAGE_H_
+#define STATIC_IMAGE_H_
 
 #include "resource.h"
 
@@ -27,4 +27,4 @@ private:
     CBitmap   m_patternImage;
 };
 
-#endif // _STATIC_IMAGE_H_
+#endif // STATIC_IMAGE_H_

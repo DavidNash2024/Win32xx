@@ -4,8 +4,8 @@
 //
 
 
-#ifndef CMyButton_H
-#define CMyButton_H
+#ifndef MYBUTTON_H
+#define MYBUTTON_H
 
 
 /////////////////////////////////////////////////////////////////////
@@ -24,4 +24,4 @@ private:
     CMyButton& operator=(const CMyButton&) = delete;
 };
 
-#endif  // CMyButton_H
+#endif  // MYBUTTON_H

@@ -3,7 +3,6 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
 #ifndef PRINTERUTIL_H
 #define PRINTERUTIL_H
 

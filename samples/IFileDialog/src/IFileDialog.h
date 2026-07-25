@@ -1,5 +1,5 @@
-#ifndef  _IFILEDIALOG_H_
-#define  _IFILEDIALOG_H_
+#ifndef  IFILEDIALOG_H_
+#define  IFILEDIALOG_H_
 
 HRESULT AddCustomControls();
 HRESULT ChooseFile();
@@ -10,4 +10,4 @@ HRESULT WritePropertiesUsingHandlers();
 HRESULT WritePropertiesWithoutUsingHandlers();
 
 
-#endif // _IFILEDIALOG_H_
+#endif // IFILEDIALOG_H_

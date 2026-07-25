@@ -2,8 +2,8 @@
 // DarkAbout.h
 //
 
-#ifndef _DARK_ABOUT_H_
-#define _DARK_ABOUT_H_
+#ifndef DARK_ABOUT_H_
+#define DARK_ABOUT_H_
 
 
 ///////////////////////////////////////////////////////////
@@ -37,4 +37,4 @@ private:
 };
 
 
-#endif // _DARK_ABOUT_H_
+#endif // DARK_ABOUT_H_

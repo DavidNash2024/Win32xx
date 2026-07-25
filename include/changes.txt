@@ -68,6 +68,7 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added BrowserEx                          - sample (replaces Browser)
+Added DirectX12                            sample
 Added CRibbonT                           - class template (replaces CRibbon)
 Added CAtoA::GetLength                   - member function
 Added CAtoBSTR::GetLength                - member function
@@ -92,6 +93,7 @@ Deprecated CWebBrowser                   - class
 Modified CStatusBar::GetParts            - added optional parameters
 Removed Browser                          - sample
 Removed BrowserATL                       - sample
+Removed DirectX9                         - sample
 Removed CRibbon                          - class
 Removed CWinApp::MsgCWinApp              - member function
 Removed CWinApp::MsgTlsIndex             - member function

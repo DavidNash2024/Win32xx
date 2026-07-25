@@ -3,7 +3,6 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
 #ifndef RICHVIEW_H
 #define RICHVIEW_H
 

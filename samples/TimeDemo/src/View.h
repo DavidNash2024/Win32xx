@@ -3,8 +3,8 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#ifndef CAPP_VIEW_H
-#define CAPP_VIEW_H
+#ifndef VIEW_H
+#define VIEW_H
 
 #include "Doc.h"
 
@@ -57,4 +57,4 @@ private:
     COLORREF    m_textColor;    // Text foreground color.
 };
 
-#endif  //CAPP_VIEW_H
+#endif  // VIEW_H

@@ -10,36 +10,20 @@
 // CDXView function definitions.
 //
 
+// InitInstance is called when the application starts.
+// Return TRUE to indicate success and run the message loop.
 BOOL CDirectX12App::InitInstance()
 {
     m_view.Create();
     return TRUE;
 }
 
-int CDirectX12App::MessageLoop()
+// OnIdle is called when the message queue is empty.
+// Return TRUE to continue idle processing or FALSE to end idle processing
+// until another message is queued.
+BOOL CDirectX12App::OnIdle(LONG)
 {
-    bool running = true;
-
-    while (running)
-    {
-        // Process standard Windows messages.
-        MSG msg = {};
-        while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            if (msg.message == WM_QUIT)
-            {
-                running = false;
-                break;
-            }
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-
-        // Break early if the window was closed to avoid rendering to an invalid surface.
-        if (!running) break;
-
-        m_view.Render();
-    }
-
-    return 0;
+    m_view.Render();
+    return TRUE;
 }
+

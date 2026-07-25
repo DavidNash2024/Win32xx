@@ -2,8 +2,8 @@
 // List.h - Declaration of CViewList and CDockList classes
 
 
-#ifndef _LIST_H
-#define _LIST_H
+#ifndef LIST_H
+#define LIST_H
 
 
 struct MovieInfo;
@@ -68,4 +68,4 @@ private:
 };
 
 
-#endif  //_LIST_H
+#endif  // LIST_H

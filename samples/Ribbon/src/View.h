@@ -2,9 +2,7 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
-
+#pragma once
 
 //////////////////////////////////////////////////
 // CView manages the main window. It uses a Ribbon
@@ -46,5 +44,3 @@ private:
     CRibbonT<CView> m_ribbon;
 };
 
-
-#endif

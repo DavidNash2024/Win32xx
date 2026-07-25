@@ -2,9 +2,7 @@
 // D2DView.h
 //
 
-#ifndef _D2DVIEW_H_
-#define _D2DVIEW_H_
-
+#pragma once
 
 #include <d2d1.h>
 #include <d2d1helper.h>
@@ -58,4 +56,3 @@ private:
     ID2D1SolidColorBrush* m_pCornflowerBlueBrush;
 };
 
-#endif // _D2DVIEW_H_

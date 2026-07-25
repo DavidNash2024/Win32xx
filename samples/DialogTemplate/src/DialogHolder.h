@@ -2,8 +2,8 @@
 // DialogsHolderh - Declaration of CDialogHolder class
 //
 
-#ifndef _DIALOG_HOLDER_H_
-#define _DIALOG_HOLDER_H_
+#ifndef DIALOG_HOLDER_H_
+#define DIALOG_HOLDER_H_
 
 
 /////////////////////////////////////////////////////
@@ -30,4 +30,4 @@ public:
     CDialog m_dialog;
 };
 
-#endif // _DIALOG_HOLDER_H_
+#endif // DIALOG_HOLDER_H_

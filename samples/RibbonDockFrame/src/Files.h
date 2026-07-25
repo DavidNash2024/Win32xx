@@ -2,9 +2,7 @@
 // Files.h
 //
 
-#ifndef FILES_H
-#define FILES_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////
 // CViewFiles manages a list view control It is used as
@@ -77,5 +75,3 @@ private:
     CContainFiles m_files;
 };
 
-
-#endif // FILES_H

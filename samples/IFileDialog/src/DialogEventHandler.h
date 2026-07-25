@@ -7,8 +7,8 @@
 // https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/winui/shell/appplatform/CommonFileDialogModes
 // https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/winui/shell/appplatform/commonfiledialog
 
-#ifndef _FILE_DIALOG_EVENT_HANDLER_
-#define _FILE_DIALOG_EVENT_HANDLER_
+#ifndef FILE_DIALOG_EVENT_HANDLER_
+#define FILE_DIALOG_EVENT_HANDLER_
 
 
 class CDialogEventHandler : public IFileDialogEvents,
@@ -59,4 +59,4 @@ public:
 };
 
 
-#endif // _FILE_DIALOG_EVENT_HANDLER_
+#endif // FILE_DIALOG_EVENT_HANDLER_

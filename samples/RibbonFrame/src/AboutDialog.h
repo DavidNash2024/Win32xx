@@ -1,8 +1,7 @@
 /////////////////////////////////////////////
 // AboutDialog.h
 
-#ifndef _ABOUTDIALOG_H_
-#define _ABOUTDIALOG_H_
+#pragma once
 
 #include "resource.h"
 
@@ -28,4 +27,3 @@ public:
     }
 };
 
-#endif // _ABOUTDIALOG_H_

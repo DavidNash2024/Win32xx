@@ -2,8 +2,8 @@
 // Tree.h - Declaration of CViewTree and CDockTree classes
 //
 
-#ifndef _TREE_H
-#define _TREE_H
+#ifndef TREE_H
+#define TREE_H
 
 
 ///////////////////////////////////////////////////////////////////
@@ -66,4 +66,4 @@ private:
 };
 
 
-#endif  //_TREE_H
+#endif  // TREE_H

@@ -2,8 +2,7 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "Doc.h"
 
@@ -45,5 +44,3 @@ private:
     COLORREF m_penColor;
 };
 
-
-#endif // CVIEW_H

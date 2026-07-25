@@ -2,8 +2,8 @@
 // RightPane.h
 //
 
-#ifndef _RIGHTPANE_H_
-#define _RIGHTPANE_H_
+#ifndef RIGHTPANE_H_
+#define RIGHTPANE_H_
 
 #include "MyListView.h"
 
@@ -29,5 +29,5 @@ private:
     CMyListView m_view;
 };
 
-#endif // _RIGHTPANE_H_
+#endif // RIGHTPANE_H_
 

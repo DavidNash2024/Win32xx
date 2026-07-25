@@ -1,5 +1,5 @@
 /////////////////////////////
-// View.h
+// RichView.h
 //
 
 #ifndef VIEW_H

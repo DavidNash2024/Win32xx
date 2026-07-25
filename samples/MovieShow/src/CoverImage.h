@@ -2,8 +2,8 @@
 // CoverImage.h
 //
 
-#ifndef _COVERIMAGE_H_
-#define _COVERIMAGE_H_
+#ifndef COVERIMAGE_H_
+#define COVERIMAGE_H_
 
 
 ////////////////////////////////////////////////////////////
@@ -29,4 +29,4 @@ private:
     ULONG_PTR   m_gdiplusToken;
 };
 
-#endif // _COVERIMAGE_H_
+#endif // COVERIMAGE_H_

@@ -2,8 +2,8 @@
 // IFileDialogApp.h
 //
 
-#ifndef _IFILE_DIALOG_APP_
-#define _IFILE_DIALOG_APP_
+#ifndef IFILE_DIALOG_APP_
+#define IFILE_DIALOG_APP_
 
 #include "MyTaskDialog.h"
 
@@ -29,4 +29,4 @@ private:
 };
 
 
-#endif // define _IFILE_DIALOG_APP_
+#endif // define IFILE_DIALOG_APP_

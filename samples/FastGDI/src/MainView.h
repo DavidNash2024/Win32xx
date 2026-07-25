@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////
 // MainView.h
 
-#ifndef _MAINVIEW_H_
-#define _MAINVIEW_H_
+#ifndef MAINVIEW_H_
+#define MAINVIEW_H_
 
 #include "ImageView.h"
 
@@ -37,4 +37,4 @@ public:
     CImageView m_imageView;
 };
 
-#endif // _MAINVIEW_H_
+#endif // MAINVIEW_H_

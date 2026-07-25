@@ -5,7 +5,6 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-#include <richedit.h>
 #include "resource.h"
 
 

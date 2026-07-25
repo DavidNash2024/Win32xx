@@ -4,8 +4,8 @@
 //
 
 
-#ifndef ABOUT_BOX_H_DEFINED
-#define ABOUT_BOX_H_DEFINED
+#ifndef ABOUT_BOX_H_
+#define ABOUT_BOX_H_
 
 ///////////////////////////////////////////////////////////////////////////////
 // The about dialog box. It is responsible for displaying the about information
@@ -29,4 +29,4 @@ private:
     CString m_status;
 };
 
-#endif // ABOUT_BOX_H_DEFINED
+#endif // ABOUT_BOX_H_

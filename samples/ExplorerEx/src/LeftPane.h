@@ -2,8 +2,8 @@
 // LeftPane.h
 //
 
-#ifndef _LEFTPANE_H_
-#define _LEFTPANE_H_
+#ifndef LEFTPANE_H_
+#define LEFTPANE_H_
 
 #include "MyTreeView.h"
 
@@ -32,5 +32,5 @@ private:
 
 
 
-#endif // _LEFTPANE_H_
+#endif // LEFTPANE_H_
 

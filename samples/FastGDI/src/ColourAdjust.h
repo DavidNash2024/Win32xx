@@ -1,8 +1,8 @@
 ////////////////////////
 // ColourAdjust.h
 
-#ifndef _COLOURADJUST_H_
-#define _COLOURADJUST_H_
+#ifndef COLOURADJUST_H_
+#define COLOURADJUST_H_
 
 
 /////////////////////////////////////////////////////
@@ -57,5 +57,5 @@ private:
 };
 
 
-#endif // _COLOURADJUST_H_
+#endif // COLOURADJUST_H_
 

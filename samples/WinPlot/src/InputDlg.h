@@ -2,8 +2,8 @@
 // InputDlg.h
 //
 
-#ifndef __INPUTDLG_H__
-#define __INPUTDLG_H__
+#ifndef INPUTDLG_H__
+#define INPUTDLG_H__
 
 #include "resource.h"
 
@@ -37,4 +37,4 @@ private:
 };
 
 
-#endif  // __INPUTDLG_H__
+#endif  // INPUTDLG_H__

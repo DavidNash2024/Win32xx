@@ -2,8 +2,8 @@
 // UserMessages.h
 //
 
-#ifndef _USER_MESSAGES_H_
-#define _USER_MESSAGES_H_
+#ifndef USER_MESSAGES_H_
+#define USER_MESSAGES_H_
 
 
 // Messages called by CViewList.
@@ -17,5 +17,5 @@
 #define UWM_ONRCLICKTREEITEM          (WM_APP + 0x0006)
 #define UWM_BOXSETCHANGED             (WM_APP + 0x0007)
 
-#endif  // _USER_MESSAGES_H_
+#endif  // USER_MESSAGES_H_
 

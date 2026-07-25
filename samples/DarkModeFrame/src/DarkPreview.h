@@ -2,8 +2,8 @@
 // DarkPreview.h
 //
 
-#ifndef _DARK_PREVIEW_H_
-#define _DARK_PREVIEW_H_
+#ifndef DARK_PREVIEW_H_
+#define DARK_PREVIEW_H_
 
 
 ////////////////////////////////////////////////////////////////////
@@ -175,4 +175,4 @@ inline void CDarkPreview<T>::SetDarkMode(bool isDarkMode)
 }
 
 
-#endif // _DARK_PREVIEW_H_
+#endif // DARK_PREVIEW_H_

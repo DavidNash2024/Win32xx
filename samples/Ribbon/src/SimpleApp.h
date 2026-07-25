@@ -2,11 +2,9 @@
 // SimpleApp.h
 //
 
-#ifndef SIMPLEAPP_H
-#define SIMPLEAPP_H
+#pragma once
 
 #include "View.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CSimpleRibbonApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CView m_view;
 };
 
-
-#endif

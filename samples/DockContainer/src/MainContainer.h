@@ -2,8 +2,8 @@
 // MainContainer.h - Declaration of the CMainContainer classes
 //
 
-#ifndef _MAIN_CONTAINER_H_
-#define _MAIN_CONTAINER_H_
+#ifndef MAIN_CONTAINER_H_
+#define MAIN_CONTAINER_H_
 
 /////////////////////////////////////////////////////////////
 // CMainContainer manages the dock frame's dock container.
@@ -25,4 +25,4 @@ private:
     CMainContainer& operator=(const CMainContainer&) = delete;
 };
 
-#endif  // _MAIN_CONTAINER_H_
+#endif  // MAIN_CONTAINER_H_

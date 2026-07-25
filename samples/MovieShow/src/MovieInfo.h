@@ -1,6 +1,6 @@
 
-#ifndef _MOVIEINFO_H_
-#define _MOVIEINFO_H_
+#ifndef MOVIEINFO_H_
+#define MOVIEINFO_H_
 
 
 struct MovieInfo
@@ -22,4 +22,4 @@ struct MovieInfo
 
 using MoviesData = std::list<MovieInfo>;
 
-#endif // _MOVIEINFO_H_
+#endif // MOVIEINFO_H_

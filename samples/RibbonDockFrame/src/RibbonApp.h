@@ -1,8 +1,7 @@
 /////////////////////////////
 // RibbonApp.h
 
-#ifndef RIBBONAPP_H
-#define RIBBONAPP_H
+#pragma once
 
 #include "Mainfrm.h"
 
@@ -27,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif

@@ -2,8 +2,8 @@
 // DialogDemoApp.h
 //
 
-#ifndef DLGSUBCLASSAPP_H
-#define DLGSUBCLASSAPP_H
+#ifndef DIALOGDEMOAPP_H
+#define DIALOGDEMOAPP_H
 
 #include "MyDialog.h"
 
@@ -29,4 +29,4 @@ private:
 };
 
 
-#endif // define DLGSUBCLASSAPP_H
+#endif // define DIALOGDEMOAPP_H

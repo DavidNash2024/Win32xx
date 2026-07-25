@@ -2,8 +2,8 @@
 // MovieShowApp.h
 //
 
-#ifndef _MOVIESHOWAPP_H_
-#define _MOVIESHOWAPP_H_
+#ifndef MOVIESHOWAPP_H_
+#define MOVIESHOWAPP_H_
 
 #include "Mainfrm.h"
 
@@ -28,4 +28,4 @@ private:
 };
 
 
-#endif // _MOVIESHOWAPP_H_
+#endif // MOVIESHOWAPP_H_

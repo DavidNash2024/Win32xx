@@ -2,8 +2,8 @@
 // UserMessages.h
 //
 
-#ifndef _USER_MESSAGES_H_
-#define _USER_MESSAGES_H_
+#ifndef USER_MESSAGES_H_
+#define USER_MESSAGES_H_
 
 
 // User defined messages used in this application.
@@ -29,4 +29,4 @@
 //   lparam - Pointer to a null-terminated string that is webview's source URI.
 
 
-#endif // _USER_MESSAGES_H_
+#endif // USER_MESSAGES_H_

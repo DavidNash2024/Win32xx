@@ -2,8 +2,7 @@
 // Doc.h
 //
 
-#ifndef WIN32XX_DOC_H
-#define WIN32XX_DOC_H
+#pragma once
 
 struct PlotPoint
 {
@@ -37,4 +36,3 @@ private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw
 };
 
-#endif  // WIN32XX_DOC_H

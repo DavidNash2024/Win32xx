@@ -3,8 +3,8 @@
 //                 and CDockDialogsTree classes
 //
 
-#ifndef _DIALOGSTREE_H_
-#define _DIALOGSTREE_H_
+#ifndef DIALOGSTREE_H_
+#define DIALOGSTREE_H_
 
 #include "ResourceFinder.h"
 
@@ -60,4 +60,4 @@ private:
 };
 
 
-#endif  //_DIALOGSTREE_H_
+#endif  // DIALOGSTREE_H_

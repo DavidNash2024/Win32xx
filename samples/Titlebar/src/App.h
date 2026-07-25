@@ -2,8 +2,8 @@
 // App.h
 //
 
-#ifndef _APP_H_
-#define _APP_H_
+#ifndef APP_H_
+#define APP_H_
 
 #include "wxx_wincore.h"
 #include "MiniFrame.h"
@@ -30,4 +30,4 @@ private:
 };
 
 
-#endif  // _APP_H_
+#endif  // APP_H_

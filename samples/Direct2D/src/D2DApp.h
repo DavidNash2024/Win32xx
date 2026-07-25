@@ -2,8 +2,7 @@
 // D2DApp.h
 //
 
-#ifndef _D2DAPP_H_
-#define _D2DAPP_H_
+#pragma once
 
 #include <d2d1.h>
 #include <d2d1helper.h>
@@ -39,7 +38,4 @@ inline ID2D1Factory* GetD2DFactory()
 {
     return ((CD2DApp*)GetApp())->GetD2DFactory();
 }
-
-
-#endif //  _D2DAPP_H_
 

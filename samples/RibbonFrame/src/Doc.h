@@ -2,9 +2,7 @@
 // Doc.h
 //
 
-#ifndef WIN32XX_DOC_H
-#define WIN32XX_DOC_H
-
+#pragma once
 
 ///////////////////////////////////////
 // Declaration of the PlotPoint struct.
@@ -38,4 +36,3 @@ private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw.
 };
 
-#endif  // WIN32XX_DOC_H

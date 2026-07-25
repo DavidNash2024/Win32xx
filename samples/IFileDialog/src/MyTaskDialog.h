@@ -2,8 +2,8 @@
 // MyTaskDialog.h
 //
 
-#ifndef _MY_TASKDIALOG_H_
-#define _MY_TASKDIALOG_H_
+#ifndef MY_TASKDIALOG_H_
+#define MY_TASKDIALOG_H_
 
 #include "IFileDialog.h"
 
@@ -27,4 +27,4 @@ private:
 };
 
 
-#endif // _MY_TASKDIALOG_H_
+#endif // MY_TASKDIALOG_H_

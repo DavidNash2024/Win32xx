@@ -2,8 +2,8 @@
 // MyWebControl.h
 //
 
-#ifndef __MYCONTROL_H
-#define __MYCONTROL_H
+#ifndef MYCONTROL_H
+#define MYCONTROL_H
 
 // Include the WebView2 Runtime files from the packages folder.
 #include <wrl.h>
@@ -37,5 +37,5 @@ private:
 };
 
 
-#endif // __MYCONTROL_H
+#endif // MYCONTROL_H
 
