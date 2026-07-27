@@ -6,6 +6,7 @@
 
 #include <d2d1.h>
 #include <d2d1helper.h>
+#include <wrl/client.h> // Required header for Microsoft::WRL::ComPtr
 #include "D2DView.h"
 
 
@@ -16,9 +17,8 @@
 class CD2DApp : public CWinApp
 {
 public:
-    CD2DApp();
-    virtual ~CD2DApp() override;
-    ID2D1Factory* GetD2DFactory() { return m_pDirect2dFactory; }
+    CD2DApp() = default;
+    virtual ~CD2DApp() override = default;
 
 protected:
     virtual BOOL InitInstance() override;
@@ -27,15 +27,5 @@ private:
     CD2DApp(const CD2DApp&) = delete;
     CD2DApp& operator=(const CD2DApp&) = delete;
 
-    HRESULT CreateDeviceIndependentResources();
-
-    // Member variables
     CD2DView m_view;
-    ID2D1Factory* m_pDirect2dFactory;
 };
-
-inline ID2D1Factory* GetD2DFactory()
-{
-    return ((CD2DApp*)GetApp())->GetD2DFactory();
-}
-

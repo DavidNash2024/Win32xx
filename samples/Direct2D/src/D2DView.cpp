@@ -11,7 +11,7 @@
 //
 
 // Constructor
-CD2DView::CD2DView() : m_pRenderTarget(nullptr), m_pLightSlateGrayBrush(nullptr), m_pCornflowerBlueBrush(nullptr)
+CD2DView::CD2DView()
 {
 }
 
@@ -21,7 +21,17 @@ CD2DView::CD2DView() : m_pRenderTarget(nullptr), m_pLightSlateGrayBrush(nullptr)
     DiscardDeviceResources();
 }
 
-// Create the resources used by OnRender
+// Create the persistent Factory.
+HRESULT CD2DView::CreateDeviceIndependentResources()
+{
+    if (!m_pDirect2dFactory)
+    {
+        return D2D1CreateFactory<ID2D1Factory>(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
+    }
+    return S_OK;
+}
+
+// Create the transient rendering pipe using our own internal member factory
 HRESULT CD2DView::CreateDeviceResources()
 {
     HRESULT hr = S_OK;
@@ -29,14 +39,10 @@ HRESULT CD2DView::CreateDeviceResources()
     if (!m_pRenderTarget)
     {
         CRect rc = GetClientRect();
-
-        D2D1_SIZE_U size = D2D1::SizeU(
-            rc.right - rc.left,
-            rc.bottom - rc.top
-        );
+        D2D1_SIZE_U size = D2D1::SizeU(rc.Width(), rc.Height());
 
         // Create a Direct2D render target.
-        hr = GetD2DFactory()->CreateHwndRenderTarget(
+        hr = m_pDirect2dFactory->CreateHwndRenderTarget(
             D2D1::RenderTargetProperties(),
             D2D1::HwndRenderTargetProperties(*this, size),
             &m_pRenderTarget
@@ -63,20 +69,25 @@ HRESULT CD2DView::CreateDeviceResources()
     return hr;
 }
 
-// Release memory allocated to resources.
+// Clear the GPU resources.
 void CD2DView::DiscardDeviceResources()
 {
-    SafeRelease(&m_pRenderTarget);
-    SafeRelease(&m_pLightSlateGrayBrush);
-    SafeRelease(&m_pCornflowerBlueBrush);
+    m_pRenderTarget.Reset();
+    m_pLightSlateGrayBrush.Reset();
+    m_pCornflowerBlueBrush.Reset();
 }
 
-// Called when the window is created.
 int CD2DView::OnCreate(CREATESTRUCT&)
 {
-    // Set the window's icon
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);
+
+    // Start the Direct2D framework for this window instance.
+    if (FAILED(CreateDeviceIndependentResources()))
+    {
+        ::MessageBox(*this, L"Failed to initialize Direct2D Factory", L"Error", MB_OK | MB_ICONERROR);
+        return -1;
+    }
 
     return 0;
 }
@@ -91,7 +102,6 @@ void CD2DView::OnDestroy()
 // Called when the display resolution has changed.
 LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 {
-
     Invalidate();
     return 0;
 }
@@ -105,7 +115,7 @@ LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 // resource script (resource.rc).
 LRESULT CD2DView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
-    LPRECT prc = (LPRECT)lparam;
+    LPRECT prc = reinterpret_cast<LPRECT>(lparam);
     SetWindowPos(HWND_TOP, *prc, SWP_SHOWWINDOW);
     return 0;
 }
@@ -132,48 +142,33 @@ HRESULT CD2DView::OnRender()
         float width = rtSize.width;
         float height = rtSize.height;
 
-        // Draw horizontal lines
+        // Vertical Grid
         for (float x = 0.0f; x < width; x += 16.0f * zoom)
         {
-            m_pRenderTarget->DrawLine(
-                D2D1::Point2F(x, 0.0f),
-                D2D1::Point2F(x, height),
-                m_pLightSlateGrayBrush,
-                zoom
-            );
+            m_pRenderTarget->DrawLine(D2D1::Point2F(x, 0.0f), D2D1::Point2F(x, height), m_pLightSlateGrayBrush.Get(), zoom);
         }
 
-        // Draw vertical lines
+        // Horizontal Grid
         for (float y = 0.0f; y < height; y += 16.0f * zoom)
         {
-            m_pRenderTarget->DrawLine(
-                D2D1::Point2F(0.0f, y),
-                D2D1::Point2F(width, y),
-                m_pLightSlateGrayBrush,
-                zoom
-            );
+            m_pRenderTarget->DrawLine(D2D1::Point2F(0.0f, y), D2D1::Point2F(width, y), m_pLightSlateGrayBrush.Get(), zoom);
         }
 
-        // Draw two rectangles.
         D2D1_RECT_F rectangle1 = D2D1::RectF(
-            rtSize.width / (2.0f) - 40.0f * zoom,
-            rtSize.height / (2.0f) - 40.0f * zoom,
-            rtSize.width / (2.0f) + 40.0f * zoom,
-            rtSize.height / (2.0f) + 40.0f * zoom
+            rtSize.width / 2.0f - 40.0f * zoom, rtSize.height / 2.0f - 40.0f * zoom,
+            rtSize.width / 2.0f + 40.0f * zoom, rtSize.height / 2.0f + 40.0f * zoom
         );
 
         D2D1_RECT_F rectangle2 = D2D1::RectF(
-            rtSize.width / (2.0f) - 80.0f * zoom,
-            rtSize.height / (2.0f) - 80.0f * zoom,
-            rtSize.width / (2.0f) + 80.0f * zoom,
-            rtSize.height / (2.0f) + 80.0f * zoom
+            rtSize.width / 2.0f - 80.0f * zoom, rtSize.height / 2.0f - 80.0f * zoom,
+            rtSize.width / 2.0f + 80.0f * zoom, rtSize.height / 2.0f + 80.0f * zoom
         );
 
         // Draw a filled rectangle.
-        m_pRenderTarget->FillRectangle(&rectangle1, m_pLightSlateGrayBrush);
+        m_pRenderTarget->FillRectangle(&rectangle1, m_pLightSlateGrayBrush.Get());
 
         // Draw the outline of a rectangle.
-        m_pRenderTarget->DrawRectangle(&rectangle2, m_pCornflowerBlueBrush, 4 * zoom);
+        m_pRenderTarget->DrawRectangle(&rectangle2, m_pCornflowerBlueBrush.Get(), 4.0f * zoom);
         hr = m_pRenderTarget->EndDraw();
     }
 
@@ -181,6 +176,7 @@ HRESULT CD2DView::OnRender()
     {
         hr = S_OK;
         DiscardDeviceResources();
+        Invalidate();
     }
 
     return hr;
@@ -191,9 +187,6 @@ void CD2DView::OnResize(UINT width, UINT height)
 {
     if (m_pRenderTarget)
     {
-        // Note: This method can fail, but it's okay to ignore the
-        // error here, because the error will be returned again
-        // the next time EndDraw is called.
         m_pRenderTarget->Resize(D2D1::SizeU(width, height));
     }
 }
@@ -201,27 +194,24 @@ void CD2DView::OnResize(UINT width, UINT height)
 // Called when the window is resized.
 LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
 {
-    UINT width = LOWORD(lparam);
-    UINT height = HIWORD(lparam);
-    OnResize(width, height);
+    OnResize(LOWORD(lparam), HIWORD(lparam));
     return 0;
 }
 
 // Specify the initial window size.
-void CD2DView::PreCreate(CREATESTRUCT&cs)
+void CD2DView::PreCreate(CREATESTRUCT& cs)
 {
-    // Scale the window to the DPI of the primary monitor
-    cs.x = DpiScaleInt(80);                 // top x
-    cs.y = DpiScaleInt(80);                 // top y
-    cs.cx = DpiScaleInt(640);               // width
-    cs.cy = DpiScaleInt(480);               // height
+    cs.x = DpiScaleInt(80);
+    cs.y = DpiScaleInt(80);
+    cs.cx = DpiScaleInt(640);
+    cs.cy = DpiScaleInt(480);
 }
 
-// Set the WNDCLASS parameters before the window is created.
 void CD2DView::PreRegisterClass(WNDCLASS& wc)
 {
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.hCursor = ::LoadCursor(nullptr, IDI_APPLICATION);
+    wc.hbrBackground = (HBRUSH)::GetStockObject(NULL_BRUSH);
     wc.lpszClassName = L"Direct2D";
 }
 

@@ -6,12 +6,14 @@
 
 #include "wxx_wincore.h"
 
+// Required DirectX 11 and Math headers
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
-#include <directxmath.h>
-#include <directxcolors.h>
+#include <DirectXMath.h>
 
-#include "resource.h"
+// Direct3D libraries required for linking
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
 
@@ -24,7 +26,6 @@ struct SimpleVertex
     XMFLOAT4 Color;
 };
 
-
 struct ConstantBuffer
 {
     XMMATRIX mWorld;
@@ -32,10 +33,8 @@ struct ConstantBuffer
     XMMATRIX mProjection;
 };
 
-
-////////////////////////////////////////////
-// CView manages main window. It renders the
-// DirectX11 images.
+////////////////////////////////////////////////////////////////
+// CDXView manages main window. It renders the DirectX11 images.
 class CDXView : public CWnd
 {
 public:
@@ -46,12 +45,16 @@ public:
 protected:
     virtual int     OnCreate(CREATESTRUCT& cs) override;
     virtual void    OnDestroy() override;
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
     virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
     CDXView(const CDXView&) = delete;
     CDXView& operator=(const CDXView&) = delete;
+
+    // Message handlers called by WndProc
+    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void CleanupDevice();
     HRESULT InitDevice();
@@ -72,8 +75,11 @@ private:
     ID3D11Buffer*           m_pVertexBuffer = nullptr;
     ID3D11Buffer*           m_pIndexBuffer = nullptr;
     ID3D11Buffer*           m_pConstantBuffer = nullptr;
-    XMMATRIX                m_world;
-    XMMATRIX                m_view;
-    XMMATRIX                m_projection;
-};
+    XMFLOAT4X4              m_world;
+    XMFLOAT4X4              m_view;
+    XMFLOAT4X4              m_projection;
 
+    LARGE_INTEGER           m_frequency = {};
+    LARGE_INTEGER           m_lastTime = {};
+    float                   m_rotationAngle = 0.0f;
+};
