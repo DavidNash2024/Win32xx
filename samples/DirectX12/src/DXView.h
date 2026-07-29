@@ -24,9 +24,12 @@ public:
     void ResizeBuffers(int width, int height);
 
 protected:
-    virtual int OnCreate(CREATESTRUCT& cs) override;
-    virtual void OnDestroy() override { ::PostQuitMessage(0); }
-    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual int     OnCreate(CREATESTRUCT& cs) override;
+    virtual void    OnDestroy() override;
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT OnSizing(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:

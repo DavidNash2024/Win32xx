@@ -4,11 +4,7 @@
 
 #pragma once
 
-#include <d2d1.h>
-#include <d2d1helper.h>
-#include <wrl/client.h> // Required header for Microsoft::WRL::ComPtr
 #include "D2DView.h"
-
 
 ///////////////////////////////////////////////////////////////
 // CD2DApp manages the application. It initializes the Win32++

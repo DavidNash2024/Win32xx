@@ -4,9 +4,8 @@
 
 #pragma once
 
-#include <d2d1.h>
-#include <d2d1helper.h>
-#include <wrl/client.h> // Required header for Microsoft::WRL::ComPtr
+#include <d2d1.h>       // Provides the core Direct2D API.
+#include <wrl/client.h> // Provides the ComPtr smart pointer.
 
 ///////////////////////////////////////////////
 // CD2DView manages the window that renders the

@@ -2,7 +2,6 @@
 // DXView.cpp
 //
 
-
 #include "wxx_wincore.h"
 #include <d3dcompiler.h>
 #include "DXView.h"
@@ -15,7 +14,6 @@
 ////////////////////////////////
 // CDXView function definitions.
 //
-
 
 // Serializes the root signature, compiles HLSL shaders, and builds the
 // Graphics Pipeline State Object (PSO).
@@ -39,12 +37,12 @@ bool CDXView::CreatePipelineState()
     // Serialize and create the Root Signature using ComPtr for local blobs.
     Microsoft::WRL::ComPtr<ID3DBlob> signature_blob = nullptr;
     Microsoft::WRL::ComPtr<ID3DBlob> error_blob = nullptr;
-    HRESULT hr = D3D12SerializeRootSignature(&root_signature_desc, D3D_ROOT_SIGNATURE_VERSION_1, &signature_blob, &error_blob);
+    HRESULT hr = ::D3D12SerializeRootSignature(&root_signature_desc, D3D_ROOT_SIGNATURE_VERSION_1, &signature_blob, &error_blob);
 
     if (FAILED(hr))
     {
         if (error_blob)
-            OutputDebugStringA(static_cast<const char*>(error_blob->GetBufferPointer()));
+            Trace(static_cast<const char*>(error_blob->GetBufferPointer()));
 
         ::MessageBox(nullptr, L"Root signature serialization failed.", L"Error", MB_OK);
         return false;
@@ -59,12 +57,12 @@ bool CDXView::CreatePipelineState()
     // Compile the Vertex Shader (Targeting 5_1 for native DX12).
     Microsoft::WRL::ComPtr<ID3DBlob> vertex_shader = nullptr;
     error_blob = nullptr;
-    hr = D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "VSMain", "vs_5_1", 0, 0, &vertex_shader, &error_blob);
+    hr = ::D3DCompileFromFile(L"Shader12.hlsl", nullptr, nullptr, "VSMain", "vs_5_1", 0, 0, &vertex_shader, &error_blob);
     if (FAILED(hr))
     {
         if (error_blob)
         {
-            OutputDebugStringA(static_cast<const char*>(error_blob->GetBufferPointer()));
+            Trace(static_cast<const char*>(error_blob->GetBufferPointer()));
         }
         ::MessageBox(nullptr, L"Vertex shader compilation failed.", L"Shader Error", MB_OK);
         return false;
@@ -73,11 +71,11 @@ bool CDXView::CreatePipelineState()
 
     // Compile the Pixel Shader (Targeting 5_1 for native DX12).
     Microsoft::WRL::ComPtr<ID3DBlob> pixel_shader = nullptr;
-    hr = D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "PSMain", "ps_5_1", 0, 0, &pixel_shader, &error_blob);
+    hr = ::D3DCompileFromFile(L"Shader12.hlsl", nullptr, nullptr, "PSMain", "ps_5_1", 0, 0, &pixel_shader, &error_blob);
     if (FAILED(hr))
     {
         if (error_blob)
-            OutputDebugStringA(static_cast<const char*>(error_blob->GetBufferPointer()));
+            Trace(static_cast<const char*>(error_blob->GetBufferPointer()));
 
         ::MessageBox(nullptr, L"Pixel shader compilation failed.", L"Shader Error", MB_OK);
         return false;
@@ -216,11 +214,50 @@ int CDXView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
+// Called when the window is destroyed.
+void CDXView::OnDestroy()
+{
+    // End the application.
+    ::PostQuitMessage(0);
+}
+
+LRESULT CDXView::OnPaint(UINT, WPARAM, LPARAM)
+{
+    ValidateRect();
+    return 0;
+}
+
+LRESULT CDXView::OnSize(UINT, WPARAM, LPARAM lparam)
+{
+    ResizeBuffers(LOWORD(lparam), HIWORD(lparam));
+    return 0;
+}
+
+LRESULT CDXView::OnSizing(UINT, WPARAM, LPARAM lparam)
+{
+    // Extract the target dimensions from the window boundary rect.
+    LPRECT rect = reinterpret_cast<LPRECT>(lparam);
+    int width = rect->right - rect->left;
+    int height = rect->bottom - rect->top;
+
+    // Account for non-client area.
+    RECT clientRect = { 0, 0, width, height };
+    ::AdjustWindowRectEx(&clientRect, GetStyle(), FALSE, GetExStyle());
+
+    int clientWidth = rect->right - rect->left - (clientRect.right - width);
+    int clientHeight = rect->bottom - rect->top - (clientRect.bottom - height);
+
+    // Reallocate DX12 surfaces and instantly push a new frame.
+    ResizeBuffers(clientWidth, clientHeight);
+    Render();
+    return TRUE;
+}
+
 // Specifiy the CREATESTRUCT parameters before creating the window.
 void CDXView::PreCreate(CREATESTRUCT& cs)
 {
     CRect windowRect(0, 0, m_width, m_height);
-    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+    ::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
     cs.cx = windowRect.Width();
     cs.cy = windowRect.Height();
@@ -290,7 +327,7 @@ void CDXView::Render()
     if (m_fence->GetCompletedValue() < currentFenceValue)
     {
         m_fence->SetEventOnCompletion(currentFenceValue, m_fenceEvent.Get());
-        WaitForSingleObject(m_fenceEvent.Get(), INFINITE);
+        ::WaitForSingleObject(m_fenceEvent.Get(), INFINITE);
     }
 
     // Increment the rotation angle for the next frame's animation.
@@ -299,18 +336,30 @@ void CDXView::Render()
 
 LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_PAINT:
-        ::ValidateRect(GetHwnd(), nullptr);
-        return 0;
+        switch (msg)
+        {
+        case WM_PAINT:  return OnPaint(msg, wparam, lparam);
+        case WM_SIZE:   return OnSize(msg, wparam, lparam);
+        case WM_SIZING: return OnSizing(msg, wparam, lparam);
 
-    case WM_SIZE:
-        ResizeBuffers(LOWORD(lparam), HIWORD(lparam));
-        break;
+        default: break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    catch (const CException& e)
+    {
+        CString str1;
+        str1 << e.GetText() << L'\n' << e.GetErrorString();
+        CString str2;
+        str2 << L"Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+    }
+
+    return 0;
 }
 
 void CDXView::ResizeBuffers(int width, int height)
@@ -326,7 +375,7 @@ void CDXView::ResizeBuffers(int width, int height)
     if (m_fence->GetCompletedValue() < fenceValueToWait)
     {
         m_fence->SetEventOnCompletion(fenceValueToWait, m_fenceEvent.Get());
-        WaitForSingleObject(m_fenceEvent.Get(), INFINITE);
+        ::WaitForSingleObject(m_fenceEvent.Get(), INFINITE);
     }
 
     // Drop references to old back buffer resources.

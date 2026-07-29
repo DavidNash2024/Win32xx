@@ -5,32 +5,29 @@
 #pragma once
 
 #include "wxx_wincore.h"
-
-// Required DirectX 11 and Math headers
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <wrl/client.h>
 
 // Direct3D libraries required for linking
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-using namespace DirectX;
-
-////////////
+/////////////
 // Structures
 //
 struct SimpleVertex
 {
-    XMFLOAT3 Pos;
-    XMFLOAT4 Color;
+    DirectX::XMFLOAT3 Pos;
+    DirectX::XMFLOAT4 Color;
 };
 
 struct ConstantBuffer
 {
-    XMMATRIX mWorld;
-    XMMATRIX mView;
-    XMMATRIX mProjection;
+    DirectX::XMMATRIX mWorld;
+    DirectX::XMMATRIX mView;
+    DirectX::XMMATRIX mProjection;
 };
 
 ////////////////////////////////////////////////////////////////
@@ -38,9 +35,19 @@ struct ConstantBuffer
 class CDXView : public CWnd
 {
 public:
-    CDXView();
-    virtual ~CDXView() override;
-    void Render();
+    CDXView() = default;
+    virtual ~CDXView() override = default;
+
+    HRESULT CreateD3DDevice();
+    HRESULT CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory1>& factory, UINT width, UINT height);
+    HRESULT CreateRenderTarget(UINT width, UINT height);
+    HRESULT GetDXGIFactory(Microsoft::WRL::ComPtr<IDXGIFactory1>& factory);
+    HRESULT InitDevice();
+    HRESULT InitShaders();
+    HRESULT InitGeometry();
+    void    InitCamera(UINT width, UINT height);
+    void    Render();
+    HRESULT ResizeBuffers(UINT width, UINT height);
 
 protected:
     virtual int     OnCreate(CREATESTRUCT& cs) override;
@@ -55,31 +62,34 @@ private:
 
     // Message handlers called by WndProc
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    void CleanupDevice();
-    HRESULT InitDevice();
+    LRESULT OnSizing(UINT msg, WPARAM wParam, LPARAM lParam);
 
     // Member variables
-    D3D_DRIVER_TYPE         m_driverType = D3D_DRIVER_TYPE_NULL;
-    D3D_FEATURE_LEVEL       m_featureLevel = D3D_FEATURE_LEVEL_11_0;
-    ID3D11Device*           m_pd3dDevice = nullptr;
-    ID3D11Device1*          m_pd3dDevice1 = nullptr;
-    ID3D11DeviceContext*    m_pImmediateContext = nullptr;
-    ID3D11DeviceContext1*   m_pImmediateContext1 = nullptr;
-    IDXGISwapChain*         m_pSwapChain = nullptr;
-    IDXGISwapChain1*        m_pSwapChain1 = nullptr;
-    ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
-    ID3D11VertexShader*     m_pVertexShader = nullptr;
-    ID3D11PixelShader*      m_pPixelShader = nullptr;
-    ID3D11InputLayout*      m_pVertexLayout = nullptr;
-    ID3D11Buffer*           m_pVertexBuffer = nullptr;
-    ID3D11Buffer*           m_pIndexBuffer = nullptr;
-    ID3D11Buffer*           m_pConstantBuffer = nullptr;
-    XMFLOAT4X4              m_world;
-    XMFLOAT4X4              m_view;
-    XMFLOAT4X4              m_projection;
+    Microsoft::WRL::ComPtr<ID3D11Device>           m_pd3dDevice;
+    Microsoft::WRL::ComPtr<ID3D11Device1>          m_pd3dDevice1;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext>    m_pImmediateContext;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext1>   m_pImmediateContext1;
+    Microsoft::WRL::ComPtr<IDXGISwapChain>         m_pSwapChain;
+    Microsoft::WRL::ComPtr<IDXGISwapChain1>        m_pSwapChain1;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
+    Microsoft::WRL::ComPtr<ID3D11VertexShader>     m_pVertexShader;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader>      m_pPixelShader;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout>      m_pVertexLayout;
+    Microsoft::WRL::ComPtr<ID3D11Buffer>           m_pVertexBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer>           m_pIndexBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer>           m_pConstantBuffer;
 
-    LARGE_INTEGER           m_frequency = {};
-    LARGE_INTEGER           m_lastTime = {};
-    float                   m_rotationAngle = 0.0f;
+    D3D_DRIVER_TYPE   m_driverType = D3D_DRIVER_TYPE_NULL;
+    D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0;
+    DirectX::XMFLOAT4X4 m_world{ 1.0f, 0.0f, 0.0f, 0.0f,
+                                 0.0f, 1.0f, 0.0f, 0.0f,
+                                 0.0f, 0.0f, 1.0f, 0.0f,
+                                 0.0f, 0.0f, 0.0f, 1.0f };
+
+    DirectX::XMFLOAT4X4 m_view = m_world;
+    DirectX::XMFLOAT4X4 m_projection = m_world;
+
+    LARGE_INTEGER m_frequency = {};
+    LARGE_INTEGER m_lastTime = {};
+    float m_rotationAngle = 0.0f;
 };

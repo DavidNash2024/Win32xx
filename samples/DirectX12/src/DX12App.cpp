@@ -2,9 +2,7 @@
 // DX12App.cpp
 //
 
-
 #include "DX12App.h"
-
 
 ////////////////////////////////
 // CDXView function definitions.
@@ -26,4 +24,3 @@ BOOL CDirectX12App::OnIdle(LONG)
     m_view.Render();
     return TRUE;
 }
-

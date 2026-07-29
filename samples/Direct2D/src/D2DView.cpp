@@ -3,7 +3,6 @@
 //
 
 #include "pch.h"
-#include "D2DApp.h"
 #include "D2DView.h"
 
 ////////////////////////////////
@@ -26,7 +25,7 @@ HRESULT CD2DView::CreateDeviceIndependentResources()
 {
     if (!m_pDirect2dFactory)
     {
-        return D2D1CreateFactory<ID2D1Factory>(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
+        return ::D2D1CreateFactory<ID2D1Factory>(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
     }
     return S_OK;
 }
