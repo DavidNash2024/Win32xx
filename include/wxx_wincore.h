@@ -113,26 +113,35 @@ namespace Win32xx
         CString appData;
 
         CString system;
-        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
+        UINT sysLen = ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
         system.ReleaseBuffer();
-
-        // Call the SHGetFolderPath function to retrieve the AppData folder.
-        SHGetFolderPath(nullptr, CSIDL_APPDATA | CSIDL_FLAG_CREATE, nullptr, 0,
-            appData.GetBuffer(MAX_PATH));
-
-        appData.ReleaseBuffer();
-
-        // If we can't get the AppData folder, get the MyDocuments folder instead.
-        if (appData.IsEmpty())
+        if (sysLen == 0)
         {
-            // Call the SHGetSpecialFolderPath function to retrieve the
-            // MyDocuments folder.
-            SHGetSpecialFolderPath(nullptr, appData.GetBuffer(MAX_PATH),
-                CSIDL_PERSONAL, TRUE);
-
-            appData.ReleaseBuffer();
+            TRACE("GetSystemDirectory failed\n");
+            system.Empty();
         }
 
+        // Call the SHGetFolderPath function to retrieve the AppData folder.
+        HRESULT hr = SHGetFolderPath(nullptr, CSIDL_APPDATA | CSIDL_FLAG_CREATE, nullptr, 0,
+            appData.GetBuffer(MAX_PATH));
+        appData.ReleaseBuffer();
+
+        if (FAILED(hr) || appData.IsEmpty())
+        {
+            // Fallback to MyDocuments if SHGetFolderPath failed or returned empty.
+            TRACE("SHGetFolderPath for AppData failed, falling back to Personal folder\n");
+            BOOL ok = SHGetSpecialFolderPath(nullptr, appData.GetBuffer(MAX_PATH),
+                CSIDL_PERSONAL, TRUE);
+            appData.ReleaseBuffer();
+            if (!ok || appData.IsEmpty())
+            {
+                // Final fallback to system directory or empty string.
+                if (!system.IsEmpty())
+                    appData = system;
+                else
+                    appData.Empty();
+            }
+        }
         return appData;
     }
 
@@ -142,49 +151,19 @@ namespace Win32xx
     inline std::vector<CString> GetCommandLineArgs()
     {
         std::vector<CString> commandLineArgs;
-        CString commandLine = GetCommandLine();
-        int index = 0;
-        int endPos = 0;
 
-        while (index < commandLine.GetLength())
+        // We use the wide version of CommandLineToArgvW for both ANSI and Unicode
+        // here because CommandLineToArgvA behaves differently.
+        int argc = 0;
+        LPWSTR* argv = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
+        if (argv != nullptr)
         {
-            // Is the argument quoted?
-            bool isQuoted = (commandLine[index] == _T('\"'));
+            for (int i = 0; i < argc; ++i)
+                commandLineArgs.emplace_back(CString(argv[i]));
 
-            if (isQuoted)
-            {
-                // Find the terminating token (quote followed by space).
-                endPos = commandLine.Find(_T("\" "), index);
-                if (endPos == -1) endPos = commandLine.GetLength() - 1;
-
-                // Store the argument in the CStringT vector without the quotes.
-                CString s;
-                if (endPos - index < 2)
-                    s = _T("\"\"");     // "" For a single quote or double quote argument.
-                else
-                    s = commandLine.Mid(index + 1, endPos - index - 1);
-
-                commandLineArgs.push_back(s);
-                index = endPos + 2;
-            }
-            else
-            {
-                // Find the terminating token (space character).
-                endPos = commandLine.Find(_T(' '), index);
-                if (endPos == -1) endPos = commandLine.GetLength();
-
-                // Store the argument in the CStringT vector.
-                CString s = commandLine.Mid(index, endPos - index);
-                commandLineArgs.push_back(s);
-                index = endPos + 1;
-            }
-
-            // Skip excess space characters.
-            while (index < commandLine.GetLength() && commandLine[index] == _T(' '))
-                index++;
+            ::LocalFree(argv);
         }
 
-        // CommandLineArgs is a vector of CStringT.
         return commandLineArgs;
     }
 
@@ -842,7 +821,7 @@ namespace Win32xx
         // Override it to automatically perform tasks during window creation.
         // Return 0 to continue creating the window.
 
-        // Note: Window controls don't call OnCreate. They are sublcassed (attached)
+        // Note: Window controls don't call OnCreate. They are subclassed (attached)
         //  after their window is created.
 
         return 0;

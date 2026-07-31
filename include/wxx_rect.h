@@ -921,7 +921,12 @@ namespace Win32xx
     inline CPoint GetCursorPos()
     {
         CPoint pt;
-        ::GetCursorPos(&pt);
+        if (!::GetCursorPos(&pt))
+        {
+            TRACE("GetCursorPos failed\n");
+            pt.x = 0;
+            pt.y = 0;
+        }
         return pt;
     }
 

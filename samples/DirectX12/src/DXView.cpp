@@ -256,6 +256,8 @@ LRESULT CDXView::OnSizing(UINT, WPARAM, LPARAM lparam)
 // Specifiy the CREATESTRUCT parameters before creating the window.
 void CDXView::PreCreate(CREATESTRUCT& cs)
 {
+    m_width = DpiScaleInt(400);
+    m_height = DpiScaleInt(400);
     CRect windowRect(0, 0, m_width, m_height);
     ::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 

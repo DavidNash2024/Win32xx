@@ -270,18 +270,24 @@ namespace Win32xx
     // Overrides OnPaint and call OnDraw with a memory DC.
     inline LRESULT CScrollView::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-
         if (m_totalSize != CSize(0, 0))
         {
             CPaintDC dc(*this);
             CMemDC memDC(dc);
 
-            // negative sizes are not allowed.
             assert(m_totalSize.cx > 0);
             assert(m_totalSize.cy > 0);
 
             // Create the compatible bitmap for the memory DC.
             memDC.CreateCompatibleBitmap(GetDC(), m_totalSize.cx, m_totalSize.cy);
+            CBitmap curBmp = memDC.GetCurrentBitmap();
+            if (curBmp.GetHandle() == nullptr)
+            {
+                TRACE("CScrollView::OnPaint - CreateCompatibleBitmap failed.\n");
+                OnDraw(dc);
+                FillOutsideRect(dc, m_bkgndBrush);
+                return 0;
+            }
 
             // Set the background color.
             CRect rcTotal(CPoint(0, 0), m_totalSize);
@@ -420,10 +426,18 @@ namespace Win32xx
     // Sets the current scroll position.
     inline void CScrollView::SetScrollPosition(POINT pt)
     {
-        assert(pt.x >= 0 && pt.x <= m_totalSize.cx);
-        assert(pt.y >= 0 && pt.y <= m_totalSize.cy);
+        int maxX = (m_totalSize.cx > 0) ? m_totalSize.cx : 0;
+        int maxY = (m_totalSize.cy > 0) ? m_totalSize.cy : 0;
 
-        m_currentPos = pt;
+        int x = pt.x;
+        if (x < 0) x = 0;
+        else if (x > maxX) x = maxX;
+
+        int y = pt.y;
+        if (y < 0) y = 0;
+        else if (y > maxY) y = maxY;
+
+        m_currentPos = CPoint(x, y);
         UpdateBars();
     }
 

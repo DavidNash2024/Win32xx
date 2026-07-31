@@ -184,7 +184,7 @@ namespace Win32xx
     inline int GetWinVersion()
     {
         // Declare a pointer to the RtlGetVersion function.
-        using RTLGETVERSION = void (WINAPI*)(PRTL_OSVERSIONINFOW);
+        using RTLGETVERSION = LONG (WINAPI*)(PRTL_OSVERSIONINFOW);
 
         HMODULE module = ::GetModuleHandle(_T("ntdll.dll"));
         RTL_OSVERSIONINFOW osvi = {};
@@ -197,7 +197,11 @@ namespace Win32xx
             if (pfn != nullptr)
             {
                 osvi.dwOSVersionInfoSize = sizeof(osvi);
-                pfn(&osvi);
+                LONG status = pfn(&osvi);
+                if (status != 0)
+                {
+                    ::OutputDebugString(_T("RtlGetVersion failed\n"));
+                }
             }
         }
 

@@ -454,6 +454,10 @@ namespace Win32xx
                      0, 0, LR_SHARED));
         HICON disabledIcon = static_cast<HICON>(GetApp()->LoadImage(
                              disabledIconID, IMAGE_ICON, 0, 0, LR_SHARED));
+
+        if (icon == nullptr)
+            return FALSE;
+
         return AddMenuIcon(menuItemID, icon, disabledIcon);
     }
 
@@ -462,7 +466,8 @@ namespace Win32xx
     inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, HICON icon,
         HICON disabledIcon)
     {
-        assert(icon != nullptr);
+        if (icon == nullptr)
+            return FALSE;
 
         int cxImage;
         int cyImage;

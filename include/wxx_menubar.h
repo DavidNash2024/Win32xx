@@ -366,6 +366,9 @@ namespace Win32xx
     inline UINT CMenuBar::GetMenuItemID() const
     {
         int menuItem = IsMDIChildMaxed() ? m_hotItem - 1 : m_hotItem;
+        if (!IsMenu(m_topMenu))
+            return UINT(-1);
+
         return ::GetMenuItemID(m_topMenu, menuItem);
     }
 
@@ -873,7 +876,8 @@ namespace Win32xx
 
         // Remove any remaining hook first.
         TLSData* pTLSData = GetApp()->GetTlsData();
-        pTLSData->pMenuBar = this;
+        if (pTLSData)
+            pTLSData->pMenuBar = this;
         if (m_msgHook != nullptr)
             ::UnhookWindowsHookEx(m_msgHook);
 
@@ -882,12 +886,16 @@ namespace Win32xx
             nullptr, ::GetCurrentThreadId());
 
         // Display the shortcut menu.
-        bool isRightToLeft = false;
-        isRightToLeft = (((GetAncestor().GetExStyle()) & WS_EX_LAYOUTRTL)) != 0;
-        int xPos = isRightToLeft ? rc.right : rc.left;
-        UINT id = static_cast<UINT>(::TrackPopupMenuEx(m_popupMenu,
-            TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, xPos, rc.bottom,
-            *this, &tpm));
+        UINT id = 0;
+        if (IsMenu(m_popupMenu))
+        {
+            bool isRightToLeft = false;
+            isRightToLeft = (((GetAncestor().GetExStyle()) & WS_EX_LAYOUTRTL)) != 0;
+            int xPos = isRightToLeft ? rc.right : rc.left;
+            id = static_cast<UINT>(::TrackPopupMenuEx(m_popupMenu,
+                TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, xPos, rc.bottom,
+                *this, &tpm));
+        }
 
         // We get here once the TrackPopupMenuEx has ended.
         // Remove the message hook.

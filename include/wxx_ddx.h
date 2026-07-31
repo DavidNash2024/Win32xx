@@ -299,8 +299,8 @@ namespace Win32xx
         if (!m_retrieveAndValidate)
         {
             // Just leave a debugging trace if writing to a control.
-            TRACE(_T("*** WARNING: control data is out of range. ***\n"));
-            return; // don't throw
+            TRACE("*** WARNING: control data is out of range. ***\n");
+            return; // Don't throw.
         }
 
         // Throw includes an error message with the range tuple when
@@ -338,8 +338,8 @@ namespace Win32xx
         // Just leave a debugging trace if writing to a control.
         if (!m_retrieveAndValidate)
         {
-            TRACE(_T("*** WARNING: current control data is out of range. ***\n"));
-            return;     // don't stop
+            TRACE("*** WARNING: current control data is out of range. ***\n");
+            return;     // Don't throw.
         }
 
         // Throw includes an error message with the range tuple when
@@ -496,6 +496,8 @@ namespace Win32xx
     inline void CDataExchange::DDX_CBIndex(UINT id, int& index)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
 
         if (m_retrieveAndValidate)
             index = static_cast<int>(::SendMessage(control, CB_GETCURSEL, 0, 0));
@@ -517,6 +519,9 @@ namespace Win32xx
     inline void CDataExchange::DDX_CBString(UINT id, CString& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
+
         if (m_retrieveAndValidate)
         {
             // Get the current edit item text or drop list static where possible.
@@ -563,6 +568,9 @@ namespace Win32xx
     inline void CDataExchange::DDX_CBStringExact(UINT id, CString& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
+
         if (m_retrieveAndValidate)
         {
             DDX_CBString(id, value);
@@ -638,6 +646,9 @@ namespace Win32xx
     inline void CDataExchange::DDX_LBIndex(UINT id, int& index)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
+
         if (m_retrieveAndValidate)
             index = static_cast<int>(::SendMessage(control, LB_GETCURSEL, 0, 0));
         else
@@ -653,6 +664,9 @@ namespace Win32xx
     inline void CDataExchange::DDX_LBString(UINT id, CString& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
+
         if (m_retrieveAndValidate)
         {
              // Find the index of the item selected in the list box.
@@ -703,6 +717,9 @@ namespace Win32xx
     inline void CDataExchange::DDX_LBStringExact(UINT id, CString& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
+
         if (m_retrieveAndValidate)
         {
             // Read and return the CString value.
@@ -743,6 +760,8 @@ namespace Win32xx
     inline void CDataExchange::DDX_MonthCal(UINT id, SYSTEMTIME& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
 
         if (m_retrieveAndValidate)
         {
@@ -770,6 +789,8 @@ namespace Win32xx
     inline void CDataExchange::DDX_Progress(UINT id, int& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
 
         if (m_retrieveAndValidate)
             value = static_cast<int>(::SendMessage(control, PBM_GETPOS, 0, 0));
@@ -784,6 +805,8 @@ namespace Win32xx
     inline void CDataExchange::DDX_Radio(UINT id, int& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
 
         // Assure that the control is a radio button and part of a group.
         bool firstInGroup = (::GetWindowLongPtr(control, GWL_STYLE) & WS_GROUP) != 0;
@@ -825,8 +848,8 @@ namespace Win32xx
             }
             else
             {
-                TRACE(_T("*** Warning: there is a non-radio button in "));
-                TRACE(_T("a radio button group. ***\n"));
+                TRACE("*** Warning: there is a non-radio button in ");
+                TRACE("a radio button group. ***\n");
             }
 
             // Check the next window in the group, if any.
@@ -851,6 +874,8 @@ namespace Win32xx
     inline void CDataExchange::DDX_Scroll(UINT id, int& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
 
         if (m_retrieveAndValidate)
             value = ::GetScrollPos(control, SB_CTL);
@@ -868,6 +893,8 @@ namespace Win32xx
     inline void CDataExchange::DDX_Slider(UINT id, int& value)
     {
         HWND control = PrepareCtrl(id);
+        if (!control)
+            return;
 
         if (m_retrieveAndValidate)
             value = static_cast<int>(::SendMessage(control, TBM_GETPOS, 0, 0));
@@ -1135,8 +1162,8 @@ namespace Win32xx
 
         if (!m_retrieveAndValidate)
         {
-            TRACE(_T("*** WARNING: CDataExchange::Fail() called while "));
-            TRACE(_T("writing to a control. ***\n"));
+            TRACE("*** WARNING: CDataExchange::Fail() called while ");
+            TRACE("writing to a control. ***\n");
         }
         else if (m_lastControl != nullptr)
         {
@@ -1149,8 +1176,8 @@ namespace Win32xx
         }
         else
         {
-            TRACE(_T("*** WARNING: validation failed with no control to "));
-            TRACE(_T("restore focus to. ***\n"));
+            TRACE("*** WARNING: validation failed with no control to ");
+            TRACE("restore focus to. ***\n");
         }
     }
 
@@ -1174,8 +1201,18 @@ namespace Win32xx
         assert(id != 0);
         assert(static_cast<int>(id) != -1); // not allowed
 
-        HWND    control = ::GetDlgItem(m_parent, static_cast<int>(id));
-        assert(control);
+        HWND control = ::GetDlgItem(m_parent, static_cast<int>(id));
+        if (control == nullptr)
+        {
+            CString msg;
+            msg.Format(_T("CDataExchange::PrepareCtrl - missing control id %d\n"), id);
+            TRACE(msg);
+            assert(control);
+
+            m_lastControl = nullptr;
+            m_isEditLastControl = FALSE;
+            return nullptr;
+        }
 
         m_lastControl  = control;
         m_isEditLastControl = FALSE; // not an edit item by default
@@ -1187,7 +1224,15 @@ namespace Win32xx
     inline HWND CDataExchange::PrepareEditCtrl(UINT id)
     {
         HWND control = PrepareCtrl(id);
-        assert(control);
+        if (control == nullptr)
+        {
+            CString msg;
+            msg.Format(_T("CDataExchange::PrepareEditCtrl - missing edit control id %d\n"), id);
+            TRACE(msg);
+            assert(control);
+            m_isEditLastControl = TRUE;
+            return nullptr;
+        }
 
         m_isEditLastControl = TRUE;
         return control;

@@ -130,7 +130,7 @@ namespace Win32xx
 
 
     ///////////////////////////////////////////////////////////////////
-    // CGlobaLock is a class template used to provide a self unlocking
+    // CGlobalLock is a class template used to provide a self unlocking
     // object to global memory. It is used to provide convenient access
     // to the memory provided by hDevMode and hDevNames handles.
     // The framework uses this class to eliminate the need to manually
@@ -259,7 +259,7 @@ namespace Win32xx
         HINSTANCE m_instance;         // handle to the application's instance
         HINSTANCE m_resource;         // handle to the application's resources
         DWORD m_tlsData;              // Thread Local Storage data
-        WNDPROC m_callback;           // callback address of CWnd::StaticWndowProc
+        WNDPROC m_callback;           // callback address of CWnd::StaticWindowProc
         CHGlobal m_devMode;           // Used by CPrintDialog and CPageSetupDialog
         CHGlobal m_devNames;          // Used by CPrintDialog and CPageSetupDialog
 

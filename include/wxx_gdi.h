@@ -1091,12 +1091,18 @@ namespace Win32xx
 
     inline CBitmap::CBitmap(LPCTSTR resourceName)
     {
-        LoadBitmap(resourceName);
+        if (!LoadBitmap(resourceName))
+        {
+            TRACE("CBitmap::CBitmap: LoadBitmap(resourceName) failed\n");
+        }
     }
 
     inline CBitmap::CBitmap(UINT resourceID)
     {
-        LoadBitmap(resourceID);
+        if (!LoadBitmap(resourceID))
+        {
+            TRACE("CBitmap::CBitmap: LoadBitmap(resourceID) failed\n");
+        }
     }
 
     inline CBitmap::CBitmap(const CBitmap& rhs) : CGDIObject(rhs)

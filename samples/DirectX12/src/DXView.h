@@ -34,8 +34,8 @@ protected:
 
 private:
     // Window values
-    int m_width = 800;
-    int m_height = 800;
+    int m_width = 0;
+    int m_height = 0;
     int m_triangleAngle = 0;
 
     // Core DX12 Objects

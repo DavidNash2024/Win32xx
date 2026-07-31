@@ -1771,8 +1771,12 @@ namespace Win32xx
         if (!pDockDrag) return FALSE;
 
         CPoint pt = pDragPos->pos;
-        CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
-        if (pDockTarget != pDockDrag->GetDockAncestor())
+        CDocker* pTargetUnder = pDockDrag->GetDockUnderDragPoint(pt);
+        if (!pTargetUnder)
+            return FALSE;
+
+        CDocker* pDockTarget = pTargetUnder->GetTopmostDocker();
+        if (!pDockTarget || pDockTarget != pDockDrag->GetDockAncestor())
         {
             Destroy();
             return FALSE;
@@ -2004,8 +2008,12 @@ namespace Win32xx
         if (!pDockDrag) return FALSE;
 
         CPoint pt = pDragPos->pos;
-        CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
-        if (pDockTarget != pDockDrag->GetDockAncestor())
+        CDocker* pTargetUnder = pDockDrag->GetDockUnderDragPoint(pt);
+        if (!pTargetUnder)
+            return FALSE;
+
+        CDocker* pDockTarget = pTargetUnder->GetTopmostDocker();
+        if (!pDockTarget || pDockTarget != pDockDrag->GetDockAncestor())
         {
             Destroy();
             return FALSE;
@@ -2062,8 +2070,12 @@ namespace Win32xx
         if (!pDockDrag) return FALSE;
 
         CPoint pt = pDragPos->pos;
-        CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
-        if (pDockTarget != pDockDrag->GetDockAncestor())
+        CDocker* pTargetUnder = pDockDrag->GetDockUnderDragPoint(pt);
+        if (!pTargetUnder)
+            return FALSE;
+
+        CDocker* pDockTarget = pTargetUnder->GetTopmostDocker();
+        if (!pDockTarget || pDockTarget != pDockDrag->GetDockAncestor())
         {
             Destroy();
             return FALSE;
@@ -2118,8 +2130,12 @@ namespace Win32xx
         if (!pDockDrag) return FALSE;
 
         CPoint pt = pDragPos->pos;
-        CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
-        if (pDockTarget != pDockDrag->GetDockAncestor())
+        CDocker* pTargetUnder = pDockDrag->GetDockUnderDragPoint(pt);
+        if (!pTargetUnder)
+            return FALSE;
+
+        CDocker* pDockTarget = pTargetUnder->GetTopmostDocker();
+        if (!pDockTarget || pDockTarget != pDockDrag->GetDockAncestor())
         {
             Destroy();
             return FALSE;

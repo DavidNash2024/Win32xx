@@ -627,14 +627,18 @@ namespace Win32xx
 
         if (activeMDIChild)
         {
-            CMDIChild* pMDIChild = static_cast<CMDIChild*>(
-                T::GetCWndPtr(activeMDIChild));
-            assert ( dynamic_cast<CMDIChild*>(T::GetCWndPtr(activeMDIChild)) );
+            CMDIChild* pMDIChild = static_cast<CMDIChild*>(T::GetCWndPtr(activeMDIChild));
+            assert(pMDIChild);
+            if (!pMDIChild)
+                return 0;
+
+            assert(dynamic_cast<CMDIChild*>(pMDIChild));
 
             if (pMDIChild->GetChildMenu())
                 UpdateFrameMenu(pMDIChild->GetChildMenu());
             else
                 UpdateFrameMenu(T::GetFrameMenu());
+
             if (pMDIChild->GetChildAccel())
                 GetApp()->SetAccelerators(pMDIChild->GetChildAccel(), *this);
             else
@@ -772,7 +776,11 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::SetActiveMDIChild(CMDIChild* pChild)
     {
-        assert ( pChild->IsWindow() );
+        assert(pChild);
+        if (!pChild)
+            return;
+
+        assert(pChild->IsWindow());
 
         WPARAM wparam = reinterpret_cast<WPARAM>(pChild->GetHwnd());
         GetMDIClient().SendMessage(WM_MDIACTIVATE, wparam, 0);

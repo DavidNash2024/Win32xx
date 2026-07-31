@@ -237,7 +237,7 @@ namespace Win32xx
         static_assert(std::is_same_v<T, CDevNames>,
             "IsDefaultPrinter() is only supported for CDevNames.");
 
-        return _T("");
+        return false;
     }
 
     // Returns true if the DEVNAMES in the global memory is for the
@@ -454,14 +454,24 @@ namespace Win32xx
     // Refer to LoadCursor in the Windows API documentation for more information.
     inline HCURSOR CWinApp::LoadCursor(LPCTSTR resourceName) const
     {
-        return ::LoadCursor(GetResourceHandle(), resourceName);
+        HCURSOR h = ::LoadCursor(GetResourceHandle(), resourceName);
+        if (h == nullptr)
+        {
+            TRACE("LoadCursor(resourceName) failed\n");
+        }
+        return h;
     }
 
     // Loads the cursor resource from the resource script (resource.rc)
     // Refer to LoadCursor in the Windows API documentation for more information.
     inline HCURSOR CWinApp::LoadCursor(UINT cursorID) const
     {
-        return ::LoadCursor(GetResourceHandle(), MAKEINTRESOURCE (cursorID));
+        HCURSOR h = ::LoadCursor(GetResourceHandle(), MAKEINTRESOURCE(cursorID));
+        if (h == nullptr)
+        {
+            TRACE("LoadCursor(cursorID) failed\n");
+        }
+        return h;
     }
 
     // Returns the handle of a standard cursor. Standard cursors include:
@@ -470,7 +480,12 @@ namespace Win32xx
     // Refer to LoadCursor in the Windows API documentation for more information.
     inline HCURSOR CWinApp::LoadStandardCursor(LPCTSTR cursorName) const
     {
-        return ::LoadCursor(nullptr, cursorName);
+        HCURSOR h = ::LoadCursor(nullptr, cursorName);
+        if (h == nullptr)
+        {
+            TRACE("LoadStandardCursor failed\n");
+        }
+        return h;
     }
 
     // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values.
@@ -478,14 +493,24 @@ namespace Win32xx
     // Refer to LoadIcon in the Windows API documentation for more information.
     inline HICON CWinApp::LoadIcon(LPCTSTR resourceName) const
     {
-        return ::LoadIcon(GetResourceHandle(), resourceName);
+        HICON h = ::LoadIcon(GetResourceHandle(), resourceName);
+        if (h == nullptr)
+        {
+            TRACE("LoadIcon(resourceName) failed\n");
+        }
+        return h;
     }
 
     // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values.
     // Refer to LoadIcon in the Windows API documentation for more information.
     inline HICON CWinApp::LoadIcon(UINT iconID) const
     {
-        return ::LoadIcon(GetResourceHandle(), MAKEINTRESOURCE (iconID));
+        HICON h = ::LoadIcon(GetResourceHandle(), MAKEINTRESOURCE(iconID));
+        if (h == nullptr)
+        {
+            TRACE("LoadIcon(iconID) failed\n");
+        }
+        return h;
     }
 
     // Returns the handle of a standard Icon. Standard Icons include:
@@ -494,7 +519,12 @@ namespace Win32xx
     // Refer to LoadIcon in the Windows API documentation for more information.
     inline HICON CWinApp::LoadStandardIcon(LPCTSTR iconName) const
     {
-        return ::LoadIcon(nullptr, iconName);
+        HICON h = ::LoadIcon(nullptr, iconName);
+        if (h == nullptr)
+        {
+            TRACE("LoadStandardIcon failed\n");
+        }
+        return h;
     }
 
     // Loads an icon, cursor, animated cursor, or bitmap image.
@@ -518,7 +548,12 @@ namespace Win32xx
     // Refer to LoadImage in the Windows API documentation for more information.
     inline HANDLE CWinApp::LoadImage(UINT imageID, UINT type, int cx, int cy, UINT flags) const
     {
-        return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
+        HANDLE h = ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE(imageID), type, cx, cy, flags);
+        if (h == nullptr)
+        {
+            TRACE("LoadImage(imageID) failed\n");
+        }
+        return h;
     }
 
     // Removes this CWnd's pointer from m_mapHWND.
@@ -527,11 +562,12 @@ namespace Win32xx
         CThreadLock mapLock(m_wndLock);
 
         auto& map = GetApp()->m_mapHWND;
-        for (auto [hwnd, wndPtr] : map)
+        for (auto it = map.begin(); it != map.end(); ++it)
         {
+            auto& [hwnd, wndPtr] = *it; 
             if (pWnd == wndPtr)
             {
-                map.erase(hwnd);
+                map.erase(it);
                 break;
             }
         }

@@ -235,6 +235,11 @@ namespace Win32xx
     inline int CImageList::AddIcon(UINT iconID) const
     {
         HICON icon = GetApp()->LoadIcon(iconID);
+        if (icon == nullptr)
+        {
+            TRACE("CImageList::AddIcon: LoadIcon failed\n");
+            return -1;
+        }
         return Add(icon);
     }
 

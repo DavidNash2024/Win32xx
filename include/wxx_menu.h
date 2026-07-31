@@ -192,6 +192,10 @@ namespace Win32xx
         {
             Assign(menu);
         }
+        else
+        {
+            TRACE("CMenu::CMenu: LoadMenu failed for resource id\n");
+        }
     }
 
     // Construct a CMenu from a menu handle.
@@ -199,6 +203,8 @@ namespace Win32xx
     {
         if (menu != nullptr)
             Attach(menu);
+        else
+            TRACE("CMenu::CMenu: constructed with null HMENU\n");
     }
 
     // Note: A copy of a CMenu is a clone of the original.
@@ -662,9 +668,11 @@ namespace Win32xx
         if (menu != nullptr)
         {
             Assign(menu);
+            return TRUE;
         }
 
-        return m_pData->menu != nullptr;
+        TRACE("CMenu::LoadMenu: LoadMenu failed.\n");
+        return FALSE;
     }
 
     // Loads the menu from the specified windows resource.

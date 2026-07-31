@@ -1,7 +1,7 @@
 Version 10.3
 ============
-This version uses features available in C++17 and updates the Win32++
-library. CRegKey, CString and support for the ribbon framework have
+This version focuses on modernising the Win32++ framework. It uses features
+available in C++17. CRegKey, CString and support for the ribbon framework have
 been updated. CPrintDialogEx and CWebBroswer have been depreciated.
 
 The samples that ship with Win32++ have also been updated. Samples with an
@@ -94,7 +94,7 @@ Modified CStatusBar::GetParts            - added optional parameters
 Removed Browser                          - sample
 Removed BrowserATL                       - sample
 Removed DirectX9                         - sample
-Removed CRibbon                          - class
+Removed CRibbon                          - class (replaced by CRibbonT)
 Removed CWinApp::MsgCWinApp              - member function
 Removed CWinApp::MsgTlsIndex             - member function
 Renamed the Explorer sample to ExplorerEx

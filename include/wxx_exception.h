@@ -311,14 +311,14 @@ namespace Win32xx
         *m_filePath = {};
 
         // Display some text in the debugger.
-        TRACE(_T("*** CFileException thrown ***\n"));
+        TRACE("*** CFileException thrown ***\n");
 
         if (filePath)
         {
             StrCopy(m_filePath, filePath, WXX_MAX_STRING_SIZE);
-            TRACE(_T("File name: "));
+            TRACE("File name: ");
             TRACE(filePath);
-            TRACE(_T("\n"));
+            TRACE("\n");
         }
 
         if (GetError() != 0)
@@ -333,20 +333,20 @@ namespace Win32xx
         *m_filePath = {};
 
         // Display some text in the debugger.
-        TRACE(_T("*** CFileException thrown ***\n"));
+        TRACE("*** CFileException thrown ***\n");
 
         if (filePath)
         {
             StrCopy(m_filePath, filePath, WXX_MAX_STRING_SIZE);
-            TRACE(_T("File name: "));
+            TRACE("File name: ");
             TRACE(filePath);
-            TRACE(_T("\n"));
+            TRACE("\n");
         }
 
         if (text)
         {
             TRACE(text);
-            TRACE(_T("\n"));
+            TRACE("\n");
         }
 
         if (GetError() != 0)
@@ -411,7 +411,7 @@ namespace Win32xx
         : CException(messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CNotSupportedException thrown ***\n"));
+        TRACE("*** CNotSupportedException thrown ***\n");
 
         if (GetError() != 0)
             TRACE(GetErrorString());
@@ -423,12 +423,12 @@ namespace Win32xx
         : CException(text, messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CNotSupportedException thrown ***\n"));
+        TRACE("*** CNotSupportedException thrown ***\n");
 
         if (text)
         {
             TRACE(text);
-            TRACE(_T("\n"));
+            TRACE("\n");
         }
 
         if (GetError() != 0)
@@ -473,7 +473,7 @@ namespace Win32xx
         : CException(messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CResourceException thrown ***\n"));
+        TRACE("*** CResourceException thrown ***\n");
 
         if (GetError() != 0)
             TRACE(GetErrorString());
@@ -485,12 +485,12 @@ namespace Win32xx
         : CException(text, messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CResourceException thrown ***\n"));
+        TRACE("*** CResourceException thrown ***\n");
 
         if (text)
         {
             TRACE(text);
-            TRACE(_T("\n"));
+            TRACE("\n");
         }
 
         if (GetError() != 0)
@@ -532,7 +532,7 @@ namespace Win32xx
             : CException(messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CUserException thrown ***\n"));
+        TRACE("*** CUserException thrown ***\n");
     }
 
     // CUserException constructor.
@@ -540,12 +540,12 @@ namespace Win32xx
         int messageID /*= 0*/) noexcept : CException(text, messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CUserException thrown ***\n"));
+        TRACE("*** CUserException thrown ***\n");
 
         if (text)
         {
             TRACE(text);
-            TRACE(_T("\n"));
+            TRACE("\n");
         }
     }
 
@@ -583,7 +583,7 @@ namespace Win32xx
         : CException(messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CWinException thrown ***\n"));
+        TRACE("*** CWinException thrown ***\n");
 
         if (GetError() != 0)
             TRACE(GetErrorString());
@@ -595,11 +595,11 @@ namespace Win32xx
         : CException(text, messageID)
     {
         // Display some text in the debugger.
-        TRACE(_T("*** CWinException thrown ***\n"));
+        TRACE("*** CWinException thrown ***\n");
         if (text)
         {
             TRACE(text);
-            TRACE(_T("\n"));
+            TRACE("\n");
         }
 
         if (GetError() != 0)
