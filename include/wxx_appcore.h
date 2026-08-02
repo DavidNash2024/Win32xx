@@ -564,7 +564,7 @@ namespace Win32xx
         auto& map = GetApp()->m_mapHWND;
         for (auto it = map.begin(); it != map.end(); ++it)
         {
-            auto& [hwnd, wndPtr] = *it; 
+            auto& [hwnd, wndPtr] = *it;
             if (pWnd == wndPtr)
             {
                 map.erase(it);

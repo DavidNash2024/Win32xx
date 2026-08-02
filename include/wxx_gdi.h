@@ -420,6 +420,7 @@ namespace Win32xx
             if (dc != nullptr)
             {
                 GetApp()->RemoveDCFromMap(dc);
+                ::RestoreDC(dc, savedDCState);
                 if (isManagedHDC)
                 {
                     // We need to release a window DC, end a paint DC,

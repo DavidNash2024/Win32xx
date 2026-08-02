@@ -462,6 +462,7 @@ namespace Win32xx
 
         if (!isValid)
         {
+            Cleanup();
             int error = static_cast<int>(CommDlgExtendedError());
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // Ignore the exception caused by closing the dialog.
@@ -597,10 +598,10 @@ namespace Win32xx
                 {
                     LRESULT result = OnNotify(wparam, lparam);
                     SetWindowLongPtr(DWLP_MSGRESULT, result);
-                    return result;
+                    return TRUE;
                 }
 
-                return 0;
+                return FALSE;
             }
 
             default: break;
@@ -640,11 +641,6 @@ namespace Win32xx
 
     // Display either a FileOpen or FileSave dialog, and allow the user to
     // select various options. An exception is thrown if the dialog isn't created.
-    //
-    // If the OFN_ALLOWMULTISELECT flag is used, the size of the buffer required
-    // to hold the file names can be quite large. An exception is thrown if the
-    // buffer size specified by m_OFN.nMaxFile turns out to be too small.
-    // Use SetParamaters to set a larger size if required.
     inline INT_PTR CFileDialog::DoModal(HWND owner /* = nullptr */)
     {
         assert(!IsWindow());    // Only one window per CWnd instance allowed
@@ -666,6 +662,7 @@ namespace Win32xx
         // The result of the file choice box is processed here.
         if (!ok)
         {
+            Cleanup();
             int error = static_cast<int>(CommDlgExtendedError());
             if (error != 0)
             {
@@ -740,24 +737,22 @@ namespace Win32xx
 
         bool isExplorer = (m_ofn.Flags & OFN_EXPLORER) != 0;
         TCHAR delimiter = (isExplorer ? _T('\0') : _T(' '));
-        int maxFileSize = static_cast<int>(m_ofn.nMaxFile);
-        int bufferSize = std::min(MAX_PATH, maxFileSize - pos);
-        CString fileNames(m_ofn.lpstrFile + pos, bufferSize);
+        CString fileNames(m_ofn.lpstrFile + pos);
         int index = 0;
         if (pos == 0)
         {
             index = fileNames.Find(delimiter);
 
-            if ( (index < 0) || (fileNames.GetAt(++index) == _T('\0')))
+            if ((index < 0) || (fileNames.GetAt(++index) == _T('\0')))
             {
-                // Only one file selected. m_OFN.lpstrFile contains a single
+                // Only one file selected. m_ofn.lpstrFile contains a single
                 // string consisting of the path and file name.
                 pos = -1;
                 return m_ofn.lpstrFile;
             }
         }
 
-        // Multiple files selected. m_OFN.lpstrFile contains a set of
+        // Multiple files selected. m_ofn.lpstrFile contains a set of
         // substrings separated by delimiters. The first substring is the path,
         // the following ones are file names.
         CString pathName = m_ofn.lpstrFile; // strPath is terminated by first null
@@ -780,13 +775,13 @@ namespace Win32xx
         if (fileNames.GetAt(index + fileLength + 1) == _T('\0'))
             pos = -1;
         else
-            pos = pos + index + fileLength +1;
+            pos = pos + index + fileLength + 1;
 
         if (!pathName.IsEmpty())
         {
             // Get the last character from the path.
             int pathLength = pathName.GetLength();
-            TCHAR termination = pathName.GetAt(pathLength -1);
+            TCHAR termination = pathName.GetAt(pathLength - 1);
 
             if (termination == _T('\\'))
             {
@@ -1314,15 +1309,13 @@ namespace Win32xx
     inline CFontDialog::CFontDialog(const LOGFONT& initial, DWORD flags /* = 0 */,
         HDC printer /* = nullptr */)
     {
-        m_logFont = {};
+        m_logFont = initial;
 
         // Set the dialog parameters.
         m_cf = {};
-        m_cf.rgbColors   = 0; // black
         m_cf.lStructSize = sizeof(m_cf);
-        m_cf.Flags  = flags;
-        m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
-        m_cf.lpLogFont = const_cast<LOGFONT*>(&initial);
+        m_cf.Flags = flags | CF_INITTOLOGFONTSTRUCT;
+        m_cf.lpLogFont = &m_logFont;
 
         if (printer)
         {
@@ -1619,9 +1612,9 @@ namespace Win32xx
         else
             m_logFont = {};
 
-        if (cf.lpszStyle)
+        if (cf.lpszStyle && cf.lpszStyle != m_styleName.c_str())
             m_styleName = cf.lpszStyle;
-        else
+        else if (!cf.lpszStyle)
             m_styleName.Empty();
 
         m_cf.lStructSize    = sizeof(m_cf);
@@ -1635,10 +1628,15 @@ namespace Win32xx
         m_cf.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
         m_cf.lpTemplateName = cf.lpTemplateName;
         m_cf.hInstance      = GetApp()->GetInstanceHandle();
-        m_cf.lpszStyle      = const_cast<LPTSTR>(m_styleName.c_str());
         m_cf.nFontType      = cf.nFontType;
         m_cf.nSizeMin       = cf.nSizeMin;
         m_cf.nSizeMax       = cf.nSizeMax;
+
+        // Fix: Only bind the pointer if the buffer is actively expected by the API flags
+        if (m_cf.Flags & CF_USESTYLE)
+            m_cf.lpszStyle = const_cast<LPTSTR>(m_styleName.c_str());
+        else
+            m_cf.lpszStyle = nullptr;
     }
 
 }

@@ -630,7 +630,7 @@ namespace Win32xx
     {
         m_mainInstruction = FillString(mainInstruction);
         m_tc.pszMainInstruction = m_mainInstruction;
-        WPARAM wparam = static_cast<WPARAM>(TDE_FOOTER);
+        WPARAM wparam = static_cast<WPARAM>(TDE_MAIN_INSTRUCTION);
         LPARAM lparam = reinterpret_cast<LPARAM>(m_mainInstruction.c_str());
 
         if (IsWindow())
