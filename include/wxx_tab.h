@@ -1283,13 +1283,13 @@ namespace Win32xx
     // Removes a tab and its view page.
     inline void CTab::RemoveTabPage(int page)
     {
-        if ((page < 0) || (page > static_cast<int>(m_allTabPageInfo.size() -1)))
+        if ((page < 0) || (page >= static_cast<int>(m_allTabPageInfo.size())))
             return;
 
         // Remove the tab.
         DeleteItem(page);
 
-        // Remove the TapPageInfo entry.
+        // Remove the TabPageInfo entry.
         auto itTPI = m_allTabPageInfo.begin() + page;
         CWnd* pView = (*itTPI).pView;
         int image = (*itTPI).tabImage;

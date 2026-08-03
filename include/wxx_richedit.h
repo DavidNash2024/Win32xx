@@ -393,7 +393,7 @@ namespace Win32xx
         assert(IsWindow());
 
         IRichEditOle* pRichEditOle = nullptr;
-        LPARAM lparam = reinterpret_cast<LPARAM>(pRichEditOle);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&pRichEditOle);
         SendMessage(EM_GETOLEINTERFACE, 0, lparam);
         return pRichEditOle;
     }

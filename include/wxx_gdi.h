@@ -876,30 +876,34 @@ namespace Win32xx
     class CMetaFileDC final : public CDC
     {
     public:
-        CMetaFileDC();
-        CMetaFileDC(const CMetaFileDC& rhs);
-        CMetaFileDC& operator=(const CMetaFileDC& rhs);
+        CMetaFileDC() = default;
         virtual ~CMetaFileDC() override;
 
         CMetaFile Close();
-        void Create(LPCTSTR fileName = nullptr);
+        BOOL Create(LPCTSTR fileName = nullptr);
+
+    private:
+        CMetaFileDC(const CMetaFileDC&) = delete;
+        CMetaFileDC& operator=(const CMetaFileDC&) = delete;
     };
 
 
-    ///////////////////////////////////////////////////////////////////
-    // CEnhMetaFileDC manages a GDI device context for a Windows-format
-    // enhanced metafile.
+    //////////////////////////////////////////////////////////////////////////
+    // CEnhMetaFileDC manages an Enhanced Windows Metafile DC (HENHMETAFILE).
+    // Inherits from CDC to allow all standard GDI drawing primitives.
     class CEnhMetaFileDC final : public CDC
     {
     public:
-        CEnhMetaFileDC();
-        CEnhMetaFileDC(const CEnhMetaFileDC& rhs);
-        CEnhMetaFileDC& operator=(const CEnhMetaFileDC& rhs);
+        CEnhMetaFileDC() = default;
         virtual ~CEnhMetaFileDC() override;
 
         CEnhMetaFile CloseEnhanced();
-        void CreateEnhanced(HDC ref, LPCTSTR fileName, const RECT* pBounds,
-                LPCTSTR description);
+        BOOL CreateEnhanced(HDC ref, LPCTSTR fileName, const RECT* pBounds,
+            LPCTSTR description);
+
+    private:
+        CEnhMetaFileDC(const CEnhMetaFileDC&) = delete;
+        CEnhMetaFileDC& operator=(const CEnhMetaFileDC&) = delete;
     };
 
 
@@ -5154,62 +5158,43 @@ namespace Win32xx
     // Definitions for the CMetaFileDC class.
     //
 
-    inline CMetaFileDC::CMetaFileDC()
+    inline CMetaFileDC::~CMetaFileDC()
     {
-    }
-
-    inline CMetaFileDC::CMetaFileDC(const CMetaFileDC& rhs) : CDC(rhs)
-    {
-    }
-
-    inline CMetaFileDC& CMetaFileDC::operator=(const CMetaFileDC& rhs)
-    {
-        CDC::operator=(rhs);
-        return *this;
-    }
-
-    inline  CMetaFileDC::~CMetaFileDC()
-    {
-        if (m_pData.use_count() == 1)
+        HDC dc = GetHDC();
+        if (dc != nullptr)
         {
-            // Assert here if the metafile was created but not closed.
-            assert(GetHDC() == nullptr);
-
-            if (GetHDC())
-            {
-                ::DeleteMetaFile(Close());
-            }
+            ::DeleteMetaFile(::CloseMetaFile(dc));
+            Detach();
         }
+    }
+
+    inline BOOL CMetaFileDC::Create(LPCTSTR fileName /*= nullptr*/)
+    {
+        if (GetHDC() != nullptr)
+            return FALSE;
+
+        HDC dc = ::CreateMetaFile(fileName);
+        if (dc == nullptr)
+            return FALSE;
+
+        Attach(dc);
+        return TRUE;
     }
 
     // Closes the metafile and returns a CMetaFile object.
-    // The CMetaFile object automatically deletes the HMETAFILE when the last
-    // copy of the CMetaFile goes out of scope.
     inline CMetaFile CMetaFileDC::Close()
     {
-        assert(GetHDC());
+        HDC dc = GetHDC();
+        if (dc == nullptr)
+            return CMetaFile();
 
-        HDC dc = Detach();
         HMETAFILE meta = ::CloseMetaFile(dc);
+        Detach();
+
+        if (meta == nullptr)
+            return CMetaFile();
+
         return CMetaFile(meta);
-    }
-
-    inline void CMetaFileDC::Create(LPCTSTR fileName /*= nullptr*/)
-    {
-        try
-        {
-            assert(GetHDC() == nullptr);
-            HDC dc = ::CreateMetaFile(fileName);
-            if (dc == nullptr)
-                throw CResourceException(GetApp()->MsgGdiDC());
-
-            Assign(dc);
-        }
-        catch (...)
-        {
-            Release();  // Cleanup
-            throw;      // Rethrow
-        }
     }
 
 
@@ -5217,63 +5202,44 @@ namespace Win32xx
     // Definitions for the CEnhMetaFileDC class.
     //
 
-    inline CEnhMetaFileDC::CEnhMetaFileDC()
-    {
-    }
-
-    inline CEnhMetaFileDC::CEnhMetaFileDC(const CEnhMetaFileDC& rhs) : CDC(rhs)
-    {
-    }
-
-    inline CEnhMetaFileDC& CEnhMetaFileDC::operator=(const CEnhMetaFileDC& rhs)
-    {
-        CDC::operator=(rhs);
-        return *this;
-    }
-
     inline CEnhMetaFileDC::~CEnhMetaFileDC()
     {
-        if (m_pData.use_count() == 1)
+        HDC dc = GetHDC();
+        if (dc != nullptr)
         {
-            // Assert here if the enhanced metafile was created but not closed.
-            assert(GetHDC() == nullptr);
-
-            if (GetHDC())
-            {
-                ::DeleteEnhMetaFile(CloseEnhanced());
-            }
+            ::DeleteEnhMetaFile(::CloseEnhMetaFile(dc));
+            Detach();
         }
+    }
+
+    inline BOOL CEnhMetaFileDC::CreateEnhanced(HDC ref, LPCTSTR fileName, const RECT* pBounds,
+        LPCTSTR description)
+    {
+        if (GetHDC() != nullptr)
+            return FALSE;
+
+        HDC dc = ::CreateEnhMetaFile(ref, fileName, pBounds, description);
+        if (dc == nullptr)
+            return FALSE;
+
+        Attach(dc);
+        return TRUE;
     }
 
     // Closes the enhanced metafile and returns a CEnhMetaFile object.
-    // The CEnhMetaFile object automatically deletes the HENHMETAFILE when the
-    // last copy of the CEnhMetaFile goes out of scope.
     inline CEnhMetaFile CEnhMetaFileDC::CloseEnhanced()
     {
-        assert(GetHDC());
+        HDC dc = GetHDC();
+        if (dc == nullptr)
+            return CEnhMetaFile();
 
-        HDC dc = Detach();
         HENHMETAFILE enhMeta = ::CloseEnhMetaFile(dc);
+        Detach();
+
+        if (enhMeta == nullptr)
+            return CEnhMetaFile();
+
         return CEnhMetaFile(enhMeta);
-    }
-
-    inline void CEnhMetaFileDC::CreateEnhanced(HDC ref, LPCTSTR fileName,
-        const RECT* pBounds, LPCTSTR description)
-    {
-        try
-        {
-            assert(GetHDC() == nullptr);
-            HDC dc = ::CreateEnhMetaFile(ref, fileName, pBounds, description);
-            if (dc == nullptr)
-                throw CResourceException(GetApp()->MsgGdiDC());
-
-            Assign(dc);
-        }
-        catch (...)
-        {
-            Release();  // Cleanup
-            throw;      // Rethrow
-        }
     }
 
 

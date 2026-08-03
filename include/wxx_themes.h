@@ -113,7 +113,9 @@ namespace Win32xx
         if (module != nullptr)
         {
             // Declare pointers to IsCompositionActive function.
-            FARPROC pIsCompositionActive = ::GetProcAddress(module, "IsCompositionActive");
+            typedef BOOL (WINAPI *PFN_ISCOMPOSITIONACTIVE)();
+            PFN_ISCOMPOSITIONACTIVE pIsCompositionActive = reinterpret_cast<PFN_ISCOMPOSITIONACTIVE>(
+                    reinterpret_cast<void*>(::GetProcAddress(module, "IsCompositionActive")));
 
             if (pIsCompositionActive)
             {

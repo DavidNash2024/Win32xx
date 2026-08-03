@@ -829,11 +829,14 @@ namespace Win32xx
         assert(IsWindow());
 
         int page = GetPageIndex(pPage);
+        if (page < 0 || page >= static_cast<int>(m_allPages.size()))
+            return;
+
         WPARAM wparam = static_cast<WPARAM>(page);
         if (GetHwnd() != nullptr)
             SendMessage(*this, PSM_REMOVEPAGE, wparam, 0);
 
-        m_allPages.erase(m_allPages.begin() + page, m_allPages.begin() + page+1);
+        m_allPages.erase(m_allPages.begin() + page, m_allPages.begin() + page + 1);
         m_psh.nPages = static_cast<UINT>(m_allPages.size());
     }
 
