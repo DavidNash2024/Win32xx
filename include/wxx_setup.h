@@ -245,7 +245,7 @@ namespace Win32xx
             state = ::GetAsyncKeyState(VK_LBUTTON);
 
         // Returns true if the left mouse button is down.
-        return (state & 0x8000);
+        return ((state & 0x8000) != 0) ? TRUE : FALSE;
     }
 
     // Returns TRUE if XP themes are being used.

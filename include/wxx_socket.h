@@ -179,7 +179,7 @@ namespace Win32xx
         CSocket& operator=(const CSocket&) = delete;
 
         static UINT WINAPI EventThread(LPVOID pThis);
-        inline static int m_socketCount = 0;
+        inline static LONG m_socketCount = 0;
 
         CCriticalSection m_cs;
         SOCKET m_socket = INVALID_SOCKET;
@@ -199,8 +199,11 @@ namespace Win32xx
 
     inline CSocket::CSocket() : m_stopRequest(FALSE, TRUE)
     {
+        // Ensure instance initialization is thread-safe for this object.
         CThreadLock lock(m_cs);
-        if (m_socketCount == 0)
+
+        LONG newCount = ::InterlockedIncrement(&m_socketCount);
+        if (newCount == 1)
         {
             // Initialize the Windows Socket Services version 2.2 for the
             // first socket.
@@ -208,8 +211,6 @@ namespace Win32xx
             if (::WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
                 throw CNotSupportedException(GetApp()->MsgSocWSAStartup());
         }
-
-        m_socketCount++;
     }
 
     inline CSocket::~CSocket()
@@ -218,8 +219,8 @@ namespace Win32xx
         Disconnect();
 
         // Terminate the  Windows Socket Services for the last socket.
-        m_socketCount--;
-        if (m_socketCount == 0)
+        LONG newCount = ::InterlockedDecrement(&m_socketCount);
+        if (newCount == 0)
             ::WSACleanup();
     }
 
@@ -471,7 +472,7 @@ namespace Win32xx
 
     // Retrieves the name of the peer to which the socket is connected.
     // Refer to getpeername in the Windows API documentation for additional information.
-    inline int  CSocket::GetPeerName(struct sockaddr* name, int* namelen) const
+    inline int CSocket::GetPeerName(struct sockaddr* name, int* namelen) const
     {
         int result = ::getpeername(m_socket, name, namelen);
         if (result != 0)
@@ -482,7 +483,7 @@ namespace Win32xx
 
     // Retrieves the local name for the socket.
     // Refer to getsockname in the Windows API documentation for additional information.
-    inline int  CSocket::GetSockName(struct sockaddr* name, int* namelen) const
+    inline int CSocket::GetSockName(struct sockaddr* name, int* namelen) const
     {
         int result = ::getsockname(m_socket, name, namelen);
         if (result != 0)
@@ -493,7 +494,7 @@ namespace Win32xx
 
     // Retrieves the socket option.
     // Refer to getsockopt in the Windows API documentation for additional information.
-    inline int  CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen) const
+    inline int CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen) const
     {
         int result = ::getsockopt(m_socket, level, optname, optval, optlen);
         if (result != 0)

@@ -238,6 +238,9 @@ namespace Win32xx
         __in_opt const PROPVARIANT* propValue,
         __in_opt IUISimplePropertySet* pCommandExecutionProperties)
     {
+        if (!m_pWnd)
+            return E_FAIL;
+
         return m_pWnd->Execute(commandId, verb, key, propValue, pCommandExecutionProperties);
     }
 
@@ -247,6 +250,9 @@ namespace Win32xx
     inline STDMETHODIMP CRibbonT<T>::OnCreateUICommand(UINT32 commandId,
         __in UI_COMMANDTYPE typeID, __deref_out IUICommandHandler** ppCommandHandler)
     {
+        if (!m_pWnd)
+            return E_FAIL;
+
         return m_pWnd->OnCreateUICommand(commandId, typeID, ppCommandHandler);
     }
 
@@ -257,6 +263,9 @@ namespace Win32xx
         __in UI_VIEWTYPE typeId, __in IUnknown* pView,
         UI_VIEWVERB verb, INT32 reasonCode)
     {
+        if (!m_pWnd)
+            return E_FAIL;
+
         return m_pWnd->OnViewChanged(viewId, typeId, pView, verb, reasonCode);
     }
 
@@ -514,28 +523,40 @@ namespace Win32xx
         SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, static_cast<ULONG>(fileNames.size()));
         m_recentFiles.clear();
 
-        if (psa != nullptr)
+        if (psa == nullptr)
+            return E_OUTOFMEMORY;
+
+        LONG currentFile = 0;
+        HRESULT hr = S_OK;
+
+        for (const CString& fileName : fileNames)
         {
-            LONG currentFile = 0;
+            WCHAR curFileName[MAX_PATH] = {};
+            StrCopyW(curFileName, TtoW(fileName), MAX_PATH);
 
-            for (const CString& fileName : fileNames)
+            m_recentFiles.push_back(Microsoft::WRL::Make<CRecentFiles>(curFileName));
+            IUnknown* pUnk = m_recentFiles.back().Get();
+            hr = SafeArrayPutElement(psa, &currentFile, static_cast<void*>(pUnk));
+            if (FAILED(hr))
             {
-                WCHAR curFileName[MAX_PATH] = {};
-                StrCopyW(curFileName, TtoW(fileName), MAX_PATH);
-
-                m_recentFiles.push_back(Microsoft::WRL::Make<CRecentFiles>(curFileName));
-                result = SafeArrayPutElement(psa, &currentFile,
-                    static_cast<void*>(m_recentFiles.back().Get()));
-                ++currentFile;
+                SafeArrayDestroy(psa);
+                return hr;
             }
 
-            SAFEARRAYBOUND sab = {static_cast<ULONG>(currentFile), 0};
-            SafeArrayRedim(psa, &sab);
-            result = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
-
-            SafeArrayDestroy(psa);  // Calls release for each element in the array.
+            ++currentFile;
         }
 
+        SAFEARRAYBOUND sab = { static_cast<ULONG>(currentFile), 0 };
+        hr = SafeArrayRedim(psa, &sab);
+        if (FAILED(hr))
+        {
+            SafeArrayDestroy(psa);
+            return hr;
+        }
+
+        result = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
+
+        SafeArrayDestroy(psa);  // Calls release for each element in the array.
         return result;
     }
 

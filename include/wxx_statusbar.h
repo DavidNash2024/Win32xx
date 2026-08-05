@@ -205,7 +205,8 @@ namespace Win32xx
         assert(IsWindow());
 
         BOOL result = FALSE;
-        if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= part))
+        int partCount = static_cast<int>(SendMessage(SB_GETPARTS, 0, 0));
+        if (part >= 0 && part < partCount)
         {
             WPARAM wparam = static_cast<WPARAM>(part | style);
             LPARAM lparam = reinterpret_cast<LPARAM>(text);

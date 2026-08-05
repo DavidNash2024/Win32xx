@@ -671,7 +671,7 @@ namespace Win32xx
     // have the CBS_SORT style, the string is added to the end of the list.
     // Otherwise, the string is inserted into the list, and the list is sorted.
     // Refer to CB_ADDSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::AddString(LPCTSTR string) const
+    inline int CComboBox::AddString(LPCTSTR string) const
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(string);
@@ -723,7 +723,7 @@ namespace Win32xx
 
     // Deletes a string in the list box of a combo box.
     // Refer to CB_DELETESTRING in the Windows API documentation for more information.
-    inline int  CComboBox::DeleteString(int index) const
+    inline int CComboBox::DeleteString(int index) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -733,7 +733,7 @@ namespace Win32xx
     // Adds the names of directories and files that match a specified string
     // and set of file attributes.
     // Refer to CB_DIR in the Windows API documentation for more information.
-    inline int  CComboBox::Dir(UINT attr, LPCTSTR wildCard ) const
+    inline int CComboBox::Dir(UINT attr, LPCTSTR wildCard ) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(attr);
@@ -744,7 +744,7 @@ namespace Win32xx
     // Search the list box of a combo box for an item beginning with the
     // characters in a specified string.
     // Refer to CB_FINDSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::FindString(int indexStart, LPCTSTR string) const
+    inline int CComboBox::FindString(int indexStart, LPCTSTR string) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(indexStart);
@@ -755,7 +755,7 @@ namespace Win32xx
     // Find the first list box string in a combo box that matches the string
     // specified in string.
     // Refer to CB_FINDSTRINGEXACT in the Windows API documentation for more information.
-    inline int  CComboBox::FindStringExact(int indexStart, LPCTSTR string) const
+    inline int CComboBox::FindStringExact(int indexStart, LPCTSTR string) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(indexStart);
@@ -775,7 +775,7 @@ namespace Win32xx
 
     // Retrieves the number of items in the list box of the combo box.
     // Refer to CB_GETCOUNT in the Windows API documentation for more information.
-    inline int  CComboBox::GetCount() const
+    inline int CComboBox::GetCount() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(CB_GETCOUNT, 0, 0));
@@ -784,7 +784,7 @@ namespace Win32xx
     // Retrieves the index of the currently selected item, if any, in the
     // list box of the combo box.
     // Refer to CB_GETCURSEL in the Windows API documentation for more information.
-    inline int  CComboBox::GetCurSel() const
+    inline int CComboBox::GetCurSel() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(CB_GETCURSEL, 0, 0));
@@ -812,7 +812,7 @@ namespace Win32xx
     // Retrieves the minimum allowable width, in pixels, of the list box of the combo box
     // with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
     // Refer to CB_GETDROPPEDWIDTH in the Windows API documentation for more information.
-    inline int  CComboBox::GetDroppedWidth() const
+    inline int CComboBox::GetDroppedWidth() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(CB_GETDROPPEDWIDTH, 0, 0));
@@ -850,7 +850,7 @@ namespace Win32xx
     // Retrieve from the combo box the width, in pixels, by which the list box can
     // be scrolled horizontally (the scrollable width).
     // Refer to CB_GETHORIZONTALEXTENT in the Windows API documentation for more information.
-    inline int  CComboBox::GetHorizontalExtent() const
+    inline int CComboBox::GetHorizontalExtent() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(CB_GETHORIZONTALEXTENT, 0, 0));
@@ -868,7 +868,7 @@ namespace Win32xx
 
     // Determines the height of list items or the selection field in the combo box.
     // Refer to CB_GETITEMHEIGHT in the Windows API documentation for more information.
-    inline int  CComboBox::GetItemHeight(int index) const
+    inline int CComboBox::GetItemHeight(int index) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -888,7 +888,7 @@ namespace Win32xx
 
     // Retrieves a string from the list of the combo box.
     // Refer to CB_GETLBTEXT in the Windows API documentation for more information.
-    inline int  CComboBox::GetLBText(int index, LPTSTR text) const
+    inline int CComboBox::GetLBText(int index, LPTSTR text) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -898,7 +898,7 @@ namespace Win32xx
 
     // Retrieves the length, in characters, of a string in the list of the combo box.
     // Refer to CB_GETLBTEXTLEN in the Windows API documentation for more information.
-    inline int  CComboBox::GetLBTextLen(int index) const
+    inline int CComboBox::GetLBTextLen(int index) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -916,7 +916,7 @@ namespace Win32xx
     // Retrieves the zero-based index of the first visible item in the list box
     // portion of the combo box.
     // Refer to CB_GETTOPINDEX in the Windows API documentation for more information.
-    inline int  CComboBox::GetTopIndex() const
+    inline int CComboBox::GetTopIndex() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(CB_GETTOPINDEX, 0, 0));
@@ -925,7 +925,7 @@ namespace Win32xx
     // Allocates memory for storing list box items. Use this before adding a
     // large number of items to the list box portion of a combo box.
     // Refer to CB_INITSTORAGE in the Windows API documentation for more information.
-    inline int  CComboBox::InitStorage(int items, int byteCount) const
+    inline int CComboBox::InitStorage(int items, int byteCount) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(items);
@@ -936,7 +936,7 @@ namespace Win32xx
     // Inserts a string into the list box of the combo box. Unlike the AddString,
     // a list with the CBS_SORT style is not sorted.
     // Refer to CB_INSERTSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::InsertString(int index, LPCTSTR string) const
+    inline int CComboBox::InsertString(int index, LPCTSTR string) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -1000,7 +1000,7 @@ namespace Win32xx
     // characters in a specified string. If a matching item is found, it is
     // selected and copied to the edit control.
     // Refer to CB_SELECTSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::SelectString(int startAfter, LPCTSTR string) const
+    inline int CComboBox::SelectString(int startAfter, LPCTSTR string) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(startAfter);
@@ -1011,7 +1011,7 @@ namespace Win32xx
     // Selects a string in the list of the combo box. If necessary, the list
     // scrolls the string into view.
     // Refer to CB_SETCURSEL in the Windows API documentation for more information.
-    inline int  CComboBox::SetCurSel(int index) const
+    inline int CComboBox::SetCurSel(int index) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -1021,7 +1021,7 @@ namespace Win32xx
     // Sets the maximum allowable width, in pixels, of the list box of the
     // combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
     // Refer to CB_SETDROPPEDWIDTH in the Windows API documentation for more information.
-    inline int  CComboBox::SetDroppedWidth(int width) const
+    inline int CComboBox::SetDroppedWidth(int width) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(width);
@@ -1040,7 +1040,7 @@ namespace Win32xx
     // Selects either the default user interface or the extended user interface
     // for the combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
     // Refer to CB_SETEXTENDEDUI in the Windows API documentation for more information.
-    inline int  CComboBox::SetExtendedUI(BOOL isExtended) const
+    inline int CComboBox::SetExtendedUI(BOOL isExtended) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(isExtended);
@@ -1059,7 +1059,7 @@ namespace Win32xx
 
     // Sets the value associated with the specified item in the combo box.
     // Refer to CB_SETITEMDATA in the Windows API documentation for more information.
-    inline int  CComboBox::SetItemData(int index, DWORD itemData) const
+    inline int CComboBox::SetItemData(int index, DWORD itemData) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -1069,7 +1069,7 @@ namespace Win32xx
 
     // Sets the height of list items or the selection field in the combo box.
     // Refer to CB_SETITEMHEIGHT in the Windows API documentation for more information.
-    inline int  CComboBox::SetItemHeight(int index, UINT cyItemHeight) const
+    inline int CComboBox::SetItemHeight(int index, UINT cyItemHeight) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -1088,7 +1088,7 @@ namespace Win32xx
 
     // Ensure that a particular item is visible in the list box of the combo box.
     // Refer to CB_SETTOPINDEX in the Windows API documentation for more information.
-    inline int  CComboBox::SetTopIndex(int index) const
+    inline int CComboBox::SetTopIndex(int index) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -1111,7 +1111,7 @@ namespace Win32xx
 
     // Removes an item from the ComboBoxEx control.
     // Refer to CBEM_DELETEITEM in the Windows API documentation for more information.
-    inline int  CComboBoxEx::DeleteItem(int index ) const
+    inline int CComboBoxEx::DeleteItem(int index ) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(index);
@@ -1465,7 +1465,7 @@ namespace Win32xx
     inline int CHeader::OrderToIndex(int order) const
     {
         assert(IsWindow());
-        return Header_OrderToIndex( *this, order);
+        return Header_OrderToIndex(*this, order);
     }
 
     // Called by Create to set some window class parameters.
@@ -2262,7 +2262,7 @@ namespace Win32xx
     // Retrieves the number of logical positions the trackbar's slider moves in
     // response to keyboard input from the arrow keys.
     // Refer to TBM_GETLINESIZE in the Windows API documentation for more information.
-    inline int  CSlider::GetLineSize() const
+    inline int CSlider::GetLineSize() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETLINESIZE, 0, 0));
@@ -2270,7 +2270,7 @@ namespace Win32xx
 
     // Retrieves the number of tick marks in the trackbar.
     // Refer to TBM_GETNUMTICS in the Windows API documentation for more information.
-    inline int  CSlider::GetNumTics() const
+    inline int CSlider::GetNumTics() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETNUMTICS, 0, 0));
@@ -2280,7 +2280,7 @@ namespace Win32xx
     // response to keyboard input, or mouse input, such as clicks in the
     // trackbar's channel.
     // Refer to TBM_GETPAGESIZE in the Windows API documentation for more information.
-    inline int  CSlider::GetPageSize() const
+    inline int CSlider::GetPageSize() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETPAGESIZE, 0, 0));
@@ -2288,7 +2288,7 @@ namespace Win32xx
 
     // Retrieves the current logical position of the slider in the trackbar.
     // Refer to TBM_GETPOS in the Windows API documentation for more information.
-    inline int  CSlider::GetPos() const
+    inline int CSlider::GetPos() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETPOS, 0, 0));
@@ -2296,7 +2296,7 @@ namespace Win32xx
 
     // Retrieves the maximum position for the slider in the trackbar.
     // Refer to TBM_GETRANGEMAX in the Windows API documentation for more information.
-    inline int  CSlider::GetRangeMax() const
+    inline int CSlider::GetRangeMax() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETRANGEMAX, 0, 0));
@@ -2304,7 +2304,7 @@ namespace Win32xx
 
     // Retrieves the minimum position for the slider in the trackbar.
     // Refer to TBM_GETRANGEMIN in the Windows API documentation for more information.
-    inline int  CSlider::GetRangeMin() const
+    inline int CSlider::GetRangeMin() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETRANGEMIN, 0, 0));
@@ -2312,7 +2312,7 @@ namespace Win32xx
 
     // Retrieves the ending position of the current selection range in the trackbar.
     // Refer to TBM_GETSELEND in the Windows API documentation for more information.
-    inline int  CSlider::GetSelEnd() const
+    inline int CSlider::GetSelEnd() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETSELEND, 0, 0));
@@ -2320,7 +2320,7 @@ namespace Win32xx
 
     // Retrieves the starting position of the current selection range in the trackbar.
     // Refer to TBM_GETSELSTART in the Windows API documentation for more information.
-    inline int  CSlider::GetSelStart() const
+    inline int CSlider::GetSelStart() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETSELSTART, 0, 0));
@@ -2328,7 +2328,7 @@ namespace Win32xx
 
     // Retrieves the length of the slider in the trackbar.
     // Refer to TBM_GETTHUMBLENGTH in the Windows API documentation for more information.
-    inline int  CSlider::GetThumbLength() const
+    inline int CSlider::GetThumbLength() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(TBM_GETTHUMBLENGTH, 0, 0));
@@ -2356,7 +2356,7 @@ namespace Win32xx
 
     // Retrieves the current physical position of a tick mark in the trackbar.
     // Refer to TBM_GETTICPOS in the Windows API documentation for more information.
-    inline int  CSlider::GetTicPos(int tic) const
+    inline int CSlider::GetTicPos(int tic) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(tic);
@@ -2390,7 +2390,7 @@ namespace Win32xx
     // Sets the number of logical positions the trackbar's slider moves in
     // response to keyboard input from the arrow keys.
     // Refer to TBM_SETLINESIZE in the Windows API documentation for more information.
-    inline int  CSlider::SetLineSize(int size) const
+    inline int CSlider::SetLineSize(int size) const
     {
         assert(IsWindow());
         LPARAM lparam = static_cast<LPARAM>(size);
@@ -2401,7 +2401,7 @@ namespace Win32xx
     // response to keyboard input, or mouse input such as clicks in the
     // trackbar's channel.
     // Refer to TBM_SETPAGESIZE in the Windows API documentation for more information.
-    inline int  CSlider::SetPageSize(int size) const
+    inline int CSlider::SetPageSize(int size) const
     {
         assert(IsWindow());
         LPARAM lparam = static_cast<LPARAM>(size);
@@ -2468,7 +2468,7 @@ namespace Win32xx
 
     // Positions a ToolTip control used by the trackbar control.
     // Refer to TBM_SETTIPSIDE in the Windows API documentation for more information.
-    inline int  CSlider::SetTipSide(int location) const
+    inline int CSlider::SetTipSide(int location) const
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(location);

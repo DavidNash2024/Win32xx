@@ -153,7 +153,7 @@ namespace Win32xx
             rbbi.fMask = RBBIM_CHILD;
             GetBandInfo(band, rbbi);
             if (rbbi.hwndChild == wnd)
-                result = band;
+                return band;
         }
 
         return result;
@@ -174,7 +174,7 @@ namespace Win32xx
 
     // Retrieves the count of bands currently in the rebar control.
     // Refer to RB_GETBANDCOUNT in the Windows API documentation for more information.
-    inline int  CReBar::GetBandCount() const
+    inline int CReBar::GetBandCount() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(RB_GETBANDCOUNT, 0, 0));
@@ -331,7 +331,7 @@ namespace Win32xx
         rbbi.fMask = RBBIM_STYLE;
         GetBandInfo(band, rbbi);
 
-        return !(rbbi.fStyle & RBBS_HIDDEN);
+        return !(rbbi.fStyle & RBBS_HIDDEN) ? TRUE : FALSE;
     }
 
     // Permit the parent window to handle the drawing of the rebar's background.
@@ -500,7 +500,7 @@ namespace Win32xx
         rbbi.cyMinChild = cy;
         rbbi.cyMaxChild = cy;
 
-        return SetBandInfo(band, rbbi );
+        return SetBandInfo(band, rbbi);
     }
 
     // Sets the band's bitmaps.

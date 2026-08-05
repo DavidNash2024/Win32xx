@@ -64,7 +64,7 @@ namespace Win32xx
         CCriticalSection& operator=(const CCriticalSection&) = delete;
 
         CRITICAL_SECTION m_cs;
-        long m_count;
+        LONG m_count;
     };
 
 
@@ -102,7 +102,7 @@ namespace Win32xx
 
     inline CCriticalSection::~CCriticalSection()
     {
-        while (m_count > 0)
+        while (::InterlockedCompareExchange(&m_count, 0, 0) > 0)
         {
             Release();
         }
@@ -114,18 +114,15 @@ namespace Win32xx
     inline void CCriticalSection::Lock()
     {
         ::EnterCriticalSection(&m_cs);
-        InterlockedIncrement(&m_count);
+        ::InterlockedIncrement(&m_count);
     }
 
     // Leave the critical section and decrement the lock count.
     inline void CCriticalSection::Release()
     {
-        assert(m_count > 0);
-        if (m_count > 0)
-        {
-            ::LeaveCriticalSection(&m_cs);
-            ::InterlockedDecrement(&m_count);
-        }
+        [[maybe_unused]] LONG newCount = ::InterlockedDecrement(&m_count);
+        assert(newCount >= 0);
+        ::LeaveCriticalSection(&m_cs);
     }
 
 }

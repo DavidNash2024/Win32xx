@@ -192,7 +192,7 @@ namespace Win32xx
         newPos.x = std::max(0, std::min(newPosX, maxPosX));
 
         // Scroll the window
-        int deltaX = newPosX - m_currentPos.x;
+        int deltaX = newPos.x - m_currentPos.x;
         ScrollWindowEx(-deltaX, 0, nullptr, nullptr, 0, nullptr, SW_INVALIDATE);
         SetScrollPosition(newPos);
 
@@ -297,7 +297,8 @@ namespace Win32xx
             OnDraw(memDC);
 
             // Copy the modified memory DC to the window's DC with scrolling offsets.
-            dc.BitBlt(0, 0, m_totalSize.cx, m_totalSize.cy, memDC, m_currentPos.x,
+            CRect rcClient = GetClientRect();
+            dc.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), memDC, m_currentPos.x,
                 m_currentPos.y, SRCCOPY);
 
             // Set the area outside the scrolling area.

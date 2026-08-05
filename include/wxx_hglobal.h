@@ -93,11 +93,13 @@ namespace Win32xx
     {
         if (m_global != nullptr)
         {
-            // Fails if the memory was already freed.
-            VERIFY(::GlobalFree(m_global) == nullptr);
-        }
+            // Free the global memory. GlobalFree returns NULL on success.
+            HGLOBAL res = ::GlobalFree(m_global);
+            VERIFY(res == nullptr);
 
-        m_global = nullptr;
+            if (res == nullptr)
+                m_global = nullptr;
+        }
     }
 
     // Reassign is used when global memory has been reassigned, as

@@ -276,6 +276,9 @@ namespace Win32xx
         if (m_bitmap.GetHandle())
         {
             BITMAP bm = m_bitmap.GetBitmapData();
+            if (bm.bmWidth <= 0 || bm.bmHeight <= 0)
+                return;
+
             int border = 10;
             CRect rcClient = GetClientRect();
 
@@ -523,6 +526,10 @@ namespace Win32xx
         int width = printerDC.GetDeviceCaps(HORZRES);
         int height = printerDC.GetDeviceCaps(VERTRES);
 
+        // Validate device dimensions.
+        if (width <= 0 || height <= 0)
+            throw CResourceException(GetApp()->MsgPrintFound());
+
         // A bitmap to hold all the pixels of the printed page would be too large.
         // Shrinking its dimensions by 4 reduces it to 1/16th its original size.
         int shrink = width > 8000 ? 8 : 4;
@@ -542,6 +549,9 @@ namespace Win32xx
 
         // Detach the bitmap from the memory DC and save it.
         CBitmap bitmap = memDC.DetachBitmap();
+        if (!bitmap.GetHandle())
+            throw CResourceException(GetApp()->MsgPrintFound());
+
         GetPreviewPane().SetBitmap(bitmap);
 
         // Display the print preview.

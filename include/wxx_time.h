@@ -565,7 +565,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return 1900 + ptm->tm_year;
+        if (ptm)
+            return 1900 + ptm->tm_year;
+
+        return 0;
     }
 
     // Returns the month of the year represented by this CTime object in the
@@ -574,7 +577,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return ptm->tm_mon + 1;
+        if (ptm)
+            return ptm->tm_mon + 1;
+
+        return 0;
     }
 
     // Returns the day of the month represented by this CTime object in the
@@ -583,7 +589,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return ptm->tm_mday;
+        if (ptm)
+            return ptm->tm_mday;
+
+        return 0;
     }
 
     // Returns the hour of the day represented by this CTime object in the
@@ -592,7 +601,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return ptm->tm_hour;
+        if (ptm)
+            return ptm->tm_hour;
+
+        return 0;
     }
 
     // Returns the minute of the hour represented by this CTime object in the
@@ -601,7 +613,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return ptm->tm_min;
+        if (ptm)
+            return ptm->tm_min;
+
+        return 0;
     }
 
     // Returns the second of the minute represented by this CTime object in the
@@ -610,7 +625,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return ptm->tm_sec;
+        if (ptm)
+            return ptm->tm_sec;
+
+        return 0;
     }
 
     // Returns the day of the week represented by this CTime object in the
@@ -619,7 +637,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return ptm->tm_wday + 1;
+        if (ptm)
+            return ptm->tm_wday + 1;
+
+        return 0;
     }
 
     // Returns the day of the year represented by this CTime object in the
@@ -628,7 +649,10 @@ namespace Win32xx
     {
         tm atm;
         tm* ptm = (local ? GetLocalTm(&atm) : GetGmtTm(&atm));
-        return ptm->tm_yday + 1;
+        if (ptm)
+            return ptm->tm_yday + 1;
+
+        return 0;
     }
 
     // Assigns the specified value to this CTime object.

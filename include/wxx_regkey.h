@@ -66,7 +66,7 @@ namespace Win32xx
         [[nodiscard]] HKEY GetKey() const { return m_key; }
 
         [[nodiscard]] LONG Create(HKEY keyParent, LPCTSTR keyName,
-            LPTSTR className = REG_NONE,
+            LPCTSTR className = nullptr,
             DWORD options = REG_OPTION_NON_VOLATILE,
             REGSAM samDesired = KEY_READ | KEY_WRITE,
             LPSECURITY_ATTRIBUTES secAttr = nullptr,
@@ -174,11 +174,12 @@ namespace Win32xx
 
     // Creates the specified registry key.
     inline LONG CRegKey::Create(HKEY keyParent, LPCTSTR keyName,
-        LPTSTR className, DWORD options, REGSAM samDesired,
+        LPCTSTR className, DWORD options, REGSAM samDesired,
         LPSECURITY_ATTRIBUTES secAttr, LPDWORD disposition)
     {
         HKEY key = nullptr;
-        LONG result = ::RegCreateKeyEx(keyParent, keyName, 0, className,
+        LONG result = ::RegCreateKeyEx(keyParent, keyName, 0,
+            const_cast<LPTSTR>(className),
             options, samDesired, secAttr, &key, disposition);
 
         if (result == ERROR_SUCCESS)

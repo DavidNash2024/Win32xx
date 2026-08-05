@@ -282,7 +282,7 @@ namespace Win32xx
     inline UINT CTreeView::GetIndent() const
     {
         assert(IsWindow());
-        return TreeView_GetIndent( *this );
+        return TreeView_GetIndent(*this);
     }
 
     // Retrieves the color used to draw the insertion mark for the tree view.
@@ -290,7 +290,7 @@ namespace Win32xx
     inline COLORREF CTreeView::GetInsertMarkColor() const
     {
         assert(IsWindow());
-        return TreeView_GetInsertMarkColor( *this );
+        return TreeView_GetInsertMarkColor(*this);
     }
 
     // Retrieves some or all of a tree-view item's attributes.
@@ -298,7 +298,7 @@ namespace Win32xx
     inline BOOL CTreeView::GetItem(TVITEM& itemInfo) const
     {
         assert(IsWindow());
-        return TreeView_GetItem( *this, &itemInfo );
+        return TreeView_GetItem(*this, &itemInfo);
     }
 
     // Retrieves a tree-view item's application data.
@@ -316,10 +316,10 @@ namespace Win32xx
 
     // Retrieves the current height of the tree-view item.
     // Refer to TreeView_GetItemHeight in the Windows API documentation for more information.
-    inline int  CTreeView::GetItemHeight() const
+    inline int CTreeView::GetItemHeight() const
     {
         assert(IsWindow());
-        return TreeView_GetItemHeight( *this );
+        return TreeView_GetItemHeight(*this);
     }
 
     // Retrieves the index of the tree-view item's image and selected image.
@@ -331,7 +331,7 @@ namespace Win32xx
         TVITEM tvi = {};
         tvi.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
         tvi.hItem = item;
-        BOOL result = TreeView_GetItem( *this, &tvi );
+        BOOL result = TreeView_GetItem(*this, &tvi);
         image = tvi.iImage;
         selectedImage = tvi.iSelectedImage;
         return result;
@@ -582,11 +582,7 @@ namespace Win32xx
     inline BOOL CTreeView::ItemHasChildren(HTREEITEM item) const
     {
         assert(IsWindow());
-
-        if (TreeView_GetChild( *this, item))
-            return TRUE;
-
-        return FALSE;
+        return TreeView_GetChild(*this, item) ? TRUE : FALSE;
     }
 
     inline void CTreeView::PreRegisterClass(WNDCLASS& wc)
@@ -685,7 +681,7 @@ namespace Win32xx
     inline BOOL CTreeView::SetInsertMark(HTREEITEM item, BOOL after/* = TRUE*/) const
     {
         assert(IsWindow());
-        return TreeView_SetInsertMark( *this, item, after );
+        return TreeView_SetInsertMark(*this, item, after);
     }
 
     // Sets the color used to draw the insertion mark for the tree view.
@@ -701,7 +697,7 @@ namespace Win32xx
     inline BOOL CTreeView::SetItem(TVITEM& item) const
     {
         assert(IsWindow());
-        return TreeView_SetItem( *this, &item);
+        return TreeView_SetItem(*this, &item);
     }
 
     // Sets some or all of a tree-view item's attributes.
@@ -720,7 +716,7 @@ namespace Win32xx
         tvi.state = state;
         tvi.stateMask = stateMask;
         tvi.lParam = lparam;
-        return TreeView_SetItem( *this, &tvi );
+        return TreeView_SetItem(*this, &tvi);
     }
 
     // Sets the tree-view item's application data.
@@ -733,12 +729,12 @@ namespace Win32xx
         tvi.hItem = item;
         tvi.mask = TVIF_PARAM;
         tvi.lParam = static_cast<LPARAM>(data);
-        return TreeView_SetItem( *this, &tvi );
+        return TreeView_SetItem(*this, &tvi);
     }
 
     // Sets the height of all the tree-view items.
     // Refer to TreeView_SetItemHeight in the Windows API documentation for more information.
-    inline int  CTreeView::SetItemHeight(SHORT cy) const
+    inline int CTreeView::SetItemHeight(SHORT cy) const
     {
         assert(IsWindow());
         return TreeView_SetItemHeight( *this, cy );
@@ -755,7 +751,7 @@ namespace Win32xx
         tvi.iImage = image;
         tvi.iSelectedImage = selectedImage;
         tvi.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-        return TreeView_SetItem(*this, &tvi );
+        return TreeView_SetItem(*this, &tvi);
     }
 
     // Sets the tree-view item's application text.
@@ -768,7 +764,7 @@ namespace Win32xx
         tvi.hItem = item;
         tvi.pszText = const_cast<LPTSTR>(text);
         tvi.mask = TVIF_TEXT;
-        return TreeView_SetItem(*this, &tvi );
+        return TreeView_SetItem(*this, &tvi);
     }
 
     // Sets the maximum scroll time for the tree-view control.
