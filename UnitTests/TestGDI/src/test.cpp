@@ -30,6 +30,7 @@ void SelectBitmapTest(CDC dc, int cx, int cy)
     // Note the bitmap object goes out of scope here, but SelectObject makes its own copy.
 }
 
+// The bitmap object goes out of scope. The HBITMAP returned is invalid.
 HBITMAP CreateHBITMAPTest(int cx, int cy)
 {
     CBitmap bitmap;
@@ -37,6 +38,7 @@ HBITMAP CreateHBITMAPTest(int cx, int cy)
     return bitmap;
 }
 
+// The bitmap object remains in scope, copied to the returned CBitmap.
 CBitmap CreateBitmapTest(int cx, int cy)
 {
     CBitmap bitmap;

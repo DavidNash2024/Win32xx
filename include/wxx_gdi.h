@@ -222,10 +222,10 @@ namespace Win32xx
         CBitmap(HBITMAP bitmap);
         CBitmap(LPCTSTR resourceName);
         CBitmap(UINT resourceID);
-        CBitmap(const CBitmap& rhs);
-        CBitmap& operator=(const CBitmap& rhs);
+        CBitmap(const CBitmap& rhs) = default;
+        CBitmap& operator=(const CBitmap& rhs) = default;
         operator HBITMAP() const;
-        virtual ~CBitmap() override;
+        virtual ~CBitmap() = default;
 
         void ConvertToDisabled(COLORREF mask) const;
         void CopyImage(HBITMAP origBitmap, int cxDesired = 0, int cyDesired = 0, UINT flags = 0);
@@ -268,10 +268,10 @@ namespace Win32xx
         CBrush();
         CBrush(HBRUSH brush);
         CBrush(COLORREF color);
-        CBrush(const CBrush& rhs);
-        CBrush& operator=(const CBrush& rhs);
+        CBrush(const CBrush& rhs) = default;
+        CBrush& operator=(const CBrush& rhs) = default;
         operator HBRUSH() const;
-        virtual ~CBrush() override;
+        virtual ~CBrush() = default;
 
         void CreateBrushIndirect(LOGBRUSH logBrush);
         void CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
@@ -291,10 +291,10 @@ namespace Win32xx
         CFont();
         CFont(HFONT font);
         CFont(const LOGFONT& logFont);
-        CFont(const CFont& rhs);
-        CFont& operator=(const CFont& rhs);
+        CFont(const CFont& rhs) = default;
+        CFont& operator=(const CFont& rhs) = default;
         operator HFONT() const;
-        virtual ~CFont() override;
+        virtual ~CFont() = default;
 
         // Create methods
         void CreateFontIndirect(const LOGFONT& logFont);
@@ -319,10 +319,10 @@ namespace Win32xx
       public:
         CPalette();
         CPalette(HPALETTE palette);
-        CPalette(const CPalette& rhs);
-        CPalette& operator=(const CPalette& rhs);
+        CPalette(const CPalette& rhs) = default;
+        CPalette& operator=(const CPalette& rhs) = default;
         operator HPALETTE() const;
-        virtual ~CPalette() override;
+        virtual ~CPalette() = default;
 
         // Create methods
         void CreateHalftonePalette(HDC dc);
@@ -350,10 +350,10 @@ namespace Win32xx
         CPen(int penStyle, int width, COLORREF color);
         CPen(int penStyle, int width, LOGBRUSH logBrush,
             int styleCount = 0, const DWORD* pStyle = nullptr);
-        CPen(const CPen& rhs);
-        CPen& operator=(const CPen& rhs);
+        CPen(const CPen& rhs) = default;
+        CPen& operator=(const CPen& rhs) = default;
         operator HPEN() const;
-        virtual ~CPen() override;
+        virtual ~CPen() = default;
 
         void CreatePen(int penStyle, int width, COLORREF color);
         void CreatePenIndirect(LOGPEN logPen);
@@ -371,10 +371,10 @@ namespace Win32xx
       public:
         CRgn();
         CRgn(HRGN rgn);
-        CRgn(const CRgn& rhs);
-        CRgn& operator=(const CRgn& rhs);
+        CRgn(const CRgn& rhs) = default;
+        CRgn& operator=(const CRgn& rhs) = default;
         operator HRGN() const;
-        virtual ~CRgn() override;
+        virtual ~CRgn() = default;
 
         // Create methods
         void CreateEllipticRgn(int x1, int y1, int x2, int y2);
@@ -808,9 +808,9 @@ namespace Win32xx
     {
     public:
         CClientDC(HWND wnd);
-        CClientDC(const CClientDC& rhs);
-        CClientDC& operator=(const CClientDC& rhs);
-        virtual ~CClientDC() override;
+        CClientDC(const CClientDC& rhs) = default;
+        CClientDC& operator=(const CClientDC& rhs) = default;
+        virtual ~CClientDC() = default;
     };
 
 
@@ -824,9 +824,9 @@ namespace Win32xx
     {
     public:
         CClientDCEx(HWND wnd, HRGN clip, DWORD flags);
-        CClientDCEx(const CClientDCEx& rhs);
-        CClientDCEx& operator=(const CClientDCEx& rhs);
-        virtual ~CClientDCEx() override;
+        CClientDCEx(const CClientDCEx& rhs) = default;
+        CClientDCEx& operator=(const CClientDCEx& rhs) = default;
+        virtual ~CClientDCEx() = default;
     };
 
 
@@ -838,9 +838,9 @@ namespace Win32xx
     {
     public:
         explicit CMemDC(HDC dc);
-        CMemDC(const CMemDC& rhs);
-        CMemDC& operator=(const CMemDC& rhs);
-        virtual ~CMemDC() override;
+        CMemDC(const CMemDC& rhs) = default;
+        CMemDC& operator=(const CMemDC& rhs) = default;
+        virtual ~CMemDC() = default;
     };
 
 
@@ -851,9 +851,9 @@ namespace Win32xx
     {
     public:
         CPaintDC(HWND wnd);
-        CPaintDC(const CPaintDC& rhs);
-        CPaintDC& operator=(const CPaintDC& rhs);
-        virtual ~CPaintDC() override;
+        CPaintDC(const CPaintDC& rhs) = default;
+        CPaintDC& operator=(const CPaintDC& rhs) = default;
+        virtual ~CPaintDC() = default;
     };
 
 
@@ -863,10 +863,10 @@ namespace Win32xx
     class CWindowDC final : public CDC
     {
     public:
-        CWindowDC(HWND wnd);
-        CWindowDC(const CWindowDC& rhs);
-        CWindowDC& operator=(const CWindowDC& rhs);
-        virtual ~CWindowDC() override;
+        CWindowDC(HWND wnd);;
+        CWindowDC(const CWindowDC& rhs) = default;
+        CWindowDC& operator=(const CWindowDC& rhs) = default;
+        virtual ~CWindowDC() = default;
     };
 
 
@@ -877,14 +877,14 @@ namespace Win32xx
     {
     public:
         CMetaFileDC() = default;
+        CMetaFileDC(const CMetaFileDC&) = default;
+        CMetaFileDC& operator=(const CMetaFileDC&) = default;
         virtual ~CMetaFileDC() override;
 
         CMetaFile Close();
         BOOL Create(LPCTSTR fileName = nullptr);
 
     private:
-        CMetaFileDC(const CMetaFileDC&) = delete;
-        CMetaFileDC& operator=(const CMetaFileDC&) = delete;
     };
 
 
@@ -895,6 +895,8 @@ namespace Win32xx
     {
     public:
         CEnhMetaFileDC() = default;
+        CEnhMetaFileDC(const CEnhMetaFileDC&) = default;
+        CEnhMetaFileDC& operator=(const CEnhMetaFileDC&) = default;
         virtual ~CEnhMetaFileDC() override;
 
         CEnhMetaFile CloseEnhanced();
@@ -902,8 +904,6 @@ namespace Win32xx
             LPCTSTR description);
 
     private:
-        CEnhMetaFileDC(const CEnhMetaFileDC&) = delete;
-        CEnhMetaFileDC& operator=(const CEnhMetaFileDC&) = delete;
     };
 
 
@@ -1110,23 +1110,9 @@ namespace Win32xx
         }
     }
 
-    inline CBitmap::CBitmap(const CBitmap& rhs) : CGDIObject(rhs)
-    {
-    }
-
-    inline CBitmap& CBitmap::operator=(const CBitmap& rhs)
-    {
-        CGDIObject::operator =(rhs);
-        return *this;
-    }
-
     inline CBitmap::operator HBITMAP() const
     {
         return static_cast<HBITMAP>(GetHandle());
-    }
-
-    inline CBitmap::~CBitmap()
-    {
     }
 
     // Loads a bitmap from a resource using the resource ID.
@@ -1586,23 +1572,9 @@ namespace Win32xx
         }
     }
 
-    inline CBrush::CBrush(const CBrush& rhs) : CGDIObject(rhs)
-    {
-    }
-
-    inline CBrush& CBrush::operator=(const CBrush& rhs)
-    {
-        CGDIObject::operator =(rhs);
-        return *this;
-    }
-
     inline CBrush::operator HBRUSH() const
     {
         return static_cast<HBRUSH>(GetHandle());
-    }
-
-    inline CBrush::~CBrush()
-    {
     }
 
     // Creates a logical brush that has the specified solid color.
@@ -1713,23 +1685,9 @@ namespace Win32xx
         }
     }
 
-    inline CFont::CFont(const CFont& rhs) : CGDIObject(rhs)
-    {
-    }
-
-    inline CFont& CFont::operator=(const CFont& rhs)
-    {
-        CGDIObject::operator =(rhs);
-        return *this;
-    }
-
     inline CFont::operator HFONT() const
     {
         return static_cast<HFONT>(GetHandle());
-    }
-
-    inline CFont::~CFont()
-    {
     }
 
     // Creates a logical font that has the specified characteristics.
@@ -1827,23 +1785,9 @@ namespace Win32xx
         Attach(palette);
     }
 
-    inline CPalette::CPalette(const CPalette& rhs) : CGDIObject(rhs)
-    {
-    }
-
-    inline CPalette& CPalette::operator=(const CPalette& rhs)
-    {
-        CGDIObject::operator =(rhs);
-        return *this;
-    }
-
     inline CPalette::operator HPALETTE() const
     {
         return static_cast<HPALETTE>(GetHandle());
-    }
-
-    inline CPalette::~CPalette ()
-    {
     }
 
     // Creates a logical palette from the information in the specified LOGPALETTE structure.
@@ -1970,23 +1914,9 @@ namespace Win32xx
         }
     }
 
-    inline CPen::CPen(const CPen& rhs) : CGDIObject(rhs)
-    {
-    }
-
-    inline CPen& CPen::operator=(const CPen& rhs)
-    {
-        CGDIObject::operator =(rhs);
-        return *this;
-    }
-
     inline CPen::operator HPEN () const
     {
         return static_cast<HPEN>(GetHandle());
-    }
-
-    inline CPen::~CPen()
-    {
     }
 
     // Creates a logical pen that has the specified style, width, and color.
@@ -2053,23 +1983,9 @@ namespace Win32xx
         Attach(rgn);
     }
 
-    inline CRgn::CRgn(const CRgn& rhs) : CGDIObject(rhs)
-    {
-    }
-
-    inline CRgn& CRgn::operator=(const CRgn& rhs)
-    {
-        CGDIObject::operator =(rhs);
-        return *this;
-    }
-
     inline CRgn::operator HRGN() const
     {
         return static_cast<HRGN>(GetHandle());
-    }
-
-    inline CRgn::~CRgn()
-    {
     }
 
     // Creates a rectangular region.
@@ -4977,20 +4893,6 @@ namespace Win32xx
         }
     }
 
-    inline CClientDC::CClientDC(const CClientDC& rhs) : CDC(rhs)
-    {
-    }
-
-    inline CClientDC& CClientDC::operator=(const CClientDC& rhs)
-    {
-        CDC::operator=(rhs);
-        return *this;
-    }
-
-    inline CClientDC::~CClientDC()
-    {
-    }
-
 
     /////////////////////////////////////////
     // Definitions for the CClientDCEx class.
@@ -5024,20 +4926,6 @@ namespace Win32xx
         }
     }
 
-    inline CClientDCEx::CClientDCEx(const CClientDCEx& rhs) : CDC(rhs)
-    {
-    }
-
-    inline CClientDCEx& CClientDCEx::operator=(const CClientDCEx& rhs)
-    {
-        CDC::operator=(rhs);
-        return *this;
-    }
-
-    inline CClientDCEx::~CClientDCEx()
-    {
-    }
-
 
     ////////////////////////////////////
     // Definitions for the CMemDC class.
@@ -5055,20 +4943,6 @@ namespace Win32xx
             Release();  // Cleanup
             throw;      // Rethrow
         }
-    }
-
-    inline CMemDC::CMemDC(const CMemDC& rhs) : CDC(rhs)
-    {
-    }
-
-    inline CMemDC& CMemDC::operator=(const CMemDC& rhs)
-    {
-        CDC::operator=(rhs);
-        return *this;
-    }
-
-    inline CMemDC::~CMemDC()
-    {
     }
 
 
@@ -5098,20 +4972,6 @@ namespace Win32xx
         }
     }
 
-    inline CPaintDC::CPaintDC(const CPaintDC& rhs) : CDC(rhs)
-    {
-    }
-
-    inline CPaintDC& CPaintDC::operator=(const CPaintDC& rhs)
-    {
-        CDC::operator=(rhs);
-        return *this;
-    }
-
-    inline CPaintDC::~CPaintDC()
-    {
-    }
-
 
     ///////////////////////////////////////
     // Definitions for the CWindowDC class.
@@ -5137,20 +4997,6 @@ namespace Win32xx
             Release();  // Cleanup
             throw;      // Rethrow
         }
-    }
-
-    inline CWindowDC::CWindowDC(const CWindowDC& rhs) : CDC(rhs)
-    {
-    }
-
-    inline CWindowDC& CWindowDC::operator=(const CWindowDC& rhs)
-    {
-        CDC::operator=(rhs);
-        return *this;
-    }
-
-    inline CWindowDC::~CWindowDC()
-    {
     }
 
 
