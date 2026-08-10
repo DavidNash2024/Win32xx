@@ -189,13 +189,9 @@ namespace Win32xx
     {
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(id));
         if (menu != nullptr)
-        {
             Assign(menu);
-        }
         else
-        {
             TRACE("CMenu::CMenu: LoadMenu failed for resource id\n");
-        }
     }
 
     // Construct a CMenu from a menu handle.

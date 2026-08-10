@@ -21,7 +21,7 @@ void SetMyFont(CDC dc)
 //Tests:
 // Pass a CDC by value to a function
 // Pass a CMemDC as a CDC
-// Keep an object using SelectObject object in scope.
+// Keep an object in scope by using SelectObject which makes its own copy.
 void SelectBitmapTest(CDC dc, int cx, int cy)
 {
     CBitmap bitmap;
@@ -218,16 +218,16 @@ bool TestCDCReferenceCount(HWND wnd)
 bool TestBitmap(CBitmap bitmap, int cx, int cy)
 {
     BITMAP data{};
-    bool testPassed = false;
+    bool result = false;
 
     // Is this a valid bitmap?
     if(::GetObject(bitmap, sizeof(data), &data))
     {
         // Is the bitmap size correct?
-        testPassed = (data.bmWidth == cx && data.bmHeight == cy);
+        result = (data.bmWidth == cx && data.bmHeight == cy);
     }
 
-    return testPassed;
+    return result;
 }
 
 void RunTests()
@@ -239,7 +239,7 @@ void RunTests()
     CString T = "passed";
     CString F = "***failed***";
     std::cout << "\n\n***  Testing begins     ***\n";
-    for (int i = 0; i < 1000; i++)
+    for (int i = 1; i <= 1000; i++)
     {
         // Set the font.
         SetMyFont(memDC);

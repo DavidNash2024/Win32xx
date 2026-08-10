@@ -1716,7 +1716,11 @@ namespace Win32xx
     inline CMenu CWnd::GetMenu() const
     {
         assert(IsWindow());
-        return CMenu(::GetMenu(*this));
+        HMENU menu = ::GetMenu(*this);
+        if (menu != nullptr)
+            return CMenu(menu);
+
+        return CMenu();
     }
 
     // The GetNextDlgGroupItem function retrieves the first control in a group of
