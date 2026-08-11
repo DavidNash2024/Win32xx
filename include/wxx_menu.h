@@ -447,7 +447,9 @@ namespace Win32xx
                     str = str.Left(tabPos);
                 }
 
-                if (str == menuName)
+                CString newMenuName = menuName;
+                newMenuName.Replace(_T("&"), _T(""));
+                if (str == newMenuName)
                 {
                     item = i;
                     break;

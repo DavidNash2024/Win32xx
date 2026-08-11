@@ -87,6 +87,8 @@ IDI_BOTTOM              ICON                    "../src/res/Bottom.ico"
 
 IDW_MAIN                BITMAP                  "../src/res/Toolbar24.bmp"
 IDB_TOOLBAR16           BITMAP                  "../src/res/Toolbar16.bmp"
+IDB_TOOLBAR_HOT         BITMAP                  "../src/res/Toolbar24_h.bmp"
+IDB_TOOLBAR_DIS         BITMAP                  "../src/res/Toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

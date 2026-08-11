@@ -376,6 +376,10 @@ void CMainFrame::SetupToolBar()
 
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+
+    // The following is optional.
+    // Use separate imagelists for normal, hot and disabled buttons.
+    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 }
 
 // Add the TBSTATE_WRAP style to the rebar's toolbar.

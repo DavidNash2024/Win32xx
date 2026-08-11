@@ -843,10 +843,13 @@ LRESULT CMainFrame::OnPreviewSetup()
 BOOL CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int menuItem = GetFrameMenu().FindMenuItem(L"&Encoding");
-    CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
-    UINT enc = m_encodeMode + IDM_ENC_ANSI;
-    if (enc == id)
-        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
+    if (menuItem >= 0)
+    {
+        CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
+        UINT enc = m_encodeMode + IDM_ENC_ANSI;
+        if (enc == id)
+            radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
+    }
 
     return TRUE;
 }

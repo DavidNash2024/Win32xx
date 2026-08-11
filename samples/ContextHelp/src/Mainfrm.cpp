@@ -324,9 +324,12 @@ void CMainFrame::OnUpdateCheckC(UINT id)
 void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int fileItem = GetFrameMenu().FindMenuItem(L"&Select");
-    CMenu radioMenu = GetFrameMenu().GetSubMenu(fileItem);
-    if (GetDoc().GetRadio() == id)
-        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
+    if (fileItem >= 0)
+    {
+        CMenu radioMenu = GetFrameMenu().GetSubMenu(fileItem);
+        if (GetDoc().GetRadio() == id)
+            radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
+    }
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.

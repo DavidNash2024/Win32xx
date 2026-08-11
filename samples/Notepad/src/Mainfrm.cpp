@@ -314,7 +314,7 @@ BOOL CMainFrame::OnEditUndo()
 BOOL CMainFrame::OnEncodeANSI()
 {
     SetEncoding(ANSI);
-    int menuItem = GetFrameMenu().FindMenuItem(L"Encoding");
+    int menuItem = GetFrameMenu().FindMenuItem(L"&Encoding");
     if (menuItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
@@ -328,7 +328,7 @@ BOOL CMainFrame::OnEncodeANSI()
 BOOL CMainFrame::OnEncodeUTF8()
 {
     SetEncoding(UTF8);
-    int menuItem = GetFrameMenu().FindMenuItem(L"Encoding");
+    int menuItem = GetFrameMenu().FindMenuItem(L"&Encoding");
     if (menuItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
@@ -342,7 +342,7 @@ BOOL CMainFrame::OnEncodeUTF8()
 BOOL CMainFrame::OnEncodeUTF16()
 {
     SetEncoding(UTF16LE);
-    int menuItem = GetFrameMenu().FindMenuItem(L"Encoding");
+    int menuItem = GetFrameMenu().FindMenuItem(L"&Encoding");
     if (menuItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
@@ -798,11 +798,14 @@ LRESULT CMainFrame::OnPreviewSetup()
 // Update the radio buttons in the menu.
 BOOL CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
-    int menuItem = GetFrameMenu().FindMenuItem(L"Encoding");
-    CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
-    UINT enc = m_encoding + IDM_ENC_ANSI;
-    if (enc == id)
-        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
+    int menuItem = GetFrameMenu().FindMenuItem(L"&Encoding");
+    if (menuItem >= 0)
+    {
+        CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
+        UINT enc = m_encoding + IDM_ENC_ANSI;
+        if (enc == id)
+            radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
+    }
 
     return TRUE;
 }
