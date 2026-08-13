@@ -5,7 +5,7 @@
 #include <iostream>
 #include "wxx_cstring.h"        // Includes CString from Win32++.
 // #include "wxx_socket.h"      // Includes network support from Win32++.
-// #include "stdafx.h"          // Include the entire Win32++ library.
+// #include "pch.h"             // Include the entire Win32++ library.
 
 using namespace std;
 

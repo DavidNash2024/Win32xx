@@ -360,11 +360,13 @@
         <None Include="..\src\Mainfrm.h">
             <BuildOrder>59</BuildOrder>
         </None>
+        <None Include="..\src\pch.h">
+            <BuildOrder>65</BuildOrder>
+        </None>
         <None Include="..\src\resource.h">
             <BuildOrder>60</BuildOrder>
         </None>
         <ResourceCompile Include="..\src\resource.rc">
-            <ModuleName>resource.rc</ModuleName>
             <Form>Resource.res</Form>
             <BuildOrder>61</BuildOrder>
         </ResourceCompile>
@@ -373,12 +375,6 @@
         </CppCompile>
         <None Include="..\src\RichView.h">
             <BuildOrder>63</BuildOrder>
-        </None>
-        <CppCompile Include="..\src\StdAfx.cpp">
-            <BuildOrder>64</BuildOrder>
-        </CppCompile>
-        <None Include="..\src\pch.h">
-            <BuildOrder>65</BuildOrder>
         </None>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

@@ -135,7 +135,7 @@ void ScintillaView::InitialiseEditor()
     assert(m_directFunction);
 
     // Set up the attributes of the global default style.
-    StyleSetFont(STYLE_DEFAULT, "Courier New");
+    StyleSetFont(STYLE_DEFAULT, "Consolas");
     StyleSetSize(STYLE_DEFAULT, 10);
     StyleSetBack(STYLE_DEFAULT, white);
     StyleSetFore(STYLE_DEFAULT, black);

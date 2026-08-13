@@ -211,7 +211,7 @@ void CRichView::SetFontDefaults()
     CHARFORMAT cf{};
     cf.cbSize = sizeof(cf);
     cf.dwMask = CFM_SIZE | CFM_FACE | CFM_EFFECTS;
-    StrCopy(cf.szFaceName, L"Courier New", LF_FACESIZE);
+    StrCopy(cf.szFaceName, L"Consolas", LF_FACESIZE);
     constexpr int twipsPerPoint = 20;
     constexpr int fontSize = 10;
     cf.yHeight = fontSize * twipsPerPoint;

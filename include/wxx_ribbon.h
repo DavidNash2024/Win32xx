@@ -520,7 +520,7 @@ namespace Win32xx
     {
         std::vector<CString> fileNames = T::GetMRUEntries();
         HRESULT result = E_FAIL;
-        SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, static_cast<ULONG>(fileNames.size()));
+        SAFEARRAY* psa = ::SafeArrayCreateVector(VT_UNKNOWN, 0, static_cast<ULONG>(fileNames.size()));
         m_recentFiles.clear();
 
         if (psa == nullptr)
@@ -536,10 +536,10 @@ namespace Win32xx
 
             m_recentFiles.push_back(Microsoft::WRL::Make<CRecentFiles>(curFileName));
             IUnknown* pUnk = m_recentFiles.back().Get();
-            hr = SafeArrayPutElement(psa, &currentFile, static_cast<void*>(pUnk));
+            hr = ::SafeArrayPutElement(psa, &currentFile, static_cast<void*>(pUnk));
             if (FAILED(hr))
             {
-                SafeArrayDestroy(psa);
+                ::SafeArrayDestroy(psa);
                 return hr;
             }
 
@@ -547,16 +547,16 @@ namespace Win32xx
         }
 
         SAFEARRAYBOUND sab = { static_cast<ULONG>(currentFile), 0 };
-        hr = SafeArrayRedim(psa, &sab);
+        hr = ::SafeArrayRedim(psa, &sab);
         if (FAILED(hr))
         {
-            SafeArrayDestroy(psa);
+            ::SafeArrayDestroy(psa);
             return hr;
         }
 
-        result = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
+        result = ::UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
 
-        SafeArrayDestroy(psa);  // Calls release for each element in the array.
+        ::SafeArrayDestroy(psa);  // Calls release for each element in the array.
         return result;
     }
 
@@ -617,11 +617,11 @@ namespace Win32xx
 
         if (key == UI_PKEY_Label)
         {
-            result = UIInitPropertyFromString(key, m_displayName, ppropvar);
+            result = ::UIInitPropertyFromString(key, m_displayName, ppropvar);
         }
         else if (key == UI_PKEY_LabelDescription)
         {
-            result = UIInitPropertyFromString(key, m_displayName, ppropvar);
+            result = ::UIInitPropertyFromString(key, m_displayName, ppropvar);
         }
 
         return result;

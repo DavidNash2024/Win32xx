@@ -325,9 +325,8 @@ namespace Win32xx
                     break;
             }
 
-            // Add null termination if required.
-            if (dst[index] != '\0')
-                dst[dst_size - 1] = '\0';
+            // Add null termination.
+            dst[dst_size - 1] = '\0';
         }
     }
 
@@ -350,9 +349,8 @@ namespace Win32xx
                     break;
             }
 
-            // Add null termination if required.
-            if (dst[index] != L'\0')
-                dst[dst_size - 1] = L'\0';
+            // Add null termination.
+            dst[dst_size - 1] = L'\0';
         }
     }
 

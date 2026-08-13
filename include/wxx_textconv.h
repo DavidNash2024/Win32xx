@@ -296,9 +296,9 @@ namespace Win32xx
         MultiByteToWideChar(codePage, 0, str, charCount, m_wideArray.data(), length);
 
         if (charCount == -1)
-            m_length = (length > 0) ? static_cast<size_t>(length - 1) : 0;
+            m_length = (length > 0) ? (length - 1) : 0;
         else
-            m_length = static_cast<size_t>(length);
+            m_length = length;
     }
 
     inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/)

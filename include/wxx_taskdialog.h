@@ -176,14 +176,25 @@ namespace Win32xx
     // TD_WARNING_ICON; TD_ERROR_ICON; TD_INFORMATION_ICON; TD_SHIELD_ICON.
     // TaskDialogs support per monitor DPI aware version 2, but a MessageBox
     // currently does not. TaskDialogs are not supported on Windows XP.
-    inline void TaskDialogBox(HWND wnd, LPCWSTR text, LPCWSTR caption,
+    // Returns S_OK on success, otherwise returns E_OUTOFMEMORY, E_INVALIDARG,
+    // or E_FAIL.
+    inline HRESULT TaskDialogBox(HWND parent, LPCWSTR text, LPCWSTR caption,
         LPWSTR iconType = TD_INFORMATION_ICON)
     {
-        CTaskDialog taskDialog;
-        taskDialog.SetContent(text);
-        taskDialog.SetWindowTitle(caption);
-        taskDialog.SetMainIcon(iconType);
-        taskDialog.DoModal(wnd);
+        // Fill the TASKDIALOGCONFIG struct.
+        TASKDIALOGCONFIG tc = {};
+        tc.cbSize = sizeof(tc);
+        tc.hInstance = reinterpret_cast<HINSTANCE>(&__ImageBase);
+        tc.hwndParent = parent;
+        tc.pszWindowTitle = caption;
+        tc.pszMainInstruction = text;
+        tc.pszMainIcon = iconType;
+
+        // Create the task dialog.
+        HRESULT result = ::TaskDialogIndirect(&tc, nullptr,
+            nullptr, nullptr);
+
+        return result;
     }
 
     /////////////////////////////////////////
