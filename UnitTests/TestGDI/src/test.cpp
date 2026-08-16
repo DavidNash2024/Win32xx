@@ -248,7 +248,7 @@ void RunTests()
         SelectBitmapTest(memDC, cx, cy);
         CBitmap bitmap1 = memDC.DetachBitmap();
         str = "Select Bitmap test:            " + (TestBitmap(bitmap1, cx, cy) ? T : F) + "\n";
-        std::wcout << str.c_str();
+        tcout << str.c_str();
 
         // The created bitmap should be valid and the correct size.
         CBitmap bitmap2 = CreateBitmapTest(cx, cy);
@@ -262,11 +262,11 @@ void RunTests()
         str = "Return HBITMAP by value test:  " + (TestBitmap(bitmap3, cx, cy) ? F : T) + "\n";
         tcout << str.c_str();
 
-        // The series of reference count tests should all pass.
+        // The series of GDI Object reference count tests should all pass.
         str = "Object Reference Count test:   " + (TestObjectReferenceCount() ? T : F) + "\n";
         tcout << str.c_str();
 
-        // The series of reference count tests should all pass.
+        // The series of DC reference count tests should all pass.
         str = "DC Reference Count test:       " + (TestCDCReferenceCount(HWND_DESKTOP) ? T : F) + "\n";
         tcout << str.c_str();
         tcout << "Loop count = " << ToCString(i).c_str() << '\n';

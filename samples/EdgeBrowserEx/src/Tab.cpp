@@ -36,7 +36,7 @@ HRESULT Tab::Init(ICoreWebView2Environment* env, bool shouldBeActive)
 
         // Register event handler for history change
         RETURN_IF_FAILED(m_contentWebView->add_HistoryChanged(Callback<ICoreWebView2HistoryChangedEventHandler>(
-            [this, browserWindow](ICoreWebView2* webview, IUnknown* args) -> HRESULT
+            [this, browserWindow](ICoreWebView2* webview, IUnknown*) -> HRESULT
         {
             CBrowserWindow::CheckFailure(browserWindow->HandleTabHistoryUpdate(m_tabId, webview), L"Can't update go back/forward buttons.");
 
@@ -45,7 +45,7 @@ HRESULT Tab::Init(ICoreWebView2Environment* env, bool shouldBeActive)
 
         // Register event handler for source change
         RETURN_IF_FAILED(m_contentWebView->add_SourceChanged(Callback<ICoreWebView2SourceChangedEventHandler>(
-            [this, browserWindow](ICoreWebView2* webview, ICoreWebView2SourceChangedEventArgs* args) -> HRESULT
+            [this, browserWindow](ICoreWebView2* webview, ICoreWebView2SourceChangedEventArgs*) -> HRESULT
         {
             CBrowserWindow::CheckFailure(browserWindow->HandleTabURIUpdate(m_tabId, webview), L"Can't update address bar");
 
@@ -53,7 +53,7 @@ HRESULT Tab::Init(ICoreWebView2Environment* env, bool shouldBeActive)
         }).Get(), &m_uriUpdateForwarderToken));
 
         RETURN_IF_FAILED(m_contentWebView->add_NavigationStarting(Callback<ICoreWebView2NavigationStartingEventHandler>(
-            [this, browserWindow](ICoreWebView2* webview, ICoreWebView2NavigationStartingEventArgs* args) -> HRESULT
+            [this, browserWindow](ICoreWebView2* webview, ICoreWebView2NavigationStartingEventArgs*) -> HRESULT
         {
             CBrowserWindow::CheckFailure(browserWindow->HandleTabNavStarting(m_tabId, webview), L"Can't update reload button");
 

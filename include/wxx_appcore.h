@@ -744,11 +744,6 @@ namespace Win32xx
                         m_devMode.Reassign(pd.hDevMode);
                         m_devNames.Reassign(pd.hDevNames);
                     }
-                    else
-                    {
-                        ::GlobalFree(pd.hDevMode);
-                        ::GlobalFree(pd.hDevNames);
-                    }
                 }
             }
         }

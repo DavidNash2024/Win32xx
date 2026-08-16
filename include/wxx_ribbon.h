@@ -275,6 +275,9 @@ namespace Win32xx
     inline STDMETHODIMP CRibbonT<T>::OnDestroyUICommand(UINT32 commandId,
         __in UI_COMMANDTYPE typeID, __in_opt IUICommandHandler* pCommandHandler)
     {
+        if (!m_pWnd)
+            return E_FAIL;
+
         return m_pWnd->OnDestroyUICommand(commandId, typeID, pCommandHandler);
     }
 
@@ -285,6 +288,9 @@ namespace Win32xx
         __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* currentValue,
         __out PROPVARIANT* newValue)
     {
+        if (!m_pWnd)
+            return E_FAIL;
+
         return m_pWnd->UpdateProperty(commandId, key, currentValue, newValue);
     }
 

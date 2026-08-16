@@ -74,7 +74,7 @@ HRESULT CBrowserWindow::CreateBrowserControlsWebView()
             RETURN_IF_FAILED(m_controlsWebView->get_Settings(&settings));
             RETURN_IF_FAILED(settings->put_AreDevToolsEnabled(FALSE));
             RETURN_IF_FAILED(m_controlsController->add_ZoomFactorChanged(Callback<ICoreWebView2ZoomFactorChangedEventHandler>(
-                [](ICoreWebView2Controller* host, IUnknown* args) -> HRESULT
+                [](ICoreWebView2Controller* host, IUnknown*) -> HRESULT
                 {
                     host->put_ZoomFactor(1.0);
                     return S_OK;
@@ -111,7 +111,7 @@ HRESULT CBrowserWindow::CreateBrowserOptionsWebView()
             RETURN_IF_FAILED(settings->put_AreDevToolsEnabled(FALSE));
 
             RETURN_IF_FAILED(m_optionsController->add_ZoomFactorChanged(Callback<ICoreWebView2ZoomFactorChangedEventHandler>(
-                [](ICoreWebView2Controller* host, IUnknown* args) -> HRESULT
+                [](ICoreWebView2Controller* host, IUnknown*) -> HRESULT
                 {
                     host->put_ZoomFactor(1.0);
                     return S_OK;
@@ -124,7 +124,7 @@ HRESULT CBrowserWindow::CreateBrowserOptionsWebView()
 
             // Hide menu when focus is lost
             RETURN_IF_FAILED(m_optionsController->add_LostFocus(Callback<ICoreWebView2FocusChangedEventHandler>(
-                [this](ICoreWebView2Controller* sender, IUnknown* args) -> HRESULT
+                [this](ICoreWebView2Controller*, IUnknown*) -> HRESULT
                 {
                     json jsonObj;
                     jsonObj["message"] = MG_OPTIONS_LOST_FOCUS;
@@ -358,7 +358,7 @@ HRESULT CBrowserWindow::HandleTabNavCompleted(size_t tabId, ICoreWebView2* webvi
     return PostJsonToWebView(jsonObj, m_controlsWebView.Get());
 }
 
-HRESULT CBrowserWindow::HandleTabNavStarting(size_t tabId, ICoreWebView2* webview)
+HRESULT CBrowserWindow::HandleTabNavStarting(size_t tabId, ICoreWebView2*)
 {
     json jsonObj;
     jsonObj["message"] = MG_NAV_STARTING;
@@ -367,7 +367,7 @@ HRESULT CBrowserWindow::HandleTabNavStarting(size_t tabId, ICoreWebView2* webvie
     return PostJsonToWebView(jsonObj, m_controlsWebView.Get());
 }
 
-HRESULT CBrowserWindow::HandleTabSecurityUpdate(size_t tabId, ICoreWebView2* webview, ICoreWebView2DevToolsProtocolEventReceivedEventArgs* args)
+HRESULT CBrowserWindow::HandleTabSecurityUpdate(size_t tabId, ICoreWebView2*, ICoreWebView2DevToolsProtocolEventReceivedEventArgs* args)
 {
     wil::unique_cotaskmem_string jsonArgs;
     RETURN_IF_FAILED(args->get_ParameterObjectAsJson(&jsonArgs));
@@ -391,7 +391,7 @@ HRESULT CBrowserWindow::HandleTabURIUpdate(size_t tabId, ICoreWebView2* webview)
     jsonObj["args"]["tabId"] = tabId;
     jsonObj["args"]["uri"] = std::string(WtoA(source.get(), CP_UTF8).c_str());
 
-    int message = jsonObj["message"].get<int>();
+    //int message = jsonObj["message"].get<int>();
 
     std::wstring uri(source.get());
     std::wstring favoritesURI = GetFilePathAsURI(GetFullPathFor(L"wvbrowser_ui\\content_ui\\favorites.html"));
@@ -426,7 +426,7 @@ HRESULT CBrowserWindow::InitUIWebViews()
     // used to isolate the browser UI from web content requested by the user.
     return CreateCoreWebView2EnvironmentWithOptions(nullptr, browserDataDirectory.c_str(),
         nullptr, Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
-            [this](HRESULT result, ICoreWebView2Environment* env) -> HRESULT
+            [this](HRESULT, ICoreWebView2Environment* env) -> HRESULT
     {
         // Environment is ready, create the WebView
         m_uiEnv = env;
@@ -489,7 +489,7 @@ void CBrowserWindow::OnClose()
     CWnd::OnClose();
 }
 
-int CBrowserWindow::OnCreate(CREATESTRUCT& cs)
+int CBrowserWindow::OnCreate(CREATESTRUCT&)
 {
     // Set the window's icon
     SetIconSmall(IDI_GLOBE);
@@ -732,8 +732,8 @@ HRESULT CBrowserWindow::OnMGNavigate(json args)
     }
     else if (!SUCCEEDED(m_tabs.at(m_activeTabId)->m_contentWebView->Navigate(uri.c_str())))
     {
-        std::string uri = args.at("encodedSearchURI").get<std::string>().c_str();
-        CheckFailure(m_tabs.at(m_activeTabId)->m_contentWebView->Navigate(AtoW(uri.c_str(), CP_UTF8)), L"Can't navigate to requested page.");
+        std::string searchURI = args.at("encodedSearchURI").get<std::string>().c_str();
+        CheckFailure(m_tabs.at(m_activeTabId)->m_contentWebView->Navigate(AtoW(searchURI.c_str(), CP_UTF8)), L"Can't navigate to requested page.");
     }
     return S_OK;
 }
@@ -829,7 +829,7 @@ HRESULT CBrowserWindow::OnMGHistory(json args, json jsonObj)
 void CBrowserWindow::SetUIMessageBroker()
 {
     m_uiMessageBroker = Callback<ICoreWebView2WebMessageReceivedEventHandler>(
-        [this](ICoreWebView2* webview, ICoreWebView2WebMessageReceivedEventArgs* eventArgs) -> HRESULT
+        [this](ICoreWebView2*, ICoreWebView2WebMessageReceivedEventArgs* eventArgs) -> HRESULT
     {
         wil::unique_cotaskmem_string jsonString;
         CheckFailure(eventArgs->get_WebMessageAsJson(&jsonString), L"");  // Get the message from the UI WebView as JSON formatted string

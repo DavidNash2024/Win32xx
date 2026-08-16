@@ -374,7 +374,7 @@ namespace Win32xx
         }
     }
 
-    // Constructor. Assing from std::wstring.
+    // Constructor. Assign from std::wstring.
     template <class T>
     inline CStringT<T>::CStringT(const std::wstring& str)
     {

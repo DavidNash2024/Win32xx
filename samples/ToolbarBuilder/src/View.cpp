@@ -381,8 +381,8 @@ LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
     {
         switch (pHeader->code)
         {
-            // PGN_CALCSIZE is a Notification sent by a pager control to obtain
-            // the scrollable dimensions of the contained window.
+        // PGN_CALCSIZE is a Notification sent by a pager control to obtain
+        // the scrollable dimensions of the contained window.
         case PGN_CALCSIZE:
         {
             LPNMPGCALCSIZE pCalcSize = reinterpret_cast<LPNMPGCALCSIZE>(pHeader);

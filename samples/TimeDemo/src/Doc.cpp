@@ -331,8 +331,7 @@ void CDoc::NewDocument()
 
     PushContent(L"");
 
-    s = ::GetCommandLine();
-    s.Format(L"  Command line: %s", s.c_str());
+    s.Format(L"  Command line: %s", ::GetCommandLine());
     PushContent(s);
     PushContent(L"");
 

@@ -1299,8 +1299,6 @@ namespace Win32xx
         }
     }
 
-
-
     // Draws the status bar text with the appropriate color.
     template <class T>
     inline void CFrameT<T>::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
@@ -1796,7 +1794,6 @@ namespace Win32xx
             *yImagePos = (rc.bottom + rc.top - szImage.cy - textSize.cy) / 2;
         }
     }
-
 
     // Get the appropriate image list depending on the button state.
     template <class T>
