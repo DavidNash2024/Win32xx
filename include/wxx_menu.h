@@ -449,6 +449,14 @@ namespace Win32xx
 
                 CString newMenuName = menuName;
                 newMenuName.Replace(_T("&"), _T(""));
+
+                // Strip out trailing shortcut strings (e.g. dropping "\tCtrl+O").
+                tabPos = newMenuName.Find(_T('\t'));
+                if (tabPos != -1)
+                {
+                    newMenuName = newMenuName.Left(tabPos);
+                }
+
                 if (str == newMenuName)
                 {
                     item = i;

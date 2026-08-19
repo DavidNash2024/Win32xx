@@ -114,7 +114,7 @@ CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,60,50,14
-    CTEXT           "Frame Application",IDC_STATIC,43,22,99,8
+    CTEXT           "FrameEx Application",IDC_STATIC,43,22,99,8
     ICON            IDW_MAIN,0,4,4,20,20
     CTEXT           "",IDC_STATIC1,53,32,80,8
     CTEXT           "",IDC_STATIC2,53,42,80,8

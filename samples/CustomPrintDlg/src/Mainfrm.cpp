@@ -633,6 +633,7 @@ void CMainFrame::OnInitialUpdate()
     }
 
     m_richView.SetFocus();
+    SetEncoding(ANSI);
 
     // Retrieve the command line arguments.
     std::vector<CString> args = GetCommandLineArgs();

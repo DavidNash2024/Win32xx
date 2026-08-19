@@ -19,4 +19,3 @@ BOOL CFrameApp::InitInstance()
     return TRUE;
 }
 
-
