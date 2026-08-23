@@ -63,12 +63,12 @@ namespace Win32xx
         CRect GetPartRect(int part) const;
         CString GetPartText(int part) const;
         BOOL IsSimple() const;
-        BOOL SetParts(int parts, const int paneWidths[]) const;
-        BOOL SetPartText(int part, LPCTSTR text, UINT style = 0) const;
-        BOOL SetPartWidth(int part, int width) const;
+        BOOL SetParts(int parts, const int paneWidths[]);
+        BOOL SetPartText(int part, LPCTSTR text, UINT style = 0);
+        BOOL SetPartWidth(int part, int width);
         HICON GetPartIcon(int part) const;
-        BOOL SetPartIcon(int part, HICON icon) const;
-        void SetSimple(BOOL isSimple = TRUE) const;
+        BOOL SetPartIcon(int part, HICON icon);
+        void SetSimple(BOOL isSimple = TRUE);
 
     private:
         CStatusBar(const CStatusBar&) = delete;
@@ -116,8 +116,10 @@ namespace Win32xx
         CRect rc;
         WPARAM wparam = static_cast<WPARAM>(part);
         LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
-        SendMessage(SB_GETRECT, wparam, lparam);
-        return rc;
+        if (SendMessage(SB_GETRECT, wparam, lparam))
+            return rc;
+        else
+            return CRect();
     }
 
     // Retrieves the text from a part in the status bar.
@@ -125,14 +127,13 @@ namespace Win32xx
     inline CString CStatusBar::GetPartText(int part) const
     {
         assert(IsWindow());
-        CString PaneText;
 
         // Get size of Text array
         WPARAM wparam = static_cast<WPARAM>(part);
         int chars = LOWORD (SendMessage(SB_GETTEXTLENGTH, wparam, 0));
         CString str;
 
-        LPARAM lparam = reinterpret_cast<LPARAM>(str.GetBuffer(chars));
+        LPARAM lparam = reinterpret_cast<LPARAM>(str.GetBuffer(chars + 1));
         SendMessage(SB_GETTEXT, wparam, lparam);
         str.ReleaseBuffer();
         return str;
@@ -143,7 +144,7 @@ namespace Win32xx
     inline BOOL CStatusBar::IsSimple() const
     {
         assert(IsWindow());
-        return (SendMessage(SB_ISSIMPLE, 0, 0)) ? TRUE : FALSE;
+        return SendMessage(SB_ISSIMPLE, 0, 0) ? TRUE : FALSE;
     }
 
     // Called when the background needs erasing.
@@ -179,14 +180,14 @@ namespace Win32xx
     // right edge of each part. If an element of iPaneWidths is -1, the right
     // edge of the corresponding part extends to the border of the window.
     // Refer to SB_SETPARTS in the Windows API documentation for more information.
-    inline BOOL CStatusBar::SetParts(int parts, const int paneWidths[]) const
+    inline BOOL CStatusBar::SetParts(int parts, const int paneWidths[])
     {
         assert(IsWindow());
         assert(parts <= 256);
 
         WPARAM wparam = static_cast<WPARAM>(parts);
         LPARAM lparam = reinterpret_cast<LPARAM>(paneWidths);
-        return (SendMessage(SB_SETPARTS, wparam, lparam)) ? TRUE : FALSE;
+        return SendMessage(SB_SETPARTS, wparam, lparam) ? TRUE : FALSE;
     }
 
     // Set the text in a status bar part.
@@ -200,7 +201,7 @@ namespace Win32xx
     // SBT_RTLREADING    The text will be displayed in the opposite direction
     //                   to the text in the parent window.
     // Refer to SB_SETTEXT in the Windows API documentation for more information.
-    inline BOOL CStatusBar::SetPartText(int part, LPCTSTR text, UINT style) const
+    inline BOOL CStatusBar::SetPartText(int part, LPCTSTR text, UINT style)
     {
         assert(IsWindow());
 
@@ -218,19 +219,19 @@ namespace Win32xx
 
     // Sets the icon for a part in the status bar.
     // Refer to SB_SETICON in the Windows API documentation for more information.
-    inline BOOL CStatusBar::SetPartIcon(int part, HICON icon) const
+    inline BOOL CStatusBar::SetPartIcon(int part, HICON icon)
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(part);
         LPARAM lparam = reinterpret_cast<LPARAM>(icon);
-        return (SendMessage(SB_SETICON, wparam, lparam)) ? TRUE : FALSE;
+        return SendMessage(SB_SETICON, wparam, lparam) ? TRUE : FALSE;
     }
 
     // Changes the width of an existing pane, or creates a new pane with the
     // specified width. A width of -1 for the last part sets the width to the
     // border of the window.
     // Refer to SB_SETPARTS in the Windows API documentation for more information.
-    inline BOOL CStatusBar::SetPartWidth(int part, int width) const
+    inline BOOL CStatusBar::SetPartWidth(int part, int width)
     {
         assert(IsWindow());
         assert(part >= 0 && part <= 255);
@@ -238,22 +239,25 @@ namespace Win32xx
         const int oldCount = GetParts();
         const int newCount = std::max(part + 1, oldCount);
         std::vector<int> partWidths(newCount, 0);
-        GetParts(oldCount, partWidths.data());
+
+        if (oldCount > 0)
+            GetParts(oldCount, partWidths.data());
+        else
+            for (int i = 0; i < newCount; ++i)
+                partWidths[i] = 0;
 
         if (part == 0)
-            partWidths[part] = width;
+            partWidths[0] = width;
         else
             partWidths[part] = (width >= 0) ? (partWidths[part - 1] + width) : -1;
 
-        const LRESULT result = SetParts(newCount, partWidths.data());
-
-        return result ? TRUE : FALSE;
+       return SetParts(newCount, partWidths.data());
     }
 
     // Specifies whether a status window displays simple text or displays all
     // window parts set by a previous SB_SETPARTS message.
     // Refer to SB_SIMPLE in the Windows API documentation for more information.
-    inline void CStatusBar::SetSimple(BOOL isSimple /* = TRUE*/) const
+    inline void CStatusBar::SetSimple(BOOL isSimple /* = TRUE*/)
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(isSimple);

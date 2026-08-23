@@ -218,7 +218,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(format);
-        return (SendMessage(EM_CANPASTE, wparam, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_CANPASTE, wparam, 0) ? TRUE : FALSE;
     }
 
     // Determines whether there are any actions in the control redo queue.
@@ -226,7 +226,7 @@ namespace Win32xx
     inline BOOL CRichEdit::CanRedo() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_CANREDO, 0, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_CANREDO, 0, 0) ? TRUE : FALSE;
     }
 
     // Determines whether there are any actions in an edit control's undo queue.
@@ -234,7 +234,7 @@ namespace Win32xx
     inline BOOL CRichEdit::CanUndo() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_CANUNDO, 0, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_CANUNDO, 0, 0) ? TRUE : FALSE;
     }
 
     // Gets information about the character closest to a specified point in the
@@ -279,7 +279,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
-        return (SendMessage(EM_DISPLAYBAND, 0, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_DISPLAYBAND, 0, lparam) ? TRUE : FALSE;
     }
 
     // Resets the undo flag of the rich edit control. The undo flag is set
@@ -448,7 +448,7 @@ namespace Win32xx
     inline BOOL CRichEdit::GetModify() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_GETMODIFY, 0, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_GETMODIFY, 0, 0) ? TRUE : FALSE;
     }
 
     // Retrieves the rich edit control options.
@@ -485,7 +485,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(type);
         LPARAM lparam = reinterpret_cast<LPARAM>(&puncInfo);
-        return (SendMessage(EM_GETPUNCTUATION, wparam, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_GETPUNCTUATION, wparam, lparam) ? TRUE : FALSE;
     }
 
     // Retrieves the formatting rectangle. The formatting rectangle is the
@@ -759,7 +759,7 @@ namespace Win32xx
     inline BOOL CRichEdit::Redo() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_REDO, 0, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_REDO, 0, 0) ? TRUE : FALSE;
     }
 
     // Replaces the current selection with specified text.
@@ -786,7 +786,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(enable);
-        return (SendMessage(EM_AUTOURLDETECT, wparam, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_AUTOURLDETECT, wparam, 0) ? TRUE : FALSE;
     }
 
     // Sets the background color.
@@ -805,7 +805,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&format);
-        return (SendMessage(EM_SETCHARFORMAT, 0, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETCHARFORMAT, 0, lparam) ? TRUE : FALSE;
     }
 
     // Sets the current default character formatting attributes.
@@ -814,7 +814,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&format);
-        return (SendMessage(EM_SETCHARFORMAT, 0, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETCHARFORMAT, 0, lparam) ? TRUE : FALSE;
     }
 
     // Sets the event mask. The event mask specifies which notification
@@ -843,7 +843,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(pCallback);
-        return (SendMessage(EM_SETOLECALLBACK, 0, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETOLECALLBACK, 0, lparam) ? TRUE : FALSE;
     }
 
     // Sets the options.
@@ -865,7 +865,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&format);
-        return (SendMessage(EM_SETPARAFORMAT, 0, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETPARAFORMAT, 0, lparam) ? TRUE : FALSE;
     }
 
     // Sets the paragraph formatting attributes in the current selection.
@@ -874,7 +874,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&pf);
-        return (SendMessage(EM_SETPARAFORMAT, 0, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETPARAFORMAT, 0, lparam) ? TRUE : FALSE;
     }
 
     // Sets the current punctuation characters for the rich edit control.
@@ -885,7 +885,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(type);
         LPARAM lparam = reinterpret_cast<LPARAM>(&puncInfo);
-        return (SendMessage(EM_SETPUNCTUATION, wparam, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETPUNCTUATION, wparam, lparam) ? TRUE : FALSE;
     }
 
     // Sets or removes the read-only style.
@@ -894,7 +894,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(isReadOnly);
-        return (SendMessage(EM_SETREADONLY, wparam, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_SETREADONLY, wparam, 0) ? TRUE : FALSE;
     }
 
     // Sets the formatting rectangle. The formatting rectangle is the limiting
@@ -935,7 +935,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&format);
-        return (SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, lparam) ? TRUE : FALSE;
     }
 
     // Sets the character formatting attributes in the current selection.
@@ -944,7 +944,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&cf);
-        return (SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, lparam) ? TRUE : FALSE;
     }
 
     // Sets the target output device and line width used for "what you see is
@@ -955,7 +955,7 @@ namespace Win32xx
         assert(IsWindow());
         WPARAM wparam = reinterpret_cast<WPARAM>(dc);
         LPARAM lparam = static_cast<LPARAM>(lineWidth);
-        return (SendMessage(EM_SETTARGETDEVICE, wparam, lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETTARGETDEVICE, wparam, lparam) ? TRUE : FALSE;
     }
 
     // Sets the text mode or undo level of the rich edit control. The message
@@ -965,7 +965,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(mode);
-        return (SendMessage(EM_SETTEXTMODE, wparam, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_SETTEXTMODE, wparam, 0) ? TRUE : FALSE;
     }
 
     // Sets the maximum number of actions that can stored in the undo queue.
@@ -984,7 +984,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&format);
-        return (SendMessage(EM_SETCHARFORMAT, (SCF_SELECTION | SCF_WORD), lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETCHARFORMAT, (SCF_SELECTION | SCF_WORD), lparam) ? TRUE : FALSE;
     }
 
     // Sets the character formatting attributes in the current word.
@@ -993,7 +993,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(&cf);
-        return (SendMessage(EM_SETCHARFORMAT, (SCF_SELECTION | SCF_WORD), lparam)) ? TRUE : FALSE;
+        return SendMessage(EM_SETCHARFORMAT, (SCF_SELECTION | SCF_WORD), lparam) ? TRUE : FALSE;
     }
 
     // Stops the control from collecting additional typing actions into the
@@ -1031,7 +1031,7 @@ namespace Win32xx
     inline BOOL CRichEdit::Undo() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_UNDO, 0, 0)) ? TRUE : FALSE;
+        return SendMessage(EM_UNDO, 0, 0) ? TRUE : FALSE;
     }
 
 }

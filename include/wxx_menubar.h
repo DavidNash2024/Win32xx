@@ -96,9 +96,9 @@ namespace Win32xx
         CMenuBar(const CMenuBar&) = delete;
         CMenuBar& operator=(const CMenuBar&) = delete;
 
-        void Cancel() const;
+        void Cancel();
         void DoAltKey(WORD keyCode);
-        void DrawMDIButton(CDC& drawDC, int button, UINT state) const;
+        void DrawMDIButton(CDC& drawDC, int button, UINT state);
         void ExitMenu();
         CWnd* GetActiveMDIChild() const;
         CWnd* GetMDIClient() const;
@@ -107,12 +107,12 @@ namespace Win32xx
         BOOL IsMDIChildMaxed() const;
         BOOL IsMDIFrame() const;
         LRESULT OnPopupMenu();
-        void Press(UINT buttonID, BOOL press) const;
+        void Press(UINT buttonID, BOOL press);
         void ProcessMenuItem();
         void ReleaseFocus();
         void StoreHotItem(int hotItem);
-        void UnpressAll() const;
-        void UpdateMDIButtons(WPARAM wparam, LPARAM lparam) const;
+        void UnpressAll();
+        void UpdateMDIButtons(WPARAM wparam, LPARAM lparam);
         static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
 
         enum MDIButtonType
@@ -158,7 +158,7 @@ namespace Win32xx
 
     // Cancel certain modes, such as mouse capture.
     // Cancels a popup menu.
-    inline void CMenuBar::Cancel() const
+    inline void CMenuBar::Cancel()
     {
         SendMessage(WM_CANCELMODE, 0, 0);
     }
@@ -235,7 +235,7 @@ namespace Win32xx
     }
 
     // Draws an individual MDI button.
-    inline void CMenuBar::DrawMDIButton(CDC& drawDC, int button, UINT state) const
+    inline void CMenuBar::DrawMDIButton(CDC& drawDC, int button, UINT state)
     {
         if (!IsRectEmpty(&m_mdiRect[button]))
         {
@@ -1064,7 +1064,7 @@ namespace Win32xx
     }
 
     // Sets the pressed state of the menu button (pressed or unpressed).
-    inline void CMenuBar::Press(UINT buttonID, BOOL press) const
+    inline void CMenuBar::Press(UINT buttonID, BOOL press)
     {
         PressButton(buttonID, press);
     }
@@ -1240,7 +1240,7 @@ namespace Win32xx
     }
 
     // Unpress any currently pressed buttons.
-    inline void CMenuBar::UnpressAll() const
+    inline void CMenuBar::UnpressAll()
     {
         for (int i = 0; i < GetButtonCount(); ++i)
         {
@@ -1250,7 +1250,7 @@ namespace Win32xx
     }
 
     // Updates the pressed state of the MDI Buttons.
-    inline void CMenuBar::UpdateMDIButtons(WPARAM wparam, LPARAM lparam) const
+    inline void CMenuBar::UpdateMDIButtons(WPARAM wparam, LPARAM lparam)
     {
         CPoint pt;
         pt.x = GET_X_LPARAM(lparam);

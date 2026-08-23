@@ -16,9 +16,10 @@ New Features and Enhancements
   applications for Windows XP.
 
 * Updated the CString class and the ToCString functions.
-  A CString can now also be constructed from a std::string and a std::wstring.
+  A CString can now also be constructed from a std::string or a std::wstring.
   The ToCString functions can also be used to convert a std::string and a 
-  std::wstring to a CString.
+  std::wstring to a CString. The update includes bug fixes in SpanExcluding
+  and SpanIncluding.
 
 * Updated the CRegKey class.
   QueryStringValue and SetStringValue can now use a CString parameter.
@@ -73,6 +74,15 @@ Added CRibbonT                           - class template (replaces CRibbon)
 Added CAtoA::GetLength                   - member function
 Added CAtoBSTR::GetLength                - member function
 Added CAtoW::GetLength                   - member function
+Added CDateTime::SetDefaultRange         - member function
+Added CDateTime::SetMaxRange             - member function
+Added CDateTime::SetMaxRange             - member function
+Added CMonthCalendar::SetDefaultRange    - member function
+Added CMonthCalendar::SetMaxRange        - member function
+Added CMonthCalendar::SetMinRange        - member function
+Added CProgressBar::GetMinRange          - member function
+Added CProgressBar::GetMaxRange          - member function
+Added CProgressBar::SetRange32           - member function
 Added CRegKey::QueryBOOLValue            - member function
 Added CRegKey::SetBOOLValue              - member function
 Added CStringT(const std::string& str)   - constructor
@@ -180,6 +190,8 @@ Added CImageList::Destroy         - member function
 Added CMenu::Destroy              - member function
 Removed CGDIObject::DeleteObject
 Removed CImageList::DeleteImageList
+Removed CListBox::GetItemDataPtr
+Removed CListBox::SetiIetmDataPtr
 Removed CMenu::DestroyMenu
 
 

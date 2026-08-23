@@ -869,7 +869,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(page);
-        return (SendMessage(*this, PSM_SETCURSEL, wparam, 0)) ? TRUE : FALSE;
+        return SendMessage(*this, PSM_SETCURSEL, wparam, 0) ? TRUE : FALSE;
     }
 
     // Activates the specified property page.

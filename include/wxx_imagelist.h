@@ -90,7 +90,7 @@ namespace Win32xx
         void Create(HIMAGELIST images);
         BOOL CreateDisabledImageList(HIMAGELIST normalImages);
         void CreateDragImage(HWND header, int index);
-        void CreateDragImage(HWND listView, int item, CPoint& pt);
+        void CreateDragImage(HWND listView, int item, CPoint pt);
         void CreateDragImage(HWND treeView, HTREEITEM item);
 
         // Operations
@@ -445,7 +445,7 @@ namespace Win32xx
 
     // Creates a drag image list for the specified item.
     // Refer to ListView_CreateDragImage in the Windows API documentation for more information.
-    inline void CImageList::CreateDragImage(HWND listView, int item, CPoint& pt)
+    inline void CImageList::CreateDragImage(HWND listView, int item, CPoint pt)
     {
         assert(::IsWindow(listView));
         HIMAGELIST images = ListView_CreateDragImage(listView, item, &pt);

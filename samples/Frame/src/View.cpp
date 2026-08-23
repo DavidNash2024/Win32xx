@@ -47,7 +47,6 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-
 // Sets the WNDCLASS parameters before the window is created.
 // This is where we set the Window class parameters.
 // Preforming this is optional, but doing so allows us to
@@ -66,7 +65,6 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
-
 
 // Prints the specified page to the specified device context.
 // Here we copy (stretch) a bitmap image of the view window
@@ -151,7 +149,6 @@ void CView::QuickPrint(LPCWSTR docName)
         MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 }
-
 
 // All window messages for this window pass through WndProc.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
