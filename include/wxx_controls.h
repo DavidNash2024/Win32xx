@@ -419,6 +419,7 @@ namespace Win32xx
         int  GetMaxRange() const;
         int  GetPos() const;
         int  GetRange(BOOL whichLimit, PBRANGE& range) const;
+        int  GetRange(BOOL whichLimit) const;
         int  OffsetPos(int increment) const;
         int  SetPos(int pos) const;
         int  SetRange(short minRange, short maxRange) const;
@@ -2150,7 +2151,17 @@ namespace Win32xx
         return static_cast<int>(SendMessage(PBM_GETRANGE, wparam, lparam));
     }
 
-      // Advances the current position of the progress bar by a specified
+    // Retrieves information about the current high and low limits of the
+    // progress bar control.
+    // Refer to PBM_GETRANGE in the Windows API documentation for more information.
+    inline int CProgressBar::GetRange(BOOL whichLimit) const
+    {
+        assert(IsWindow());
+        WPARAM wparam = static_cast<WPARAM>(whichLimit);
+        return static_cast<int>(SendMessage(PBM_GETRANGE, wparam, 0));
+    }
+
+    // Advances the current position of the progress bar by a specified
     // increment and redraws the bar to reflect the new position.
     // Refer to PBM_DELTAPOS in the Windows API documentation for more information.
     inline int CProgressBar::OffsetPos(int increment) const
