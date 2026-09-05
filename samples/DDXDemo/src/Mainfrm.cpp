@@ -249,7 +249,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
 // Select the radio button with the specified id.
 BOOL CMainFrame::OnRadioButton(UINT id)
 {
-    m_view.SetRadio(id - IDC_CHECK_A);
+    m_view.SetRadio(id - IDC_RADIO_A);
     return TRUE;
 }
 
