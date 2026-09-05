@@ -1,5 +1,5 @@
-// Win32++   Version 10.3
-// Release Date: TBA
+// Win32++   Version 10.3.0
+// Release Date: 4th September 2026
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

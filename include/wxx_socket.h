@@ -1,5 +1,5 @@
-// Win32++   Version 10.3
-// Release Date: TBA
+// Win32++   Version 10.3.0
+// Release Date: 4th September 2026
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -648,11 +648,12 @@ namespace Win32xx
             DWORD waitResult = ::WaitForSingleObject(*m_threadPtr, 3 * THREAD_TIMEOUT);
             if (waitResult == WAIT_TIMEOUT)
             {
-                TRACE("*** Critical Warning: Event Thread failed to exit within timeout! ***\n");
+                TRACE("*** Critical Warning: Event Thread failed to exit within timeout! Waiting to avoid race... ***\n");
                 if (m_socket != INVALID_SOCKET)
                 {
                     ::WSAEventSelect(m_socket, nullptr, 0);
                 }
+                ::WaitForSingleObject(*m_threadPtr, INFINITE);
             }
 
             m_stopRequest.ResetEvent();

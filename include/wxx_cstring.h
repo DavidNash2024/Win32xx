@@ -1,5 +1,5 @@
-// Win32++   Version 10.3
-// Release Date: TBA
+// Win32++   Version 10.3.0
+// Release Date: 4th September 2026
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -779,24 +779,27 @@ namespace Win32xx
 
             if (length > 0)
             {
-                m_str.resize(static_cast<size_t>(length));
+                const size_t bufSize = static_cast<size_t>(length) + 1;
+                m_str.resize(bufSize);
                 if constexpr (std::is_same_v<CleanT, char> || std::is_same_v<CleanT, CHAR>)
                 {
-                    ::vsnprintf(m_str.data(), static_cast<size_t>(length) + 1, format, args);
+                    ::vsnprintf(m_str.data(), bufSize, format, args);
                 }
                 else // T is wchar_t (WCHAR).
                 {
 #if defined(_MSC_VER)  // For Microsoft compilers.
                     ::_vsnwprintf_s(m_str.data(),
-                        static_cast<size_t>(length) + 1,
+                        bufSize,
                         static_cast<size_t>(length),
                         format, args);
 #else
                     ::_vsnwprintf(m_str.data(),
-                        static_cast<size_t>(length),
+                        bufSize,
                         format, args);
 #endif
                 }
+
+                m_str.resize(static_cast<size_t>(length));
             }
             else
                 m_str.clear();
