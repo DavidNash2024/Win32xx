@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MYFONTDIALOG_H
-#define MYFONTDIALOG_H
+#pragma once
 
 /////////////////////////////////////////////////////////
 // This class derives from the Win32++ CFontDialog class.
@@ -41,4 +39,3 @@ private:
     LOGFONT     m_logFont;  // Current logfont.
 };
 
-#endif

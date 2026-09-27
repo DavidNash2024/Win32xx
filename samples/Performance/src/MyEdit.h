@@ -2,9 +2,7 @@
 // MyEdit.h
 //
 
-#ifndef MYEDIT_H
-#define MYEDIT_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////
 // CMyEdit manages an edit control. The edit control is
@@ -29,4 +27,3 @@ private:
     CFont m_font;
 };
 
-#endif // MYEDIT_H

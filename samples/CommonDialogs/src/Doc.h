@@ -3,9 +3,7 @@
 //  Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef SDI_DOC_H
-#define SDI_DOC_H
+#pragma once
 
 #include "MyFindReplaceDlg.h"
 #include "RichEditView.h"
@@ -50,4 +48,3 @@ private:
     CView*      m_data;         // path to the document data
 };
 
-#endif //SDI_DOC_H

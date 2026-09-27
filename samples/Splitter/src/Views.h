@@ -2,9 +2,7 @@
 // Views.h
 //
 
-#ifndef VIEWS_H
-#define VIEWS_H
-
+#pragma once
 
 ///////////////////////////////////////
 // CViewSimple manages a simple window.
@@ -93,4 +91,3 @@ private:
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-#endif // VIEWS_H

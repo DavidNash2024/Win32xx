@@ -2,11 +2,9 @@
 // PropertySheetApp.h
 //
 
-#ifndef PROPERTYSHEETAPP_H
-#define PROPERTYSHEETAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CPropertySheetApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define PROPERTYSHEETAPP_H

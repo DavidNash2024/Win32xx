@@ -2,8 +2,7 @@
 // Rect.h
 //
 
-#ifndef RECT_H
-#define RECT_H
+#pragma once
 
 struct RectData
 {
@@ -43,4 +42,3 @@ private:
     int m_cyClientMax;
 };
 
-#endif  //RECT_H

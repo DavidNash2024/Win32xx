@@ -2,8 +2,7 @@
 // MyWebControl.h
 //
 
-#ifndef MYCONTROL_H
-#define MYCONTROL_H
+#pragma once
 
 // Include the WebView2 Runtime files from the packages folder.
 #include <wrl.h>
@@ -36,6 +35,4 @@ private:
     wil::com_ptr<ICoreWebView2> m_webView;
 };
 
-
-#endif // MYCONTROL_H
 

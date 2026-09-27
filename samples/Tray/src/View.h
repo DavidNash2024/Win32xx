@@ -2,9 +2,7 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
-
+#pragma once
 
 ////////////////////////////////////////////////////
 // CView is the application's main window. It can be
@@ -45,4 +43,3 @@ private:
     bool m_isMinimized;
 };
 
-#endif

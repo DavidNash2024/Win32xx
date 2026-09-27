@@ -1,9 +1,10 @@
 ////////////////////////////////////
 // ScribbleApp.h
 
+#pragma once
+
 #include "wxx_wincore.h"
 #include "View.h"
-
 
 ///////////////////////////////////////////////////////////////////
 // CScribbleApp manages the application. It initializes the Win32++

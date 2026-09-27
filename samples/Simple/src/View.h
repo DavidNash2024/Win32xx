@@ -2,11 +2,9 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "wxx_wincore.h"
-
 
 ///////////////////////////////////////////////
 // CView manages the application's main window.
@@ -30,4 +28,3 @@ private:
     CView& operator=(const CView&) = delete;
 };
 
-#endif

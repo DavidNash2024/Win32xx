@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef SDI_MAINFRM_H
-#define SDI_MAINFRM_H
+#pragma once
 
 #include "View.h"
 #include "AboutBox.h"
@@ -57,7 +55,4 @@ private:
     CView      m_view;         // The view object
     CString    m_appName;      // Application name
 };
-
-#endif // SDI_MAINFRM_H
-
 

@@ -2,9 +2,7 @@
 // Doc.h
 //
 
-#ifndef WIN32XX_DOC_H
-#define WIN32XX_DOC_H
-
+#pragma once
 
 //////////////////////////////////////////////////////////////
 // CDoc holds the application's data. It inherits from CObject
@@ -21,4 +19,3 @@ protected:
     virtual void Serialize(CArchive& ar) override;
 };
 
-#endif  // WIN32XX_DOC_H

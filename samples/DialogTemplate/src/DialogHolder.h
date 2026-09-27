@@ -2,9 +2,7 @@
 // DialogsHolderh - Declaration of CDialogHolder class
 //
 
-#ifndef DIALOG_HOLDER_H_
-#define DIALOG_HOLDER_H_
-
+#pragma once
 
 /////////////////////////////////////////////////////
 // CDialogHolder is the parent window for the dialog.
@@ -30,4 +28,3 @@ public:
     CDialog m_dialog;
 };
 
-#endif // DIALOG_HOLDER_H_

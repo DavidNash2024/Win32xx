@@ -35,17 +35,13 @@
 //
 ////////////////////////////////////////////////////////
 
-
-#ifndef WIN32XX_MENUBAR_H_
-#define WIN32XX_MENUBAR_H_
+#pragma once
 
 #include "wxx_wincore.h"
 #include "wxx_toolbar.h"
 
-
 namespace Win32xx
 {
-
     /////////////////////////////////////////////////////////////
     // The CMenuBar class provides a menu inside a rebar control.
     // CMenuBar inherits from CToolBar.
@@ -1340,4 +1336,3 @@ namespace Win32xx
 
 }
 
-#endif  // WIN32XX_MENUBAR_H_

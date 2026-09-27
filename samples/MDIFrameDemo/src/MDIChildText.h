@@ -2,9 +2,7 @@
 // MDIChildText.h
 //  Declaration of the CViewText and CMDIChildText classes
 
-#ifndef MDICHILDTEXT_H
-#define MDICHILDTEXT_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////
 // CViewText manages a rich edit control. It is used as
@@ -50,4 +48,3 @@ private:
     CMenu m_menu;
 };
 
-#endif  //MDICHILDTEXT_H

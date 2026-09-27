@@ -41,15 +41,6 @@
 // in developing this class.
 
 
-#ifndef WIN32XX_PREVIEW_H_
-#define WIN32XX_PREVIEW_H_
-
-#include "wxx_wincore.h"
-#include "wxx_dialog.h"
-#include "wxx_stdcontrols.h"
-#include "wxx_printdialogs.h"
-#include "default_resource.h"
-
 /////////////////////////////////////////////////////////////////////////////
 // CPrintPreview provides a preview of printed page before sending the print
 // job to the printer. CPrintPreview creates a memory device context from the
@@ -81,6 +72,13 @@
 // After CPrintPreview calls PrintPage, it extracts the bitmap and displays
 // it in CPrintPreview's preview pane.
 
+#pragma once
+
+#include "wxx_wincore.h"
+#include "wxx_dialog.h"
+#include "wxx_stdcontrols.h"
+#include "wxx_printdialogs.h"
+#include "default_resource.h"
 
 namespace Win32xx
 {
@@ -570,5 +568,3 @@ namespace Win32xx
 
 }
 
-
-#endif // WIN32XX_PREVIEW_H_

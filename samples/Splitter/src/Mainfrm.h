@@ -2,8 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "SplitterPanes.h"
@@ -12,7 +11,6 @@
 const int ID_DOCK_LIST = 1;
 const int ID_DOCK_TREE = 2;
 const int ID_DOCK_TEXT = 3;
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -58,7 +56,4 @@ private:
     CDockTree* m_pDockTree;
     CDockList* m_pDockList;
 };
-
-
-#endif //MAINFRM_H
 

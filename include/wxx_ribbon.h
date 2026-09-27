@@ -43,9 +43,7 @@
 //  CRibbonMDIFrame and CRibbonMDIDockFrame.
 //
 
-#ifndef WIN32XX_RIBBON_H_
-#define WIN32XX_RIBBON_H_
-
+#pragma once
 
 // Notes :
 //  To compile this code you will need a Microsoft compiler, Visual Studio
@@ -635,6 +633,4 @@ namespace Win32xx
 
 
 } // namespace Win32xx
-
-#endif  // WIN32XX_RIBBON_H_
 

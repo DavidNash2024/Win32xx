@@ -2,15 +2,13 @@
 // MainWnd.h
 //
 
-#ifndef MAINWND_H
-#define MAINWND_H
+#pragma once
 
 #include "TestWnd.h"
 #include "MyThread.h"
 #include "MyEdit.h"
 
 using MyThreadPtr = std::unique_ptr<CMyWinThread>;
-
 
 /////////////////////////////////////////////////////
 // CMainWindow manages the application's main window.
@@ -47,5 +45,3 @@ private:
     int m_windowsCount;                 // Count of windows actually created.
 };
 
-
-#endif  //MAINWND_H

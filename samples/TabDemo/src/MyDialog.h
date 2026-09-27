@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 //////////////////////////////////////////////////
 // CViewDialog manages a dialog.
@@ -51,5 +49,3 @@ private:
     CRichEdit m_richEdit2;
 };
 
-
-#endif //MYDIALOG_H

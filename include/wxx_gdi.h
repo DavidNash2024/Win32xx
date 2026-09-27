@@ -170,10 +170,7 @@
 //  CBitmapInfoPtr pbmi(bitmap);
 //  memDC.GetDIBits(bitmap, 0, pbmi->bmiHeader.biHeight, nullptr, pbmi, DIB_RGB_COLORS);
 
-
-#ifndef WIN32XX_GDI_H_
-#define WIN32XX_GDI_H_
-
+#pragma once
 
 #include "wxx_appcore0.h"
 #include "wxx_wincore0.h"
@@ -5140,6 +5137,4 @@ namespace Win32xx
 
 
 } // namespace Win32xx
-
-#endif // WIN32XX_GDI_H_
 

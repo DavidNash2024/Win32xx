@@ -48,14 +48,10 @@
 // include a monochrome bitmap that contains masks that are used to draw
 // images transparently.
 
-
-#ifndef WIN32XX_IMAGELIST_H_
-#define WIN32XX_IMAGELIST_H_
-
+#pragma once
 
 #include "wxx_appcore0.h"
 #include "wxx_rect.h"
-
 
 namespace Win32xx
 {
@@ -728,6 +724,4 @@ namespace Win32xx
     }
 
 }   // namespace Win32xx
-
-#endif  // WIN32XX_IMAGELIST_H_
 

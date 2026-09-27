@@ -3,8 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#ifndef SDI_MAINFRM_H
-#define SDI_MAINFRM_H
+#pragma once
 
 #include "AboutBox.h"
 #include "ColorChoice.h"
@@ -77,4 +76,3 @@ private:
     MyFindReplaceDialog m_findReplaceDlg;  // Find-replace dialog.
 };
 
-#endif // SDI_MAINFRM_H

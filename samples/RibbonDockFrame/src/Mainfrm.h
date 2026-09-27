@@ -2,13 +2,11 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "View.h"
 #include "Doc.h"
-
 
 ////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -67,4 +65,3 @@ private:
     IUIRibbon* m_pIUIRibbon;
 };
 
-#endif //MAINFRM_H

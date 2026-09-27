@@ -2,11 +2,9 @@
 // PictureApp.h
 //
 
-#ifndef PICTUREAPP_H
-#define PICTUREAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 //////////////////////////////////////////////////////////////////
 // CPictureApp manages the application. It initializes the Win32++
@@ -29,5 +27,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define PICTUREAPP_H

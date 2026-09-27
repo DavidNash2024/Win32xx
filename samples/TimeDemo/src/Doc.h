@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef SDI_DOC_H
-#define SDI_DOC_H
+#pragma once
 
 ///////////////////////////////////////////////////////////////////////////////
 // The document class. It is responsible for maintaining the document content,
@@ -47,4 +45,3 @@ private:
     std::vector<CString> m_docContent;  // Array of document lines.
 };
 
-#endif // SDI_DOC_H

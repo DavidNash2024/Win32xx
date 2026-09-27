@@ -2,11 +2,9 @@
 // Dockers.h
 //
 
-#ifndef DOCKABLES_H
-#define DOCKABLES_H
+#pragma once
 
 #include "Views.h"
-
 
 /////////////////////////////////////////////////////
 // CDockSimple manages the docker with a simple view.
@@ -89,7 +87,4 @@ private:
 
     CViewText m_view;
 };
-
-
-#endif // DOCKABLES_H
 

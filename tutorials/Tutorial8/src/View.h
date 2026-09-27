@@ -2,8 +2,7 @@
 // View.h
 //  Declaration of the CView class
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "wxx_wincore.h"
 #include <vector>
@@ -53,5 +52,3 @@ private:
     COLORREF m_penColor;
 };
 
-
-#endif // CVIEW_H

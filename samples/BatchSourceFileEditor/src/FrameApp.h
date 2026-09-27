@@ -2,8 +2,7 @@
 // FrameApp.h
 //
 
-#ifndef FRAMEAPP_H
-#define FRAMEAPP_H
+#pragma once
 
 #include "mainfrm.h"
 
@@ -21,5 +20,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define FRAMEAPP_H

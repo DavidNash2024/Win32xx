@@ -2,11 +2,9 @@
 // MDIFrameApp.h
 //
 
-#ifndef MDIFRAMEAPP_H
-#define MDIFRAMEAPP_H
+#pragma once
 
 #include "MainMDIfrm.h"
-
 
 ///////////////////////////////////////////////////////////////////
 // CMDIFrameApp manages the application. It initializes the Win32++
@@ -28,5 +26,3 @@ private:
     CMainMDIFrame m_mainMDIFrame;
 };
 
-
-#endif // MDIFRAMEAPP_H

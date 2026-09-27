@@ -2,9 +2,7 @@
 // TestApp.h
 //
 
-#ifndef TESTAPP_H
-#define TESTAPP_H
-
+#pragma once
 
 class CTestApp : public CWinApp
 {
@@ -20,5 +18,3 @@ private:
     CTestWindow m_testWindow;
 };
 
-
-#endif // TESTAPP_H

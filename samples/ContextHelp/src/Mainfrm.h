@@ -2,12 +2,10 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "View.h"
 #include "AppHelp.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -60,6 +58,4 @@ private:
     BOOL        m_isChoosing;
 };
 
-
-#endif //MAINFRM_H
 

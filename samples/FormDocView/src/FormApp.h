@@ -1,12 +1,9 @@
 //////////////////////////////////////////////////
 // FormApp.h
 
-#ifndef SDI_APP_H
-#define SDI_APP_H
-
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ///////////////////////////////////////////////////////////////
 // CFormApp manages the application. It initializes the Win32++
@@ -28,5 +25,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define SDI_APP_H

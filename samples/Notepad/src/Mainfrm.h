@@ -2,13 +2,11 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "RichView.h"
 #include "resource.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -105,6 +103,4 @@ private:
     bool m_isRTF;
     HWND m_oldFocus;
 };
-
-#endif //MAINFRM_H
 

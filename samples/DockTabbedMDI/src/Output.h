@@ -3,11 +3,9 @@
 //          and CDockOutput classes
 //
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
+#pragma once
 
 #include <richedit.h>
-
 
 ////////////////////////////////////////////////////////////////
 // CViewOutput manages an rich edit control. It displays output.
@@ -69,4 +67,3 @@ private:
     CContainOutput m_view;
 };
 
-#endif // OUTPUT_H

@@ -2,13 +2,10 @@
 // Table.h:
 //
 
-#if !defined TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
-#define TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
-
+#pragma once
 
 namespace Calc
 {
-
     /////////////////////////////
     // A table of math functions.
     //
@@ -49,5 +46,3 @@ namespace Calc
 
 } // namespace Calc
 
-
-#endif // defined TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED

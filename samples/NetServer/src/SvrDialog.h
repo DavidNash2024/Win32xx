@@ -2,8 +2,7 @@
 // SvrDialog.h
 //
 
-#ifndef SVRDIALOG_H
-#define SVRDIALOG_H
+#pragma once
 
 #include "Server.h"
 
@@ -12,7 +11,6 @@ class CTCPClientDlg;
 
 using ServerSocketPtr = std::shared_ptr<CWorkerSocket>;
 using TCPClientDlgPtr = std::shared_ptr<CTCPClientDlg>;
-
 
 //////////////////////////////////////////////////////////////
 // CTCPClientDlg manages the dialog that is displayed for each
@@ -122,6 +120,4 @@ private:
     CRadioTCP   m_radioTCP;
     CRadioUDP   m_radioUDP;
 };
-
-#endif //SVRDIALOG_H
 

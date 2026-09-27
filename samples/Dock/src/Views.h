@@ -3,9 +3,7 @@
 //  Declaration of the CViewSimple, CViewText,
 //  CViewClasses and CViewFiles classes.
 
-#ifndef VIEWS_H
-#define VIEWS_H
-
+#pragma once
 
 //////////////////////////////////////////
 // CViewClasses manages a tree view control.
@@ -103,4 +101,3 @@ private:
     CFont m_font;
 };
 
-#endif // VIEWS_H

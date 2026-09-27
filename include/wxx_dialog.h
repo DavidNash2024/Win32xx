@@ -64,12 +64,9 @@
 // GetNextDlgGroupItem, GetNextDlgTabItem, SendDlgItemMessage, SetDlgItemInt,
 // SetDlgItemText.
 
-
-#ifndef WIN32XX_DIALOG_H_
-#define WIN32XX_DIALOG_H_
+#pragma once
 
 #include "wxx_wincore.h"
-
 
 namespace Win32xx
 {
@@ -1236,5 +1233,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-
-#endif // WIN32XX_DIALOG_H_

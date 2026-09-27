@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "RichView.h"
@@ -73,4 +71,3 @@ private:
     WordWrapType    m_wrapOption;
 };
 
-#endif // MAINFRM_H

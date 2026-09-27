@@ -2,8 +2,7 @@
 // Enums.h
 //
 
-#ifndef ENUMS_H_CF6AD5B7_507F_4DE4_8980_A3940530D108__INCLUDED
-#define ENUMS_H_CF6AD5B7_507F_4DE4_8980_A3940530D108__INCLUDED
+#pragma once
 
 namespace Calc
 {
@@ -36,4 +35,3 @@ namespace Calc
 
 } // namespace Calc
 
-#endif // ENUMS_H_CF6AD5B7_507F_4DE4_8980_A3940530D108__INCLUDED

@@ -2,11 +2,9 @@
 // MovieShowApp.h
 //
 
-#ifndef MOVIESHOWAPP_H_
-#define MOVIESHOWAPP_H_
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ////////////////////////////////////////////////////////////////////
 // CMovieShowApp manages the application. It initializes the Win32++
@@ -27,5 +25,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // MOVIESHOWAPP_H_

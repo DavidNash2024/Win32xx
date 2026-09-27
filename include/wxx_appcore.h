@@ -36,10 +36,6 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef WIN32XX_APPCORE_H_
-#define WIN32XX_APPCORE_H_
-
-
 ///////////////////////////////////////////////////////
 // wxx_appcore.h
 // This file contains the definitions of the CWinApp class.
@@ -47,6 +43,7 @@
 // should inherit from this class to start Win32++ in your own
 // application.
 
+#pragma once
 
 #include "wxx_appcore0.h"
 #include "wxx_textconv.h"
@@ -323,12 +320,10 @@ namespace Win32xx
             ::TlsFree(m_tlsData);
         }
 
+        OleUninitialize();
+        FreeLibrary(m_msimg32);
         if (m_resource != m_instance)
             ::FreeLibrary(m_resource);
-
-        OleUninitialize();
-
-        FreeLibrary(m_msimg32);
 
         // Clear the stored CWinApp pointer before the CWinApp object is
         // destroyed.
@@ -1055,8 +1050,5 @@ namespace Win32xx
         return str;
     }
 
-
 } // namespace Win32xx
-
-#endif // WIN32XX_APPCORE_H_
 

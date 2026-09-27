@@ -72,17 +72,13 @@
 // Refer to the MDIDemo sample for an example on how to use these classes to
 // create a MDI frame application with different types of MDI child windows.
 
-
-#ifndef WIN32XX_MDI_H_
-#define WIN32XX_MDI_H_
+#pragma once
 
 #include "wxx_frame.h"
 #include <vector>
 
-
 namespace Win32xx
 {
-
     ///////////////////////////////////////////////////////////////
     // CMDIChild manages a MDI child window. CMDIChild also manages
     // the creation and position of the MDI Child's view window.
@@ -1202,4 +1198,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WIN32XX_MDI_H_

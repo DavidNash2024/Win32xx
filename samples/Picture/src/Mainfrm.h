@@ -2,12 +2,10 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "MainView.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -54,6 +52,4 @@ private:
     CAboutDialog m_aboutDialog;
     CMainView m_mainView;
 };
-
-#endif //MAINFRM_H
 

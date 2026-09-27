@@ -2,9 +2,7 @@
 // UserMessages.h
 //
 
-#ifndef USER_MESSAGES_H_
-#define USER_MESSAGES_H_
-
+#pragma once
 
 // User defined messages used in this application.
 #define UWM_HISTORYCHANGED        (WM_APP + 0x0001)
@@ -28,5 +26,3 @@
 //   wparam - This parameter is not used.
 //   lparam - Pointer to a null-terminated string that is webview's source URI.
 
-
-#endif // USER_MESSAGES_H_

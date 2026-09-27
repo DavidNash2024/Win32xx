@@ -2,9 +2,7 @@
 // DarkAbout.h
 //
 
-#ifndef DARK_ABOUT_H_
-#define DARK_ABOUT_H_
-
+#pragma once
 
 ///////////////////////////////////////////////////////////
 // CDarkAbout provides a dialog compatible with dark mode,
@@ -36,5 +34,3 @@ private:
     bool m_isDarkMode;
 };
 
-
-#endif // DARK_ABOUT_H_

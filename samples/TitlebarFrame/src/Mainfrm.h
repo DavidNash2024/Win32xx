@@ -2,8 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "View.h"
@@ -116,6 +115,4 @@ private:
     bool m_isToolbarShown;
     bool m_isMiniFrame;
 };
-
-#endif //MAINFRM_H
 

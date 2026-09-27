@@ -1,7 +1,4 @@
-#ifndef TEST_H__
-#define TEST_H__
+#pragma once
 
 void RunTests();
 
-
-#endif // TEST_H__

@@ -2,9 +2,7 @@
 // Tree.h - Declaration of CViewTree and CDockTree classes
 //
 
-#ifndef TREE_H
-#define TREE_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////////////////
 // CViewTree manages a tree view control. The tree view control
@@ -66,4 +64,3 @@ private:
 };
 
 
-#endif  // TREE_H

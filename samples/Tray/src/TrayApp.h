@@ -2,11 +2,9 @@
 // TrayApp.h
 //
 
-#ifndef TRAYAPP_H
-#define TRAYAPP_H
+#pragma once
 
 #include "View.h"
-
 
 ////////////////////////////////////////////////////////
 // CTrayApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CView m_view;
 };
 
-
-#endif // TRAYAPP_H

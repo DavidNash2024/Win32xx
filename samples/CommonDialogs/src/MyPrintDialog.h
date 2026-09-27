@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MYPRINTER_H
-#define MYPRINTER_H
+#pragma once
 
 //////////////////////////////////////////////////////////////////////////
 // This class extends the CPrintDialog class to add a title to the dialog.
@@ -56,4 +54,3 @@ private:
     CString  m_PSDTitle;
 };
 
-#endif  // MYPRINTER_H

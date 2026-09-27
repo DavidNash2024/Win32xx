@@ -2,9 +2,7 @@
 // MDIChildListView.h
 //  Declaration of the CViewList and CMDIChildListView classes
 
-#ifndef MDICHILDLISTVIEW_H
-#define MDICHILDLISTVIEW_H
-
+#pragma once
 
 ///////////////////////////////////////////
 // CViewList manages a list view control.
@@ -48,6 +46,4 @@ private:
     CViewList m_listView;
     CMenu m_menu;
 };
-
-#endif  //MDICHILDLISTVIEW_H
 

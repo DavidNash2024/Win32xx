@@ -2,9 +2,7 @@
 // UserMessages.h
 //
 
-#ifndef _USER_MESSAGES_H_
-#define _USER_MESSAGES_H_
-
+#pragma once
 
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCWSTR)
@@ -20,5 +18,3 @@
 //   LPARAM: unused
 #define UWM_SENDPOINT (WM_APP + 0x0003)
 
-
-#endif // _USER_MESSAGES_H_

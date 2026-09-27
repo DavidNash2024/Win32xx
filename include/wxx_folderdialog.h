@@ -70,12 +70,9 @@
 //
 ////////////////////////////////////////////////////////////////////
 
-
-#ifndef WIN32XX_FOLDERDIALOG_H_
-#define WIN32XX_FOLDERDIALOG_H_
+#pragma once
 
 #include "wxx_dialog.h"
-
 
 namespace Win32xx
 {
@@ -382,4 +379,3 @@ namespace Win32xx
 
 }
 
-#endif // WIN32XX_FOLDERDIALOG_H_

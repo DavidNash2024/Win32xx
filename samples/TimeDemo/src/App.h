@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#ifndef SDI_APP_H
-#define SDI_APP_H
-
+#pragma once
 
 #include "Mainfrm.h"
 
@@ -45,4 +43,3 @@ private:
     static const CString m_compiledOn;   // Latest compile date.
 };
 
-#endif // define SDI_APP_H

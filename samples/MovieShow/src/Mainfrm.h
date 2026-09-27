@@ -1,8 +1,7 @@
 /////////////////////////////////////////////
 // Mainfrm.h
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "Tree.h"
 #include "List.h"
@@ -145,4 +144,3 @@ private:
     int          m_treeWidth;
 };
 
-#endif //MAINFRM_H

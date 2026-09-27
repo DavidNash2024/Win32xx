@@ -87,10 +87,7 @@
 //                      std::basic_string<TCHAR>. This reference can be used to
 //                      modify the string directly.
 
-
-#ifndef WIN32XX_CSTRING_H_
-#define WIN32XX_CSTRING_H_
-
+#pragma once
 
 // The wxx_setup.h file defines the set of macros and includes the C, C++,
 // and windows header files required by Win32++.
@@ -2309,4 +2306,3 @@ namespace Win32xx
 
 }   // namespace Win32xx
 
-#endif // WIN32XX_CSTRING_H_

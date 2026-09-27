@@ -2,11 +2,9 @@
 // MDIDemoApp.h
 //
 
-#ifndef MDIDEMOAPP_H
-#define MDIDEMOAPP_H
+#pragma once
 
 #include "MainMDIfrm.h"
-
 
 ///////////////////////////////////////////////////////////////////
 // CMDIDemoApp manages the application. It initializes the Win32++
@@ -28,5 +26,3 @@ private:
     CMainMDIFrame m_mainMDIFrame;
 };
 
-
-#endif // MDIDEMOAPP_H

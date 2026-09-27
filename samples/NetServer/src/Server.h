@@ -2,17 +2,13 @@
 // Server.h
 //
 
-#ifndef SERVER_H
-#define SERVER_H
-
+#pragma once
 
 // User defined message
 #define USER_ACCEPT     WM_APP+1
 #define USER_CONNECT    WM_APP+2
 #define USER_DISCONNECT WM_APP+3
 #define USER_RECEIVE    WM_APP+4
-
-
 
 // For a TCP server, inherit a class from CSocket and override OnAccept, OnDisconnect
 // and OnReceive. Create one instance of this class and use it as a listening socket.
@@ -82,5 +78,3 @@ private:
     CWorkerSocket& operator=(const CWorkerSocket&) = delete;
 };
 
-
-#endif // SERVER_H

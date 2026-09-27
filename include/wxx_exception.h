@@ -36,11 +36,6 @@
 ////////////////////////////////////////////////////////
 
 
-
-#ifndef WIN32XX_EXCEPTION_H_
-#define WIN32XX_EXCEPTION_H_
-
-
 //
 // Sample code, demonstrating how to use CUserException with a string resource:
 //
@@ -73,6 +68,7 @@
 //      ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 //  }
 
+#pragma once
 
 namespace Win32xx
 {
@@ -633,5 +629,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-
-#endif // WIN32XX_EXCEPTION_H_

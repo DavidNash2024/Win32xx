@@ -2,9 +2,7 @@
 // SplitterMDIChild.h
 //  Declaration of the CSimpleView and CSplitterMDIChild class
 
-#ifndef MDICHILDVIEW_H
-#define MDICHILDVIEW_H
-
+#pragma once
 
 /////////////////////////////////////////////////////////
 // CSimpleView manages a simple window. It is used as the
@@ -83,4 +81,3 @@ private:
     CDockSimple m_view;
 };
 
-#endif  //MDICHILDVIEW_H

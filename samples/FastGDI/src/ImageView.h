@@ -1,9 +1,7 @@
 //////////////////////////////////////////////////////
 // ImageView.h
 
-#ifndef IMAGEVIEW_H_
-#define IMAGEVIEW_H_
-
+#pragma once
 
 /////////////////////////////////////////////////////////////
 // CImageView manages the window that displays the image. It
@@ -33,5 +31,3 @@ private:
     CBitmap m_image;
 };
 
-
-#endif // IMAGEVIEW_H_

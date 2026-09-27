@@ -2,8 +2,7 @@
 // View.h
 //
 
-#ifndef SDI_VIEW_H
-#define SDI_VIEW_H
+#pragma once
 
 #include "Doc.h"
 
@@ -62,4 +61,3 @@ private:
     CWnd      m_group;
 };
 
-#endif //SDI_VIEW_H

@@ -2,12 +2,9 @@
 // RightPane.h
 //
 
-#ifndef RIGHTPANE_H_
-#define RIGHTPANE_H_
+#pragma once
 
 #include "MyListView.h"
-
-
 
 //////////////////////////////////////////////////////
 // CRightPane is a docker that manages the right view.
@@ -28,6 +25,4 @@ private:
 
     CMyListView m_view;
 };
-
-#endif // RIGHTPANE_H_
 

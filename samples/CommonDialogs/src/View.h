@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef SDI_VIEW_H
-#define SDI_VIEW_H
+#pragma once
 
 #include "RichEditView.h"
 
@@ -61,4 +59,3 @@ private:
     CRichEditView   m_richView;     // The view of the document.
 };
 
-#endif // SDI_VIEW_H

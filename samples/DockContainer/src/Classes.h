@@ -3,9 +3,7 @@
 //              and CDockClasses classes
 //
 
-#ifndef CLASSES_H
-#define CLASSES_H
-
+#pragma once
 
 ///////////////////////////////////////////////
 // CViewClasses manages a tree view control.
@@ -80,5 +78,3 @@ private:
     CContainClasses m_classes;
 };
 
-
-#endif  //CLASSES_H

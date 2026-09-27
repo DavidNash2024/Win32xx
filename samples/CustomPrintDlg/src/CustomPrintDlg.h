@@ -2,8 +2,7 @@
 // CustomPrintDialog.h
 //
 
-#ifndef CUSTOMPRINTDLG_H
-#define CUSTOMPRINTDLG_H
+#pragma once
 
 #include "resource.h"
 
@@ -92,5 +91,3 @@ private:
     bool m_isPropertiesDisplayed;
 };
 
-
-#endif   // CUSTOMPRINTDLG_H

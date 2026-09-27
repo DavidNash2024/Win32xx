@@ -35,9 +35,7 @@
 //
 ////////////////////////////////////////////////////////
 
-
-#ifndef WIN32XX_THREAD_H_
-#define WIN32XX_THREAD_H_
+#pragma once
 
 #include <process.h>
 
@@ -124,7 +122,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
     ///////////////////////////////////////////////
     // Definitions for the CThreadT class template.
     //
@@ -313,4 +310,3 @@ namespace Win32xx
 
 }
 
-#endif // WIN32XX_THREAD_H_

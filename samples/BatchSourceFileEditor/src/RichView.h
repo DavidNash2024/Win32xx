@@ -2,8 +2,7 @@
 // RichView.h
 //
 
-#ifndef RICHVIEW_H
-#define RICHVIEW_H
+#pragma once
 
 /////////////////////////////////////
 // Declaration of the CRichEdit class
@@ -35,4 +34,3 @@ private:
     std::vector<int> m_pageBreaks;
 };
 
-#endif // RICHVIEW_H

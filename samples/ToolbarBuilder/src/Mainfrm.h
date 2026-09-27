@@ -2,13 +2,11 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "View.h"
 #include "AboutDialog.h"
 #include "NewDialog.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -60,6 +58,4 @@ private:
     CColorDialog m_colorDialog;
     CString m_fileName;
 };
-
-#endif //MAINFRM_H
 

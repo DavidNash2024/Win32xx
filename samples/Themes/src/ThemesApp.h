@@ -2,11 +2,9 @@
 // ThemesApp.h
 //
 
-#ifndef THEMESAPP_H
-#define THEMESAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CThemesApp manages the application. It initializes the Win32++
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define THEMESAPP_H

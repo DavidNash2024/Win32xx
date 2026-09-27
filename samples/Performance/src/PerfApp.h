@@ -2,11 +2,9 @@
 // PerfApp.h
 //
 
-#ifndef PERFAPP_H
-#define PERFAPP_H
+#pragma once
 
 #include "MainWnd.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CPerformanceApp manages the application. It initializes the
@@ -32,7 +30,4 @@ private:
 
 // returns a pointer to the CPerformanceApp object
 inline CPerformanceApp* GetPerfApp() { return static_cast<CPerformanceApp*>(GetApp()); }
-
-
-#endif  //PERFAPP_H
 

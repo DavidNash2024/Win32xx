@@ -2,12 +2,10 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "MainContainer.h"
-
 
 // The docker identifiers (dock IDs)
 const int ID_DOCK_CLASSES1 = 1;
@@ -69,6 +67,4 @@ private:
     bool m_isContainerTabsAtTop;
     bool m_hideSingleTab;
 };
-
-#endif //MAINFRM_H
 

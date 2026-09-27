@@ -43,13 +43,11 @@
 // Chromium-powered WebView2 control, which provides similar hosting logic but
 // maps directly to Microsoft Edge.
 
-#ifndef WIN32XX_WEBBROWSER_H_
-#define WIN32XX_WEBBROWSER_H_
+#pragma once
 
 #include "wxx_appcore0.h"
 #include <exdisp.h>
 #include <ocidl.h>
-
 
 namespace Win32xx
 {
@@ -1336,4 +1334,3 @@ namespace Win32xx
 
 }
 
-#endif  // WIN32XX_WEBBROWSER_H_

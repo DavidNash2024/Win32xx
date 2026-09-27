@@ -2,10 +2,7 @@
 // SimpleMDIChild.h
 //  Declaration of the CSimpleView and CSimpleMDIChild class
 
-
-#ifndef MDICHILDVIEW_H
-#define MDICHILDVIEW_H
-
+#pragma once
 
 /////////////////////////////////////////////////////
 // CSimpleView manages CSimpleMDIChild's view window.
@@ -53,4 +50,3 @@ private:
     CMenu m_menu;
 };
 
-#endif  //MDICHILDVIEW_H

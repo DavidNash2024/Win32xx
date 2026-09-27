@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 /////////////////////////////////////////
 // CMyDialog manages the thread's dialog.
@@ -38,4 +36,3 @@ private:
     CBitmap m_patternImage;
 };
 
-#endif //MYDIALOG_H

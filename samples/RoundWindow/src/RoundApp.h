@@ -2,11 +2,9 @@
 // RoundApp.h
 //
 
-#ifndef ROUNDAPP_H
-#define ROUNDAPP_H
+#pragma once
 
 #include "View.h"
-
 
 ////////////////////////////////////////////////////////
 // CRoundApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CView m_view;
 };
 
-
-#endif

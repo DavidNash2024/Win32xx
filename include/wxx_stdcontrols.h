@@ -46,16 +46,12 @@
 // older form of notification, and send their notifications via a WM_COMMAND
 // message. Newer controls send their notifications via a WM_NOTIFY message.
 
-
-#ifndef WIN32XX_STDCONTROLS_H_
-#define WIN32XX_STDCONTROLS_H_
+#pragma once
 
 #include "wxx_wincore.h"
 
-
 namespace Win32xx
 {
-
     ////////////////////////////////////////////////////////////////////
     // The CButton class provides the functionality of a button control.
     // A button is a control the user can click to provide input to an
@@ -267,7 +263,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
     /////////////////////////////////////
     // Definitions for the CButton class.
     //
@@ -1397,5 +1392,4 @@ namespace Win32xx
 
 }
 
-#endif  // WIN32XX_STDCONTROLS_H_
 

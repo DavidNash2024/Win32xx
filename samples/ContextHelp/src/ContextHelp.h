@@ -30,10 +30,7 @@
 //    I wish to thank  Robert C. Tausworthe for providing the original
 //    code and for his ongoing assistance in developing this sample.
 
-
-#ifndef CONTEXTHELP_H
-#define CONTEXTHELP_H
-
+#pragma once
 
 ////////////////////////////////////////////////////
 // CContextHelp opens the help file and displays the
@@ -64,4 +61,3 @@ private:
     std::unordered_map<UINT, CString> m_helpTopics;   // Map of help topics
 };
 
-#endif // CONTEXTHELP_H

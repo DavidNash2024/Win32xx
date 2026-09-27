@@ -3,9 +3,7 @@
 //           and CDockFiles classes.
 //
 
-#ifndef FILES_H
-#define FILES_H
-
+#pragma once
 
 /////////////////////////////////////////////////////////////
 // CViewFiles manages a list view control. It displays files.
@@ -75,5 +73,3 @@ private:
     CContainFiles m_files;
 };
 
-
-#endif // FILES_H

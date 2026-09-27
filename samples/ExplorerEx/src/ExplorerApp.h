@@ -2,8 +2,7 @@
 // ExplorerApp.h
 //
 
-#ifndef EXPLORERAPP_H
-#define EXPLORERAPP_H
+#pragma once
 
 #include "Mainfrm.h"
 
@@ -31,5 +30,3 @@ private:
 // returns a pointer to the CExplorerApp object
 inline CExplorerApp* GetExplorerApp() { return static_cast<CExplorerApp*>(GetApp()); }
 
-
-#endif  //EXPLORERAPP_H

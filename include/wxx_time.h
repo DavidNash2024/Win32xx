@@ -52,12 +52,6 @@
 //
 ////////////////////////////////////////////////////////
 
-#ifndef WIN32XX_TIME_H_
-#define WIN32XX_TIME_H_
-
-#include "wxx_wincore.h"
-#include <time.h>
-
 
 //  The CTime class is based internally on the time_t data type, which is
 //  measured in seconds past the January 1, 00:00:00 1970 UTC epoch. Thus,
@@ -91,6 +85,10 @@
 //  and second, minute, hour fields.  The format may be found in the MSDN
 //  Library article on DosDateTimeToFileTime().
 
+#pragma once
+
+#include "wxx_wincore.h"
+#include <time.h>
 
 namespace Win32xx
 {
@@ -897,5 +895,3 @@ namespace Win32xx
 
 } // namespace Win32XX
 
-
-#endif // WIN32XX_TIME_H_

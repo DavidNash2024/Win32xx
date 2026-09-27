@@ -2,11 +2,9 @@
 // GDIPlusView.h
 //
 
-#ifndef GDIPLUSVIEW_H
-#define GDIPLUSVIEW_H
+#pragma once
 
 #include <objidl.h>
-
 
 #if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
 #pragma warning (disable : 4458) // disable warning: declaration hides class member
@@ -55,5 +53,3 @@ private:
     ULONG_PTR   m_gdiplusToken;
 };
 
-
-#endif // GDIPLUSVIEW_H

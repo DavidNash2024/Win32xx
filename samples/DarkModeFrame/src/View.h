@@ -2,11 +2,9 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "Doc.h"
-
 
 //////////////////////////////////////////
 // CView manages CMainFrame's view window.
@@ -34,5 +32,3 @@ private:
     bool m_isDarkMode;
 };
 
-
-#endif // VIEW_H

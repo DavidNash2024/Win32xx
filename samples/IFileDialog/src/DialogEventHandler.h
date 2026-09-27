@@ -7,9 +7,7 @@
 // https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/winui/shell/appplatform/CommonFileDialogModes
 // https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/winui/shell/appplatform/commonfiledialog
 
-#ifndef FILE_DIALOG_EVENT_HANDLER_
-#define FILE_DIALOG_EVENT_HANDLER_
-
+#pragma once
 
 class CDialogEventHandler : public IFileDialogEvents,
                             public IFileDialogControlEvents
@@ -58,5 +56,3 @@ public:
     IFACEMETHODIMP OnControlActivating(IFileDialogCustomize *, DWORD) { return S_OK; };
 };
 
-
-#endif // FILE_DIALOG_EVENT_HANDLER_

@@ -3,11 +3,9 @@
 //          and CDockText classes
 //
 
-#ifndef TEXT_H
-#define TEXT_H
+#pragma once
 
 #include <richedit.h>
-
 
 ///////////////////////////////////////////////////////////
 // CViewText manages a rich edit control. It displays text.
@@ -77,7 +75,4 @@ private:
 
     CContainText m_view;
 };
-
-
-#endif // TEXT_H
 

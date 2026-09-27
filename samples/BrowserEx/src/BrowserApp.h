@@ -2,8 +2,7 @@
 // BrowserApp.h
 //
 
-#ifndef BROWSERAPP_H
-#define BROWSERAPP_H
+#pragma once
 
 #include "Mainfrm.h"
 
@@ -26,5 +25,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // BROWSERAPP_H

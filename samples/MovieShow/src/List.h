@@ -2,9 +2,7 @@
 // List.h - Declaration of CViewList and CDockList classes
 
 
-#ifndef LIST_H
-#define LIST_H
-
+#pragma once
 
 struct MovieInfo;
 
@@ -67,5 +65,3 @@ private:
     int m_oldDPI;
 };
 
-
-#endif  // LIST_H

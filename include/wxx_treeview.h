@@ -35,13 +35,9 @@
 //
 ////////////////////////////////////////////////////////
 
-
-
-#ifndef WIN32XX_TREEVIEW_H_
-#define WIN32XX_TREEVIEW_H_
+#pragma once
 
 #include "wxx_wincore.h"
-
 
 // Disable macros from Windowsx.h
 #undef GetNextSibling
@@ -150,7 +146,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
     ///////////////////////////////////////
     // Definitions for the CTreeView class.
     //
@@ -833,6 +828,4 @@ namespace Win32xx
 
 
 } // namespace Win32xx
-
-#endif // WIN32XX_TREEVIEW_H_
 

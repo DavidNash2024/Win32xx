@@ -3,11 +3,9 @@
 //                 and CDockDialogsTree classes
 //
 
-#ifndef DIALOGSTREE_H_
-#define DIALOGSTREE_H_
+#pragma once
 
 #include "ResourceFinder.h"
-
 
 ///////////////////////////////////////////////
 // CDialogsTree manages a tree view control.
@@ -59,5 +57,3 @@ private:
     CDialogsTree m_tree;
 };
 
-
-#endif  // DIALOGSTREE_H_

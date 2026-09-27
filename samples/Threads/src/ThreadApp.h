@@ -2,11 +2,9 @@
 // ThreadApp.h
 //
 
-#ifndef THREADAPP_H
-#define THREADAPP_H
+#pragma once
 
 #include "MainWnd.h"
-
 
 /////////////////////////////////////////////////////////
 // CThreadApp manages the application. It initializes the
@@ -27,7 +25,4 @@ private:
 
     CMainWindow m_mainWnd;
 };
-
-
-#endif  //THREADAPP_H
 

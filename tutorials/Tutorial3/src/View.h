@@ -2,13 +2,10 @@
 // View.h
 //  Declaration of the CView class
 
-#ifndef VIEW_H
-#define VIEW_H
-
+#pragma once
 
 #include "wxx_wincore.h"
 #include <vector>
-
 
 ////////////////////////////////////////////////
 // CView is the application's main window.
@@ -37,5 +34,3 @@ private:
     POINT m_OldPt;
 };
 
-
-#endif // CVIEW_H

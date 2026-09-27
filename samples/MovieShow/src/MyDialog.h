@@ -2,11 +2,9 @@
 // CViewDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
+#pragma once
 
 #include "CoverImage.h"
-
 
 ////////////////////////////////////////////////////////////////
 // CViewDialog manages the dialog that displays the information
@@ -75,4 +73,3 @@ private:
     CViewDialog m_view;
 };
 
-#endif // MYDIALOG_H

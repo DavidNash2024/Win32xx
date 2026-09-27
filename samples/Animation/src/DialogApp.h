@@ -2,8 +2,7 @@
 // DialogApp.h
 //
 
-#ifndef DIALOGAPP_H
-#define DIALOGAPP_H
+#pragma once
 
 #include "MyDialog.h"
 
@@ -27,5 +26,3 @@ private:
     CMyDialog m_myDialog;
 };
 
-
-#endif // define DIALOGAPP_H

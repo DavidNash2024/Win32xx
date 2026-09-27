@@ -2,9 +2,7 @@
 // DarkPreview.h
 //
 
-#ifndef DARK_PREVIEW_H_
-#define DARK_PREVIEW_H_
-
+#pragma once
 
 ////////////////////////////////////////////////////////////////////
 // CDarkPreview is a class template used to provides a print preview
@@ -174,5 +172,3 @@ inline void CDarkPreview<T>::SetDarkMode(bool isDarkMode)
     m_isDarkMode = isDarkMode;
 }
 
-
-#endif // DARK_PREVIEW_H_

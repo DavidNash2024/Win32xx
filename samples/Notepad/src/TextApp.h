@@ -2,11 +2,9 @@
 // TextApp.h
 //
 
-#ifndef TEXTAPP_H
-#define TEXTAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ///////////////////////////////////////////////////////////////
 // CTextApp manages the application. It initializes the Win32++
@@ -29,5 +27,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define TEXTAPP_H

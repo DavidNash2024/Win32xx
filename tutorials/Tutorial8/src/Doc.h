@@ -1,12 +1,10 @@
 //////////////////////////////////
 // Doc.h
 
-#ifndef WIN32XX_DOC_H
-#define WIN32XX_DOC_H
+#pragma once
 
 #include "wxx_wincore.h"
 #include "wxx_archive.h"
-
 
 struct PlotPoint
 {
@@ -36,7 +34,4 @@ public:
 private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw.
 };
-
-
-#endif  // WIN32XX_DOC_H
 

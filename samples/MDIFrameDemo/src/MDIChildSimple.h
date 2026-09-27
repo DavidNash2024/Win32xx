@@ -2,9 +2,7 @@
 // MDIChildSimple.h
 //  Declaration of the CViewSimple and CMDIChildSimple class
 
-#ifndef MDICHILDVIEW_H
-#define MDICHILDVIEW_H
-
+#pragma once
 
 /////////////////////////////////////////////////////
 // CViewSimple manages a simple window. It is used as
@@ -53,4 +51,3 @@ private:
     CMenu m_menu;
 };
 
-#endif  //MDICHILDVIEW_H

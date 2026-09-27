@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MY_FIND_REPLACE_DLG_H
-#define MY_FIND_REPLACE_DLG_H
+#pragma once
 
 ///////////////////////////////////////////////////////////////////
 // MyFindReplaceDialog inherits from the Win32++ CFindReplaceDialog
@@ -28,4 +26,3 @@ class MyFindReplaceDialog : public CFindReplaceDialog
         CString m_boxTitle;
 };
 
-#endif // MY_FIND_REPLACE_DLG_H

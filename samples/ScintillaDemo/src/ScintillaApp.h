@@ -2,11 +2,9 @@
 // ScintillaApp.h
 //
 
-#ifndef SCINTILLA_APP_H
-#define SCINTILLA_APP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ////////////////////////////////////////////////////////////////
 // ScintillaApp manages the application. It initializes the Win32++
@@ -29,5 +27,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define SCINTILLA_APP_H

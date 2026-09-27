@@ -1,7 +1,6 @@
 
-#ifndef MOVIEINFO_H_
-#define MOVIEINFO_H_
 
+#pragma once
 
 struct MovieInfo
 {
@@ -21,5 +20,3 @@ struct MovieInfo
 };
 
 using MoviesData = std::list<MovieInfo>;
-
-#endif // MOVIEINFO_H_

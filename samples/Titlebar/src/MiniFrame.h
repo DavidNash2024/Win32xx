@@ -2,8 +2,7 @@
 // MiniFrame.h
 //
 
-#ifndef MINIFRAME_H
-#define MINIFRAME_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "View.h"
@@ -111,4 +110,3 @@ private:
     TitlebarColors m_colors;            // A struct holding the title bar colors.
 };
 
-#endif // MINIFRAME_H

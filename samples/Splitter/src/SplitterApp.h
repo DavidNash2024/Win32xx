@@ -2,11 +2,9 @@
 // SplitterApp.h
 //
 
-#ifndef SPLITTERAPP_H
-#define SPLITTERAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ///////////////////////////////////////////////////////////////////
 // CSplitterApp manages the application. It initializes the Win32++
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define EFRAMEAPP_H

@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef CLISTVIEW_BOX_H_DEFINED
-#define CLISTVIEW_BOX_H_DEFINED
+#pragma once
 
 ////////////////////////////////////////////////////////////////////
 // This class is displays a popup window containing a list box whose
@@ -35,4 +33,3 @@ private:
     std::vector<CString> m_listContent; // The list strings.
 };
 
-#endif // CLISTVIEW_BOX_H_DEFINED

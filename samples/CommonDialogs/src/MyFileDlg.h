@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MY_FILE_DLG_H
-#define MY_FILE_DLG_H
+#pragma once
 
 /////////////////////////////////////////////////////////
 // MyFileDlg inherits from the Win32++ CFileDialog class.
@@ -31,4 +29,3 @@ private:
     CString m_title;
 };
 
-#endif // MY_FILE_DLG_H

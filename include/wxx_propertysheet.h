@@ -50,9 +50,7 @@
 // Refer to the PropertySheet demo program for an example of how property sheets
 // can be used.
 
-
-#ifndef WIN32XX_PROPERTYSHEET_H_
-#define WIN32XX_PROPERTYSHEET_H_
+#pragma once
 
 #include "wxx_dialog.h"
 
@@ -62,10 +60,8 @@
 #define ID_WIZFINISH   0x3025
 #define ID_HELP        0xE146
 
-
 namespace Win32xx
 {
-
     /////////////////////////////////////////////////////////////
     // This class provides support for property pages. A property
     // page is an individual page used in a property sheet.
@@ -924,4 +920,3 @@ namespace Win32xx
     }
 }
 
-#endif // WIN32XX_PROPERTYSHEET_H_

@@ -35,17 +35,12 @@
 //
 ////////////////////////////////////////////////////////
 
-
-
-#ifndef WIN32XX_LISTVIEW_H_
-#define WIN32XX_LISTVIEW_H_
+#pragma once
 
 #include "wxx_wincore.h"
 
-
 namespace Win32xx
 {
-
     /////////////////////////////////////////////////////////////
     // CListView manages a List View control. A list-view control
     // is a window that displays a collection of items. Each item
@@ -1071,6 +1066,4 @@ namespace Win32xx
     }
 
 } // namespace Win32xx
-
-#endif // WIN32XX_LISTVIEW_H_
 

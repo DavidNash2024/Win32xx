@@ -2,11 +2,9 @@
 // InputDlg.h
 //
 
-#ifndef INPUTDLG_H__
-#define INPUTDLG_H__
+#pragma once
 
 #include "resource.h"
-
 
 /////////////////////////////////////////////
 // CInputDlg manages the dialog used to input
@@ -36,5 +34,3 @@ private:
     CString m_function;
 };
 
-
-#endif  // INPUTDLG_H__

@@ -74,10 +74,7 @@
 // Refer to the Dock, DockContainer and DockTabbedMDI sample for example on how
 // to create a docking frame application.
 
-
-#ifndef WIN32XX_FRAME_H_
-#define WIN32XX_FRAME_H_
-
+#pragma once
 
 #include "wxx_dialog.h"
 #include "wxx_docking.h"
@@ -3928,4 +3925,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WIN32XX_FRAME_H_

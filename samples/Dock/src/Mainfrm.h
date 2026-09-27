@@ -2,9 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
-
+#pragma once
 
 #include "Dockers.h"
 #include "AboutDialog.h"
@@ -79,4 +77,3 @@ private:
     bool m_disableDockCaption;
 };
 
-#endif //MAINFRM_H

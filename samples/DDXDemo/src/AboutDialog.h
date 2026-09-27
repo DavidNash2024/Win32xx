@@ -3,8 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#ifndef ABOUTDIALOG_H_
-#define ABOUTDIALOG_H_
+#pragma once
 
 #include "resource.h"
 
@@ -31,4 +30,3 @@ public:
     }
 };
 
-#endif // ABOUTDIALOG_H_

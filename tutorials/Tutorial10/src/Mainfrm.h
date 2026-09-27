@@ -2,8 +2,7 @@
 // Mainfrm.h
 //  Declaration of the CMainFrame class
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "wxx_commondlg.h"
 #include "wxx_frame.h"
@@ -11,7 +10,6 @@
 #include "wxx_preview.h"
 #include "View.h"
 #include "Doc.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -56,6 +54,4 @@ private:
     CString m_pathName;
     BOOL m_isToolbarShown;
 };
-
-#endif // MAINFRM_H
 

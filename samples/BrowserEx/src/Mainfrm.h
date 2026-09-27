@@ -2,8 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "MyCombo.h"
 #include "EdgeView.h"
@@ -66,7 +65,4 @@ private:
     CMyCombo      m_combo;          // ComboBoxEx control used in the toolbar.
     CString       m_selectedItem;   // Currently selected ComboBoxEx item.
 };
-
-
-#endif //MAINFRM_H
 

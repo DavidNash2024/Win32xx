@@ -1,6 +1,5 @@
-#ifndef TEST_H__
-#define TEST_H__
 
+#pragma once
 
 void RunTests();
 bool Construct();
@@ -29,5 +28,3 @@ bool SeekToEnd();
 bool UnlockRange();
 bool Write();
 
-
-#endif // TEST_H__

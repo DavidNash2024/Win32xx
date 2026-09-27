@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef THE_APP_H
-#define THE_APP_H
+#pragma once
 
 #include "Mainfrm.h"
 
@@ -47,4 +45,3 @@ inline CRichView& GetRichView()
     return GetFrame().GetRichView();
 }
 
-#endif // THE_APP_H

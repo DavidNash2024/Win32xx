@@ -2,12 +2,9 @@
 // ClientDialog.h
 //
 
-#ifndef CLIENTDIALOG_H
-#define CLIENTDIALOG_H
-
+#pragma once
 
 #include "Client.h"
-
 
 //////////////////////////////////////////////////////////////
 // CClientDialog manages the application's main dialog.
@@ -74,4 +71,3 @@ private:
     int  m_socketType;
 };
 
-#endif //CLIENTDIALOG_H

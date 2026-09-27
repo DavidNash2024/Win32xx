@@ -2,8 +2,7 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 //////////////////////////////////////////
 // CView manages CMainFrame's view window.
@@ -35,5 +34,3 @@ private:
     CSize m_ballSize;
 };
 
-
-#endif // VIEW_H

@@ -2,13 +2,10 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 #include "MyButton.h"
 #include "Hyperlink.h"
-
 
 ///////////////////////////////////////////////////
 // CMyDialog manages the application's main dialog.
@@ -51,4 +48,3 @@ private:
     CListBox    m_listBox;
 };
 
-#endif //MYDIALOG_H

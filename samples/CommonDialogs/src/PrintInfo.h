@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef CPRINTINFO_H
-#define CPRINTINFO_H
+#pragma once
 
 /////////////////////////////////////////////////////////////////////////
 // CPrintInfo stores information about a print or print preview job.
@@ -52,4 +50,3 @@ public:
     UINT    m_nOffsetPage;        // First page offset in combined Doc job.
 };
 
-#endif // CPRINTINFO_H

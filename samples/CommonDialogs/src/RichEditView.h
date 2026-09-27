@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef CRICHEDITVIEW_H
-#define CRICHEDITVIEW_H
+#pragma once
 
 #include "PrintInfo.h"
 
@@ -59,4 +57,3 @@ private:
     std::vector<int> m_firstPageChar; // First character of each page.
 };
 
-#endif  // CRICHEDITVIEW_H

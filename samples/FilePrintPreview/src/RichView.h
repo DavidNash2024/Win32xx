@@ -3,8 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#ifndef RICHVIEW_H
-#define RICHVIEW_H
+#pragma once
 
 // Word wrap options.
 enum WordWrapType
@@ -52,4 +51,3 @@ private:
     std::vector<int> m_pageBreaks;  // Page starting position list.
 };
 
-#endif // RICHVIEW_H

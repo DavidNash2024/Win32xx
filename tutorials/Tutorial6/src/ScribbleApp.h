@@ -1,13 +1,10 @@
 //////////////////////////////////
 // ScribbleApp.h
 
-
-#ifndef SCRIBBLEAPP_H
-#define SCRIBBLEAPP_H
+#pragma once
 
 #include "wxx_wincore.h"
 #include "Mainfrm.h"
-
 
 ///////////////////////////////////////////////////////////////////
 // CScribbleApp manages the application. It initializes the Win32++
@@ -26,6 +23,4 @@ private:
 
     CMainFrame m_frame;
 };
-
-#endif // SCRIBBLEAPP_H
 

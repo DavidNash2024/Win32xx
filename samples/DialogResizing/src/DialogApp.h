@@ -2,11 +2,9 @@
 // DialogApp.h
 //
 
-#ifndef DIALOGAPP_H
-#define DIALOGAPP_H
+#pragma once
 
 #include "MyDialog.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CDialogApp manages the application. It initializes the Win32++
@@ -28,5 +26,3 @@ private:
     CMyDialog m_myDialog;
 };
 
-
-#endif // define DIALOGAPP_H

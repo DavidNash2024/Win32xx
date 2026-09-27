@@ -2,9 +2,7 @@
 // Edit.h
 //
 
-#ifndef EDIT_H_
-#define EDIT_H_
-
+#pragma once
 
 ////////////////////////////////////////////
 // CMyEdit manages and edit control used as
@@ -28,5 +26,3 @@ private:
     LRESULT OnChar(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-
-#endif // EDIT_H_

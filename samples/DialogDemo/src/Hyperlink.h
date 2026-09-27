@@ -2,14 +2,11 @@
 // Hyperlink.h
 //
 
-#ifndef HYPERLINK_H
-#define HYPERLINK_H
-
+#pragma once
 
 #ifndef IDC_HAND
   #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
-
 
 //////////////////////////////////////////////////
 // CHyperlink manages the hyperlink. The hyperlink
@@ -44,6 +41,4 @@ private:
     HCURSOR  m_cursor;
     CFont    m_urlFont;
 };
-
-#endif // HYPERLINK_H
 

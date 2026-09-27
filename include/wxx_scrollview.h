@@ -51,17 +51,12 @@
 //
 /////////////////////////////////////////////////////////
 
-
-
-#ifndef WIN32XX_SCROLLVIEW_H_
-#define WIN32XX_SCROLLVIEW_H_
+#pragma once
 
 #include "wxx_appcore0.h"
 
-
 namespace Win32xx
 {
-
     //////////////////////////////////////////////////////////////////////
     // The CScrollView class adds scrolling to a view window. Inherit your
     // view window from CScrollView, and use the SetScrollSizes function
@@ -588,4 +583,3 @@ namespace Win32xx
     }
 }
 
-#endif // WIN32XX_SCROLLVIEW_H_

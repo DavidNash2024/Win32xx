@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 /////////////////////////////////////////////////////
 // CButtonDialog manages a dialog with several button
@@ -88,4 +86,3 @@ private:
     CComboBoxDialog* m_pComboDlg;
 };
 
-#endif //MYDIALOG_H

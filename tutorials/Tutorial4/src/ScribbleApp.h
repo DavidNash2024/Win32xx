@@ -1,6 +1,8 @@
 ////////////////////////////////////
 // ScribbleApp.h
 
+#pragma once
+
 #include "wxx_wincore.h"
 #include "View.h"
 

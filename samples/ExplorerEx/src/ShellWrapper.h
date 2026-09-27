@@ -3,17 +3,9 @@
 //  Declaration of the CContextMenu, CContextMenu2,
 //    CEnumIDList, Cpidl, and CShellFolder classes
 
-#ifndef SHELLWRAPPER_H
-#define SHELLWRAPPER_H
+#pragma once
 
 #include <shlobj.h>
-
-
-//For Visual C++ 6 and without a modern SDK
-#ifndef DWORD_PTR
-#define DWORD_PTR DWORD
-#endif
-
 
 namespace ShellWrapper
 {
@@ -143,6 +135,4 @@ namespace ShellWrapper
     };
 
 } //namespace ShellWrapper
-
-#endif  // define SHELLWRAPPER_H
 

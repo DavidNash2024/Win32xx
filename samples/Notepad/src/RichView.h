@@ -2,9 +2,7 @@
 // RichView.h
 //
 
-#ifndef RICHVIEW_H
-#define RICHVIEW_H
-
+#pragma once
 
 ////////////////////////////////////////////////////
 // CRichView manages a rich edit control. It is used
@@ -34,4 +32,3 @@ private:
     std::vector<int> m_pageBreaks;
 };
 
-#endif // RICHVIEW_H

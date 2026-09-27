@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "View.h"
 #include "AboutDialog.h"
@@ -53,4 +51,3 @@ private:
     CView        m_view;
 };
 
-#endif //MAINFRM_H

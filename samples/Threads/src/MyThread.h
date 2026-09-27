@@ -2,11 +2,9 @@
 // MyThread.h
 //
 
-#ifndef MYTHREAD_H
-#define MYTHREAD_H
+#pragma once
 
 #include "TestWnd.h"
-
 
 /////////////////////////////////////////////////////////
 // CMyWinThread manages a windows thread. It runs a separate
@@ -33,5 +31,3 @@ private:
     HWND        m_mainWindow;
 };
 
-
-#endif  //MYTHREAD_H

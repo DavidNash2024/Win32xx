@@ -2,11 +2,9 @@
 // IFileDialogApp.h
 //
 
-#ifndef IFILE_DIALOG_APP_
-#define IFILE_DIALOG_APP_
+#pragma once
 
 #include "MyTaskDialog.h"
-
 
 //////////////////////////////////////////////////////////////////////
 // CIFileDialogApp manages the application. It initializes the Win32++
@@ -28,5 +26,3 @@ private:
     CMyTaskDialog myTaskDialog;
 };
 
-
-#endif // define IFILE_DIALOG_APP_

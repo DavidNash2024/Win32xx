@@ -2,8 +2,7 @@
 // HelpAbout.h
 //
 
-#ifndef HELPABOUT_H
-#define HELPABOUT_H
+#pragma once
 
 /////////////////////////////////////////////////////////////////
 // CAboutHelp manages the dialog which displays information about
@@ -27,4 +26,3 @@ private:
     CString     m_credits;          // AboutBox contents
 };
 
-#endif // HELPABOUT_H

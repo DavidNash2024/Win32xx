@@ -35,17 +35,13 @@
 //
 ////////////////////////////////////////////////////////
 
-
-#ifndef WIN32XX_REBAR_H_
-#define WIN32XX_REBAR_H_
+#pragma once
 
 #include "wxx_wincore.h"
 #include "wxx_themes.h"
 
-
 namespace Win32xx
 {
-
     /////////////////////////////////////////////////////
     // CRebar manages a rebar control. Rebar controls act
     // as containers for child windows such as toolbars.
@@ -637,4 +633,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WIN32XX_REBAR_H_

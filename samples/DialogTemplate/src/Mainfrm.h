@@ -2,14 +2,12 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "RichView.h"
 #include "DialogsTree.h"
 #include "DialogHolder.h"
 #include "AboutDialog.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -81,6 +79,4 @@ private:
     bool m_isTemplateShown;
     bool m_isPosChanging;
 };
-
-#endif //MAINFRM_H
 

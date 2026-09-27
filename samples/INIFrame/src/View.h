@@ -2,11 +2,9 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "Doc.h"
-
 
 //////////////////////////////////////////
 // CView manages CMainFrame's view window.
@@ -33,5 +31,3 @@ private:
     CDoc m_doc;
 };
 
-
-#endif // VIEW_H

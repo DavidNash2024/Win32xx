@@ -19,8 +19,7 @@
 // Windows App SDK. It needs to be acquired manually from uxtheme.dll at
 // ordinal 135.
 
-#ifndef DARKMODE_H_
-#define DARKMODE_H_
+#pragma once
 
 #include <winrt/Windows.UI.ViewManagement.h>
 
@@ -44,4 +43,3 @@ bool IsHighContrast();
 bool IsPreferredModeSupported();
 void SetPreferredAppMode(AppMode mode);
 
-#endif // DARKMODE_H_

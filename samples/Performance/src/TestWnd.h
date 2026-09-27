@@ -2,9 +2,7 @@
 // TestWnd.h
 //
 
-#ifndef TESTWND_H
-#define TESTWND_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////////
 // CTestWindow manages the test windows.
@@ -32,5 +30,3 @@ private:
     int m_windowCount;
 };
 
-
-#endif  //TESTWIN_H

@@ -79,17 +79,12 @@
 //      Popup.TrackPopupMenu(0, pt.x, pt.y, *this);
 //  }
 
-
-#ifndef WIN32XX_MENU_H_
-#define WIN32XX_MENU_H_
-
+#pragma once
 
 #include "wxx_appcore0.h"
 
-
 namespace Win32xx
 {
-
     //////////////////////////////////////////////////////////////////////////
     // This class provides support for menus. It provides member functions for
     // creating, tracking, updating, and destroying a menu.
@@ -831,6 +826,4 @@ namespace Win32xx
     }
 
 }   // namespace Win32xx
-
-#endif  // WIN32XX_MENU_H_
 

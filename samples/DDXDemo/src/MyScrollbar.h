@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MYSCROLLBAR_H
-#define MYSCROLLBAR_H
+#pragma once
 
 /////////////////////////////////////////////////////////
 // CMyScrollBar manages the scroll bar control in dialog.
@@ -26,4 +24,3 @@ class CMyScrollBar : public CScrollBar
         SCROLLINFO m_scrollInfo;
 };
 
-#endif  // MYSCROLLBAR_H

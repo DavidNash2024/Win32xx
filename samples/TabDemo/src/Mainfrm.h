@@ -2,8 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "MyTab.h"
@@ -49,4 +48,3 @@ private:
     CMyTab m_view;
 };
 
-#endif // MAINFRM_H

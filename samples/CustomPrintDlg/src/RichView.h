@@ -2,12 +2,9 @@
 // RichView.h
 //
 
-#ifndef RICHVIEW_H
-#define RICHVIEW_H
-
+#pragma once
 
 #include "CustomPrintDlg.h"
-
 
 ////////////////////////////////////////////////////
 // CRichView manages a rich edit control. It is used
@@ -40,4 +37,3 @@ private:
     CCustomPrintDlg m_printDialog;
 };
 
-#endif // RICHVIEW_H

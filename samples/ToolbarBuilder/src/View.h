@@ -2,9 +2,7 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
-
+#pragma once
 
 //////////////////////////////////////////
 // CView manages CMainFrame's view window.
@@ -61,5 +59,3 @@ private:
     bool m_isMasked;
 };
 
-
-#endif // VIEW_H

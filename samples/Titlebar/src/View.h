@@ -2,9 +2,7 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
-
+#pragma once
 
 //////////////////////////////////////////
 // CView manages CMiniFrame's view window.
@@ -24,5 +22,3 @@ private:
     CView& operator=(const CView&) = delete;
 };
 
-
-#endif // VIEW_H

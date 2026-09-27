@@ -2,9 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
-
+#pragma once
 
 #if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
 #pragma warning (disable : 4458) // disable warning: declaration hides class member
@@ -82,6 +80,4 @@ private:
     CImageList m_toolbarImages;
     CImageList m_disabledImages;
 };
-
-#endif //MAINFRM_H
 

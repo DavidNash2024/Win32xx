@@ -41,14 +41,10 @@
 //  Declaration of the following structs:
 //  MenuTheme, ReBarTheme, StatusBarTheme and ToolBarTheme
 
-
-#ifndef WIN32XX_THEMES_H_
-#define WIN32XX_THEMES_H_
-
+#pragma once
 
 namespace Win32xx
 {
-
     /////////////////////////////////////////
     // Declarations of structures for themes.
     //
@@ -130,6 +126,4 @@ namespace Win32xx
     }
 
 } // namespace Win32xx
-
-#endif // WIN32XX_THEMES_H_
 

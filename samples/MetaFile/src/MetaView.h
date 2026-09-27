@@ -2,12 +2,9 @@
 // MetaView.h
 //
 
-#ifndef METAVIEW_H
-#define METAVIEW_H
-
+#pragma once
 
 #include "wxx_wincore.h"
-
 
 ////////////////////////////////////////////////////////////
 // CMetaView manages the application's main window.
@@ -31,4 +28,3 @@ private:
     CEnhMetaFile  m_enhMetaFile;
 };
 
-#endif // METAVIEW_H

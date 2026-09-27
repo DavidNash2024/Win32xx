@@ -2,11 +2,9 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "wxx_wincore.h"
-
 
 //////////////////////////////////////////
 // CView manages the application's main window.
@@ -51,5 +49,3 @@ private:
     int m_oldDPI;
 };
 
-
-#endif

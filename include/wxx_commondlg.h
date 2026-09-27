@@ -46,8 +46,7 @@
 //
 ////////////////////////////////////////////////////////
 
-#ifndef WIN32XX_COMMONDLG_H_
-#define WIN32XX_COMMONDLG_H_
+#pragma once
 
 #include "wxx_dialog.h"
 #include "wxx_richedit.h"
@@ -1639,7 +1638,5 @@ namespace Win32xx
             m_cf.lpszStyle = nullptr;
     }
 
-}
+} // namespace Win32xx
 
-
-#endif // WIN32XX_COMMONDLG_H_

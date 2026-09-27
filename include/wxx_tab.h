@@ -40,8 +40,7 @@
 // wxx_tab.h
 //  Declaration of the CTab and CMDITab classes.
 
-#ifndef WIN32XX_TAB_H_
-#define WIN32XX_TAB_H_
+#pragma once
 
 #include "wxx_wincore.h"
 #include "wxx_dialog.h"
@@ -50,7 +49,6 @@
 
 namespace Win32xx
 {
-
     // This struct holds the information for each tab page.
     struct TabPageInfo
     {
@@ -298,7 +296,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
     //////////////////////////////////////////////////////////////
     // Definitions for the CSelectDialog class nested within CTab.
     //
@@ -2295,4 +2292,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif  // WIN32XX_TAB_H_

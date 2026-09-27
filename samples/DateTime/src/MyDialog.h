@@ -2,11 +2,9 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
+#pragma once
 
 #define ID_TIMER 101
-
 
 ///////////////////////////////////////////////////
 // CMyDialog manages the application's main dialog.
@@ -37,4 +35,3 @@ private:
 
 };
 
-#endif //MYDIALOG_H

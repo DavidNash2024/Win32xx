@@ -2,11 +2,9 @@
 // SplitterPanes.h
 //
 
-#ifndef SPLITTERPANES_H
-#define SPLITTERPANES_H
+#pragma once
 
 #include "Views.h"
-
 
 ////////////////////////////////////////////////////
 // CDockTest manages the docker that uses CViewText
@@ -67,4 +65,3 @@ private:
     CViewList m_view;
 };
 
-#endif // SPLITTERPANES_H

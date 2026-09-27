@@ -2,12 +2,10 @@
 // AppHelp.h
 //
 
-#ifndef APPHELP_H
-#define APPHELP_H
+#pragma once
 
 #include "ContextHelp.h"
 #include "HelpAbout.h"
-
 
 //////////////////////////////////////////////////////
 // CHelp combines the features of the CContextHelp and
@@ -35,5 +33,3 @@ private:
     CAboutHelp m_helpAbout;
 };
 
-
-#endif // APPHELP_H

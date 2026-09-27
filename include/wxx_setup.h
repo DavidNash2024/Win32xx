@@ -42,9 +42,7 @@
 // also defines CObject and many of the global functions
 // used by Win32++.
 
-
-#ifndef WIN32XX_SETUP_H_
-#define WIN32XX_SETUP_H_
+#pragma once
 
 // Include the C++ headers.
 #include <algorithm>
@@ -366,4 +364,3 @@ namespace Win32xx
 
 }
 
-#endif // WIN32XX_SETUP_H_

@@ -2,9 +2,7 @@
 // MainMDIfrm.h
 //
 
-#ifndef MAINMDIFRM_H
-#define MAINMDIFRM_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////////////
 // CMainMDIFrame manages the application's main window.
@@ -41,6 +39,4 @@ private:
     BOOL OnMDIIconArrange();
     BOOL OnMDITile();
 };
-
-#endif  //MAINMDIFRM_H
 

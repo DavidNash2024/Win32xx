@@ -2,14 +2,12 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "View.h"
 #include "MyCombo.h"
 #include "resource.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -87,7 +85,4 @@ private:
     bool m_showCards;
     int  m_selectedItem;      // Currently selected ComboBoxEx item.
 };
-
-
-#endif // MAINFRM_H
 

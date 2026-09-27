@@ -40,18 +40,14 @@
 // wxx_rich_edit.h
 //  Declaration of the CRichEdit class.
 
-#ifndef WIN32XX_RICHEDIT_H_
-#define WIN32XX_RICHEDIT_H_
-
+#pragma once
 
 #include "wxx_wincore.h"
 #include <richedit.h>
 #include <richole.h>
 
-
 namespace Win32xx
 {
-
     ////////////////////////////////////////////////////////////
     // CRichEdit manages a rich edit control. Rich Edit controls
     // support plain text and rich text. Rich text can utilize
@@ -1036,4 +1032,3 @@ namespace Win32xx
 
 }
 
-#endif   // WIN32XX_RICHEDIT_H_

@@ -2,11 +2,9 @@
 // Output.h - Declaration of the CViewOutput, CContainOutput,
 //          and CDockOutput classes
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
+#pragma once
 
 #include "resource.h"
-
 
 ///////////////////////////////////////////////////////////////
 // CViewOutput manages a rich edit control. It displays output.
@@ -67,4 +65,3 @@ private:
     CContainOutput m_view;
 };
 
-#endif // OUTPUT_H

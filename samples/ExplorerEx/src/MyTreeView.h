@@ -2,13 +2,11 @@
 // MyTreeView.h
 //
 
-#ifndef MYTREEVIEW_H
-#define MYTREEVIEW_H
+#pragma once
 
 #include "ShellWrapper.h"
 
 using namespace ShellWrapper;
-
 
 //////////////////////////////////////////////////.
 // CMyTreeView manages a tree view control.
@@ -70,4 +68,3 @@ private:
     std::vector <TreeItemDataPtr> m_pItems; // vector of smart pointers.
 };
 
-#endif  // MYTREEVIEW_H

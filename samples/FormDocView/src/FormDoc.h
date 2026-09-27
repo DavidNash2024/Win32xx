@@ -3,10 +3,7 @@
 
 // Based on code provided by Lynn Allan
 
-
-#ifndef SDI_DOC_H
-#define SDI_DOC_H
-
+#pragma once
 
 //////////////////////////////////////////////////////////////
 // CDoc holds the application's data. It inherits from CObject
@@ -38,4 +35,3 @@ private:
     DWORD m_radio;
 };
 
-#endif //SDI_DOC_H

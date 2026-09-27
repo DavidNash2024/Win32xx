@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////
 // MainView.h
 
-#ifndef MAINVIEW_H_
-#define MAINVIEW_H_
+#pragma once
 
 #include "ImageView.h"
 
@@ -35,4 +34,3 @@ public:
     CImageView m_imageView;
 };
 
-#endif // MAINVIEW_H_

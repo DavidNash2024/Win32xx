@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 #include "MyWebControl.h"
 
@@ -31,4 +29,3 @@ private:
     CWebControl m_webControl;
 };
 
-#endif //MYDIALOG_H

@@ -2,9 +2,7 @@
 // MDIChildTreeView.h
 //  Declaration of the CViewTree and CMDIChildTreeView classes
 
-#ifndef MDICHILDTREEVIEW_H
-#define MDICHILDTREEVIEW_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////
 // CViewTree manages a tree view control. It is used as
@@ -46,4 +44,3 @@ private:
     CMenu m_menu;
 };
 
-#endif  //MDICHILDTREEVIEW_H

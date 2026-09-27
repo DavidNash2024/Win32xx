@@ -2,9 +2,7 @@
 // MDIChildRect.h
 //  Declaration of the CViewRect and CMDIChildRect classes
 
-#ifndef MDICHILDRECT_H
-#define MDICHILDRECT_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////////
 // CViewRect manages a window that displays rectangles with
@@ -54,5 +52,3 @@ private:
     CMenu m_menu;
 };
 
-
-#endif  //MDICHILDRECT_H

@@ -2,9 +2,7 @@
 // TestWindow.h
 //
 
-#ifndef TESTWINDOW_H
-#define TESTWINDOW_H
-
+#pragma once
 
 class CTestWindow : public CWnd
 {
@@ -35,4 +33,3 @@ private:
     CMenu m_menu;
 };
 
-#endif  // TESTWINDOW_H

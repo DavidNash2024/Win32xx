@@ -2,13 +2,10 @@
 // View.h
 //  Declaration of the CView class
 
-#ifndef VIEW_H
-#define VIEW_H
-
+#pragma once
 
 #include "wxx_wincore.h"
 #include <vector>
-
 
 struct PlotPoint
 {
@@ -16,7 +13,6 @@ struct PlotPoint
     int y;
     bool isPenDown;
 };
-
 
 ////////////////////////////////////////////////
 // CView manages CMainFrame's view window.
@@ -49,5 +45,3 @@ private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw  COLORREF m_PenColor.
 };
 
-
-#endif // CVIEW_H

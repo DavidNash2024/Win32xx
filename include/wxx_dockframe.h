@@ -40,15 +40,11 @@
 // wxx_dockframe.h
 //  Declaration of CDockFrame and CMDIDockFrame.
 
-
-#ifndef WIN32XX_DOCKFRAME_H_
-#define WIN32XX_DOCKFRAME_H_
-
+#pragma once
 
 #include "wxx_docking.h"
 #include "wxx_frame.h"
 #include "wxx_mdi.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // The CDockFrame class adds support for docking to a Single Document Interface
@@ -264,4 +260,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WIN32XX_DOCKFRAME_H_

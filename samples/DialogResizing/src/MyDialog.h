@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 /////////////////////////////////////////////////////////
 // CMyDialog manages the application's main dialog.
@@ -48,4 +46,3 @@ private:
     CRichEdit m_richEdit2;
 };
 
-#endif //MYDIALOG_H

@@ -2,12 +2,10 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "scintillaview.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -77,6 +75,4 @@ private:
     bool m_isToolbarShown;
     HWND m_oldFocus;
 };
-
-#endif //MAINFRM_H
 

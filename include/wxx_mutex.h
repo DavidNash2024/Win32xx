@@ -36,11 +36,6 @@
 ////////////////////////////////////////////////////////
 
 
-
-#ifndef WIN32XX_MUTEX_H_
-#define WIN32XX_MUTEX_H_
-
-
 ///////////////////////////////////////////////////////
 // wxx_mutex.h
 // This file contains the declarations of the following set of classes.
@@ -70,6 +65,7 @@
 //            functions.
 //
 
+#pragma once
 
 namespace Win32xx
 {
@@ -249,7 +245,4 @@ namespace Win32xx
     }
 
 }
-
-
-#endif // WIN32XX_MUTEX_H_
 

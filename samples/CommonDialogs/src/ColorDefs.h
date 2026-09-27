@@ -6,9 +6,7 @@
 // This file provides descriptive identifiers for a number of commonly used
 // RGB Color Definitions.
 
-
-#ifndef COLORDEFS_IS_LOADED
-#define COLORDEFS_IS_LOADED
+#pragma once
 
 #define COLOR_BLACK     RGB(  0,   0,   0)
 #define COLOR_GRAY      RGB(100, 100, 100)
@@ -42,5 +40,3 @@
 #define COLOR_LT_RED    RGB(255, 128, 128)
 #define COLOR_DK_RED    RGB(128,   0,   0)
 
-
-#endif /* COLORDEFS_IS_LOADED */

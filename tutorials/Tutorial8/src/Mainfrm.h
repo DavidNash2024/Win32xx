@@ -2,14 +2,12 @@
 // Mainfrm.h
 //  Declaration of the CMainFrame class.
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "wxx_commondlg.h"
 #include "wxx_frame.h"
 #include "wxx_file.h"
 #include "View.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -47,6 +45,4 @@ private:
     CView m_view;
     CString m_pathName;
 };
-
-#endif // MAINFRM_H
 

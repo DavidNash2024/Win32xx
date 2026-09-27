@@ -2,11 +2,9 @@
 // TabbedMDIApp.h
 //
 
-#ifndef TABBEDMDIAPP_H
-#define TABBEDMDIAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ////////////////////////////////////////////////////////////
 // CTabbedMDIApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // TABBEDMDIAPP_H

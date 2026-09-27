@@ -2,8 +2,7 @@
 // App.h
 //
 
-#ifndef SDI_APP_H
-#define SDI_APP_H
+#pragma once
 
 #include "Mainfrm.h"
 
@@ -27,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define SDI_APP_H

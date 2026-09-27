@@ -35,16 +35,12 @@
 //
 ////////////////////////////////////////////////////////
 
-
-
-#ifndef WIN32XX_MESSAGEPUMP_H_
-#define WIN32XX_MESSAGEPUMP_H_
+#pragma once
 
 #include "wxx_messagepump0.h"
 
 namespace Win32xx
 {
-
     //////////////////////////////////////////
     // Definitions for the CMessagePump class.
     //
@@ -160,4 +156,3 @@ namespace Win32xx
 
 }
 
-#endif // WIN32XX_MESSAGEPUMP_H_

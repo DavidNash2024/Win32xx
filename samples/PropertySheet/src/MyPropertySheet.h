@@ -2,9 +2,7 @@
 // MyPropertySheet.h
 //
 
-#ifndef MYPROPERTYSHEET_H
-#define MYPROPERTYSHEET_H
-
+#pragma once
 
 ///////////////////////////////////////////////
 // CMyPropertySheet manages the property sheet.
@@ -75,5 +73,3 @@ private:
     CComboPage& operator=(const CComboPage&) = delete;
 };
 
-
-#endif // MYPROPERTYSHEET_H

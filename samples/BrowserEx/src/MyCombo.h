@@ -2,8 +2,7 @@
 // MyCombo.h
 //
 
-#ifndef MYCOMBO_H
-#define MYCOMBO_H
+#pragma once
 
 //////////////////////////////////////////////////////
 // CMyCombo manages the ComboBoxEx control used by the
@@ -32,5 +31,3 @@ private:
     std::vector<CString> m_items;
 };
 
-
-#endif

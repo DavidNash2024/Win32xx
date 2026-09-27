@@ -85,10 +85,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 */
 
-
-#ifndef WIN32XX_WINCORE_H_
-#define WIN32XX_WINCORE_H_
-
+#pragma once
 
 // Include the necessary Win32++ header files.
 #include "wxx_appcore.h"
@@ -98,10 +95,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #include "wxx_menu.h"
 #include "wxx_ddx.h"
 
-
 namespace Win32xx
 {
-
     ////////////////////
     // Global Functions.
     //
@@ -2677,4 +2672,3 @@ namespace Win32xx
 
 }
 
-#endif // WIN32XX_WINCORE_H_

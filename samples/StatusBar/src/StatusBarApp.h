@@ -2,11 +2,9 @@
 // FrameApp.h
 //
 
-#ifndef STATUSBARAPP_H
-#define STATUSBARAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CStatusBarApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define STATUSBARAPP_H

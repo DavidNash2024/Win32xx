@@ -2,8 +2,7 @@
 // MyTabbedMDI.h
 //
 
-#ifndef MYTABBEDMDI_H
-#define MYTABBEDMDI_H
+#pragma once
 
 // The docker identifiers (dock IDs)
 const int ID_MDI_CLASSES = 1;
@@ -33,4 +32,3 @@ private:
     CMyTabbedMDI& operator=(const CMyTabbedMDI&) = delete;
 };
 
-#endif

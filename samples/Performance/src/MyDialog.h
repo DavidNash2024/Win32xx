@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 /////////////////////////////////////
 // CMyDialog manages the dialog that allows users to configure
@@ -25,4 +23,3 @@ private:
     CMyDialog& operator=(const CMyDialog&) = delete;
 };
 
-#endif //MYDIALOG_H

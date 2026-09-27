@@ -2,11 +2,9 @@
 // MyTaskDialog.h
 //
 
-#ifndef MYTASKDIALOG_H
-#define MYTASKDIALOG_H
+#pragma once
 
 #include "resource.h"
-
 
 /////////////////////////////////////////////
 // CMyTaskDialog manages a task dialog. It is
@@ -36,5 +34,3 @@ private:
     CMyTaskDialog& operator=(const CMyTaskDialog&) = delete;
 };
 
-
-#endif

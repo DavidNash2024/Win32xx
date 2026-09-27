@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef SDI_DOC_H
-#define SDI_DOC_H
+#pragma once
 
 /////////////////////////////////////////////////////////////////////////////
 // The CDoc class manages the document data, which is stored in the registry.
@@ -114,4 +112,3 @@ private:
     SYSTEMTIME  m_calDateSysTime;
 };
 
-#endif //SDI_DOC_H

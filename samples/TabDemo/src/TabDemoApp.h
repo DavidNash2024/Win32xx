@@ -2,12 +2,9 @@
 // TabDemoApp.h
 //
 
-#ifndef CONTAINERAPP_H
-#define CONTAINERAPP_H
-
+#pragma once
 
 #include "Mainfrm.h"
-
 
 //////////////////////////////////////////////////////////////////
 // CTabDemoApp manages the application. It initializes the Win32++
@@ -29,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // CONTAINERAPP_H

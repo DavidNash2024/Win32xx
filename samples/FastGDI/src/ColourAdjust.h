@@ -1,9 +1,7 @@
 ////////////////////////
 // ColourAdjust.h
 
-#ifndef COLOURADJUST_H_
-#define COLOURADJUST_H_
-
+#pragma once
 
 /////////////////////////////////////////////////////
 // CColorAdjust manages a dialog that allows the
@@ -55,7 +53,4 @@ private:
     int     m_cRed;
     BOOL    m_isGray;
 };
-
-
-#endif // COLOURADJUST_H_
 

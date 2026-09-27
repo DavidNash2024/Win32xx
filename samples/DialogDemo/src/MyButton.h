@@ -2,9 +2,7 @@
 // MyButton.h
 //
 
-#ifndef MYBUTTON_H
-#define MYBUTTON_H
-
+#pragma once
 
 ///////////////////////////////////////
 // CMyButton manages the button control.
@@ -29,7 +27,4 @@ private:
     LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
 };
-
-
-#endif //BUTTON_H
 

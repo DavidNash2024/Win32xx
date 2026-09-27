@@ -2,11 +2,9 @@
 // scintillaview.h
 //
 
-#ifndef SCINTILLAVIEW_H
-#define SCINTILLAVIEW_H
+#pragma once
 
 #include "Scintilla.h"
-
 
 ///////////////////////////////////////////////
 // ScintillaView manages the application's main window.
@@ -96,4 +94,3 @@ private:
     HMODULE m_module;
 };
 
-#endif // SCINTILLAVIEW_H

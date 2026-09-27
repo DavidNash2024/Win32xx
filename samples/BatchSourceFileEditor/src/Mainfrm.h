@@ -2,8 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -64,6 +63,4 @@ private:
     CString m_folder;
     bool m_isToolbarShown;
 };
-
-#endif //MAINFRM_H
 

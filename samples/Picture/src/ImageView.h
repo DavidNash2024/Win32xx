@@ -2,11 +2,9 @@
 // ImageView.h
 //
 
-#ifndef IMAGEVIEW_H_
-#define IMAGEVIEW_H_
+#pragma once
 
 #include <olectl.h>
-
 
 /////////////////////////////////////////////////////////
 // CImageView manages the window that displays the image.
@@ -34,5 +32,3 @@ private:
     CBrush  m_brush;
 };
 
-
-#endif // IMAGEVIEW_H_

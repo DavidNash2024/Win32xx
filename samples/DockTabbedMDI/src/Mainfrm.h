@@ -2,9 +2,7 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
-
+#pragma once
 
 #include "AboutDialog.h"
 #include "MyTabbedMDI.h"
@@ -21,7 +19,6 @@ const int ID_DOCK_TEXT2 = 8;
 const int ID_DOCK_BROWSER = 9;
 const int ID_DOCK_RECT = 10;
 const int ID_DOCK_DIALOG = 11;
-
 
 
 ///////////////////////////////////////////////////////////
@@ -87,6 +84,4 @@ private:
     bool m_isMDITabsAtTop;
     CDocker* m_pActiveDocker;
 };
-
-#endif //MAINFRM_H
 

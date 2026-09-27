@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef CCOLORCHOICE_H
-#define CCOLORCHOICE_H
+#pragma once
 
 #include "ListBoxDlg.h"
 
@@ -54,4 +52,3 @@ private:
     std::vector<ctl_color> m_colorTable; // usage-color pairs
 };
 
-#endif  // CCOLORCHOICE_H

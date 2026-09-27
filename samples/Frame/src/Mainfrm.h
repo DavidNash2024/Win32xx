@@ -2,11 +2,9 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "View.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -54,6 +52,4 @@ private:
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
 };
-
-#endif //MAINFRM_H
 

@@ -2,11 +2,9 @@
 // View.h
 //  Declaration of the CView class
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "Doc.h"
-
 
 // Message - sent to the parent (Frame) window when a file is dropped on the View window.
 //   WPARAM: A pointer to the fileName (LPCWSTR)
@@ -56,5 +54,3 @@ private:
     COLORREF m_penColor;
 };
 
-
-#endif // CVIEW_H

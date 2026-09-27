@@ -2,9 +2,7 @@
 // MDIChildMax.h
 //  Declaration of the CViewMax and CMDIChildMax classes
 
-#ifndef MDICHILDMAX_H
-#define MDICHILDMAX_H
-
+#pragma once
 
 ////////////////////////////////////////////////////////
 // CViewMax is used as the view window for CMDIChildMax.
@@ -46,4 +44,3 @@ private:
     CMenu m_menu;
 };
 
-#endif  //MDICHILDMAX_H

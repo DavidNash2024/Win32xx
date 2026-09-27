@@ -53,9 +53,7 @@
 // wxx_docking.h
 //  Declaration of the CDocker class
 
-#ifndef WIN32XX_DOCKING_H_
-#define WIN32XX_DOCKING_H_
-
+#pragma once
 
 #include "wxx_wincore.h"
 #include "wxx_toolbar.h"
@@ -5771,4 +5769,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WIN32XX_DOCKING_H_

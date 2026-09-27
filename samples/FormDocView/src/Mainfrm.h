@@ -1,12 +1,10 @@
 /////////////////////////////////////////////
 // Mainfrm.h
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "FormView.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -50,5 +48,3 @@ private:
     static constexpr COLORREF lightgray = RGB(192, 192, 192);
 };
 
-
-#endif //MAINFRM_H

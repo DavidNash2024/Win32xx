@@ -2,9 +2,7 @@
 // CoverImage.h
 //
 
-#ifndef COVERIMAGE_H_
-#define COVERIMAGE_H_
-
+#pragma once
 
 ////////////////////////////////////////////////////////////
 // CCoverImage is used by the dialog to draw the cover image.
@@ -29,4 +27,3 @@ private:
     ULONG_PTR   m_gdiplusToken;
 };
 
-#endif // COVERIMAGE_H_

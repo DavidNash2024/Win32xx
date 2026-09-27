@@ -2,11 +2,9 @@
 // SplashThread.h
 //
 
-#ifndef SPLASHTHREAD_H
-#define SPLASHTHREAD_H
+#pragma once
 
 #include "Splash.h"
-
 
 //////////////////////////////////////////////////////////////////
 // CSplashThread creates the windows thread for the splash window.
@@ -31,5 +29,3 @@ private:
     CEvent  m_splashCreated;
 };
 
-
-#endif // SPLASHTHREAD_H

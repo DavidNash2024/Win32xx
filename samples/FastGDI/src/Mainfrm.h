@@ -1,13 +1,11 @@
 /////////////////////////////////////////////
 // Mainfrm.h
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "MainView.h"
 #include "ImageView.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -71,6 +69,4 @@ private:
     CString m_pathName;
     bool m_isToolbarShown;
 };
-
-#endif //MAINFRM_H
 

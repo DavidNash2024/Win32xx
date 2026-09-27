@@ -2,11 +2,9 @@
 // FrameApp.h
 //
 
-#ifndef REBARAPP_H
-#define REBARAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ////////////////////////////////////////////////////////////////
 // CReBarApp manages the application. It initializes the Win32++
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define REBARAPP_H

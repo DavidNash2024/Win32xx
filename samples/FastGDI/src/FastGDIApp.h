@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////
 // FastGDIApp.h
 
-#ifndef FASTGDIAPP_H
-#define FASTGDIAPP_H
+#pragma once
 
 #include "Mainfrm.h"
 
@@ -28,4 +27,3 @@ private:
     CMainFrame m_frame;
 };
 
-#endif // define FASTGDIAPP_H

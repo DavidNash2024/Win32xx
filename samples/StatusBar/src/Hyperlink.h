@@ -2,13 +2,7 @@
 // Hyperlink.h
 //
 
-#ifndef HYPERLINK_H
-#define HYPERLINK_H
-
-#ifndef IDC_HAND
-#define IDC_HAND  MAKEINTRESOURCE(32649)
-#endif
-
+#pragma once
 
 ////////////////////////////////////////////////////////////////////////
 // CHyperlink creates a window that behaves like a hyperlink.
@@ -50,5 +44,3 @@ private:
     CString  m_urlName;
 };
 
-
-#endif // HYPERLINK_H

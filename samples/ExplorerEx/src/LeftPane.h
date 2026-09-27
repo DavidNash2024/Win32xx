@@ -2,14 +2,12 @@
 // LeftPane.h
 //
 
-#ifndef LEFTPANE_H_
-#define LEFTPANE_H_
+#pragma once
 
 #include "MyTreeView.h"
 
 // The docker identifiers (dock IDs)
 const int ID_DOCK_LEFTPANE = 1;
-
 
 ////////////////////////////////////////////////////
 // CLeftPane is a docker that manages the left view.
@@ -29,8 +27,4 @@ private:
 
     CMyTreeView m_view;
 };
-
-
-
-#endif // LEFTPANE_H_
 

@@ -2,9 +2,7 @@
 // SearchDialog.h
 //
 
-#ifndef SEARCHDIALOG_H
-#define SEARCHDIALOG_H
-
+#pragma once
 
 /////////////////////////////////////////////////////////
 // CSearchDialog allows the user to perform a word search
@@ -45,5 +43,3 @@ private:
     CString m_infoText;
 };
 
-
-#endif // SEARCHDIALOG_H

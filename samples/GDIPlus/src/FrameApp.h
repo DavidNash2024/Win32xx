@@ -2,11 +2,9 @@
 // FrameApp.h
 //
 
-#ifndef FRAMEAPP_H
-#define FRAMEAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ////////////////////////////////////////////////////////////////
 // CFrameApp manages the application. It initializes the Win32++
@@ -26,5 +24,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define FRAMEAPP_H

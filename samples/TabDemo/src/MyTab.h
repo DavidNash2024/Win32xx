@@ -2,9 +2,7 @@
 // MyTab.h
 //
 
-#ifndef MYTAB_H
-#define MYTAB_H
-
+#pragma once
 
 ////////////////////////////////////////////////////
 // CMyTab is used as the view window by CMainFrame.
@@ -24,5 +22,3 @@ private:
     CMyTab& operator=(const CMyTab&) = delete;
 };
 
-
-#endif  // MYTAB_H

@@ -218,9 +218,6 @@
     <ClInclude Include="..\src\NewDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\wxx_pagescroller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\AboutDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>

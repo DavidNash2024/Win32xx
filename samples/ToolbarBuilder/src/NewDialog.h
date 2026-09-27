@@ -2,9 +2,7 @@
 // NewDialog.h
 //
 
-#ifndef NEWDIALOG_H
-#define NEWDIALOG_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////
 // CNewDialog displays a dialog to choose a new toolbar.
@@ -35,4 +33,3 @@ private:
     int m_colorBitsRadio;
 };
 
-#endif // NEWDIALOG_H

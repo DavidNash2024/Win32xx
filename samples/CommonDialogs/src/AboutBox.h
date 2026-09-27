@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef ABOUTBOX_H
-#define ABOUTBOX_H
+#pragma once
 
 /////////////////////////////////////////////////
 // This class implements the AboutBox dialog box.
@@ -26,4 +24,3 @@ private:
     CString m_about;
 };
 
-#endif  // ABOUTBOX_H

@@ -2,11 +2,9 @@
 // DoubleBufferApp.h
 //
 
-#ifndef DOUBLEBUFFERAPP_H
-#define DOUBLEBUFFERAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ///////////////////////////////////////////////////////////////
 // CDoubleBufferApp manages the application. It initializes the
@@ -28,4 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-#endif // define DOUBLEBUFFERAPP_H

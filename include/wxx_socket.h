@@ -106,9 +106,7 @@
 // * IsIPV6Supported returns false if for Windows XP.
 //
 
-
-#ifndef WIN32XX_SOCKET_H_
-#define WIN32XX_SOCKET_H_
+#pragma once
 
 // CSocket requires features from the Win32++ framework.
 #include "wxx_wincore.h"
@@ -116,7 +114,6 @@
 #include "wxx_mutex.h"
 
 #include <ws2tcpip.h>
-
 
 namespace Win32xx
 {
@@ -192,7 +189,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
     ////////////////////////////////////
     // Definitions of the CSocket class.
     //
@@ -662,4 +658,3 @@ namespace Win32xx
     }
 }
 
-#endif // WIN32XX_SOCKET_H_

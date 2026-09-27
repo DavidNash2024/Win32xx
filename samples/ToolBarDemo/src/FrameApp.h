@@ -2,11 +2,9 @@
 // FrameApp.h
 //
 
-#ifndef FRAMEAPP_H
-#define FRAMEAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CToolBarDemoApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // define FRAMEAPP_H

@@ -40,10 +40,7 @@
 // wxx_rect.h
 //  Definitions of the CSize, CPoint and CRect classes.
 
-
-#ifndef WIN32XX_RECT_H_
-#define WIN32XX_RECT_H_
-
+#pragma once
 
 namespace Win32xx
 {
@@ -932,4 +929,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WIN32XX_RECT_H_

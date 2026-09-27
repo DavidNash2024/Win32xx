@@ -36,17 +36,13 @@
 ////////////////////////////////////////////////////////
 
 
-
-#ifndef WIN32XX_APPCORE0_H_
-#define WIN32XX_APPCORE0_H_
-
-
 ///////////////////////////////////////////////////////////////////////////
 // wxx_appcore0.h
 // This file contains the declarations of CGlobalLock and CWinApp.
 // CWinApp is used start Win32++ and run the message loop. You should
 // should inherit from this class to start Win32++ in your own application.
 
+#pragma once
 
 #include "wxx_setup.h"
 #include "wxx_criticalsection.h"
@@ -431,5 +427,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-
-#endif // WIN32XX_APPCORE0_H_

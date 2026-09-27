@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef PRINT_PREVIEW_H
-#define PRINT_PREVIEW_H
+#pragma once
 
 #include "resource.h"
 
@@ -190,4 +188,3 @@ private:
     DWORD       m_flags;                // Dialog invocation flags.
 };
 
-#endif // PRINT_PREVIEW_H

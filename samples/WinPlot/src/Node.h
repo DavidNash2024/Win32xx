@@ -2,11 +2,9 @@
 // Node.h:
 //
 
-#ifndef CF6AD5B7_507F_4DE4_8980_A3940530D108_NODE_H
-#define CF6AD5B7_507F_4DE4_8980_A3940530D108_NODE_H
+#pragma once
 
 #include <iostream>
-
 
 namespace Calc
 {
@@ -131,4 +129,3 @@ namespace Calc
 }
 
 
-#endif  //define CF6AD5B7_507F_4DE4_8980_A3940530D108_NODE_H

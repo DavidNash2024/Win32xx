@@ -2,11 +2,9 @@
 // CustomControlApp.h
 //
 
-#ifndef CUSTOMCONTROLAPP_H
-#define CUSTOMCONTROLAPP_H
+#pragma once
 
 #include "MyDialog.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CCustomControlApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMyDialog m_myDialog;
 };
 
-
-#endif // define CUSTOMCONTROLAPP_H

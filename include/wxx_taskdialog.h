@@ -51,15 +51,12 @@
 //  Task dialogs are always modal.
 //  Task dialogs require Unicode.
 
-
-#ifndef WIN32XX_TASKDIALOG_H_
-#define WIN32XX_TASKDIALOG_H_
+#pragma once
 
 #include "wxx_wincore.h"
 
 namespace Win32xx
 {
-
     //////////////////////////////////////////////////////////////////
     // CTaskDialog manages a task dialog. A task dialog is similar to,
     // while much more flexible than, a basic message box.
@@ -166,7 +163,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
     ///////////////////
     // Global function.
     //
@@ -866,5 +862,3 @@ namespace Win32xx
 
 }
 
-
-#endif // WIN32XX_TASKDIALOG_H_

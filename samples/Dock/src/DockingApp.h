@@ -2,11 +2,9 @@
 // DockingApp.h
 //
 
-#ifndef DOCKINGAPP_H
-#define DOCKINGAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 ////////////////////////////////////////////////////////////
 // CDockingApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMainFrame m_MainFrame;
 };
 
-
-#endif // DOCKINGAPP_H

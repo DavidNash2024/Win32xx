@@ -3,14 +3,11 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef SDI_VIEW_H
-#define SDI_VIEW_H
+#pragma once
 
 #include "MyButton.h"
 #include "MyScrollbar.h"
 #include "Doc.h"
-
 
 /////////////////////////////////////////////////////////////
 // CView manages dialog used as the main frame's view window.
@@ -135,4 +132,3 @@ private:
     int  m_focusID;      // The control with current focus.
 };
 
-#endif //SDI_VIEW_H

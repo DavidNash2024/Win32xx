@@ -2,12 +2,10 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "Calc.h"
 #include "InputDlg.h"
-
 
 //////////////////////////////////////////
 // CView manages CMainFrame's view window.
@@ -61,5 +59,3 @@ private:
     double m_ymax;
 };
 
-
-#endif // VIEW_H

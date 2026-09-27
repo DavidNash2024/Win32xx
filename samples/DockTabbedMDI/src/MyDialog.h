@@ -2,9 +2,7 @@
 // CViewDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 ////////////////////////////////////////////////////////
 // CViewDialog manages a dialog. This is the view window
@@ -95,4 +93,3 @@ private:
     CContainDialog m_view;
 };
 
-#endif //MYDIALOG_H

@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 ///////////////////////////////////////////////
 // CBalloonToolTip manages a tooltip which uses
@@ -62,5 +60,3 @@ private:
     CBitmap m_patternImage;
 };
 
-
-#endif //MYDIALOG_H

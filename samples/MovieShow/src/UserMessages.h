@@ -2,9 +2,7 @@
 // UserMessages.h
 //
 
-#ifndef USER_MESSAGES_H_
-#define USER_MESSAGES_H_
-
+#pragma once
 
 // Messages called by CViewList.
 #define UWM_PLAYMOVIE                 (WM_APP + 0x0001)
@@ -16,6 +14,4 @@
 #define UWM_GETMOVIESDATA             (WM_APP + 0x0005)
 #define UWM_ONRCLICKTREEITEM          (WM_APP + 0x0006)
 #define UWM_BOXSETCHANGED             (WM_APP + 0x0007)
-
-#endif  // USER_MESSAGES_H_
 

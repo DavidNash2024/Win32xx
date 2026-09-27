@@ -2,14 +2,11 @@
 // Mainfrm.h
 //
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
-
+#pragma once
 
 #include "AboutDialog.h"
 #include "LeftPane.h"
 #include "RightPane.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -64,6 +61,4 @@ private:
     CRightPane m_rightPane;
     bool m_showHidden;
 };
-
-#endif  //MAINFRM_H
 

@@ -5,10 +5,7 @@
 // This file is used for precompiled headers.
 // Rarely modified header files should be included.
 
-
-#ifndef PCH_H_
-#define PCH_H_
-
+#pragma once
 
 // Predefinitions for windows.h go here
 //#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
@@ -83,5 +80,3 @@
   #endif
 
 #endif  // define WIN32_LEAN_AND_MEAN
-
-#endif  // define PCH_H_

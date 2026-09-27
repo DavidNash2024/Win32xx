@@ -2,8 +2,7 @@
 // MyWinThread.h
 //
 
-#ifndef MYWINTHREAD_H
-#define MYWINTHREAD_H
+#pragma once
 
 ////////////////////////////////////////////////////
 // CMyWinThread manages the threads used in the dll.
@@ -24,4 +23,3 @@ private:
     CMyDialog m_myDialog;
 };
 
-#endif  // MYWINTHREAD_H

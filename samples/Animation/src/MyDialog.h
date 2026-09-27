@@ -2,9 +2,7 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
-
+#pragma once
 
 ///////////////////////////////////////////////////
 // CMyDialog manages the application's main dialog.
@@ -26,4 +24,3 @@ private:
     CAnimation m_animation;
 };
 
-#endif //MYDIALOG_H

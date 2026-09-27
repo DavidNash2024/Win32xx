@@ -3,11 +3,9 @@
 //          and CDockOutput classes
 //
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
+#pragma once
 
 #include "resource.h"
-
 
 ///////////////////////////////////////////////////////////
 // CViewOutput manages an edit control. It displays output.
@@ -71,5 +69,4 @@ private:
     CContainOutput m_view;
 };
 
-
-#endif // OUTPUT_H
+#pragma once

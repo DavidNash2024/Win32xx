@@ -2,11 +2,9 @@
 // DialogDemoApp.h
 //
 
-#ifndef DIALOGDEMOAPP_H
-#define DIALOGDEMOAPP_H
+#pragma once
 
 #include "MyDialog.h"
-
 
 /////////////////////////////////////////////////////////////
 // CDialogDemoApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMyDialog m_myDialog;
 };
 
-
-#endif // define DIALOGDEMOAPP_H

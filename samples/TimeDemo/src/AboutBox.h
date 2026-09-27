@@ -3,9 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef ABOUT_BOX_H_
-#define ABOUT_BOX_H_
+#pragma once
 
 ///////////////////////////////////////////////////////////////////////////////
 // The about dialog box. It is responsible for displaying the about information
@@ -29,4 +27,3 @@ private:
     CString m_status;
 };
 
-#endif // ABOUT_BOX_H_

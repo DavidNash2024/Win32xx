@@ -7,7 +7,6 @@
 #include "framework.h"
 #include "Tab.h"
 
-
 class CBrowserWindow : public CWnd
 {
 public:

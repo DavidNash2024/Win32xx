@@ -2,9 +2,7 @@
 // ScrollBar.h
 //
 
-#ifndef MYSCROLLBAR_H
-#define MYSCROLLBAR_H
-
+#pragma once
 
 //////////////////////////////////////////////
 // CMyScrollBar manages the scrollbar control.
@@ -27,5 +25,3 @@ private:
     SCROLLINFO m_si;
 };
 
-
-#endif

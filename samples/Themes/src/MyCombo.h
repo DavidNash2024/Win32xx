@@ -2,9 +2,7 @@
 // MyCombo.h
 //
 
-#ifndef MYCOMBO_H
-#define MYCOMBO_H
-
+#pragma once
 
 /////////////////////////////////////////////////////////
 // CMyCombo manages the ComboBoxEx control, It is used by
@@ -29,5 +27,3 @@ private:
     CImageList m_images;
 };
 
-
-#endif // MYCOMBO_H

@@ -3,10 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-
-#ifndef MYBUTTON_H
-#define MYBUTTON_H
-
+#pragma once
 
 /////////////////////////////////////////////////////////////////////
 // The CMyButton class manages the owner-drawn buttons in the dialog.
@@ -24,4 +21,3 @@ private:
     CMyButton& operator=(const CMyButton&) = delete;
 };
 
-#endif  // MYBUTTON_H

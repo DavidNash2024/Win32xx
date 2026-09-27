@@ -2,9 +2,7 @@
 // Files.h
 //
 
-#ifndef FILES_H
-#define FILES_H
-
+#pragma once
 
 //////////////////////////////////////////////////
 // CViewDialog manages a list view control.
@@ -31,5 +29,3 @@ private:
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-
-#endif // FILES_H

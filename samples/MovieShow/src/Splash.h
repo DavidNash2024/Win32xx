@@ -2,9 +2,7 @@
 // Splash.h
 //
 
-#ifndef SPLASH_H
-#define SPLASH_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////////////////////
 // CSplash creates a splash screen with optional text and progress bar.
@@ -41,5 +39,3 @@ private:
     HANDLE       m_fontHandle;
 };
 
-
-#endif // SPLASH_H

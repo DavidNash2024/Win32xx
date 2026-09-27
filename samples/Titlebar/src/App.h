@@ -2,12 +2,10 @@
 // App.h
 //
 
-#ifndef APP_H_
-#define APP_H_
+#pragma once
 
 #include "wxx_wincore.h"
 #include "MiniFrame.h"
-
 
 ////////////////////////////////////////////////////////////
 // CApp manages the application. It initializes the Win32++
@@ -29,5 +27,3 @@ private:
     CMiniFrame m_view;
 };
 
-
-#endif  // APP_H_

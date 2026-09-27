@@ -2,9 +2,7 @@
 // TestWnd.h
 //
 
-#ifndef TESTWND_H
-#define TESTWND_H
-
+#pragma once
 
 ////////////////////////////////////////////////////////////
 // CTestWindow manages the test window created by CMyWinThread.
@@ -28,5 +26,3 @@ private:
     HWND m_mainWindow;
 };
 
-
-#endif  //TESTWIN_H

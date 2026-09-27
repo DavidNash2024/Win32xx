@@ -69,16 +69,12 @@ if (ff.FindFirstFile(_T("C:\\SomeFolder\\*.*")))
 
 */
 
-
-#ifndef WIN32XX_FILEFIND_H_
-#define WIN32XX_FILEFIND_H_
+#pragma once
 
 #include "wxx_wincore.h"
 
-
 namespace Win32xx
 {
-
     ////////////////////////////////////////////////////////
     // CFileFind finds one or more files matching the string
     // specified by FindFirstFile.
@@ -373,4 +369,3 @@ namespace Win32xx
 
 }
 
-#endif // WIN32XX_FILEFIND_H_

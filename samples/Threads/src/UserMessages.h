@@ -2,9 +2,7 @@
 // UserMessages.h
 //
 
-#ifndef USER_MESSAGES_H_
-#define USER_MESSAGES_H_
-
+#pragma once
 
 // User defined messages used in this application.
 #define UWM_WINDOWCREATED WM_APP +1    // the message sent when window is created.
@@ -12,5 +10,3 @@
 #define UWM_CLOSETHREAD   WM_APP +3    // close the thread specified as wparam,
 #define UWM_APPENDTEXT    WM_APP +4    // append text to main window. wparam is CString pointer.
 
-
-#endif // USER_MESSAGES_H_

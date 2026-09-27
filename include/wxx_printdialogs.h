@@ -87,15 +87,13 @@
 //     CDC printerDC = printDialog.GetDefaults();
 //
 
-#ifndef WIN32XX_PRINTDIALOGS_H_
-#define WIN32XX_PRINTDIALOGS_H_
+#pragma once
 
 #include "wxx_wincore.h"
 #include "wxx_commondlg.h"
 
 namespace Win32xx
 {
-
     /////////////////////////////////////////////////////////////////////////
     // This class encapsulates the Windows API PrintDlg function.
     // The PrintDlg function displays a print dialog. The print dialog
@@ -770,4 +768,3 @@ namespace Win32xx
 
 }
 
-#endif // WIN32XX_PRINTDIALOGS_H_

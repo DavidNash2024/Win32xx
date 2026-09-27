@@ -6,7 +6,6 @@
 
 #include "Mainfrm.h"
 
-
 /////////////////////////////////////////////////////////////////
 // CRibbonFrameApp manages the application. It initializes the
 // Win32++ framework when it is constructed, and creates the main

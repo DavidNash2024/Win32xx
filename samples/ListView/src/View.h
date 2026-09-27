@@ -2,8 +2,7 @@
 // View.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "Edit.h"
 
@@ -79,5 +78,3 @@ private:
     int m_column;
 };
 
-
-#endif // VIEW_H

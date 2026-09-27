@@ -2,17 +2,13 @@
 // MainWnd.h
 //
 
-#ifndef MAINWND_H
-#define MAINWND_H
-
+#pragma once
 
 #include "MyEdit.h"
 #include "TestWnd.h"
 
-
 #define WM_WINDOWCREATED WM_USER + 1   // the message sent when window is created
 #define WM_TESTMESSAGE   WM_USER + 2   // the test message
-
 
 using TestWindowPtr = std::unique_ptr<CTestWindow>;
 
@@ -56,5 +52,3 @@ private:
     LONGLONG m_frequency;
 };
 
-
-#endif  //MAINWND_H

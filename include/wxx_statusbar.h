@@ -35,9 +35,7 @@
 //
 ////////////////////////////////////////////////////////
 
-
-#ifndef WIN32XX_STATUSBAR_H_
-#define WIN32XX_STATUSBAR_H_
+#pragma once
 
 #include "wxx_wincore.h"
 
@@ -81,7 +79,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
     ////////////////////////////////////////
     // Definitions for the CStatusBar class.
     //
@@ -266,4 +263,3 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // WIN32XX_STATUSBAR_H_

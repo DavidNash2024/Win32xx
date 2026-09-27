@@ -2,9 +2,7 @@
 // Classes.h
 //
 
-#ifndef CLASSES_H
-#define CLASSES_H
-
+#pragma once
 
 //////////////////////////////////////////////////
 // CViewClasses manages a tree view control.
@@ -28,5 +26,3 @@ private:
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-
-#endif  //CLASSES_H

@@ -2,15 +2,13 @@
 // Client.h
 //
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 
 // User defined message
 #define USER_ACCEPT     WM_APP+1
 #define USER_CONNECT    WM_APP+2
 #define USER_DISCONNECT WM_APP+3
 #define USER_RECEIVE    WM_APP+4
-
 
 ///////////////////////////////////////////////////
 // CClientSocket manages the network socket used by
@@ -31,5 +29,3 @@ private:
     CClientSocket& operator=(const CClientSocket&) = delete;
 };
 
-
-#endif // CLIENT_H

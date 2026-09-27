@@ -2,11 +2,9 @@
 // DialogApp.h
 //
 
-#ifndef DIALOGAPP_H
-#define DIALOGAPP_H
+#pragma once
 
 #include "ClientDialog.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CDialogApp manages the application. It initializes the Win32++
@@ -33,5 +31,3 @@ private:
 // returns a pointer to the CDialogApp object
 inline CDialogApp* GetDlgApp() { return static_cast<CDialogApp*>(GetApp()); }
 
-
-#endif // define DIALOGAPP_H

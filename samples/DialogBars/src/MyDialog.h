@@ -2,11 +2,9 @@
 // MyDialog.h
 //
 
-#ifndef MYDIALOG_H
-#define MYDIALOG_H
+#pragma once
 
 #include "Scrollbar.h"
-
 
 ///////////////////////////////////////////////////
 // CMyDialog manages the application's main dialog.
@@ -40,4 +38,3 @@ private:
     CProgressBar m_progressBar;
 };
 
-#endif //MYDIALOG_H

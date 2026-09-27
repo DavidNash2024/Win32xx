@@ -2,9 +2,7 @@
 // TaskDialogApp.h
 //
 
-#ifndef TASKDIALOGAPP_H
-#define TASKDIALOGAPP_H
-
+#pragma once
 
 ////////////////////////////////////////////////////////////////
 // CFrameApp manages the application. It initializes the Win32++
@@ -23,7 +21,4 @@ private:
     CTaskDialogApp(const CTaskDialogApp&) = delete;
     CTaskDialogApp& operator=(const CTaskDialogApp&) = delete;
 };
-
-
-#endif // define TASKDIALOGAPP_H
 

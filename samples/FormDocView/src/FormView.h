@@ -1,8 +1,7 @@
 ///////////////////////////////////////
 // FormView.h
 
-#ifndef SDI_VIEW_H
-#define SDI_VIEW_H
+#pragma once
 
 #include "FormDoc.h"
 #include "StaticImage.h"
@@ -59,4 +58,3 @@ private:
     CResizer m_resizer;
 };
 
-#endif //SDI_VIEW_H

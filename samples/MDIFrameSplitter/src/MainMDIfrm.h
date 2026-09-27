@@ -2,8 +2,7 @@
 // MainMDIfrm.h
 //
 
-#ifndef MAINMDIFRM_H
-#define MAINMDIFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 
@@ -47,6 +46,4 @@ private:
 
     CAboutDialog m_aboutDialog;
 };
-
-#endif  //MAINMDIFRM_H
 

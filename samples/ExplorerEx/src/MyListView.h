@@ -2,8 +2,7 @@
 // MyListView.h
 //
 
-#ifndef MYLISTVIEW_H
-#define MYLISTVIEW_H
+#pragma once
 
 #include "ShellWrapper.h"
 
@@ -102,4 +101,3 @@ private:
     std::vector <ListItemDataPtr> m_pItems; // vector of smart pointers.
 };
 
-#endif  // MYLISTVIEW_H

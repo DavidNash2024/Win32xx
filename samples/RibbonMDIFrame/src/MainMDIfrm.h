@@ -2,12 +2,10 @@
 // MainMDIfrm.h
 //
 
-#ifndef MAINMDIFRM_H
-#define MAINMDIFRM_H
+#pragma once
 
 #include "AboutDialog.h"
 #include "Doc.h"
-
 
 ///////////////////////////////////////////////////////////
 // CMainMDIFrame manages the application's main window.
@@ -55,7 +53,4 @@ private:
     CString m_pathName;
     IUIRibbon* m_pIUIRibbon;
 };
-
-
-#endif //MAINMDIFRM_H
 

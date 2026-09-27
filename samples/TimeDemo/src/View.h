@@ -3,8 +3,7 @@
 // Authors: Robert Tausworthe, David Nash
 //
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "Doc.h"
 
@@ -57,4 +56,3 @@ private:
     COLORREF    m_textColor;    // Text foreground color.
 };
 
-#endif  // VIEW_H

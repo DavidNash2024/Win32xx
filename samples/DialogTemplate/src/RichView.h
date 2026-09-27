@@ -2,9 +2,7 @@
 // RichView.h
 //
 
-#ifndef VIEW_H
-#define VIEW_H
-
+#pragma once
 
 ///////////////////////////////////////////////////////
 // CRichview manages CMainFrame's Richedit view window.
@@ -38,5 +36,3 @@ private:
     std::vector<int> m_pageBreaks;
 };
 
-
-#endif // VIEW_H

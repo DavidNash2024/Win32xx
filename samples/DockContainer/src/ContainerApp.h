@@ -2,11 +2,9 @@
 // ContainerApp.h
 //
 
-#ifndef CONTAINERAPP_H
-#define CONTAINERAPP_H
+#pragma once
 
 #include "Mainfrm.h"
-
 
 /////////////////////////////////////////////////////////////////
 // CDockContainerApp manages the application. It initializes the
@@ -28,5 +26,3 @@ private:
     CMainFrame m_frame;
 };
 
-
-#endif // CONTAINERAPP_H

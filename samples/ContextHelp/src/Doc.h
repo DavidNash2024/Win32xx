@@ -2,9 +2,7 @@
 // Doc.h
 //
 
-#ifndef SDI_DOC_H
-#define SDI_DOC_H
-
+#pragma once
 
 /////////////////////////////////////////////////////////////////
 // CDoc holds the application's data. It stores the application's
@@ -36,4 +34,3 @@ private:
     DWORD  m_radio;
 };
 
-#endif //SDI_DOC_H

@@ -2,13 +2,11 @@
 // MakeDLL.h
 //
 
-#ifndef MAKEDLL_H
-#define MAKEDLL_H
+#pragma once
 
 #include "MyDialog.h"
 
 BOOL WINAPI DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved );
-
 
 extern "C"  // Required by MinGW compiler to avoid name mangling
 {
@@ -16,5 +14,3 @@ extern "C"  // Required by MinGW compiler to avoid name mangling
     __declspec(dllexport) void ShowDialog();
 }
 
-
-#endif // MAKEDLL_H

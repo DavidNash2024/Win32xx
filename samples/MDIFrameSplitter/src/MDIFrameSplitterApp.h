@@ -2,11 +2,9 @@
 // MDIFrameSplitterApp.h
 //
 
-#ifndef MDIFRAMESPLITTERAPP_H
-#define MDIFRAMESPLITTERAPP_H
+#pragma once
 
 #include "MainMDIfrm.h"
-
 
 ////////////////////////////////////////////////
 // Declaration of the CMDIFrameSplitterApp class
@@ -27,5 +25,3 @@ private:
     CMainMDIFrame m_mainMDIFrame;
 };
 
-
-#endif // MDIFRAMESPLITTERAPP_H
