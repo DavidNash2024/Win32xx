@@ -1,5 +1,5 @@
-// Win32++   Version 10.3.0
-// Release Date: 4th September 2026
+// Win32++   Version 10.4.0
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -4047,27 +4047,22 @@ namespace Win32xx
     {
         assert(m_pData->dc != nullptr);
 
-        CString system;
-        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
-        system.ReleaseBuffer();
+        // Runtime dynamic linking for GradientFill to avoids the need to link Msimg32.lib.
+        // The msimg32 dll is loaded and freed by CWinApp.
+        BOOL result = FALSE;
+        HMODULE msimg32 = IsAppRunning() ? GetApp()->m_msimg32 : nullptr;
 
-        // Use runtime dynamic linking. Avoids the need to explicitly link Msimg32.lib.
-        HMODULE msimg32 = ::LoadLibrary(system + _T("\\msimg32.dll"));
-        if (msimg32)
+        if (msimg32 != nullptr)
         {
-            using PGRADIENTFILL = BOOL(WINAPI*)(HDC, PTRIVERTEX, ULONG, PVOID,
-                ULONG, ULONG);
-
+            using PGRADIENTFILL = BOOL(WINAPI*)(HDC, PTRIVERTEX, ULONG, PVOID, ULONG, ULONG);
             PGRADIENTFILL pGradientFill = reinterpret_cast<PGRADIENTFILL>(
                 reinterpret_cast<void*>(::GetProcAddress(msimg32, "GradientFill")));
 
-            if (pGradientFill)
-                return pGradientFill(m_pData->dc, pVertex, vertex, pMesh, mesh, mode);
-
-            ::FreeLibrary(msimg32);
+            if (pGradientFill != nullptr)
+                result = pGradientFill(m_pData->dc, pVertex, vertex, pMesh, mesh, mode);
         }
 
-        return FALSE;
+        return result;
     }
 
     // Draws an icon or cursor.

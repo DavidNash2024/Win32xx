@@ -1,5 +1,5 @@
-// Win32++   Version 10.3.0
-// Release Date: 4th September 2026
+// Win32++   Version 10.4.0
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -262,6 +262,7 @@ namespace Win32xx
         WNDPROC m_callback;           // callback address of CWnd::StaticWindowProc
         CHGlobal m_devMode;           // Used by CPrintDialog and CPageSetupDialog
         CHGlobal m_devNames;          // Used by CPrintDialog and CPageSetupDialog
+        HMODULE m_msimg32;            // Used for runtime dynamic linking of GradientFill
 
         inline static CWinApp* m_pCWinApp = nullptr;
 

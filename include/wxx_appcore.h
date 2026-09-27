@@ -1,5 +1,5 @@
-// Win32++   Version 10.3.0
-// Release Date: 4th September 2026
+// Win32++   Version 10.4.0
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -255,7 +255,7 @@ namespace Win32xx
     //
 
     // Constructor.
-    inline CWinApp::CWinApp() : m_callback(nullptr)
+    inline CWinApp::CWinApp() : m_callback(nullptr), m_msimg32(nullptr)
     {
         CThreadLock appLock(m_appLock);
         m_tlsData = ::TlsAlloc();
@@ -263,6 +263,14 @@ namespace Win32xx
         // Set the instance handle.
         m_instance = reinterpret_cast<HINSTANCE>(&__ImageBase);
         m_resource = m_instance;
+
+        // Retrieve the system directory string.
+        CString system;
+        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
+        system.ReleaseBuffer();
+
+        // Load the library just once for this app.
+        m_msimg32 = ::LoadLibrary(system + _T("\\msimg32.dll"));
 
         if (m_pCWinApp == nullptr)
         {
@@ -319,6 +327,8 @@ namespace Win32xx
             ::FreeLibrary(m_resource);
 
         OleUninitialize();
+
+        FreeLibrary(m_msimg32);
 
         // Clear the stored CWinApp pointer before the CWinApp object is
         // destroyed.

@@ -1,5 +1,5 @@
-// Win32++   Version 10.3.0
-// Release Date: 4th September 2026
+// Win32++   Version 10.4.0
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -455,9 +455,14 @@ namespace Win32xx
         assert(m_key);
         assert(keyName);
 
+        // Retrieve the system directory string.
+        CString system;
+        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
+        system.ReleaseBuffer();
+
         typedef LONG(WINAPI* PFN_SHDeleteKey)(HKEY, LPCTSTR);
         LONG result = ERROR_PROC_NOT_FOUND;
-        HMODULE hShlwapi = ::LoadLibrary(_T("shlwapi.dll"));
+        HMODULE hShlwapi = ::LoadLibrary(system + _T("\\shlwapi.dll"));
         if (hShlwapi != nullptr)
         {
 
