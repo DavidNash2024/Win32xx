@@ -233,14 +233,8 @@ namespace Win32xx
     {
         tm* ptm = &atm;
 
-#if (defined(__BORLANDC__) && !defined(__MINGW64__))
-        // For older Embarcadero compilers.
-        if (::gmtime_s(&t, &atm) == 0)
-            ptm = nullptr;
-#else
         if (::gmtime_s(&atm, &t) != 0)
             ptm = nullptr;
-#endif
 
         if (ptm == nullptr)
             throw CNotSupportedException(GetApp()->MsgTimeValid());
@@ -256,14 +250,8 @@ namespace Win32xx
     {
         tm* ptm = &atm;
 
-#if (defined(__BORLANDC__) && !defined(__MINGW64__))
-        // For older Embarcadero compilers.
-        if (::localtime_s(&t, &atm) == 0)
-            ptm = nullptr;
-#else
         if (::localtime_s(&atm, &t) != 0)
             ptm = nullptr;
-#endif
 
         if (ptm == nullptr)
             throw CNotSupportedException(GetApp()->MsgTimeValid());

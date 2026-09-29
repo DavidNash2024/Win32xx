@@ -31,13 +31,6 @@ using std::max;
 #pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
-// For C++Builder
-#if defined (__BORLANDC__) && !(_WIN64)
-#pragma comment(lib, "shell32.lib")
-#endif
-
-#include <shlwapi.h>
-
 using namespace MediaInfoDLL;
 using namespace Gdiplus;
 

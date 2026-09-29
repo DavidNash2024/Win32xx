@@ -1,3 +1,12 @@
+Version 10.4
+============
+
+New Features and Enhancements
+-----------------------------
+* Updated for C++ Builder 13 CE. 
+* Updated CPoint, CRect and CSize.
+
+
 Version 10.3
 ============
 This version focuses on modernising the Win32++ framework. It uses features

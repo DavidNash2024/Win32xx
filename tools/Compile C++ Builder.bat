@@ -3,7 +3,7 @@ REM: A batch program to rebuild the Win32++ samples using C++ Builder 11 CE.
 REM: The contents of the log file is erased 
 
 REM: Set the paths and environment variables
-call "C:\Program Files (x86)\Embarcadero\Studio\23.0\bin\rsvars.bat"
+call "C:\Program Files (x86)\Embarcadero\Studio\37.0\bin\rsvars.bat"
 
 REM: Change the directory to the Samples parent
 pushd ..\Samples
