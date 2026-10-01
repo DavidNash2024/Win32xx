@@ -7,13 +7,13 @@
 bool CSizeConstruct()
 {
     bool pass = true;
-    CSize size1;
-    CSize size2(20, 30);
-    CSize size3(size2);
-    CPoint pt(40, 50);
-    CSize size4(pt);
-    DWORD dw = MAKEWPARAM(50, 60);
-    CSize size5(dw);
+    constexpr CSize size1;
+    constexpr CSize size2(20, 30);
+    constexpr CSize size3(size2);
+    constexpr CPoint pt(40, 50);
+    constexpr CSize size4(pt);
+    constexpr DWORD dw = MAKEWPARAM(50, 60);
+    constexpr CSize size5(dw);
 
     pass = pass && ((size1.cx == 0) && (size1.cy == 0));
     pass = pass && ((size2.cx == 20) && (size2.cy == 30));
@@ -62,16 +62,16 @@ bool CPointConstruct()
 {
     bool pass = true;
 
-    CPoint point1;
-    CPoint point2(30, 30);
-    POINT point = {40, 50};
-    CPoint point3(point);
-    POINTS points = {50, 60};
-    CPoint point4(points);
-    CSize size(70, 80);
-    CPoint point5(size);
-    LPARAM lparam = MAKELPARAM(90, 95);
-    CPoint point6(lparam);
+    constexpr CPoint point1;
+    constexpr CPoint point2(30, 30);
+    constexpr POINT point = {40, 50};
+    constexpr CPoint point3(point);
+    constexpr POINTS points = {50, 60};
+    constexpr CPoint point4(points);
+    constexpr CSize size(70, 80);
+    constexpr CPoint point5(size);
+    constexpr LPARAM lparam = MAKELPARAM(90, 95);
+    constexpr CPoint point6(lparam);
 
     pass = pass && ((point1.x == 0) && (point1.y == 0));
     pass = pass && ((point2.x == 30) && (point2.y == 30));
@@ -88,7 +88,7 @@ bool CPointOperations()
     bool pass = true;
 
     CPoint point1(20, 30);
-    CPoint point2(30, 40);
+    constexpr CPoint point2(30, 40);
 
     pass = pass && (point1 == point1);
     pass = pass && (point1 != point2);
@@ -96,7 +96,7 @@ bool CPointOperations()
     pass = pass && (point1 == CPoint(50, 70));
     point1 -= point2;
     pass = pass && (point1 == CPoint(20, 30));
-    CSize size(10, 15);
+    constexpr CSize size(10, 15);
     point1 += size;
     pass = pass && (point1 == CPoint(30, 45));
     point1 -= size;
@@ -117,20 +117,20 @@ bool CPointOperations()
 bool CRectConstruct()
 {
     CRect rect1;
-    CRect rect2(10, 20, 30, 40);
+    constexpr CRect rect2(10, 20, 30, 40);
 
     bool pass = true;
     pass = pass && ((rect1.left == 0) && (rect1.top == 0) && (rect1.right == 0) && (rect1.bottom == 0));
     pass = pass && ((rect2.left == 10) && (rect2.top == 20) && (rect2.right == 30) && (rect2.bottom == 40));
     pass = pass && (rect1 == CRect(0, 0, 0, 0));
     pass = pass && (rect2 == CRect(10, 20, 30, 40));
-    CRect rect3(rect2);
+    constexpr CRect rect3(rect2);
     pass = pass && (rect3 == rect2);
-    CSize size(50, 60);
-    CPoint point(70, 80);
-    CRect rect4(point, size);
+    constexpr CSize size(50, 60);
+    constexpr CPoint point(70, 80);
+    constexpr CRect rect4(point, size);
     pass = pass && (rect4 == CRect(70, 80, 120, 140));
-    CRect rect5(point, point);
+    constexpr CRect rect5(point, point);
     pass = pass && (rect5 == CRect(70, 80, 70, 80));
 
     return pass;
@@ -140,7 +140,7 @@ bool CRectInflate()
 {
     bool pass = true;
 
-    CRect rect1(2, 4, 6, 8);
+    constexpr CRect rect1(2, 4, 6, 8);
     CRect rect2;
     CopyRect(rect2, &rect1);
     pass = pass && ((rect1 == rect2) && (rect2 == CRect(2, 4, 6, 8)));
@@ -148,7 +148,7 @@ bool CRectInflate()
     pass = pass && (rect2 == CRect(0, 2, 8, 10));
     rect2.DeflateRect(2, 2);
     pass = pass && (rect2 == CRect(2, 4, 6, 8));
-    CSize size(2, 2);
+    constexpr CSize size(2, 2);
     rect2.InflateRect(size);
     pass = pass && (rect2 == CRect(0, 2, 8, 10));
     rect2.DeflateRect(size);
@@ -168,7 +168,7 @@ bool CRectInflate()
 bool CRectOperations()
 {
     bool pass = true;
-    CRect rect1(10, 20, 10, 20);
+    constexpr CRect rect1(10, 20, 10, 20);
     pass = pass && !!rect1.IsRectEmpty();
     pass = pass && !rect1.IsRectNull();
     CRect rect2;
@@ -223,7 +223,7 @@ bool CRectAttributes()
 {
     bool pass = true;
 
-    CRect rect1(10, 30, 90, 100);
+    constexpr CRect rect1(10, 30, 90, 100);
     pass = pass && (rect1.Width() == 80);
     pass = pass && (rect1.Height() == 70);
     pass = pass && (rect1.Size() == CSize(80, 70));
@@ -256,5 +256,4 @@ void RunTests()
     cout << ("CSize operations test       "); CSizeOperations() ?  cout << ("Passed\n") : cout << ("Failed\n");
     cout << ("*** CSize tests end ***\n\n ");
 }
-
 

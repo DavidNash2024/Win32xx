@@ -3316,7 +3316,6 @@ namespace Win32xx
     /////////////////////////////////
     // Wrappers for WinAPI functions.
 
-
     // Retrieves device-specific information for the specified device.
     // Refer to GetDeviceCaps in the Windows API documentation for more information.
     inline int CDC::GetDeviceCaps (int index) const
@@ -3347,7 +3346,6 @@ namespace Win32xx
 
     //////////////////
     // Font Functions.
-
 
     // Retrieves font metric data for a TrueType font.
     // Refer to GetFontData in the Windows API documentation for more information.
@@ -3414,7 +3412,6 @@ namespace Win32xx
 
     //////////////////////
     // Clipping functions.
-
 
     // Creates a new clipping region that consists of the existing clipping
     // region minus the specified rectangle.
@@ -3610,7 +3607,6 @@ namespace Win32xx
 
     ////////////////////////////////////
     // Point and Line Drawing Functions.
-
 
     // Returns the current position in logical coordinates.
     // Refer to GetCurrentPositionEx in the Windows API documentation for more information.
@@ -3858,7 +3854,6 @@ namespace Win32xx
     ///////////////////////////
     // Shape Drawing Functions.
 
-
     // Draws a rectangle in the style used to indicate that the rectangle has
     // the focus.
     // Refer to DrawFocusRect in the Windows API documentation for more information.
@@ -3983,7 +3978,6 @@ namespace Win32xx
 
     /////////////////////////////////
     // Fill and 3D Drawing functions.
-
 
     // Fills a rectangle by using the specified brush.
     // Refer to FillRect in the Windows API documentation for more information.
@@ -4345,9 +4339,9 @@ namespace Win32xx
         return ::SetLayout(m_pData->dc, layout);
     }
 
+
     /////////////////////
     // Mapping Functions.
-
 
     // Retrieves the current mapping mode.
     // Possible modes: MM_ANISOTROPIC, MM_HIENGLISH, MM_HIMETRIC, MM_ISOTROPIC,
@@ -4512,7 +4506,6 @@ namespace Win32xx
     /////////////////////
     // MetaFile Functions
 
-
     // Displays the picture stored in the specified metafile.
     // Refer to PlayMetaFile in the Windows API documentation for more information.
     inline BOOL CDC::PlayMetaFile(HMETAFILE metaFile) const
@@ -4532,7 +4525,6 @@ namespace Win32xx
 
     /////////////////////
     // Printer Functions.
-
 
     // Starts a print job.
     // Refer to StartDoc in the Windows API documentation for more information.

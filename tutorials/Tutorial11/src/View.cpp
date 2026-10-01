@@ -44,10 +44,9 @@ int CView::OnCreate(CREATESTRUCT&)
 
 // Draws the points to a memory DC. A memory DC provides double buffering
 // for smoother rendering.
-CMemDC CView::Draw()
+CMemDC CView::Draw(CDC& dc)
 {
     // Set up our Memory DC and bitmap.
-    CClientDC dc(*this);
     CMemDC memDC(dc);
     int width = GetClientRect().Width();
     int height = GetClientRect().Height();
@@ -79,7 +78,7 @@ void CView::OnDraw(CDC& dc)
     int height = GetClientRect().Height();
 
     // Copy from the memory DC to our painting dc.
-    CMemDC memDC = Draw();
+    CMemDC memDC = Draw(dc);
     dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
 }
 
@@ -180,7 +179,7 @@ void CView::PrintPage(CDC& dc, int)
         int height = viewRect.Height();
 
         // Acquire the view's bitmap.
-        CMemDC memDC = Draw();
+        CMemDC memDC = Draw(dc);
         CBitmap bmView = memDC.DetachBitmap();
 
         // Now we convert the Device Dependent Bitmap(DDB) to a

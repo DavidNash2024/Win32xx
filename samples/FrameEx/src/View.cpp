@@ -9,6 +9,32 @@
 // CView function definitions
 //
 
+// Draws the points to a memory DC. A memory DC provides double buffering
+// for smoother rendering, and better print and print preview support.
+CMemDC CView::Draw(CDC& dc)
+{
+    // Set up our Memory DC and bitmap.
+    CMemDC memDC(dc);
+    CRect clientRect = GetClientRect();
+    int width = clientRect.Width();
+    int height = clientRect.Height();
+    memDC.CreateCompatibleBitmap(dc, width, height);
+    memDC.FillRect(clientRect, CBrush(RGB(255, 255, 255)));
+
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = DpiScaleLogfont(info.lfMessageFont, 10);
+        memDC.CreateFontIndirect(lf);
+    }
+
+    // Centre some text in our view window.
+    memDC.DrawText(L"View Window", -1, clientRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+    return memDC;
+}
+
 // Returns a reference to CDoc.
 CDoc& CView::GetDoc()
 {
@@ -18,17 +44,12 @@ CDoc& CView::GetDoc()
 // OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
-    // Use the message font for Windows 7 and higher.
-    if (GetWinVersion() >= 2601)
-    {
-        NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = DpiScaleLogfont(info.lfMessageFont, 10);
-        dc.CreateFontIndirect(lf);
-    }
+    int width = GetClientRect().Width();
+    int height = GetClientRect().Height();
 
-    // Centre some text in our view window.
-    CRect rc = GetClientRect();
-    dc.DrawText(L"View Window", -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    // Copy from the memory DC to our painting dc.
+    CMemDC memDC = Draw(dc);
+    dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
 }
 
 // OnInitialUpdate is called immediately after the window is created.
@@ -45,7 +66,6 @@ void CView::PreCreate(CREATESTRUCT& cs)
     // Set the extended style
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
-
 
 // Sets the WNDCLASS parameters before the window is created.
 // This is where we set the Window class parameters.
@@ -66,7 +86,6 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
-
 // Prints the specified page to the specified device context.
 // Here we copy (stretch) a bitmap image of the view window
 // to the printed page.
@@ -85,10 +104,7 @@ void CView::PrintPage(CDC& dc, int)
         int cyView = GetClientRect().Height();
 
         // Draw the view image to a memory DC.
-        CClientDC viewDC(*this);
-        CMemDC memDC(viewDC);
-        memDC.CreateCompatibleBitmap(viewDC, cxView, cyView);
-        OnDraw(memDC);
+        CMemDC memDC = Draw(dc);
 
         // Now we convert the bitmap from DDB to DIB
         CBitmap bmView = memDC.DetachBitmap();
@@ -150,7 +166,6 @@ void CView::QuickPrint(LPCWSTR docName)
         MessageBox(e.GetText(), L"Print Failed", MB_ICONWARNING);
     }
 }
-
 
 // All window messages for this window pass through WndProc.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

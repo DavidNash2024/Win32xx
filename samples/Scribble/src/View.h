@@ -27,7 +27,7 @@ public:
     COLORREF GetPenColor() { return m_penColor; }
     void SetPenColor(COLORREF color) { m_penColor = color; }
 
-    CMemDC Draw();
+    CMemDC Draw(CDC& dc);
     void DrawLine(int x, int y);
     void Print(LPCWSTR docName);
     void PrintPage(CDC& dc, int page = 1);

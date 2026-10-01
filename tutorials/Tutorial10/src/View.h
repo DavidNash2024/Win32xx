@@ -21,7 +21,7 @@ public:
     CView();
     virtual ~CView() override = default;
 
-    CMemDC Draw();
+    CMemDC Draw(CDC& dc);
     void DrawLine(int x, int y);
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();

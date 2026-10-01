@@ -13,6 +13,7 @@ class CView : public CWnd
 public:
     CView() = default;
     virtual ~CView() override = default;
+    CMemDC Draw(CDC& dc);
     CDoc& GetDoc();
     void PrintPage(CDC& dc, int page = 1);
     void QuickPrint(LPCWSTR docName);
