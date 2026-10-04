@@ -449,8 +449,11 @@ namespace Win32xx
     {
         HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON,
                      0, 0, LR_SHARED));
-        HICON disabledIcon = static_cast<HICON>(GetApp()->LoadImage(
-                             disabledIconID, IMAGE_ICON, 0, 0, LR_SHARED));
+
+        HICON disabledIcon = nullptr;
+        if (disabledIconID != 0)
+            disabledIcon = static_cast<HICON>(GetApp()->LoadImage(
+                disabledIconID, IMAGE_ICON, 0, 0, LR_SHARED));
 
         if (icon == nullptr)
             return FALSE;

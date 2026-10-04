@@ -685,12 +685,6 @@ namespace Win32xx
     inline LRESULT CMDIFrameT<T>::OnWindowPosChanged(UINT msg, WPARAM wparam,
         LPARAM lparam)
     {
-        if (T::GetMenuBar().IsWindow())
-        {
-            // Refresh MenuBar Window
-            T::GetMenuBar().SetupMenuBar(T::GetMenuBar().GetBarMenu());
-        }
-
         return FinalWindowProc(msg, wparam, lparam);
     }
 

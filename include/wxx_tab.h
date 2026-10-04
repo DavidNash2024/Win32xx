@@ -452,7 +452,10 @@ namespace Win32xx
     // Use RemoveTabPage to remove the tab and page added in this manner.
     inline CWnd* CTab::AddTabPage(WndPtr view, LPCTSTR tabText, UINT iconID, int tabID /* = 0 */)
     {
-        HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
+        HICON icon= nullptr;
+        if (iconID != 0)
+            icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
+
         return AddTabPage(std::move(view), tabText, icon, tabID);
     }
 

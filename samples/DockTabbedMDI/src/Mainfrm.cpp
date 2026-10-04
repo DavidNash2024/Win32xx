@@ -372,6 +372,8 @@ void CMainFrame::OnInitialUpdate()
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);
     RedrawWindow();
+
+    TRACE("Main frame window created\n");
 }
 
 // Updates menu items before they are displayed.

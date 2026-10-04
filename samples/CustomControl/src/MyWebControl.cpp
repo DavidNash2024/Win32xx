@@ -76,7 +76,7 @@ void CWebControl::StartBrowser()
                             m_controller->put_Bounds(bounds);
 
                             // Navigate to a web site.
-                            m_webView->Navigate(L"https://www.google.com.au");
+                            m_webView->Navigate(L"https://www.google.com");
                         }
                         return S_OK;
                     }).Get());

@@ -229,8 +229,8 @@ BOOL CFormView::OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked)
     GetDoc().SetRadio(idClicked);
 
     CString str;
-    int button = idClicked - idFirst + 1;
-    str.Format(L"Radio%d", button);
+    char button = char(idClicked - idFirst) + 'A';
+    str.Format(L"Radio %c", button);
     TRACE(str); TRACE("\n");
     SetDlgItemText(IDC_STATUS, str);
 

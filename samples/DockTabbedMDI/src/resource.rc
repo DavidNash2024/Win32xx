@@ -80,7 +80,6 @@ IDM_NEWMENU MENU
 BEGIN
     POPUP "New"
     BEGIN
-        MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New Classes",                 IDM_FILE_NEWTREE

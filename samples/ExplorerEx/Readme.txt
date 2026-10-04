@@ -1,5 +1,5 @@
-Explorer Example
-================
+ExplorerEx Example
+==================
 This example demonstrates how to work directly with the Shell namespace to
 produce an explorer-like utility. The Shell namespace organizes the file system
 and other objects managed by the Shell into a single tree-structured hierarchy.
