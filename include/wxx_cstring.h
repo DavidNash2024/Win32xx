@@ -537,7 +537,7 @@ namespace Win32xx
             const wchar_t* pWide = wideStr.c_str();
 
             // Allocate BSTR using the calculated length from m_str
-            bstr = ::SysAllocStringLen(pWide, static_cast<UINT>(m_str.size()));
+            bstr = ::SysAllocStringLen(pWide, static_cast<UINT>(wideStr.GetLength()));
         }
         else // T is wchar_t (WCHAR).
         {

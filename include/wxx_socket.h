@@ -440,8 +440,15 @@ namespace Win32xx
         }
 
         // Clean up Winsock events and detach from the socket
-        ::WSAEventSelect(localSocket, nullptr, 0);
-        ::WSACloseEvent(allEvents[0]);
+        if (localSocket != INVALID_SOCKET)
+            ::WSAEventSelect(localSocket, nullptr, 0);
+
+        if (allEvents[0] != WSA_INVALID_EVENT)
+            ::WSACloseEvent(allEvents[0]);
+
+        if (allEvents[1] != WSA_INVALID_EVENT)
+            ::WSACloseEvent(allEvents[1]);
+
         return 0;
     }
 

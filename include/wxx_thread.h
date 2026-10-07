@@ -152,11 +152,11 @@ namespace Win32xx
     {
         if (m_thread)
         {
-            // A thread's state is set to signalled when the thread terminates.
             // If your thread is still running at this point, you have a bug.
             if (IsRunning())
             {
                 TRACE("*** Warning *** Ending CWinThread before ending its thread\n");
+                assert(true);
             }
 
             // Close the thread's handle.

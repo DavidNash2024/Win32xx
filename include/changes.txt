@@ -5,7 +5,7 @@ New Features and Enhancements
 -----------------------------
 * Updated for C++ Builder 13 CE.
 * Updated CPoint, CRect and CSize.
-
+* Updated CCriticialSection and CThreadLock
 * Removed the CWebBrowser class.
 
 

@@ -37,90 +37,35 @@
 
 #pragma once
 
-namespace Win32xx
-{
-
-    /////////////////////////////////////////
-    // This class is used for thread synchronisation. A critical section object
-    // provides synchronization similar to that provided by a mutex object,
-    // except that a critical section can be used only by the threads of a
-    // single process. Critical sections are faster and more efficient than
-    // mutexes. The CCriticalSection object should be created in the primary
-    // thread. Create them as member variables in your CWinApp derived class.
-    class CCriticalSection
-    {
-    public:
-        CCriticalSection();
-        ~CCriticalSection();
-
-        void Lock();
-        void Release();
-
-    private:
-        CCriticalSection (const CCriticalSection&) = delete;
-        CCriticalSection& operator=(const CCriticalSection&) = delete;
-
-        CRITICAL_SECTION m_cs;
-        LONG m_count;
-    };
-
-
-    /////////////////////////////////////////////////////////////////
-    // CThreadLock provides a convenient RAII-style mechanism for
-    // owning a CCriticalSection for the duration of a scoped block.
-    // Automatically locks the specified CCriticalSection when
-    // constructed, and releases the critical section when destroyed.
-    class CThreadLock
-    {
-    public:
-        explicit CThreadLock(CCriticalSection& cs) : m_cs(cs) { m_cs.Lock(); }
-        ~CThreadLock() { m_cs.Release(); }
-
-    private:
-        CThreadLock(const CThreadLock&) = delete;
-        CThreadLock& operator= (const CThreadLock&) = delete;
-        CCriticalSection& m_cs;
-    };
-
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#include <mutex>
 
 namespace Win32xx
 {
+    // CCriticalSection emulates a Windows Critical Section. A recursive_mutex
+    // allows the same thread to be locked multiple times.
+    using CCriticalSection = std::recursive_mutex;
 
-    //////////////////////////////////////////////
-    // Definitions for the CCriticalSection class.
-    //
-    inline CCriticalSection::CCriticalSection() : m_count(0)
-    {
-        ::InitializeCriticalSection(&m_cs);
-    }
-
-    inline CCriticalSection::~CCriticalSection()
-    {
-        while (::InterlockedCompareExchange(&m_count, 0, 0) > 0)
-        {
-            Release();
-        }
-
-        ::DeleteCriticalSection(&m_cs);
-    }
-
-    // Enter the critical section and increment the lock count.
-    inline void CCriticalSection::Lock()
-    {
-        ::EnterCriticalSection(&m_cs);
-        ::InterlockedIncrement(&m_count);
-    }
-
-    // Leave the critical section and decrement the lock count.
-    inline void CCriticalSection::Release()
-    {
-        [[maybe_unused]] LONG newCount = ::InterlockedDecrement(&m_count);
-        assert(newCount >= 0);
-        ::LeaveCriticalSection(&m_cs);
-    }
-
+    // CThreadLock is a RAII wrapper that provides automatic, scope-based locking
+    // and unlocking.
+    using CThreadLock = std::lock_guard<std::recursive_mutex>;
 }
 
+// This code demonstrates how to use CCriticalSection and CThreadLock.
+//  
+// class MyClass
+// {
+// public:
+//     MyClass() = default;
+//     ~MyClass() = default;
+//     void SomeFunction()
+//     {
+//        // Lock this code, preventing other threads from running it until the lock
+//        // is released. The lock is automatically released when Lock goes out of scope.  
+//        CThreadLock Lock(m_cs);  // m_cs is a CCriticalSection member variable.
+//
+//        // Do something that requires thread safety.
+//        DoSomething(); 
+//     }
+// private:
+//     CCriticalSection m_cs;
+// };

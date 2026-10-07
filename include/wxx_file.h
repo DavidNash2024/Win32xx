@@ -78,8 +78,8 @@ namespace Win32xx
         void Open(LPCTSTR fileName, UINT openFlags, DWORD attributes = FILE_ATTRIBUTE_NORMAL);
         void Close();
         void Flush() const;
-        UINT Read(void* buffer, UINT count) const;
-        void Write(const void* buffer, UINT count) const;
+        DWORD Read(void* buffer, DWORD count) const;
+        void Write(const void* buffer, DWORD count) const;
 
         // File Position & Size Mechanics
         ULONGLONG Seek(LONGLONG seekTo, UINT method) const;
@@ -402,7 +402,7 @@ namespace Win32xx
 
     // Reads from the file, storing the contents in the specified buffer.
     // Refer to ReadFile in the Windows API documentation for more information.
-    inline UINT CFile::Read(void* buffer, UINT count) const
+    inline DWORD CFile::Read(void* buffer, DWORD count) const
     {
         assert(m_file != INVALID_HANDLE_VALUE);
 
@@ -532,7 +532,7 @@ namespace Win32xx
 
     // Writes the specified buffer to the file.
     // Refer to WriteFile in the Windows API documentation for more information.
-    inline void CFile::Write(const void* buffer, UINT count) const
+    inline void CFile::Write(const void* buffer, DWORD count) const
     {
         assert(m_file != INVALID_HANDLE_VALUE);
 
