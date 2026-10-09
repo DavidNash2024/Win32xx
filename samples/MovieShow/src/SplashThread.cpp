@@ -13,8 +13,9 @@
 // Destructor.
 CSplashThread::~CSplashThread()
 {
-    // Destroy the thread's window.
-    m_splash.Destroy();
+    // Issue a close request to the splash window.
+    if (m_splash.IsWindow())
+        m_splash.Close();
 
     // End the thread.
     PostThreadMessage(WM_QUIT, 0, 0);

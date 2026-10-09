@@ -44,8 +44,7 @@ int WINAPI wWinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int)
         {
             CString msg;
             CString what(e.what());
-            msg.Format(L"%s\n%s\n%s", e.GetText(), e.GetText(),
-                e.GetErrorString(), L"\nWinMain Goodbye...");
+            msg << e.GetText() << e.GetText() << e.GetErrorString() << L"\nWinMain Goodbye...";
             ::MessageBox(nullptr, msg.c_str(), what.c_str(),
                 MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         }

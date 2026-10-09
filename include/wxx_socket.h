@@ -242,7 +242,7 @@ namespace Win32xx
     {
         ADDRINFOT hints = {};
         hints.ai_family = AF_UNSPEC;
-        hints.ai_socktype = SOCK_STREAM; // Note: Lock to STREAM means this function won't work for UDP
+        hints.ai_socktype = 0;
         hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 
         CString portName;
@@ -348,6 +348,7 @@ namespace Win32xx
     {
         StopEvents(); // Halt the network thread.
 
+        CThreadLock lock(m_cs);
         if (m_socket != INVALID_SOCKET)
         {
             ::shutdown(m_socket, SD_BOTH);
@@ -445,9 +446,6 @@ namespace Win32xx
 
         if (allEvents[0] != WSA_INVALID_EVENT)
             ::WSACloseEvent(allEvents[0]);
-
-        if (allEvents[1] != WSA_INVALID_EVENT)
-            ::WSACloseEvent(allEvents[1]);
 
         return 0;
     }
@@ -637,6 +635,12 @@ namespace Win32xx
     inline void CSocket::StartEvents()
     {
         StopEvents();   // Ensure the thread isn't already running.
+
+        if (m_socket == INVALID_SOCKET)
+        {
+            TRACE("StartEvents: socket invalid; not starting event thread\n");
+            return;
+        }
 
         m_threadPtr = std::make_unique<CWorkThread>(EventThread, this);
         m_threadPtr->CreateThread();

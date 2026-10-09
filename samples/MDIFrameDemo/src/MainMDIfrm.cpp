@@ -133,7 +133,9 @@ BOOL CMainMDIFrame::OnFileNew()
 // Ask the active MDI window to close.
 BOOL CMainMDIFrame::OnFileClose()
 {
-    GetActiveMDIChild()->Close();
+    auto pChild = GetActiveMDIChild();
+    if (pChild != nullptr)
+        pChild->Close();
 
     return TRUE;
 }

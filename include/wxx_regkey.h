@@ -559,8 +559,11 @@ namespace Win32xx
         // Insert the final, second terminating null character
         buffer.push_back(_T('\0'));
 
-        // buffer.size() tracks every single character accurately, including embedded nulls
-        ULONG bytes = static_cast<ULONG>(buffer.size() * sizeof(TCHAR));
+        size_t charCount = buffer.size();
+        if (charCount > static_cast<size_t>(std::numeric_limits<ULONG>::max() / sizeof(TCHAR)))
+            return ERROR_INVALID_PARAMETER; 
+
+        ULONG bytes = static_cast<ULONG>(charCount * sizeof(TCHAR));
         return ::RegSetValueEx(m_key, valueName, 0, REG_MULTI_SZ,
             reinterpret_cast<const BYTE*>(buffer.data()), bytes);
     }
@@ -593,6 +596,9 @@ namespace Win32xx
         // Determine the total number of characters, including the double null terminator.
         size_t totalChars = static_cast<size_t>((temp - value) + 1);
         ULONG bytes = static_cast<ULONG>(totalChars * sizeof(TCHAR));
+
+        if (totalChars > static_cast<size_t>(std::numeric_limits<ULONG>::max() / sizeof(TCHAR)))
+            return ERROR_INVALID_PARAMETER;
 
         return ::RegSetValueEx(m_key, valueName, 0, REG_MULTI_SZ, reinterpret_cast<const BYTE*>(value), bytes);
     }

@@ -147,6 +147,7 @@ namespace Win32xx
         CStringW m_expandedControlText;
         CStringW m_expandedInformation;
         CStringW m_footer;
+        CStringW m_footerIconName;
         CStringW m_mainInstruction;
         CStringW m_verificationText;
         CStringW m_windowTitle;
@@ -575,9 +576,10 @@ namespace Win32xx
     // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
     inline void CTaskDialog::SetFooterIcon(LPCWSTR footerIcon)
     {
-        m_tc.pszFooterIcon = const_cast<LPCWSTR>(footerIcon);
+        m_footerIconName = FillString(footerIcon);
+        m_tc.pszFooterIcon = m_footerIconName.c_str();
         WPARAM wparam = static_cast<WPARAM>(TDIE_ICON_FOOTER);
-        LPARAM lparam = reinterpret_cast<LPARAM>(footerIcon);
+        LPARAM lparam = reinterpret_cast<LPARAM>(m_tc.pszFooterIcon);
         TASKDIALOG_FLAGS flags = GetOptions();
         SetOptions(flags & ~TDF_USE_HICON_FOOTER);
 

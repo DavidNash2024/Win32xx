@@ -638,7 +638,7 @@ BOOL CMainFrame::WriteFile(LPCWSTR szFileName)
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
+        es.pfnCallback = MyStreamOutCallback;
         m_richView.StreamOut(SF_TEXT, es);
 
         // Clear the modified text flag

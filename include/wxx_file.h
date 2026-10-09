@@ -414,10 +414,7 @@ namespace Win32xx
         if (!::ReadFile(m_file, buffer, count, &read, nullptr))
         {
             DWORD error = ::GetLastError();
-            if (error != ERROR_IO_PENDING)
-            {
-                throw CFileException(GetFilePath(), GetApp()->MsgFileRead());
-            }
+            throw CFileException(GetFilePath(), GetApp()->MsgFileRead(), error);
         }
         return read;
     }

@@ -21,6 +21,12 @@ CSplash::CSplash() : m_fontHandle(nullptr)
     LoadFont();
 }
 
+CSplash::~CSplash()
+{
+    if (m_fontHandle != nullptr)
+        RemoveFontMemResourceEx(m_fontHandle);
+}
+
 // Called during window creation.
 int CSplash::OnCreate(CREATESTRUCT&)
 {

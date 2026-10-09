@@ -84,94 +84,130 @@ CMainFrame::CMainFrame() : m_addFilesThread(AddFilesProc, this), m_searchItem(nu
 UINT WINAPI CMainFrame::AddFilesProc(void* pVoid)
 {
     CMainFrame* pFrame = reinterpret_cast<CMainFrame*>(pVoid);
+    if (!pFrame)
+        return 0;
+
+    std::vector<FoundFileInfo> filesToProcess;
+    {
+        CThreadLock lock(pFrame->m_cs);
+        filesToProcess = pFrame->m_filesToAdd;
+    }
 
     MediaInfo MI;
-    if (MI.IsReady())   // Is MediaInfo.dll loaded?
+    if (!MI.IsReady())
     {
-        // Press the Add_Folder button. We use PostMessage for a different thread.
-        pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, TRUE);
+        // Report the error in a message box.
+        ::MessageBox(nullptr, MI.Inform().c_str(), L"Error", MB_OK);
+        // Ensure toolbar button is released (mirror original behavior).
+        pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, FALSE);
+        return 0;
+    }
 
-        CSplashThread splashThread;
-        splashThread.CreateThread();
-        CSplash* splash = splashThread.GetSplash();
+    // Signal toolbar button pressed on UI thread.
+    pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, TRUE);
 
-        // Wait for the splash window to be created.
-        ::WaitForSingleObject(splashThread.GetSplashCreated(), INFINITE);
+    // Create splash thread for progress UI.
+    CSplashThread splashThread;
+    splashThread.CreateThread();
+    CSplash* splash = splashThread.GetSplash();
 
-        splash->ShowText(L"Updating Library", pFrame);
-        const CProgressBar& progressBar = splash->GetBar();
-        progressBar.ShowWindow(SW_SHOW);
-        progressBar.SetRange(0, (short)pFrame->m_filesToAdd.size());
+    // Wait for splash window to be created then initialize progress.
+    ::WaitForSingleObject(splashThread.GetSplashCreated(), INFINITE);
+    splash->ShowText(L"Updating Library", pFrame);
+    const CProgressBar& progressBar = splash->GetBar();
+    progressBar.ShowWindow(SW_SHOW);
 
-        unsigned short barPos = 0;
-        for (size_t i = 0; i < pFrame->m_filesToAdd.size(); i++)
+    const size_t totalFiles = filesToProcess.size();
+    short rangeMax = static_cast<short>(std::min<size_t>(totalFiles, static_cast<size_t>(SHRT_MAX)));
+    progressBar.SetRange(0, rangeMax);
+
+    unsigned short barPos = 0;
+
+    for (size_t idx = 0; idx < totalFiles; ++idx)
+    {
+        // Honor stop request (set by UI thread).
+        if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
         {
-            // The stop request is set if the app is trying to close,
-            // or when the 'Add Folder' button toggled.
-            if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
+            // Unpress the Add_Folder button on the UI thread.
+            pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, FALSE);
+            return 0;
+        }
+
+        // Update progress.
+        if (barPos < 0xFFFFu) ++barPos;
+        progressBar.SetPos(barPos);
+
+        const CString fullName = filesToProcess[idx].fileName;
+        bool isFileInLibrary = false;
+
+        // Check existing library for file. Hold lock for list access/modification.
+        {
+            CThreadLock lock(pFrame->m_cs);
+            for (auto it = pFrame->m_moviesData.begin(); it != pFrame->m_moviesData.end(); )
             {
-                // Unpress the Add_Folder button. We use PostMessage for a different thread.
-                pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, FALSE);
-
-                // Break out of the loop and end the thread.
-                return 0;
-            }
-
-            barPos++;
-
-            // Update the splash screen's progress bar.
-            progressBar.SetPos(barPos);
-
-            CString fullName = pFrame->m_filesToAdd[i].fileName;
-            bool isFileInLibrary = false;
-            for (auto it = pFrame->m_moviesData.begin(); it != pFrame->m_moviesData.end();)
-            {
-                if ((*it).fileName == fullName)
+                if (it->fileName == fullName)
                 {
                     CFileFind ff;
-                    ff.FindFirstFile(fullName);
-                    CTime t1(ff.GetLastWriteTime());
-                    CTime t2((*it).lastModifiedTime);
-                    if (t1 != t2)
+                    if (ff.FindFirstFile(fullName))
                     {
-                        // Lock this code for thread safety.
-                        CThreadLock lock(pFrame->m_cs);
-
-                        // Remove the modified file from the library.
-                        TRACE(fullName); TRACE(" removed modified file from library\n");
-                        pFrame->m_moviesData.erase(it);
+                        CTime t1 = ff.GetLastWriteTime();
+                        CTime t2 = it->lastModifiedTime;
+                        if (t1 != t2)
+                        {
+                            // File modified on disk -> remove old entry.
+                            TRACE(fullName); TRACE(" removed modified file from library\n");
+                            it = pFrame->m_moviesData.erase(it);
+                            // continue searching not necessary; we removed the old one
+                            // mark as not in library so it'll be re-added below
+                        }
+                        else
+                        {
+                            // Up-to-date in library; skip adding.
+                            isFileInLibrary = true;
+                            ++it;
+                        }
                     }
                     else
-                        isFileInLibrary = true;
-
-                    // No need to check further.
+                    {
+                        // If file cannot be found on disk, treat as not in library.
+                        it = pFrame->m_moviesData.erase(it);
+                    }
                     break;
                 }
-
-                ++it;
-            }
-
-            // Only add files not already in the library.
-            if (!isFileInLibrary)
-            {
-                pFrame->m_isDirty = true;
-                MovieInfo mi{};
-                pFrame->LoadMovieInfoFromFile(pFrame->m_filesToAdd[i], mi);
-
-                // Lock this code for thread safety.
-                CThreadLock lock(pFrame->m_cs);
-                pFrame->m_moviesData.push_back(mi);
-
-                TRACE(fullName); TRACE(" added to library\n");
+                else
+                    ++it;
             }
         }
-    }
-    else
-    {
-        // Report the error in a message  box.
-        ::MessageBox(nullptr, MI.Inform().c_str(), L"Error", MB_OK);
+
+        if (!isFileInLibrary)
+        {
+            // Load metadata outside lock (may be expensive).
+            MovieInfo mi{};
+            pFrame->LoadMovieInfoFromFile(filesToProcess[idx], mi);
+
+            // Before pushing, re-check under lock to ensure another thread didn't add it.
+            bool addedByOther = false;
+            {
+                CThreadLock lock(pFrame->m_cs);
+                for (const auto& existing : pFrame->m_moviesData)
+                {
+                    if (existing.fileName == mi.fileName)
+                    {
+                        addedByOther = true;
+                        break;
+                    }
+                }
+                if (!addedByOther)
+                {
+                    pFrame->m_isDirty = true;
+                    pFrame->m_moviesData.push_back(std::move(mi));
+                    TRACE(fullName); TRACE(" added to library\n");
+                }
+            } // unlock
+        }
     }
 
+    // Finished processing: notify UI and release UI toolbar button.
     pFrame->OnFilesLoaded();
     pFrame->GetToolBar().PostMessage(TB_PRESSBUTTON, (WPARAM)IDM_ADD_FOLDER, FALSE);
 

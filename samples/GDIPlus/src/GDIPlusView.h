@@ -51,5 +51,6 @@ private:
     CGDIPlusView& operator=(const CGDIPlusView&) = delete;
 
     ULONG_PTR   m_gdiplusToken;
+    bool m_gdiplusStarted = false;
 };
 

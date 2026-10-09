@@ -90,7 +90,7 @@ CString CDoc::GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) c
 CString CDoc::GetDocSaveFileName(const CString &title) const
 {
     CString str;
-    TCHAR extbuff[10];
+    TCHAR extbuff[10] = {};
     DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
     CFileDialog FileDlg(FALSE, extbuff, nullptr, dwFlags, m_fileDlgFilter);
     FileDlg.SetTitle(title);
@@ -169,8 +169,7 @@ void CDoc::NewDocument()
     CString s;
     s = L"  -------------------------------------------------------";
     PushContent(s);
-    s.Format(L"    CTime functions test results",
-        8 * sizeof(size_t));
+    s.Format(L"    CTime functions test results");
     PushContent(s);
     s = L"  -------------------------------------------------------";
     PushContent(s);

@@ -57,7 +57,7 @@ void CView::OnDraw(CDC& dcMem)
     if (doc_length > 0)
     {
         // Display the current view.
-        for (UINT i = 0; i <= doc_length; i++)
+        for (UINT i = 0; i < doc_length; i++)
         {
             TextLineOut(dcMem, 0, i, TheDoc().GetDocRecord(i));
         }

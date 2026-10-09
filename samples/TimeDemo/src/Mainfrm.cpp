@@ -99,8 +99,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-// Perform whatever functions are necessary, as it is invoked in
-// response to the WM_CLOSE message that is sent when the frame is close.
+// Ask the MainFrame window to close. The OnClose function is called in response.
+// The default behaviour of OnClose is to destroy the window.
 void CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame.

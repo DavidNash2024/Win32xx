@@ -218,18 +218,25 @@ BOOL CClientDialog::OnSocketDisconnect()
 // Called when the socket has data to receive.
 BOOL CClientDialog::OnSocketReceive()
 {
-    std::vector<CHAR> bufVector( 1025, '\0' );
-    CHAR* bufArray = bufVector.data(); // CHAR array with 1025 elements initialized to '\0'
-    if (m_client.Receive(bufArray, 1024, 0 ) == SOCKET_ERROR)
+    std::vector<char> bufVector(1025, '\0');
+    char* bufArray = bufVector.data();
+    int n = m_client.Receive(bufArray, 1024, 0);
+    if (n == SOCKET_ERROR)
     {
         if (WSAGetLastError() != WSAEWOULDBLOCK)
             AppendText(m_editStatus, L"Network error");
-
         return FALSE;
     }
 
-    AppendText( m_editReceive, AtoW(bufArray) );
-    TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
+    if (n == 0)
+    {
+        AppendText(m_editStatus, L"Remote peer closed connection");
+        return FALSE;
+    }
+
+    CString received(AtoT(bufArray, CP_ACP, n), n);
+    AppendText(m_editReceive, received.c_str());
+    TRACE("[Received:] "); TRACE(received.c_str()); TRACE("\n");
 
     return TRUE;
 }
@@ -272,6 +279,11 @@ void CClientDialog::OnStartClient()
 
                 // Retrieve the local port number
                 UINT port = GetDlgItemInt(m_editPort.GetDlgCtrlID(), FALSE);
+                if (port <= 0 || port > 65535)
+                {
+                    AppendText(m_editStatus, L"Port out of range");
+                    break;
+                }
 
                 // Temporarily disable the Connect/Disconnect button
                 m_buttonConnect.EnableWindow(FALSE);
@@ -365,6 +377,12 @@ void CClientDialog::OnSend()
             int IPfamily = (check == BST_CHECKED)? PF_INET : PF_INET6 ;
 
             UINT port = GetDlgItemInt(m_editPort.GetDlgCtrlID(), FALSE);
+            if (port <= 0 || port > 65535)
+            {
+                AppendText(m_editStatus, L"Port out of range");
+                break;
+            }
+
             CString strSend = m_editSend.GetWindowText();
 
             // Retrieve the IP Address
@@ -378,7 +396,9 @@ void CClientDialog::OnSend()
                 strAddr = m_ip4Address.GetAddress();
             }
 
-            if (SOCKET_ERROR == m_client.SendTo(WtoA(strSend), strSend.GetLength(), 0, strAddr, port ))
+            CStringA ansi(TtoA(strSend).c_str());
+            int bytes = static_cast<int>(ansi.GetLength());
+            if (SOCKET_ERROR == m_client.SendTo(ansi.c_str(), bytes, 0, strAddr, port ))
                 if (WSAGetLastError() != WSAEWOULDBLOCK)
                     AppendText(m_editStatus, L"SendTo Failed");
             break;

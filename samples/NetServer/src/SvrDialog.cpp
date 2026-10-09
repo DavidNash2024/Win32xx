@@ -70,10 +70,11 @@ INT_PTR CTCPClientDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 void CTCPClientDlg::OnClose()
 {
     // Disconnect the socket when the user closes this chat dialog
-    m_pSocket->Disconnect();
+    if (m_pSocket != nullptr)
+        m_pSocket->Disconnect();
 }
 
-// // Respond to the various dialog buttons.
+// Respond to the various dialog buttons.
 BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM)
 {
     switch (LOWORD(wparam))
@@ -122,8 +123,11 @@ void CTCPClientDlg::Receive()
 // Sends data to the socket.
 void CTCPClientDlg::Send()
 {
-    CString text = m_editSend.GetWindowText();
-    if (m_pSocket->Send(WtoA(text), lstrlen(text), 0) == SOCKET_ERROR)
+    // Retrieve text as an ANSI string.
+    CStringA text(TtoA(m_editSend.GetWindowText()));
+    if (!m_pSocket) return;
+
+    if (m_pSocket->Send(text.c_str(), text.GetLength(), 0) == SOCKET_ERROR)
     {
         if (GetLastError() != WSAEWOULDBLOCK)
             TRACE(L"Network error.  Failed to send");
@@ -371,10 +375,10 @@ BOOL CSvrDialog::OnSocketAccept()
 {
     ServerSocketPtr pClient = std::make_shared<CWorkerSocket>();
     m_mainSocket.Accept(*pClient, nullptr, nullptr);
-    if (INVALID_SOCKET == m_mainSocket.GetSocket())
+    if (INVALID_SOCKET == pClient->GetSocket())
     {
         TRACE("Failed to accept connection from client\n");
-        TRACE(m_mainSocket.GetErrorString());
+        TRACE(pClient->GetErrorString());
         return FALSE;
     }
 
@@ -442,29 +446,28 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
             break;
         }
     case SOCK_DGRAM:
+    {
+        int addrlen = sizeof(m_saUDPClient);
+        if (m_mainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen) == SOCKET_ERROR)
         {
-            int addrlen = sizeof(m_saUDPClient);
-
-            // Receive data and update the UDP client socket address.
-            if (m_mainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen) == SOCKET_ERROR)
-            {
-                TRACE("Network error.  Failed to receive");
-                return FALSE;
-            }
-            else
-            {
-                TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
-            }
-
-            m_buttonSend.EnableWindow(TRUE);
-            m_editSend.EnableWindow(TRUE);
-            GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));
-            break;
+            TRACE("Network error.  Failed to receive");
+            return FALSE;
         }
+        else
+        {
+            TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
+            // Append UDP data to receive control
+            AppendText(m_editReceive, AtoW(bufArray));
+        }
+
+        m_buttonSend.EnableWindow(TRUE);
+        m_editSend.EnableWindow(TRUE);
+        GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));
+        break;
+    }
 
     default: break;
     }
-    AppendText(m_editReceive, AtoW(bufArray));
 
     return TRUE;
 }
@@ -498,6 +501,11 @@ BOOL CSvrDialog::StartServer()
 
     // Retrieve the local port number
     UINT port = GetDlgItemInt(m_editPort.GetDlgCtrlID(), FALSE);
+    if (port <= 0 || port > 65535)
+    {
+        AppendText(m_editStatus, L"Port out of range");
+        return FALSE;
+    }
 
     // Bind to the socket
     AppendText(m_editStatus, L"Binding to socket");

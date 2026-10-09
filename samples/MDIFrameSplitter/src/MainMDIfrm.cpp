@@ -109,7 +109,10 @@ void CMainMDIFrame::OnInitialUpdate()
 // Close the active MDI child window.
 BOOL CMainMDIFrame::OnFileClose()
 {
-    GetActiveMDIChild()->Close();
+    auto pChild = GetActiveMDIChild();
+    if (pChild != nullptr)
+        pChild->Close();
+    
     return TRUE;
 }
 

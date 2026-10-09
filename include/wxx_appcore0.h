@@ -275,6 +275,7 @@ namespace Win32xx
 
         // Thread and Semaphore Messages.
         virtual CString MsgAppThread() const;
+        virtual CString MsgAppThreadEnd() const;
         virtual CString MsgCriticalSection() const;
         virtual CString MsgMtxEvent() const;
         virtual CString MsgMtxMutex() const;

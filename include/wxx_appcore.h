@@ -785,6 +785,9 @@ namespace Win32xx
     inline CString CWinApp::MsgAppThread() const
     { return _T("Failed to create thread."); }
 
+    inline CString CWinApp::MsgAppThreadEnd() const
+    { return _T("The thread failed to terminate before CThreadT's destructor."); }
+
     inline CString CWinApp::MsgCriticalSection() const
     { return _T("Failed to create critical section."); }
 

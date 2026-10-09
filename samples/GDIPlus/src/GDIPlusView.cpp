@@ -16,14 +16,16 @@ CGDIPlusView::CGDIPlusView()
 {
     // Initialize GDI+.
     GdiplusStartupInput gdiplusStartupInput;
-    GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, nullptr);
+    Status gdiStatus = GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, nullptr);
+    m_gdiplusStarted = (gdiStatus == Ok);
 }
 
 // Destructor.
 CGDIPlusView::~CGDIPlusView()
 {
     // Shutdown GDI+
-    GdiplusShutdown(m_gdiplusToken);
+    if (m_gdiplusStarted)
+        GdiplusShutdown(m_gdiplusToken);
 }
 
 // Draws a capped line.

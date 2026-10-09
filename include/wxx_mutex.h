@@ -78,6 +78,7 @@ namespace Win32xx
     public:
         CEvent(BOOL isInitiallySignaled = FALSE, BOOL isManualReset = FALSE,
             LPCTSTR name = nullptr, LPSECURITY_ATTRIBUTES attributes = nullptr);
+        ~CEvent();
 
         HANDLE GetHandle() const { return m_event; }
         operator HANDLE() const  { return m_event; }
@@ -103,6 +104,7 @@ namespace Win32xx
     public:
         CMutex(BOOL isInitiallyOwned = FALSE, LPCTSTR name = nullptr,
             LPSECURITY_ATTRIBUTES attributes = nullptr);
+        ~CMutex();
 
         HANDLE GetHandle() const { return m_mutex; }
         operator HANDLE() const  { return m_mutex; }
@@ -125,6 +127,7 @@ namespace Win32xx
     public:
         CSemaphore(LONG initialCount, LONG maxCount, LPCTSTR name = nullptr,
             LPSECURITY_ATTRIBUTES attributes = nullptr);
+        ~CSemaphore();
 
         HANDLE GetHandle() const { return m_semaphore; }
         operator HANDLE() const  { return m_semaphore; }
@@ -169,6 +172,15 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgMtxEvent());
     }
 
+    inline CEvent::~CEvent()
+    {
+        if (m_event)
+        {
+            ::CloseHandle(m_event);
+            m_event = nullptr;
+        }
+    }
+
     // Sets the specified event object to the non-signalled state.
     inline void CEvent::ResetEvent()
     {
@@ -203,6 +215,15 @@ namespace Win32xx
         m_mutex = ::CreateMutex(attributes, isInitiallyOwned, name);
         if (m_mutex == nullptr)
             throw CResourceException(GetApp()->MsgMtxMutex());
+    }
+
+    inline CMutex::~CMutex()
+    {
+        if (m_mutex)
+        {
+            ::CloseHandle(m_mutex);
+            m_mutex = nullptr;
+        }
     }
 
 
@@ -242,6 +263,15 @@ namespace Win32xx
     {
         BOOL result = ::ReleaseSemaphore(m_semaphore, releaseCount, pPreviousCount);
         return result;
+    }
+
+    inline CSemaphore::~CSemaphore()
+    {
+        if (m_semaphore)
+        {
+            ::CloseHandle(m_semaphore);
+            m_semaphore = nullptr;
+        }
     }
 
 }

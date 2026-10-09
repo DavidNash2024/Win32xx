@@ -33,7 +33,8 @@ CCoverImage::CCoverImage()
 {
     // Initialize GDI+.
     GdiplusStartupInput gdiplusStartupInput;
-    GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, nullptr);
+    Status gdiStatus = GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, nullptr);
+    m_gdiplusStarted = (gdiStatus == Ok);
 
     // The entry for the dialog's control in resource.rc must match this name.
     CString className = L"CoverImage";
@@ -56,7 +57,8 @@ CCoverImage::CCoverImage()
 // Destructor.
 CCoverImage::~CCoverImage()
 {
-    GdiplusShutdown(m_gdiplusToken);
+    if (m_gdiplusStarted)
+        GdiplusShutdown(m_gdiplusToken);
 }
 
 // Draws the cover image to the specified device context.

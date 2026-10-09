@@ -83,8 +83,7 @@ BOOL CRichEditView::StreamInFile(const CFile& file)
     UINT format = SF_TEXT;
     EDITSTREAM es;
     es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
-    es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
-        reinterpret_cast<void*>(StreamInCallback));
+    es.pfnCallback = StreamInCallback;
     StreamIn(format, es);
 
     // Clear the modified text flag
@@ -99,8 +98,7 @@ BOOL CRichEditView::StreamOutFile(const CFile& file)
     EDITSTREAM es;
     es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
     es.dwError = 0;
-    es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
-        reinterpret_cast<void*>(StreamOutCallback));
+    es.pfnCallback = StreamOutCallback;
     StreamOut(format, es);
 
     // Clear the modified text flag.

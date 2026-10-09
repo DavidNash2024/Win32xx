@@ -81,7 +81,10 @@ BOOL CMainMDIFrame::OnDefaultCommand(WPARAM wparam, LPARAM lparam)
 // Close the active MDI child.
 BOOL CMainMDIFrame::OnFileClose()
 {
-    GetActiveMDIChild()->Close();
+    auto pChild = GetActiveMDIChild();
+    if (pChild != nullptr)
+        pChild->Close();
+    
     return TRUE;
 }
 

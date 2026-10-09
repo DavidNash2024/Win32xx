@@ -81,6 +81,9 @@ namespace Win32xx
     inline void CHGlobal::Alloc(size_t size)
     {
         Free();
+        if (size == 0)
+            throw std::bad_alloc();
+
         m_global = ::GlobalAlloc(GHND, size);
         if (m_global == nullptr)
             throw std::bad_alloc();
@@ -91,12 +94,14 @@ namespace Win32xx
     {
         if (m_global != nullptr)
         {
-            // Free the global memory. GlobalFree returns NULL on success.
             HGLOBAL res = ::GlobalFree(m_global);
-            VERIFY(res == nullptr);
+            if (res != nullptr)
+            {
+                // GlobalFree returns NULL on success; non-NULL means failure
+                throw std::runtime_error("GlobalFree failed");
+            }
 
-            if (res == nullptr)
-                m_global = nullptr;
+            m_global = nullptr;
         }
     }
 

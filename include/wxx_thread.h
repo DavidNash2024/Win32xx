@@ -153,10 +153,28 @@ namespace Win32xx
         if (m_thread)
         {
             // If your thread is still running at this point, you have a bug.
-            if (IsRunning())
+            try
             {
-                TRACE("*** Warning *** Ending CWinThread before ending its thread\n");
-                assert(true);
+                if (IsRunning())
+                {
+                    TRACE("*** Warning *** Ending CWinThread before ending its thread\n");
+                    assert(false);
+                    DWORD waitTime = 2000;
+                    ::WaitForSingleObject(m_thread, waitTime);
+
+                    throw CResourceException(GetApp()->MsgAppThreadEnd());
+                }
+            }
+
+            catch (const CResourceException& e)
+            {
+                // Display the exception and continue.
+                CString str1;
+                str1 << e.GetText() << L'\n' << e.GetErrorString();
+
+                CString str2;
+                str2 << L"Error: " << e.what();
+                ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
             }
 
             // Close the thread's handle.
@@ -180,15 +198,22 @@ namespace Win32xx
         {
             assert(!IsRunning());
             ::CloseHandle(m_thread);
+            m_thread = nullptr;
+            m_threadID = 0;
         }
 
+        unsigned tmpID = 0;
         m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(
             pSecurityAttributes, stack_size, m_pThreadProc,
-            m_pThreadParams, initflag, &m_threadID));
+            m_pThreadParams, initflag, &tmpID));
 
         if (m_thread == nullptr)
+        {
+            m_threadID = 0;
             throw CWinException(GetApp()->MsgAppThread());
+        }
 
+        m_threadID = static_cast<UINT>(tmpID);
         return m_thread;
     }
 

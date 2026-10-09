@@ -129,9 +129,9 @@ int CMainFrame::GetTextPartWidth(LPCWSTR text) const
 }
 
 // The stream in callback function. Reads from the file.
-DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
+DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD_PTR cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
-    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    HANDLE file = reinterpret_cast<HANDLE>(cookie);
     LPDWORD bytesRead = reinterpret_cast<LPDWORD>(pcb);
     *bytesRead = 0;
     DWORD bytesToRead = static_cast<DWORD>(cb);
@@ -142,9 +142,9 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
 }
 
 // The stream out callback function. Writes to the file.
-DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
+DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD_PTR cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
-    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    HANDLE file = reinterpret_cast<HANDLE>(cookie);
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
     *bytesWritten = 0;
     DWORD bytesToRead = static_cast<DWORD>(cb);
@@ -895,8 +895,7 @@ BOOL CMainFrame::ReadFile(LPCWSTR fileName)
 
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
-            reinterpret_cast<void*>(MyStreamInCallback));
+        es.pfnCallback = MyStreamInCallback;
         m_richView.StreamIn(stream_mode, es);
 
         //Clear the modified text flag
@@ -1163,8 +1162,7 @@ BOOL CMainFrame::WriteFile(LPCWSTR szFileName)
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
-            reinterpret_cast<void*>(MyStreamOutCallback));
+        es.pfnCallback = MyStreamOutCallback;
         m_richView.StreamOut(stream_mode, es);
 
         //Clear the modified text flag

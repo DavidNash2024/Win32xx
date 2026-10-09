@@ -1411,6 +1411,9 @@ namespace Win32xx
     inline void CWnd::Close() const
     {
         assert(IsWindow());
+		
+		// The PostMessage used here allows the Close function to be called from a
+		// different thread from the window being closed.
         PostMessage(WM_CLOSE);
     }
 

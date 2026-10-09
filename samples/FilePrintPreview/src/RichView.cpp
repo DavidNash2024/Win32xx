@@ -187,7 +187,7 @@ BOOL CRichView::ReadFile(LPCWSTR filePath)
         SetDocName(filePath);
         EDITSTREAM es;
         es.dwCookie = (DWORD_PTR) file.GetHandle();
-        es.pfnCallback = (EDITSTREAMCALLBACK) RVStreamInCallback;
+        es.pfnCallback = RVStreamInCallback;
         StreamIn(SF_TEXT, es);
 
         // Clear the modified text flag.
@@ -265,7 +265,7 @@ BOOL CRichView::WriteFile(LPCWSTR filePath)
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError  = 0;
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(RVStreamOutCallback);
+        es.pfnCallback = RVStreamOutCallback;
         StreamOut(SF_TEXT, es);
 
         // Clear the modified text flag.
