@@ -387,10 +387,6 @@ namespace Win32xx
         for (int i = 0; i <= 15; ++i)
             m_customColors[i] = RGB(255,255,255);
 
-        // Enable the hook procedure for the help button
-        if (m_cc.Flags & CC_SHOWHELP)
-            m_cc.Flags |= CC_ENABLEHOOK;
-
         // Set the CHOOSECOLOR struct parameters to safe values
         SetParameters(m_cc);
     }
@@ -500,7 +496,7 @@ namespace Win32xx
         m_cc.hInstance      = cc.hInstance;
         m_cc.rgbResult      = cc.rgbResult;
         m_cc.lpCustColors   = m_customColors;
-        m_cc.Flags          = cc.Flags;
+        m_cc.Flags          = cc.Flags | CC_ENABLEHOOK;
         m_cc.lCustData      = cc.lCustData;
         m_cc.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
         m_cc.lpTemplateName = cc.lpTemplateName;
@@ -532,10 +528,6 @@ namespace Win32xx
         m_ofn.lpstrFilter   = filter;
         m_ofn.lpstrDefExt   = defExt;
         m_ofn.Flags         = flags;
-
-        // Enable the hook procedure for the help button.
-        if (m_ofn.Flags & OFN_SHOWHELP)
-            m_ofn.Flags |= OFN_ENABLEHOOK;
 
         // Safely set the remaining OPENFILENAME values.
         SetParameters(m_ofn);
@@ -1037,7 +1029,7 @@ namespace Win32xx
         m_ofn.lpstrFileTitle    = ofn.lpstrFileTitle;
         m_ofn.nMaxFileTitle     = std::max(maxPath, ofn.nMaxFileTitle);
         m_ofn.lpstrInitialDir   = ofn.lpstrInitialDir;
-        m_ofn.Flags             = ofn.Flags;
+        m_ofn.Flags             = ofn.Flags | OFN_ENABLEHOOK;
         m_ofn.nFileOffset       = ofn.nFileOffset;
         m_ofn.nFileExtension    = ofn.nFileExtension;
         m_ofn.lpstrDefExt       = ofn.lpstrDefExt;
@@ -1282,7 +1274,7 @@ namespace Win32xx
         m_fr.lStructSize        = sizeof(m_fr);
         m_fr.hwndOwner          = nullptr;        // Set this in Create
         m_fr.hInstance          = GetApp()->GetInstanceHandle();
-        m_fr.Flags              = fr.Flags;
+        m_fr.Flags              = fr.Flags | FR_ENABLEHOOK;
         m_fr.lpstrFindWhat      = const_cast<LPTSTR>(m_findWhat.c_str());
         m_fr.lpstrReplaceWith   = const_cast<LPTSTR>(m_replaceWith.c_str());
         m_fr.wFindWhatLen       = std::max(fr.wFindWhatLen, maxCharsWord);
@@ -1290,10 +1282,6 @@ namespace Win32xx
         m_fr.lCustData          = reinterpret_cast<LPARAM>(this);
         m_fr.lpfnHook           = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
         m_fr.lpTemplateName     = fr.lpTemplateName;
-
-        // Enable the hook procedure for the help button.
-        if (m_fr.Flags & FR_SHOWHELP)
-            m_fr.Flags |= FR_ENABLEHOOK;
     }
 
 
@@ -1321,10 +1309,6 @@ namespace Win32xx
             m_cf.hDC = printer;
             m_cf.Flags |= CF_PRINTERFONTS;
         }
-
-        // Enable the hook procedure for the help button.
-        if (m_cf.Flags & CF_SHOWHELP)
-            m_cf.Flags |= CF_ENABLEHOOK;
 
         SetParameters(m_cf);
     }
@@ -1356,10 +1340,6 @@ namespace Win32xx
             m_cf.Flags |= CF_PRINTERFONTS;
         }
 
-        // Enable the hook procedure for the help button.
-        if (m_cf.Flags & CF_SHOWHELP)
-            m_cf.Flags |= CF_ENABLEHOOK;
-
         SetParameters(m_cf);
     }
 
@@ -1379,10 +1359,6 @@ namespace Win32xx
             m_cf.hDC = printer;
             m_cf.Flags |= CF_PRINTERFONTS;
         }
-
-        // Enable the hook procedure for the help button.
-        if (m_cf.Flags & CF_SHOWHELP)
-            m_cf.Flags |= CF_ENABLEHOOK;
 
         SetParameters(m_cf);
     }
@@ -1621,7 +1597,7 @@ namespace Win32xx
         m_cf.hDC            = cf.hDC;
         m_cf.lpLogFont      = &m_logFont;
         m_cf.iPointSize     = cf.iPointSize;
-        m_cf.Flags          = cf.Flags;
+        m_cf.Flags          = cf.Flags | CF_ENABLEHOOK;
         m_cf.rgbColors      = cf.rgbColors;
         m_cf.lCustData      = cf.lCustData;
         m_cf.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);

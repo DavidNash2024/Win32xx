@@ -15,8 +15,7 @@ public:
         PD_USEDEVMODECOPIES |
         PD_NOPAGENUMS |
         PD_HIDEPRINTTOFILE |
-        PD_NOSELECTION |
-        PD_ENABLEPRINTHOOK)
+        PD_NOSELECTION )
         : CPrintDialog(dwFlags) {}
     virtual ~MyPrintDialog() override = default;
 

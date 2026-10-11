@@ -112,7 +112,7 @@ BOOL CMainMDIFrame::OnFileClose()
     auto pChild = GetActiveMDIChild();
     if (pChild != nullptr)
         pChild->Close();
-    
+
     return TRUE;
 }
 

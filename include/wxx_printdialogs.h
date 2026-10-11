@@ -207,10 +207,6 @@ namespace Win32xx
         m_pd.Flags &= ~PD_RETURNIC;
         m_pd.Flags &= ~PD_RETURNDC;   // Use GetPrinterDC to retrieve the dc.
 
-        // Enable the hook proc for the help button.
-        if (m_pd.Flags & PD_SHOWHELP)
-            m_pd.Flags |= PD_ENABLEPRINTHOOK;
-
         SetParameters(m_pd);
     }
 
@@ -523,10 +519,6 @@ namespace Win32xx
         m_psd = {};
         m_psd.Flags = flags;
 
-        // Enable the hook proc for the help button
-        if (m_psd.Flags & PSD_SHOWHELP)
-            m_psd.Flags |= PSD_ENABLEPAGESETUPHOOK;
-
         SetParameters(m_psd);
     }
 
@@ -752,7 +744,7 @@ namespace Win32xx
     {
         m_psd.lStructSize       = sizeof(m_psd);
         m_psd.hwndOwner         = nullptr;            // Set this in DoModal
-        m_psd.Flags             = psd.Flags;
+        m_psd.Flags             = psd.Flags | PSD_ENABLEPAGESETUPHOOK;
         m_psd.ptPaperSize       = psd.ptPaperSize;
         m_psd.rtMinMargin       = psd.rtMinMargin;
         m_psd.rtMargin          = psd.rtMargin;

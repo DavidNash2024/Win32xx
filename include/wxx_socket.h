@@ -117,7 +117,6 @@
 
 namespace Win32xx
 {
-    const int THREAD_TIMEOUT = 1000;
 
     /////////////////////////////////////////////////////////////
     // CSocket manages a network socket. It can be used to create
@@ -211,7 +210,6 @@ namespace Win32xx
 
     inline CSocket::~CSocket()
     {
-        CThreadLock lock(m_cs);
         Disconnect();
 
         // Terminate the  Windows Socket Services for the last socket.
@@ -401,6 +399,22 @@ namespace Win32xx
         {
             DWORD result = ::WSAWaitForMultipleEvents(2, allEvents, FALSE, WSA_INFINITE, FALSE);
 
+            auto call_safe = [&](auto&& fn)
+                {
+                    try
+                    {
+                        (pSocket->*fn)();
+                    }
+                    catch (const std::exception& e)
+                    {
+                        Trace("Exception in socket event callback: " + CString(e.what()) + "\n");
+                    }
+                    catch (...)
+                    {
+                        Trace("Unknown exception in socket event callback\n");
+                    }
+                };
+
             switch (result)
             {
             case WSA_WAIT_EVENT_0 + 1: // Stop event signalled
@@ -416,19 +430,19 @@ namespace Win32xx
                 }
 
                 // Dispatch callbacks safely
-                if (networkEvents.lNetworkEvents & FD_ACCEPT)                  pSocket->OnAccept();
-                if (networkEvents.lNetworkEvents & FD_READ)                    pSocket->OnReceive();
-                if (networkEvents.lNetworkEvents & FD_WRITE)                   pSocket->OnSend();
-                if (networkEvents.lNetworkEvents & FD_OOB)                     pSocket->OnOutOfBand();
-                if (networkEvents.lNetworkEvents & FD_QOS)                     pSocket->OnQualityOfService();
-                if (networkEvents.lNetworkEvents & FD_CONNECT)                 pSocket->OnConnect();
-                if (networkEvents.lNetworkEvents & FD_ROUTING_INTERFACE_CHANGE) pSocket->OnRoutingChange();
-                if (networkEvents.lNetworkEvents & FD_ADDRESS_LIST_CHANGE)     pSocket->OnAddresListChange();
+                if (networkEvents.lNetworkEvents & FD_ACCEPT)    call_safe(&CSocket::OnAccept);
+                if (networkEvents.lNetworkEvents & FD_READ)          call_safe(&CSocket::OnReceive);
+                if (networkEvents.lNetworkEvents & FD_WRITE)         call_safe(&CSocket::OnSend);
+                if (networkEvents.lNetworkEvents & FD_OOB)           call_safe(&CSocket::OnOutOfBand);
+                if (networkEvents.lNetworkEvents & FD_QOS)           call_safe(&CSocket::OnQualityOfService);
+                if (networkEvents.lNetworkEvents & FD_CONNECT)       call_safe(&CSocket::OnConnect);
+                if (networkEvents.lNetworkEvents & FD_ROUTING_INTERFACE_CHANGE) call_safe(&CSocket::OnRoutingChange);
+                if (networkEvents.lNetworkEvents & FD_ADDRESS_LIST_CHANGE)      call_safe(&CSocket::OnAddresListChange);
 
                 if (networkEvents.lNetworkEvents & FD_CLOSE)
                 {
                     // Notify the consumer.
-                    pSocket->OnDisconnect();
+                    call_safe(&CSocket::OnDisconnect);
                     keepRunning = false;
                 }
                 break;
@@ -643,27 +657,36 @@ namespace Win32xx
         }
 
         m_threadPtr = std::make_unique<CWorkThread>(EventThread, this);
-        m_threadPtr->CreateThread();
+        try
+        {
+            m_threadPtr->CreateThread();
+        }
+        catch (...)
+        {
+            m_threadPtr.reset();
+            throw;
+        }
     }
 
     // Terminates the event thread gracefully (if possible).
     inline void CSocket::StopEvents()
     {
+        // If we have a worker thread, wait for it to exit, then destroy it.
         if (m_threadPtr)
         {
+            // Signal the worker thread to stop.
             m_stopRequest.SetEvent();
-            DWORD waitResult = ::WaitForSingleObject(*m_threadPtr, 3 * THREAD_TIMEOUT);
-            if (waitResult == WAIT_TIMEOUT)
+
+            // Wait up to 5 seconds for the worker thread to stop.
+            DWORD result = ::WaitForSingleObject(*m_threadPtr, 5000);
+            if (result == WAIT_TIMEOUT)
             {
-                TRACE("*** Critical Warning: Event Thread failed to exit within timeout! Waiting to avoid race... ***\n");
-                if (m_socket != INVALID_SOCKET)
-                {
-                    ::WSAEventSelect(m_socket, nullptr, 0);
-                }
-                ::WaitForSingleObject(*m_threadPtr, INFINITE);
+                Trace("*** CRITICAL *** Worker thread hung during StopEvents()!");
+                m_threadPtr.release();
+                return;
             }
 
-            m_stopRequest.ResetEvent();
+            // Destroy the worker thread object; its destructor will close the handle.
             m_threadPtr.reset();
         }
     }

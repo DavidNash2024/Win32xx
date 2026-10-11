@@ -72,11 +72,13 @@ namespace Win32xx
     private:
         CThreadT(const CThreadT&) = delete;
         CThreadT& operator=(const CThreadT&) = delete;
+        static unsigned __stdcall InternalThreadWrapper(LPVOID pThis);
 
         PTHREADPROC m_pThreadProc;      // Thread callback function.
         LPVOID m_pThreadParams;         // Thread parameter.
         HANDLE m_thread;                // Handle of this thread.
         UINT m_threadID;                // ID of this thread.
+        std::atomic<bool> m_stopRequested{ false };
     };
 
     using WorkThread = CThreadT<CObject>;
@@ -150,35 +152,23 @@ namespace Win32xx
     template <class T>
     inline CThreadT<T>::~CThreadT()
     {
+        m_stopRequested.store(true, std::memory_order_release);
+
         if (m_thread)
         {
-            // If your thread is still running at this point, you have a bug.
-            try
+            // Wait up to 5s for graceful stop.
+            DWORD waitRes = ::WaitForSingleObject(m_thread, 5000);
+            if (waitRes == WAIT_TIMEOUT && m_threadID != 0)
             {
-                if (IsRunning())
-                {
-                    TRACE("*** Warning *** Ending CWinThread before ending its thread\n");
-                    assert(false);
-                    DWORD waitTime = 2000;
-                    ::WaitForSingleObject(m_thread, waitTime);
-
-                    throw CResourceException(GetApp()->MsgAppThreadEnd());
-                }
+                // Best-effort: ask message-loop threads to quit.
+                ::PostThreadMessage(m_threadID, WM_QUIT, 0, 0);
+                ::WaitForSingleObject(m_thread, 2000);
             }
 
-            catch (const CResourceException& e)
-            {
-                // Display the exception and continue.
-                CString str1;
-                str1 << e.GetText() << L'\n' << e.GetErrorString();
-
-                CString str2;
-                str2 << L"Error: " << e.what();
-                ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
-            }
-
-            // Close the thread's handle.
+            // Close handle to avoid leaks. (Does not terminate thread; thread code must honor stop flag.)
             ::CloseHandle(m_thread);
+            m_thread = nullptr;
+            m_threadID = 0;
         }
     }
 
@@ -193,6 +183,11 @@ namespace Win32xx
         unsigned stack_size /* = 0*/,
         LPSECURITY_ATTRIBUTES pSecurityAttributes /* = nullptr*/)
     {
+        assert(m_pThreadProc);
+
+        if (!m_pThreadProc)
+            CWinException(GetApp()->MsgAppThread());
+
         // Reusing the CWinThread.
         if (m_thread)
         {
@@ -204,8 +199,8 @@ namespace Win32xx
 
         unsigned tmpID = 0;
         m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(
-            pSecurityAttributes, stack_size, m_pThreadProc,
-            m_pThreadParams, initflag, &tmpID));
+            pSecurityAttributes, stack_size, InternalThreadWrapper,
+            this, initflag, &tmpID));
 
         if (m_thread == nullptr)
         {
@@ -241,10 +236,24 @@ namespace Win32xx
         return ::GetThreadPriority(m_thread);
     }
 
+    template <class T>
+    unsigned __stdcall CThreadT<T>::InternalThreadWrapper(LPVOID pThis)
+    {
+        auto* self = static_cast<CThreadT*>(pThis);
+        assert(self->m_pThreadProc);
+        if (!self->m_pThreadProc)
+            throw CWinException(GetApp()->MsgAppThread());
+
+        // Call the user proc (same signature), user proc receives whatever
+        // m_pThreadParams was set to.
+        return (self->m_pThreadProc)(self->m_pThreadParams);
+    }
+
     // Returns TRUE if the thread is running.
     template <class T>
     inline BOOL CThreadT<T>::IsRunning() const
     {
+        if (!m_thread) return FALSE;
         return (WaitForSingleObject(m_thread, 0) == WAIT_TIMEOUT);
     }
 

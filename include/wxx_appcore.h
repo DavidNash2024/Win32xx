@@ -637,8 +637,8 @@ namespace Win32xx
     // Frees the global memory handles for the application's printer.
     inline void CWinApp::ResetPrinterMemory()
     {
-        m_devMode.Free();
-        m_devNames.Free();
+        m_devMode.FreeChecked();
+        m_devNames.FreeChecked();
     }
 
     // Registers a temporary window class so we can get the callback
@@ -731,8 +731,8 @@ namespace Win32xx
                 if (pd.hDevNames == nullptr)
                 {
                     // Printer was default, but now there are no printers.
-                    m_devMode.Free();
-                    m_devNames.Free();
+                    m_devMode.FreeChecked();
+                    m_devNames.FreeChecked();
                 }
                 else
                 {
@@ -744,8 +744,8 @@ namespace Win32xx
                         mNames.GetPortName()   != hNames.GetPortName())
                     {
                         // Default printer has changed. Reset the global memory.
-                        m_devMode.Free();
-                        m_devNames.Free();
+                        m_devMode.FreeChecked();
+                        m_devNames.FreeChecked();
                         m_devMode.Reassign(pd.hDevMode);
                         m_devNames.Reassign(pd.hDevNames);
                     }

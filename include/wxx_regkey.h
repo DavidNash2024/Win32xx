@@ -561,7 +561,7 @@ namespace Win32xx
 
         size_t charCount = buffer.size();
         if (charCount > static_cast<size_t>(std::numeric_limits<ULONG>::max() / sizeof(TCHAR)))
-            return ERROR_INVALID_PARAMETER; 
+            return ERROR_INVALID_PARAMETER;
 
         ULONG bytes = static_cast<ULONG>(charCount * sizeof(TCHAR));
         return ::RegSetValueEx(m_key, valueName, 0, REG_MULTI_SZ,

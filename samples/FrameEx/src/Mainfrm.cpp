@@ -100,8 +100,9 @@ BitmapPtr CMainFrame::LoadPngResource(UINT id)
                             memcpy(reinterpret_cast<byte*>(buffer.Get()), resourceData, bufferSize);
 
                             IStream* stream = nullptr;
-                            if (::CreateStreamOnHGlobal(buffer, FALSE, &stream) == S_OK)
+                            if (::CreateStreamOnHGlobal(buffer, TRUE, &stream) == S_OK)
                             {
+                                globalMemory.Reassign(nullptr); // The stream owns the globalMemory.
                                 bitmap.reset(Gdiplus::Bitmap::FromStream(stream));
                                 stream->Release();
                             }

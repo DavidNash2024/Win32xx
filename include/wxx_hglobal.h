@@ -50,10 +50,12 @@ namespace Win32xx
         CHGlobal() : m_global(nullptr) {}
         CHGlobal(HGLOBAL handle) : m_global(handle) {}
         CHGlobal(size_t size) : m_global(nullptr) { Alloc(size); }
-        ~CHGlobal()                     { Free(); }
+        ~CHGlobal() { Free(); }
 
         void Alloc(size_t size);
-        void Free();
+        bool Free() noexcept;
+        void FreeChecked() { if (!Free()) throw std::runtime_error("GlobalFree failed"); }
+
         HGLOBAL Get() const             { return m_global; }
         void Reassign(HGLOBAL handle);
 
@@ -80,7 +82,7 @@ namespace Win32xx
     // Allocates a new global memory buffer for this object.
     inline void CHGlobal::Alloc(size_t size)
     {
-        Free();
+        FreeChecked();
         if (size == 0)
             throw std::bad_alloc();
 
@@ -90,19 +92,17 @@ namespace Win32xx
     }
 
     // Manually frees the global memory assigned to this object.
-    inline void CHGlobal::Free()
+    inline bool CHGlobal::Free() noexcept
     {
-        if (m_global != nullptr)
+        if (m_global == nullptr) return true;
+        HGLOBAL res = ::GlobalFree(m_global);
+        if (res != nullptr)
         {
-            HGLOBAL res = ::GlobalFree(m_global);
-            if (res != nullptr)
-            {
-                // GlobalFree returns NULL on success; non-NULL means failure
-                throw std::runtime_error("GlobalFree failed");
-            }
-
-            m_global = nullptr;
+            // GlobalFree failed; caller can detect failure from return value.
+            return false;
         }
+        m_global = nullptr;
+        return true;
     }
 
     // Reassign is used when global memory has been reassigned, as

@@ -1249,6 +1249,11 @@ namespace Win32xx
             }
             return 0;
         }
+        case WM_NCDESTROY:
+        {
+            Cleanup();
+            return 0;
+        }
         case WM_NOTIFY:
         {
             // Do notification reflection if message came from a child window.
@@ -1411,9 +1416,9 @@ namespace Win32xx
     inline void CWnd::Close() const
     {
         assert(IsWindow());
-		
-		// The PostMessage used here allows the Close function to be called from a
-		// different thread from the window being closed.
+
+        // The PostMessage used here allows the Close function to be called from a
+        // different thread from the window being closed.
         PostMessage(WM_CLOSE);
     }
 

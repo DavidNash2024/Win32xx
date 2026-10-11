@@ -190,16 +190,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& rcs)
 void CMainFrame::OnEditFind()
 {
     m_findReplaceDlg.SetBoxTitle(L"Find a string...");
-    m_findReplaceDlg.Create(TRUE, L"Initial Text", L"", FR_DOWN |
-        FR_ENABLEHOOK, *this);
+    m_findReplaceDlg.Create(TRUE, L"Initial Text", L"", FR_DOWN, *this);
 }
 
 // Invoke the find-replace dialog.
 void CMainFrame::OnEditReplace()
 {
     m_findReplaceDlg.SetBoxTitle(L"Find, then Replace");
-    m_findReplaceDlg.Create(FALSE, L"Initial Text", L"Replace Text",
-        FR_DOWN | FR_ENABLEHOOK, *this);
+    m_findReplaceDlg.Create(FALSE, L"Initial Text", L"Replace Text", FR_DOWN, *this);
 }
 
 // Close the application.

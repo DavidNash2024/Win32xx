@@ -15,8 +15,7 @@
 // handle to a printer device context for the printer on which the fonts are to
 // be selected.
 MyFontDialog:: MyFontDialog(DWORD dwFlags, HDC hdcPrinter /* = nullptr */)
-    : CFontDialog(dwFlags | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS |
-        CF_ENABLEHOOK, hdcPrinter)
+    : CFontDialog(dwFlags | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS, hdcPrinter)
 {
     m_tm = {};
     SetBoxTitle(L"Font");

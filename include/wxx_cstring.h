@@ -768,7 +768,13 @@ namespace Win32xx
             va_copy(argsCopy, args);
             using CleanT = std::remove_cv_t<T>;
             if constexpr (std::is_same_v<CleanT, char> || std::is_same_v<CleanT, CHAR>)
-                length = ::vsnprintf(nullptr, 0, format, argsCopy);
+            {
+#if defined(_MSC_VER)  // For Microsoft compilers.
+                length = ::_vscprintf(format, argsCopy); // MSVC-safe
+#else
+                length = ::vsnprintf(nullptr, 0, format, argsCopy); // POSIX
+#endif
+            }
             else // T is wchar_t (WCHAR).
                 length = ::_vscwprintf(format, argsCopy);
 
@@ -777,6 +783,7 @@ namespace Win32xx
             if (length > 0)
             {
                 const size_t bufSize = static_cast<size_t>(length) + 1;
+                if (bufSize > (1u << 30)) throw std::length_error("Format size too large");
                 m_str.resize(bufSize);
                 if constexpr (std::is_same_v<CleanT, char> || std::is_same_v<CleanT, CHAR>)
                 {
@@ -785,14 +792,9 @@ namespace Win32xx
                 else // T is wchar_t (WCHAR).
                 {
 #if defined(_MSC_VER)  // For Microsoft compilers.
-                    ::_vsnwprintf_s(m_str.data(),
-                        bufSize,
-                        static_cast<size_t>(length),
-                        format, args);
+                    ::_vsnwprintf_s(m_str.data(), bufSize, static_cast<size_t>(length), format, args);
 #else
-                    ::_vsnwprintf(m_str.data(),
-                        bufSize,
-                        format, args);
+                    ::_vsnwprintf(m_str.data(), bufSize, format, args);
 #endif
                 }
 

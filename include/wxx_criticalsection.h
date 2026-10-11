@@ -51,7 +51,7 @@ namespace Win32xx
 }
 
 // This code demonstrates how to use CCriticalSection and CThreadLock.
-//  
+//
 // class MyClass
 // {
 // public:
@@ -60,11 +60,11 @@ namespace Win32xx
 //     void SomeFunction()
 //     {
 //        // Lock this code, preventing other threads from running it until the lock
-//        // is released. The lock is automatically released when Lock goes out of scope.  
+//        // is released. The lock is automatically released when Lock goes out of scope.
 //        CThreadLock Lock(m_cs);  // m_cs is a CCriticalSection member variable.
 //
 //        // Do something that requires thread safety.
-//        DoSomething(); 
+//        DoSomething();
 //     }
 // private:
 //     CCriticalSection m_cs;
