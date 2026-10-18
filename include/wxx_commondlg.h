@@ -365,7 +365,16 @@ namespace Win32xx
             return 0;
         }
 
-        return pCommonDlg->DialogProc(msg, wparam, lparam);
+        LRESULT result = pCommonDlg->DialogProc(msg, wparam, lparam);
+
+        // The last message received for any window's normal destruction.
+        if (msg == WM_NCDESTROY)
+        {
+            pCommonDlg->Cleanup();
+            return 0;  // As recommended by the Windows API documentation.
+        }
+
+        return result;
     }
 
 

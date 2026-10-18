@@ -194,9 +194,6 @@ namespace Win32xx
 
     inline CSocket::CSocket() : m_stopRequest(FALSE, TRUE)
     {
-        // Ensure instance initialization is thread-safe for this object.
-        CThreadLock lock(m_cs);
-
         LONG newCount = ::InterlockedIncrement(&m_socketCount);
         if (newCount == 1)
         {

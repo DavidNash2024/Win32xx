@@ -99,7 +99,8 @@ namespace Win32xx
     // The PrintDlg function displays a print dialog. The print dialog
     // enables the user to specify the properties of a particular print job.
     // NOTE: DoModal throws an exception if there is no default printer.
-    // NOTE: Setting the PD_ENABLEPRINTHOOK displays the classic print dialog.
+    // NOTE: Internally this uses the PD_ENABLEPRINTHOOK flag to display
+    //       the classic print dialog.
     class CPrintDialog : public CCommonDialog
     {
     public:
@@ -108,8 +109,7 @@ namespace Win32xx
             PD_USEDEVMODECOPIES |     // Supports multiple copies and collation.
             PD_NOPAGENUMS |           // Disables the Pages radio button and the associated edit controls.
             PD_HIDEPRINTTOFILE |      // Hides the Print to File check box.
-            PD_NOSELECTION |          // Disables the Selection radio button.
-            PD_ENABLEPRINTHOOK);      // Enables the hook procedure specified in the lpfnPrintHook member.
+            PD_NOSELECTION);          // Disables the Selection radio button.
         virtual ~CPrintDialog() override = default;
 
         virtual INT_PTR DoModal(HWND owner = nullptr) override;
@@ -488,7 +488,7 @@ namespace Win32xx
     {
         m_pd.lStructSize    = sizeof(m_pd);
         m_pd.hwndOwner      = nullptr;            // Set this in DoModal.
-        m_pd.Flags          = pd.Flags;
+        m_pd.Flags          = pd.Flags | PD_ENABLEPRINTHOOK;
         m_pd.nFromPage      = pd.nFromPage;
         m_pd.nToPage        = pd.nToPage;
         m_pd.nMinPage       = pd.nMinPage;

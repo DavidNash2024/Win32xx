@@ -165,7 +165,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& rcs)
     InitCtlColors();
     CHOOSECOLOR cc = m_colorChoice.GetParameters();
     cc.Flags = CC_FULLOPEN;
-    cc.Flags |= CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
+    cc.Flags |= CC_ANYCOLOR | CC_RGBINIT;
     m_colorChoice.SetParameters(cc);
 
     // Set the initial flags to use the font style,
@@ -363,7 +363,6 @@ void CMainFrame::OnOpenDoc()
         OFN_NONETWORKBUTTON |
         OFN_FILEMUSTEXIST   |   // only existing files allowed
         OFN_PATHMUSTEXIST   |
-        OFN_ENABLEHOOK      |
         OFN_ENABLESIZING,
         m_docFilter
     );
@@ -422,7 +421,6 @@ void CMainFrame::OnSaveAs()
         OFN_HIDEREADONLY |
         OFN_OVERWRITEPROMPT |
         OFN_EXPLORER |
-        OFN_ENABLEHOOK |
         OFN_NONETWORKBUTTON,
         m_docFilter             // filter defined by app
      );

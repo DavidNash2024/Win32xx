@@ -1115,7 +1115,16 @@ namespace Win32xx
             return 0;
         }
 
-        return w->WndProc(msg, wparam, lparam);
+        LRESULT result = w->WndProc(msg, wparam, lparam);
+
+        // The last message received for any window's normal destruction.
+        if (msg == WM_NCDESTROY)
+        {
+            w->Cleanup();
+            return 0;  // As recommended by the Windows API documentation.
+        }
+
+        return result;
 
     } // LRESULT CALLBACK StaticWindowProc(...)
 
@@ -1200,7 +1209,7 @@ namespace Win32xx
     inline LRESULT CWnd::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         LRESULT result = 0;
-        if (UWM_WINDOWCREATED == msg)
+        if (msg == UWM_WINDOWCREATED)
         {
             OnInitialUpdate();
             return 0;
@@ -1247,11 +1256,6 @@ namespace Win32xx
                 UINT menuItem = menu.GetMenuItemID(i);
                 OnMenuUpdate(menuItem);
             }
-            return 0;
-        }
-        case WM_NCDESTROY:
-        {
-            Cleanup();
             return 0;
         }
         case WM_NOTIFY:

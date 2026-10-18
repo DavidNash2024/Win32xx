@@ -368,9 +368,7 @@ void CRichEditView::OnPrepareDC(CDC&, CPrintInfo&info /* = nullptr */)
 BOOL CRichEditView::OnPreparePrinting(CPrintInfo& info)
 {
     // Set up the dialog to choose the printer and printing parameters.
-    // The PD_ENABLEPRINTHOOK parameter displays the classic dialog.
-    MyPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC |
-        PD_ENABLEPRINTHOOK);
+    MyPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
 
     PrintDlg.SetBoxTitle(L"Print contents of rich edit box.");
     info.InitInfo(&PrintDlg, 1, 0xffff, 1, 0xffff, 1);

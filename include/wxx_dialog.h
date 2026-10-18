@@ -728,7 +728,16 @@ namespace Win32xx
             return 0;
         }
 
-        return pDialog->DialogProc(msg, wparam, lparam);
+        HRESULT result = pDialog->DialogProc(msg, wparam, lparam)
+
+        // The last message received for any window's normal destruction.
+        if (msg == WM_NCDESTROY)
+        {
+            pDialog->Cleanup();
+            return 0;  // As recommended by the Windows API documentation.
+        }
+
+        return result;
 
     } // INT_PTR CALLBACK CDialog::StaticDialogProc(...)
 
