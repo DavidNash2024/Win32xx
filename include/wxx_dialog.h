@@ -728,7 +728,7 @@ namespace Win32xx
             return 0;
         }
 
-        HRESULT result = pDialog->DialogProc(msg, wparam, lparam)
+        INT_PTR result = pDialog->DialogProc(msg, wparam, lparam);
 
         // The last message received for any window's normal destruction.
         if (msg == WM_NCDESTROY)

@@ -589,14 +589,7 @@ namespace Win32xx
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        HMENU subMenuHandle = ::GetSubMenu(m_pData->menu, pos);
-        if (subMenuHandle == nullptr)
-            return CMenu();
-
-        // Create an unmanaged subMenuInstance.
-        CMenu subMenuInstance;
-        subMenuInstance.Attach(subMenuHandle);
-        return subMenuInstance;
+        return CMenu(::GetSubMenu(m_pData->menu, pos));
     }
 
     // Inserts a new menu item into a menu, moving other items down the menu.

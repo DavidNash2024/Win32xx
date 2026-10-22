@@ -569,7 +569,7 @@ namespace Win32xx
     inline CArchive& CArchive::operator<<(POINT pt)
     {
         ArchiveObject ob(&pt, sizeof(pt));
-        *this >> ob;
+        *this << ob;
         return *this;
     }
 
@@ -578,7 +578,7 @@ namespace Win32xx
     inline CArchive& CArchive::operator<<(RECT rc)
     {
         ArchiveObject ob(&rc, sizeof(rc));
-        *this >> ob;
+        *this << ob;
         return *this;
     }
 
@@ -587,7 +587,7 @@ namespace Win32xx
     inline CArchive& CArchive::operator<<(SIZE sz)
     {
         ArchiveObject ob(&sz, sizeof(sz));
-        *this >> ob;
+        *this << ob;
         return *this;
     }
 
@@ -730,13 +730,21 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline CArchive& CArchive::operator>>(CStringA& string)
     {
-        bool isUnicode;
-        int chars;
+        bool isUnicode = false;
+        int chars = 0;
+        constexpr int kMaxArchiveStringChars = 16 * 1024 * 1024;
 
         // Retrieve the Unicode state and number of characters from the archive.
         *this >> isUnicode;
         *this >> chars;
-        assert(chars >= 0);
+
+        if (chars < 0 ||
+            static_cast<size_t>(chars) > kMaxArchiveStringChars ||
+            static_cast<size_t>(chars) > m_pFile->GetLength() - m_pFile->GetPosition())
+        {
+            throw CFileException(m_pFile->GetFilePath(),
+                GetApp()->MsgArReadFail());
+        }
 
         if (isUnicode)
             throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArNotCStringA());
@@ -751,19 +759,41 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline CArchive& CArchive::operator>>(CStringW& string)
     {
-        bool isUnicode;
-        int chars;
+        bool isUnicode = false;
+        int chars = 0;
+        constexpr size_t kMaxArchiveStringChars = 16u * 1024u * 1024u;
 
         // Retrieve the Unicode state and number of characters from the archive.
         *this >> isUnicode;
         *this >> chars;
-        assert(chars >= 0);
 
-        if (!isUnicode)
-            throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArNotCStringW());
+        const ULONGLONG position = m_pFile->GetPosition();
+        const ULONGLONG length = m_pFile->GetLength();
 
-        Read(string.GetBuffer(chars), static_cast<UINT>(chars) * 2);
-        string.ReleaseBuffer(chars);
+        if (!isUnicode ||
+            chars < 0 ||
+            static_cast<size_t>(chars) > kMaxArchiveStringChars ||
+            position > length ||
+            static_cast<ULONGLONG>(chars) >
+            (length - position) / sizeof(WCHAR))
+        {
+            throw CFileException(
+                m_pFile->GetFilePath(),
+                GetApp()->MsgArReadFail());
+        }
+
+        WCHAR* buffer = string.GetBuffer(chars);
+
+        try
+        {
+            Read(buffer, static_cast<UINT>(chars * sizeof(WCHAR)));
+            string.ReleaseBuffer(chars);
+        }
+        catch (...)
+        {
+            string.ReleaseBuffer(0);
+            throw;
+        }
 
         return *this;
     }
@@ -772,13 +802,21 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline CArchive& CArchive::operator>>(CString& string)
     {
-        bool isUnicode;
-        int chars;
+        bool isUnicode = false;
+        int chars = 0;
+        constexpr size_t kMaxArchiveStringChars = 16u * 1024u * 1024u;
 
         // Retrieve the Unicode state and number of characters from the archive.
         *this >> isUnicode;
         *this >> chars;
-        assert(chars >= 0);
+
+        if (chars < 0 ||
+            static_cast<size_t>(chars) > kMaxArchiveStringChars ||
+            static_cast<size_t>(chars) > m_pFile->GetLength() - m_pFile->GetPosition())
+        {
+            throw CFileException(m_pFile->GetFilePath(),
+                GetApp()->MsgArReadFail());
+        }
 
         if (isUnicode)
         {

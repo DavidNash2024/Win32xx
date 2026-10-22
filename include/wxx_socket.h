@@ -653,6 +653,7 @@ namespace Win32xx
             return;
         }
 
+        m_stopRequest.ResetEvent();
         m_threadPtr = std::make_unique<CWorkThread>(EventThread, this);
         try
         {
@@ -674,14 +675,9 @@ namespace Win32xx
             // Signal the worker thread to stop.
             m_stopRequest.SetEvent();
 
-            // Wait up to 5 seconds for the worker thread to stop.
-            DWORD result = ::WaitForSingleObject(*m_threadPtr, 5000);
-            if (result == WAIT_TIMEOUT)
-            {
-                Trace("*** CRITICAL *** Worker thread hung during StopEvents()!");
-                m_threadPtr.release();
-                return;
-            }
+            DWORD result = ::WaitForSingleObject(*m_threadPtr, INFINITE);
+            if (result != WAIT_OBJECT_0)
+                throw CWinException(GetApp()->MsgAppThreadEnd());
 
             // Destroy the worker thread object; its destructor will close the handle.
             m_threadPtr.reset();

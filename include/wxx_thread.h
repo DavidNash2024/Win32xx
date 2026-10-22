@@ -78,7 +78,6 @@ namespace Win32xx
         LPVOID m_pThreadParams;         // Thread parameter.
         HANDLE m_thread;                // Handle of this thread.
         UINT m_threadID;                // ID of this thread.
-        std::atomic<bool> m_stopRequested{ false };
     };
 
     using WorkThread = CThreadT<CObject>;
@@ -152,20 +151,16 @@ namespace Win32xx
     template <class T>
     inline CThreadT<T>::~CThreadT()
     {
-        m_stopRequested.store(true, std::memory_order_release);
-
         if (m_thread)
         {
-            // Wait up to 5s for graceful stop.
-            DWORD waitRes = ::WaitForSingleObject(m_thread, 5000);
-            if (waitRes == WAIT_TIMEOUT && m_threadID != 0)
-            {
-                // Best-effort: ask message-loop threads to quit.
+            // Signal any message-loop worker.
+            if (m_threadID != 0)
                 ::PostThreadMessage(m_threadID, WM_QUIT, 0, 0);
-                ::WaitForSingleObject(m_thread, 2000);
-            }
 
-            // Close handle to avoid leaks. (Does not terminate thread; thread code must honor stop flag.)
+            // Wait for the thread to come to a  graceful stop.
+            ::WaitForSingleObject(m_thread, INFINITE);
+
+            // Close handle to avoid leaks.
             ::CloseHandle(m_thread);
             m_thread = nullptr;
             m_threadID = 0;
