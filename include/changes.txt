@@ -3,10 +3,21 @@ Version 10.4
 
 New Features and Enhancements
 -----------------------------
-* Updated for C++ Builder 13 CE.
+* Updated CCriticalSection and CThreadLock.
+  CCriticalSection and CThreadLock now use std::recursive_mutex. This replaces
+  the InitializeCriticalSection Windows API function call used previously.
+
+* Updated Win32++ for C++ Builder 13 CE. Previous versions of C++ Builder are
+  no longer supported by Win32++.
+
 * Updated CPoint, CRect and CSize.
-* Updated CCriticialSection and CThreadLock
+  The constructors for these classes now use the aggregate initialization
+  provided by C++17.
+
+* Added TestCArchive unit test.
+
 * Removed the CWebBrowser class.
+  It is obsolete and no longer fit for purpose.
 
 
 Version 10.3

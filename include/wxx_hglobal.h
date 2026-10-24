@@ -98,7 +98,7 @@ namespace Win32xx
         HGLOBAL res = ::GlobalFree(m_global);
         if (res != nullptr)
         {
-            // GlobalFree failed; caller can detect failure from return value.
+            // GlobalFree failed;
             return false;
         }
         m_global = nullptr;

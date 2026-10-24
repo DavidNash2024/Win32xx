@@ -68,7 +68,7 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <Multithreaded>true</Multithreaded>
         <IncludePath>..\..\..\include\;..\src\;..\..\..\include;$(IncludePath)</IncludePath>
-        <ILINK_LibraryPath>..\..\..\include\;..\src\;..\Documents\Visual Studio Projects\C++\Win32++\samples\Console\src\;..\..\..\Visual Studio Projects\C++\Win32++\samples\Console\src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <ILINK_LibraryPath>..\..\..\include\;..\src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <_TCHARMapping>char</_TCHARMapping>
         <SanitizedProjectName>Console</SanitizedProjectName>
         <VerInfo_Locale>3081</VerInfo_Locale>
