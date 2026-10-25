@@ -205,7 +205,7 @@ BOOL CMainFrame::OnCheckFiles()
         m_view.AppendSmallText(str);
     }
 
-    m_view.AppendBigText(L"Source files with non-ascii characters\n");
+/*    m_view.AppendBigText(L"Source files with non-ascii characters\n");
     CheckForNonAscii(m_folder);
     if (m_filesWithNonAscii.size() == 0)
         m_view.AppendSmallText(L"None\n");
@@ -214,9 +214,10 @@ BOOL CMainFrame::OnCheckFiles()
         CString str = L"Files with non-ascii characters: " +
             ToCString(m_filesWithNonAscii.size()) + L"\n";
         m_view.AppendSmallText(str);
-    }
+    } */
 
     SetStatusText(L"Done");
+    m_view.AppendBigText(L"Done\n");
 
     return TRUE;
 }
@@ -401,7 +402,7 @@ BOOL CMainFrame::OnFixFiles()
             MessageBox(e.GetText() + file, L"Bad File", MB_OK);
         }
     }
-
+    /*
     // Fix non-ascii.
     m_view.AppendBigText(L"Fixing source files with non-ascii characters\n");
 
@@ -442,8 +443,8 @@ BOOL CMainFrame::OnFixFiles()
             MessageBox(e.GetText() + file, L"Bad File", MB_OK);
         }
     }
-
-    m_view.AppendSmallText(L"Done\n");
+    */
+    m_view.AppendBigText(L"Done\n");
     m_fileContents.clear();
     m_filesWithTabs.clear();
     m_filesWithEndSpace.clear();

@@ -187,7 +187,6 @@ BOOL CMainFrame::LoadRegistrySettings(LPCWSTR keyName)
     m_useLines = false;
     m_showArrows = true;
     m_showCards = true;
-    DWORD bands = 0;
 
     // Call the base class function.
     if (CFrame::LoadRegistrySettings(keyName))
@@ -198,11 +197,10 @@ BOOL CMainFrame::LoadRegistrySettings(LPCWSTR keyName)
 
         if (ERROR_SUCCESS == settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName, KEY_READ))
         {
-            // Read DWORD values natively directly into your variables
+            // Read DWORD values directly into our variables.
             settingsKey.QueryDWORDValue(L"ColorStyle", m_color);
-            settingsKey.QueryDWORDValue(L"NumBands", bands);
 
-            // Queries perfectly into your bool types since the signatures now align precisely
+            // Read bool values directly into our variables.
             settingsKey.QueryBoolValue(L"UseThemes", m_useThemes);
             settingsKey.QueryBoolValue(L"UseBandColors", m_useBandColors);
             settingsKey.QueryBoolValue(L"UseFlatStyle", m_useFlatStyle);
@@ -556,16 +554,10 @@ BOOL CMainFrame::SaveRegistrySettings()
         CString settingsKeyName;
         settingsKeyName.Format(L"Software\\%s\\Theme Settings", GetRegistryKeyName().c_str());
 
-        int bandCount = GetReBar().GetBandCount();
-        DWORD bands = (bandCount > 0) ? static_cast<DWORD>(bandCount) : 0;
-
         // Create opens and attaches the handle to 'settingsKey' automatically.
         // Explicitly requesting KEY_WRITE prevents standard runtime access exceptions.
         if (ERROR_SUCCESS == settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName, REG_NONE, REG_OPTION_NON_VOLATILE, KEY_WRITE))
         {
-            // REMOVED: Redundant settingsKey.Open block
-
-            // These now save beautifully because types match and SetBoolValue accepts bool by value
             settingsKey.SetDWORDValue(L"ColorStyle", m_color);
             settingsKey.SetBoolValue(L"UseThemes", m_useThemes);
             settingsKey.SetBoolValue(L"UseBandColors", m_useBandColors);
@@ -577,7 +569,6 @@ BOOL CMainFrame::SaveRegistrySettings()
             settingsKey.SetBoolValue(L"UseLines", m_useLines);
             settingsKey.SetBoolValue(L"ShowArrows", m_showArrows);
             settingsKey.SetBoolValue(L"ShowCards", m_showCards);
-            settingsKey.SetDWORDValue(L"NumBands", bands);
         }
     }
 

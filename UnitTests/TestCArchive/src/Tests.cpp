@@ -23,7 +23,7 @@ bool DoTests()
     constexpr wchar_t wcharTest = L'\u03B8'; //'θ'
     constexpr unsigned unsignedTest = 87654321;
     constexpr bool boolTest = true;
-    
+
     const CStringA stringATest("ANSI string with \0 an embedded null", 35);
     const CStringW stringWTest(L"αβγδεζηθικλμνξοπρςστυφχψωϊϋ with \0 an embedded null", 52);
     const CString stringTest("ANSI string converted to TCHAR with \0 an embedded null", 55);
@@ -36,7 +36,7 @@ bool DoTests()
 
     // Store values in the file archive.
     {
-        CArchive arWrite(fileName, CArchive::store);        
+        CArchive arWrite(fileName, CArchive::store);
 
         arWrite << byteTest;
         arWrite << wordTest;

@@ -14,7 +14,7 @@ New Features and Enhancements
   The constructors for these classes now use the aggregate initialization
   provided by C++17.
 
-* Added TestCArchive unit test.
+* Added the TestCArchive unit test.
 
 * Removed the CWebBrowser class.
   It is obsolete and no longer fit for purpose.
