@@ -941,9 +941,6 @@ namespace Win32xx
             succeeded = GetButton(index, tbb);
             tbb.iString = stringIndex;
 
-            // Turn off ToolBar drawing.
-            SetRedraw(FALSE);
-
             // Replace the button to resize it to fit the text.
             succeeded = succeeded ? DeleteButton(index) : FALSE;
             succeeded = succeeded ? InsertButton(index, tbb) : FALSE;
@@ -951,13 +948,7 @@ namespace Win32xx
             // Ensure the button now includes some text rows.
             if (SendMessage(TB_GETTEXTROWS, 0, 0) == 0)
                 SendMessage(TB_SETMAXTEXTROWS, static_cast<WPARAM>(1), 0);
-
-            // Turn on ToolBar drawing.
-            SetRedraw(TRUE);
         }
-
-        Invalidate();
-        UpdateWindow();
 
         return succeeded;
     }

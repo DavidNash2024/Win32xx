@@ -473,11 +473,10 @@ void CMainFrame::OnInitialUpdate()
 
     m_view.AppendBigText(L"Instructions\n\n");
     m_view.AppendSmallText(L"This program searches all source files within the selected folder\n");
-    m_view.AppendSmallText(L"for lines containing tabs, trailing spaces and non-ascii characters.\n");
+    m_view.AppendSmallText(L"for lines containing tabs, and trailing spaces.\n");
     m_view.AppendSmallText(L"Source files in any subfolders are searched as well.\n");
-    m_view.AppendSmallText(L"When fixed, tabs are replaced with 4 space characters,\n");
-    m_view.AppendSmallText(L"trailing spaces are removed from the end of lines,\n");
-    m_view.AppendSmallText(L"and non-ascii characters are removed from lines.\n\n");
+    m_view.AppendSmallText(L"When fixed, tabs are replaced with 4 space characters.\n");
+    m_view.AppendSmallText(L"Trailing spaces are removed from the end of lines.\n");
 
     m_view.AppendSmallText(L"Select the Folder button to choose the folder containing the source files.\n");
     m_view.AppendSmallText(L"Select the Search button to list the files which will be modified.\n");
@@ -485,7 +484,6 @@ void CMainFrame::OnInitialUpdate()
 
     m_view.AppendBigWarning(L"Warning:\n");
     m_view.AppendSmallWarning(L"This will modify source files in the selected folder and any subfolders.\n");
-    m_view.AppendSmallWarning(L"All non-ascii characters will be removed from source files.\n");
     m_view.AppendSmallWarning(L"Make a backup copy of your source files before modifying them.\n");
     m_view.AppendSmallWarning(L"Choose the folder containing the source files carefully.\n\n");
 }

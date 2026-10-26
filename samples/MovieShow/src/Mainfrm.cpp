@@ -789,7 +789,7 @@ BOOL CMainFrame::LoadRegistrySettings(LPCWSTR szKeyName)
                 DWORD dwTreeWidth = 0;
 
                 if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Dialog Height", dwDialogHeight))
-                    throw CUserException(); // Replaced invalid string constructor parameter
+                    throw CUserException();
 
                 if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Tree Width", dwTreeWidth))
                     throw CUserException();
@@ -890,8 +890,7 @@ LRESULT CMainFrame::OnBarEnd(DragPos* pDragPos)
     return CDockFrame::OnBarEnd(pDragPos);
 }
 
-// Called when the user clicks on Box Sets (parent or child)
-// in the tree view.
+// Called when the user clicks on Box Sets (parent or child) in the tree view.
 BOOL CMainFrame::OnBoxSet(UINT nID)
 {
     int index = nID - IDM_BOXSET_1;
