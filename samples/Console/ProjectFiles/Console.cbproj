@@ -58,8 +58,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
-        <IntermediateOutputDir>.\Embarcadero\$(Platform)\$(Config)</IntermediateOutputDir>
-        <FinalOutputDir>.\Embarcadero\$(Platform)\$(Config)</FinalOutputDir>
+        <IntermediateOutputDir>.\C++ Builder\$(Platform)\$(Config)</IntermediateOutputDir>
+        <FinalOutputDir>.\C++ Builder\$(Platform)\$(Config)</FinalOutputDir>
         <BCC_wpar>false</BCC_wpar>
         <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
@@ -133,7 +133,7 @@
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-        <FinalOutputDir>.\Embarcadero\$(Platform)\$(Config)</FinalOutputDir>
+        <FinalOutputDir>.\C++ Builder\$(Platform)\$(Config)</FinalOutputDir>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(None)</Manifest_File>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
@@ -299,9 +299,6 @@
         <None Include="..\..\..\include\wxx_treeview.h">
             <BuildOrder>54</BuildOrder>
         </None>
-        <None Include="..\..\..\include\wxx_webbrowser.h">
-            <BuildOrder>54</BuildOrder>
-        </None>
         <None Include="..\..\..\include\wxx_wincore.h">
             <BuildOrder>54</BuildOrder>
         </None>
@@ -417,8 +414,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Embarcadero\Win64\Debug\Console.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName=".\Embarcadero\Win64x\Debug\Console.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64\Debug\Console.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64x\Debug\Console.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64x\Release\Console.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64x">
+                        <RemoteName>Console.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName=".\Win32\Debug\Console.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">

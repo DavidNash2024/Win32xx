@@ -116,7 +116,6 @@
 		<Unit filename="../../../include/wxx_time.h" />
 		<Unit filename="../../../include/wxx_toolbar.h" />
 		<Unit filename="../../../include/wxx_treeview.h" />
-		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/AboutDialog.h" />
@@ -128,16 +127,16 @@
 		<Unit filename="../src/PrintPreview.h" />
 		<Unit filename="../src/PrintUtil.cpp" />
 		<Unit filename="../src/PrintUtil.h" />
-		<Unit filename="../src/resource.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="../src/RichView.cpp" />
 		<Unit filename="../src/RichView.h" />
-		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/main.cpp" />
-		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/pch.h">
 			<Option compile="1" />
+		</Unit>
+		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/resource.rc">
+			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Extensions />
 	</Project>

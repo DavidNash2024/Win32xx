@@ -27,9 +27,9 @@ bool DoTests()
     const CStringA stringATest("ANSI string with \0 an embedded null", 35);
     const CStringW stringWTest(L"αβγδεζηθικλμνξοπρςστυφχψωϊϋ with \0 an embedded null", 52);
     const CString stringTest("ANSI string converted to TCHAR with \0 an embedded null", 55);
-    constexpr POINT pointTest(12, 15);
-    constexpr RECT rectTest(32, 65, 48, 0);
-    constexpr SIZE sizeTest(348, 26);
+    constexpr POINT pointTest = {12, 15};
+    constexpr RECT rectTest = {32, 65, 48, 0};
+    constexpr SIZE sizeTest = {348, 26};
 
     Data data = { pointTest, rectTest, sizeTest };
     ArchiveObject archiveTest(&data, sizeof(data));

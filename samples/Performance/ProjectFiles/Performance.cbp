@@ -117,7 +117,6 @@
 		<Unit filename="../../../include/wxx_time.h" />
 		<Unit filename="../../../include/wxx_toolbar.h" />
 		<Unit filename="../../../include/wxx_treeview.h" />
-		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/MainWnd.cpp" />
@@ -134,10 +133,10 @@
 		<Unit filename="../src/TestWnd.cpp" />
 		<Unit filename="../src/TestWnd.h" />
 		<Unit filename="../src/main.cpp" />
-		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 		</Unit>
+		<Unit filename="../src/resource.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

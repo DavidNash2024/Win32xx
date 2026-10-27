@@ -76,8 +76,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
-        <IntermediateOutputDir>.\Embarcadero\$(Platform)\$(Config)</IntermediateOutputDir>
-        <FinalOutputDir>.\Embarcadero\$(Platform)\$(Config)</FinalOutputDir>
+        <IntermediateOutputDir>.\C++ Builder\$(Platform)\$(Config)</IntermediateOutputDir>
+        <FinalOutputDir>.\C++ Builder\$(Platform)\$(Config)</FinalOutputDir>
         <BCC_wpar>false</BCC_wpar>
         <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
@@ -344,9 +344,6 @@
         <None Include="..\..\..\include\wxx_treeview.h">
             <BuildOrder>85</BuildOrder>
         </None>
-        <None Include="..\..\..\include\wxx_webbrowser.h">
-            <BuildOrder>85</BuildOrder>
-        </None>
         <None Include="..\..\..\include\wxx_wincore.h">
             <BuildOrder>85</BuildOrder>
         </None>
@@ -558,9 +555,21 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Embarcadero\Win32\Debug\CommonDialogs.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName=".\Embarcadero\Win64\Debug\CommonDialogs.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName=".\Embarcadero\Win64x\Release\CommonDialogs.exe" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win32\Debug\CommonDialogs.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64\Debug\CommonDialogs.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64x\Debug\CommonDialogs.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64x">
+                        <RemoteName>CommonDialogs.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\C++ Builder\Win64x\Debug\CommonDialogs.pdb" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64x">
+                        <RemoteName>CommonDialogs.pdb</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\C++ Builder\Win64x\Release\CommonDialogs.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

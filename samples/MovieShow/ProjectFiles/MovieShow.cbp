@@ -74,6 +74,59 @@
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
 		</Linker>
+		<Unit filename="../../../include/wxx_appcore.h" />
+		<Unit filename="../../../include/wxx_appcore0.h" />
+		<Unit filename="../../../include/wxx_archive.h" />
+		<Unit filename="../../../include/wxx_commondlg.h" />
+		<Unit filename="../../../include/wxx_controls.h" />
+		<Unit filename="../../../include/wxx_criticalsection.h" />
+		<Unit filename="../../../include/wxx_cstring.h" />
+		<Unit filename="../../../include/wxx_ddx.h" />
+		<Unit filename="../../../include/wxx_dialog.h" />
+		<Unit filename="../../../include/wxx_dockframe.h" />
+		<Unit filename="../../../include/wxx_docking.h" />
+		<Unit filename="../../../include/wxx_exception.h" />
+		<Unit filename="../../../include/wxx_file.h" />
+		<Unit filename="../../../include/wxx_filefind.h" />
+		<Unit filename="../../../include/wxx_folderdialog.h" />
+		<Unit filename="../../../include/wxx_folderdialogex.h" />
+		<Unit filename="../../../include/wxx_frame.h" />
+		<Unit filename="../../../include/wxx_gdi.h" />
+		<Unit filename="../../../include/wxx_hglobal.h" />
+		<Unit filename="../../../include/wxx_imagelist.h" />
+		<Unit filename="../../../include/wxx_listview.h" />
+		<Unit filename="../../../include/wxx_mdi.h" />
+		<Unit filename="../../../include/wxx_menu.h" />
+		<Unit filename="../../../include/wxx_menubar.h" />
+		<Unit filename="../../../include/wxx_menumetrics.h" />
+		<Unit filename="../../../include/wxx_messagepump.h" />
+		<Unit filename="../../../include/wxx_messagepump0.h" />
+		<Unit filename="../../../include/wxx_metafile.h" />
+		<Unit filename="../../../include/wxx_mutex.h" />
+		<Unit filename="../../../include/wxx_preview.h" />
+		<Unit filename="../../../include/wxx_printdialogex.h" />
+		<Unit filename="../../../include/wxx_printdialogs.h" />
+		<Unit filename="../../../include/wxx_propertysheet.h" />
+		<Unit filename="../../../include/wxx_rebar.h" />
+		<Unit filename="../../../include/wxx_rect.h" />
+		<Unit filename="../../../include/wxx_regkey.h" />
+		<Unit filename="../../../include/wxx_ribbon.h" />
+		<Unit filename="../../../include/wxx_richedit.h" />
+		<Unit filename="../../../include/wxx_scrollview.h" />
+		<Unit filename="../../../include/wxx_setup.h" />
+		<Unit filename="../../../include/wxx_socket.h" />
+		<Unit filename="../../../include/wxx_statusbar.h" />
+		<Unit filename="../../../include/wxx_stdcontrols.h" />
+		<Unit filename="../../../include/wxx_tab.h" />
+		<Unit filename="../../../include/wxx_taskdialog.h" />
+		<Unit filename="../../../include/wxx_textconv.h" />
+		<Unit filename="../../../include/wxx_themes.h" />
+		<Unit filename="../../../include/wxx_thread.h" />
+		<Unit filename="../../../include/wxx_time.h" />
+		<Unit filename="../../../include/wxx_toolbar.h" />
+		<Unit filename="../../../include/wxx_treeview.h" />
+		<Unit filename="../../../include/wxx_wincore.h" />
+		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/AboutDialog.h" />
 		<Unit filename="../src/CoverImage.cpp" />
 		<Unit filename="../src/CoverImage.h" />
@@ -87,22 +140,22 @@
 		<Unit filename="../src/MovieShowApp.h" />
 		<Unit filename="../src/MyDialog.cpp" />
 		<Unit filename="../src/MyDialog.h" />
-		<Unit filename="../src/resource.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="../src/SearchDialog.cpp" />
 		<Unit filename="../src/SearchDialog.h" />
 		<Unit filename="../src/Splash.cpp" />
 		<Unit filename="../src/Splash.h" />
 		<Unit filename="../src/SplashThread.cpp" />
 		<Unit filename="../src/SplashThread.h" />
-		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/Tree.cpp" />
 		<Unit filename="../src/Tree.h" />
 		<Unit filename="../src/UserMessages.h" />
 		<Unit filename="../src/main.cpp" />
-		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/pch.h" />
+		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -117,7 +117,6 @@
 		<Unit filename="../../../include/wxx_time.h" />
 		<Unit filename="../../../include/wxx_toolbar.h" />
 		<Unit filename="../../../include/wxx_treeview.h" />
-		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/MainWnd.cpp" />
@@ -126,19 +125,19 @@
 		<Unit filename="../src/MyEdit.h" />
 		<Unit filename="../src/MyThread.cpp" />
 		<Unit filename="../src/MyThread.h" />
-		<Unit filename="../src/resource.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="../src/TestWnd.cpp" />
 		<Unit filename="../src/TestWnd.h" />
 		<Unit filename="../src/ThreadApp.cpp" />
 		<Unit filename="../src/ThreadApp.h" />
 		<Unit filename="../src/UserMessages.h" />
 		<Unit filename="../src/main.cpp" />
-		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
+		</Unit>
+		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/resource.rc">
+			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Extensions />
 	</Project>

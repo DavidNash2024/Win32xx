@@ -122,7 +122,6 @@
 		<Unit filename="../../../include/wxx_time.h" />
 		<Unit filename="../../../include/wxx_toolbar.h" />
 		<Unit filename="../../../include/wxx_treeview.h" />
-		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/MakeDLL.cpp" />
@@ -131,15 +130,15 @@
 		<Unit filename="../src/MyDialog.h" />
 		<Unit filename="../src/MyWinThread.cpp" />
 		<Unit filename="../src/MyWinThread.h" />
-		<Unit filename="../src/resource.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="../src/pch.cpp" />
 		<Unit filename="../src/pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>
 		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Unit filename="Export.def" />
 		<Extensions />
 	</Project>

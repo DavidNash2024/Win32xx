@@ -76,8 +76,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
-        <IntermediateOutputDir>.\Embarcadero\$(Platform)\$(Config)</IntermediateOutputDir>
-        <FinalOutputDir>.\Embarcadero\$(Platform)\$(Config)</FinalOutputDir>
+        <IntermediateOutputDir>.\C++ Builder\$(Platform)\$(Config)</IntermediateOutputDir>
+        <FinalOutputDir>.\C++ Builder\$(Platform)\$(Config)</FinalOutputDir>
         <BCC_wpar>false</BCC_wpar>
         <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
@@ -346,9 +346,6 @@
         <None Include="..\..\..\include\wxx_treeview.h">
             <BuildOrder>68</BuildOrder>
         </None>
-        <None Include="..\..\..\include\wxx_webbrowser.h">
-            <BuildOrder>68</BuildOrder>
-        </None>
         <None Include="..\..\..\include\wxx_wincore.h">
             <BuildOrder>68</BuildOrder>
         </None>
@@ -513,8 +510,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Embarcadero\Win64\Debug\MDIFrameSplitter.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName=".\Embarcadero\Win64x\Release\MDIFrameSplitter.exe" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64\Debug\MDIFrameSplitter.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64x\Release\MDIFrameSplitter.exe" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\C++ Builder\Win64x\Release\MDIFrameSplitter.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64x">
+                        <RemoteName>MDIFrameSplitter.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName=".\Win32\Debug\NewProject.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
