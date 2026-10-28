@@ -106,7 +106,7 @@ namespace Win32xx
             BYTE style = 0xFF, BYTE state = 0xFF);
         BOOL  SetButtonInfo(UINT buttonID, const TBBUTTONINFO& tbbi);
         BOOL  SetButtonSize(int cx, int cy);
-        BOOL  SetButtonState(UINT buttonID, UINT state) ;
+        BOOL  SetButtonState(UINT buttonID, UINT state);
         BOOL  SetButtonStyle(UINT buttonID, BYTE style);
         BOOL  SetButtonWidth(UINT buttonID, int width);
         BOOL  SetCommandID(int index, UINT buttonID);
@@ -501,34 +501,9 @@ namespace Win32xx
     {
         assert(IsWindow());
         CSize sz;
-        if (SendMessage(TB_GETMAXSIZE, 0, reinterpret_cast<LPARAM>(&sz)))
-        {
-            int maxButtonWidth = 0;
-            int maxButtonHeight = 0;
-            int totalWidth = 0;
-            int totalHeight = 0;
-
-            for (int i = 0; i < GetButtonCount(); ++i)
-            {
-                CRect itemRect = GetItemRect(i);
-                totalWidth += itemRect.Width();
-                totalHeight += itemRect.Height();
-
-                if (itemRect.Width() > maxButtonWidth) maxButtonWidth = itemRect.Width();
-                if (itemRect.Height() > maxButtonHeight) maxButtonHeight = itemRect.Height();
-            }
-
-            if (GetStyle() & CCS_VERT)
-            {
-                sz.cx = maxButtonWidth;
-                sz.cy = totalHeight;
-            }
-            else
-            {
-                sz.cx = totalWidth;
-                sz.cy = maxButtonHeight;
-            }
-        }
+        LPARAM lparam = reinterpret_cast<LPARAM>(&sz);       
+        if (!SendMessage(TB_GETMAXSIZE, 0, lparam))
+            sz = {};
 
         return sz;
     }
