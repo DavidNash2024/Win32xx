@@ -501,7 +501,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         CSize sz;
-        LPARAM lparam = reinterpret_cast<LPARAM>(&sz);       
+        LPARAM lparam = reinterpret_cast<LPARAM>(&sz);
         if (!SendMessage(TB_GETMAXSIZE, 0, lparam))
             sz = {};
 

@@ -6,7 +6,6 @@
 #include "App.h"
 
 
-
 ////////////////////////////
 // CApp function definitions
 //

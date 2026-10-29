@@ -555,7 +555,7 @@ void CMainFrame::ShowTemplateText(HMODULE module, LPCWSTR dialogRes)
             {
                 CString output;
                 output << "// Template array for dialog: " << dialogName << "\n";
-                output << "static unsigned char dialog" << "_" << dialogName << "[] = \n{\n\t";
+                output << "constexpr unsigned char dialog" << "_" << dialogName << "[] = \n{\n\t";
                 m_richView.AppendText(output);
 
                 DWORD sz = ::SizeofResource(module, dialog);

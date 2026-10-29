@@ -9,7 +9,7 @@
 #include "App.h"
 #include "resource.h"
 
-static const LPCWSTR registryKeyName = L"Win32++\\DDX-DDVDemo";
+constexpr LPCWSTR registryKeyName = L"Win32++\\DDX-DDVDemo";
 
 ///////////////////////////////////
 // CMainFrame function definitions.

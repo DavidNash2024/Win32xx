@@ -53,9 +53,9 @@ private:
     LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
-    CView       m_view;
-    CHelp       m_appHelp;  // Help object for context help and help about dialog
-    BOOL        m_isChoosing;
+    CView   m_view;
+    CHelp   m_appHelp;  // Help object for context help and help about dialog
+    BOOL    m_isChoosing;
 };
 
 

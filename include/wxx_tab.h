@@ -95,7 +95,7 @@ namespace Win32xx
             CSelectDialog& operator=(const CSelectDialog&) = delete;
 
             std::vector<CString> m_items;
-            static constexpr UINT IDC_LIST = 122;
+            const UINT IDC_LIST = 122;
         };
 
     public:
@@ -354,7 +354,7 @@ namespace Win32xx
         */
 
         // Dialog template for the dialog definition shown above.
-        static const unsigned char dlgTemplate[] =
+        constexpr unsigned char dlgTemplate[] =
         {
             0x01,0x00,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0xc8,0x00,0xc8,0x90,0x03,
             0x00,0x00,0x00,0x00,0x00,0xd0,0x00,0xca,0x00,0x00,0x00,0x00,0x00,0x53,0x00,0x65,
