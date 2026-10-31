@@ -194,7 +194,8 @@ namespace Win32xx
     inline CBitmap ScaleUpBitmap(const CBitmap& bitmap, int scale)
     {
         assert(bitmap.GetHandle() != nullptr);
-        assert(scale != 0);
+        assert(scale > 0);
+        if (scale <= 0) return bitmap;
 
         // Select the bitmap into a memory DC.
         CMemDC imageDC(nullptr);
@@ -203,13 +204,25 @@ namespace Win32xx
         // Create and select a DIB using CreateDIBSection.
         CMemDC newImageDC(nullptr);
         BITMAP  bm = bitmap.GetBitmapData();
-        bm.bmWidth = bm.bmWidth * scale;
-        bm.bmHeight = bm.bmHeight * scale;
+
+        const auto checkedDimension = [scale](LONG value) -> LONG
+        {
+            const auto result =
+                static_cast<int64_t>(value) * static_cast<int64_t>(scale);
+
+            if (result > std::numeric_limits<LONG>::max())
+                throw CResourceException(GetApp()->MsgGdiBitmap());
+
+            return static_cast<LONG>(result);
+        };
+
+        bm.bmWidth = checkedDimension(bm.bmWidth);
+        bm.bmHeight = checkedDimension(bm.bmHeight);
         CBitmapInfoPtr pbmi(bm);
         newImageDC.CreateDIBSection(newImageDC, pbmi, DIB_RGB_COLORS, nullptr,
             nullptr, 0);
 
-        // Copy the color table from the vertical to the horizontal DIB.
+        // Copy the color table from the vertical to the new bitmap.
         if (bm.bmBitsPixel <= 8)
         {
             UINT numColors = 1U << bm.bmBitsPixel;

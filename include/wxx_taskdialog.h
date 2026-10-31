@@ -147,7 +147,6 @@ namespace Win32xx
         CStringW m_expandedControlText;
         CStringW m_expandedInformation;
         CStringW m_footer;
-        CStringW m_footerIconName;
         CStringW m_mainInstruction;
         CStringW m_verificationText;
         CStringW m_windowTitle;
@@ -171,8 +170,9 @@ namespace Win32xx
     // This function creates a TaskDialog that simulates a simple MessageBox.
     // The iconType can be formed from MAKEINTRESOURCE, or one of:
     // TD_WARNING_ICON; TD_ERROR_ICON; TD_INFORMATION_ICON; TD_SHIELD_ICON.
-    // TaskDialogs support per monitor DPI aware version 2, but a MessageBox
-    // currently does not. TaskDialogs are not supported on Windows XP.
+    // TaskDialogs support per monitor DPI aware version 2 rendering, but a
+    // MessageBox currently does not. TaskDialogs are not supported on
+    // Windows XP.
     // Returns S_OK on success, otherwise returns E_OUTOFMEMORY, E_INVALIDARG,
     // or E_FAIL.
     inline HRESULT TaskDialogBox(HWND parent, LPCWSTR text, LPCWSTR caption,
@@ -186,10 +186,10 @@ namespace Win32xx
         tc.pszWindowTitle = caption;
         tc.pszMainInstruction = text;
         tc.pszMainIcon = iconType;
+        tc.dwFlags = TDF_POSITION_RELATIVE_TO_WINDOW;
 
         // Create the task dialog.
-        HRESULT result = ::TaskDialogIndirect(&tc, nullptr,
-            nullptr, nullptr);
+        HRESULT result = ::TaskDialogIndirect(&tc, nullptr, nullptr, nullptr);
 
         return result;
     }
@@ -576,15 +576,20 @@ namespace Win32xx
     // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
     inline void CTaskDialog::SetFooterIcon(LPCWSTR footerIcon)
     {
-        m_footerIconName = FillString(footerIcon);
-        m_tc.pszFooterIcon = m_footerIconName.c_str();
-        WPARAM wparam = static_cast<WPARAM>(TDIE_ICON_FOOTER);
-        LPARAM lparam = reinterpret_cast<LPARAM>(m_tc.pszFooterIcon);
-        TASKDIALOG_FLAGS flags = GetOptions();
-        SetOptions(flags & ~TDF_USE_HICON_FOOTER);
+        assert(footerIcon);
+        assert(IS_INTRESOURCE(footerIcon));
 
-        if (IsWindow())
-            SendMessage(TDM_UPDATE_ICON, wparam, lparam);
+        if (IS_INTRESOURCE(footerIcon))
+        {
+            m_tc.pszFooterIcon = footerIcon;
+            WPARAM wparam = static_cast<WPARAM>(TDIE_ICON_FOOTER);
+            LPARAM lparam = reinterpret_cast<LPARAM>(m_tc.pszFooterIcon);
+            TASKDIALOG_FLAGS flags = GetOptions();
+            SetOptions(flags & ~TDF_USE_HICON_FOOTER);
+
+            if (IsWindow())
+                SendMessage(TDM_UPDATE_ICON, wparam, lparam);
+        }
     }
 
     // Sets the text that will be displayed in the task dialog's footer.

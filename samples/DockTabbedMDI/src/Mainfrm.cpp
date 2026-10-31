@@ -135,6 +135,7 @@ DockPtr CMainFrame::NewDockerFromID(int dockID)
 BOOL CMainFrame::OnCloseDockers()
 {
     CloseAllDockers();
+    m_pActiveDocker = nullptr;
     return TRUE;
 }
 
@@ -195,9 +196,15 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
     default:
     {
-        // Pass the command on to the view of the active docker
-        return m_pActiveDocker->GetActiveView()->SendMessage(WM_COMMAND,
-            wparam, lparam) ? TRUE : FALSE;
+        if (m_pActiveDocker == nullptr)
+            return FALSE;
+
+        CWnd* view = m_pActiveDocker->GetActiveView();
+        if (view == nullptr || !view->IsWindow())
+            return FALSE;
+
+        // Pass the command on to the view of the active docker.
+        return view->SendMessage(WM_COMMAND, wparam, lparam) ? TRUE : FALSE;
     }
     }
 }
@@ -235,6 +242,7 @@ BOOL CMainFrame::OnDefaultLayout()
     SetRedraw(FALSE);
 
     CloseAllDockers();
+    m_pActiveDocker = nullptr;
     m_myTabbedMDI.CloseAllMDIChildren();
     LoadDefaultDockers();
     LoadDefaultMDIs();
