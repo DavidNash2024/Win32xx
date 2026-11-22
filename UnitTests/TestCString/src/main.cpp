@@ -3,7 +3,7 @@
 // main.cpp
 //
 
-#include "pch.h"
+#include "pch.h"      // includes the Win32++ library.
 #include "test.h"
 #include <iostream>
 

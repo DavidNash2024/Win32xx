@@ -95,6 +95,7 @@ static bool Test_Add()
     return allPassed;
 }
 
+// Test BSTR CStrings.
 static bool Test_AllocSysString()
 {
     CStringW strW(textW);
@@ -117,6 +118,7 @@ static bool Test_AllocSysString()
     return allPassed;
 }
 
+// Test CString AppendFormat.
 static bool Test_AppendFormat()
 {
     CStringA strA(textA);
@@ -137,6 +139,7 @@ static bool Test_AppendFormat()
     return allPassed;
 }
 
+// Test CString Assign.
 static bool Test_Assign()
 {
     LPCSTR textA1 = "0123456789\0abcdefghi";
@@ -181,6 +184,7 @@ static bool Test_Assign()
     return allPassed;
 }
 
+// Test efficient assignment from a large buffer.
 static bool Test_BigBuffer()
 {
     bool allPassed = true;
@@ -217,6 +221,7 @@ static bool Test_BigBuffer()
     return allPassed;
 }
 
+// Test CString GetBuffer and ReleaseBuffer (small size).
 static bool Test_Buffer()
 {
     CStringA strA;
@@ -283,6 +288,7 @@ static bool Test_Buffer()
     return allPassed;
 }
 
+// Test CString comparisons.
 static bool Test_Compare()
 {
     CStringA strA(textA);
@@ -328,6 +334,7 @@ static bool Test_Compare()
     return allPassed;
 }
 
+// Test the various CString construct methods.
 static bool Test_Construct()
 {
     CStringA str1("test");
@@ -376,6 +383,7 @@ static bool Test_Construct()
     return allPassed;
 }
 
+// Test the deletion of characters from a CString
 static bool Test_Delete()
 {
     LPCWSTR text = L"Some Text";
@@ -439,6 +447,7 @@ static bool Test_Equal()
     return allPassed;
 }
 
+// Test the various CString find methods.
 static bool Test_Find()
 {
     CStringA strA(textA);
@@ -471,6 +480,7 @@ static bool Test_Find()
 
     return allPassed;
 }
+
 static bool Test_Format()
 {
     CStringA strA;
@@ -671,6 +681,7 @@ static bool Test_Remove()
     return allPassed;
 }
 
+// Test CString SpanIncluding and SpanExcluding.
 static bool Test_Span()
 {
     const CStringA strA(textA);
@@ -698,6 +709,7 @@ static bool Test_Span()
     return allPassed;
 }
 
+// Test conversions between std::string and CString.
 static bool Test_Std_String()
 {
     constexpr int stringLength = 10;
@@ -749,6 +761,7 @@ static bool Test_Std_String()
     return allPassed;
 }
 
+// Test the CString stream operator (<<).
 static bool Test_Stream()
 {
     bool allPassed = true;
@@ -818,6 +831,7 @@ static bool Test_Stream()
     return allPassed;
 }
 
+// Test the CString tokenization.
 static bool Test_Tokenize()
 {
     CStringA strA("%First Second#Third");
@@ -867,6 +881,7 @@ static bool Test_Tokenize()
     return allPassed;
 }
 
+// Test the various CString Trim methods.
 static bool Test_Trim()
 {
     LPCSTR text = "    abcdef    ";
@@ -915,7 +930,7 @@ static bool Test_Truncate()
     return allPassed;
 }
 
-
+// Test the loading of a CString from a string resource defined in the resource script (resource.rc).
 static bool Test_WindowText()
 {
     CStringA strA("TestCString");
@@ -926,7 +941,7 @@ static bool Test_WindowText()
     CStringW testW;
     CString test;
 
-    // The rescource.rc file must be added to the project for LoadString to work.
+    // The resource.rc file must be added to the project for LoadString to work.
     testA.LoadString(IDW_MAIN);
     testW.LoadString(IDW_MAIN);
     test.LoadString(IDW_MAIN);
@@ -954,6 +969,7 @@ static bool Test_WindowText()
     return allPassed;
 }
 
+// Run all the tests and display Passed or Failed.
 void RunTests()
 {
     using std::cout;
