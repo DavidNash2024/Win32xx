@@ -17,6 +17,8 @@ public:
     CApp() = default;
     virtual ~CApp() override = default;
 
+    CString GetAppFileName();
+
 protected:
     virtual BOOL    InitInstance() override;
     virtual BOOL    OnIdle(LONG) override;

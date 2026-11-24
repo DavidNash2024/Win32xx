@@ -14,11 +14,14 @@
 //#define NO_USING_NAMESPACE        // Don't use Win32xx namespace
 
 // Rarely modified header files should be included here
-#include <vector>               // Add support for std::vector
+#include <cassert>              // Add support for the assert macro
+#include <filesystem>           // Add support for file paths, directories, and regular files
+#include <fstream>              // Add support for std::fstream, std::ifstream, std::ofstream
 #include <map>                  // Add support for std::map
 #include <string>               // Add support for std::string
 #include <sstream>              // Add support for stringstream
-#include <cassert>              // Add support for the assert macro
+#include <vector>               // Add support for std::vector
+
 #include <stdio.h>              // Add support for C style printf, sprintf, etc.
 #include <stdlib.h>             // Add support for C style character conversions atoi etc.
 #include <tchar.h>              // Add support for C style TCHARs.
@@ -80,3 +83,4 @@
   #endif
 
 #endif  // define WIN32_LEAN_AND_MEAN
+

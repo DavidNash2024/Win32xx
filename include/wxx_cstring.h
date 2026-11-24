@@ -204,6 +204,7 @@ namespace Win32xx
         void     FormatMessageV(const T* format, va_list args);
         T        GetAt(int index) const;
         T*       GetBuffer(int minBufLength);
+        T*       GetBuffer();
         bool     GetEnvironmentVariable(const T* var);
         void     GetErrorString(DWORD error);
         void     GetWindowText(HWND wnd);
@@ -880,6 +881,14 @@ namespace Win32xx
         if (minBufLength < 0) minBufLength = 0;
 
         m_str.resize(static_cast<size_t>(minBufLength) + 1);
+        return m_str.data();
+    }
+
+    // Returns a pointer to the currently allocated internal buffer of the
+    // CString object. The size of the buffer is left unchanged.
+    template <class T>
+    inline T* CStringT<T>::GetBuffer()
+    {
         return m_str.data();
     }
 

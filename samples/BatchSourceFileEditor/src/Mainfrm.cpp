@@ -593,8 +593,8 @@ bool CMainFrame::PickFolder(const CString& startFolder)
 void CMainFrame::ReadFile(const CString& fileName)
 {
     m_fileContents.clear();
-    CFile file(fileName, OPEN_EXISTING);
-    ULONGLONG fileSize = file.GetLength();
+    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    auto fileSize = file.tellg();
 
     if (fileSize == 0)
         throw CUserException(L"Invalid source file (empty)");
@@ -605,8 +605,11 @@ void CMainFrame::ReadFile(const CString& fileName)
 
     // Read the file into a vector of char.
     std::vector<char> buffer(static_cast<size_t>(fileSize));
-    file.Read(buffer.data(), static_cast<UINT>(fileSize));
-    file.Close();
+    file.seekg(0, std::ios::beg); // Rewind to the beginning before reading
+    if (!file.read(buffer.data(), fileSize))
+        throw CFileException(fileName, L"Failed to read file contents");
+        
+    file.close();
 
     // Estimate line count to minimize vector reallocations (approx 40 chars/line)
     m_fileContents.reserve(buffer.size() / 40);
@@ -696,18 +699,18 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Writes the contents of m_fileContents to the specified file.
 void CMainFrame::WriteFile(const CString& fileName)
 {
-    CFile file(fileName, CREATE_ALWAYS);  // Truncates existing file to zero.
+    std::ofstream file(fileName, std::ios::binary);
 
-    // Write each line of text to the file.
+    // Write each line of text to the file.     
     bool first = true;
     for (const auto& line : m_fileContents)
     {
         if (!first)
-            file.Write("\r\n", 2);
+            file.write("\r\n", 2);
 
         first = false;
-        file.Write(line.c_str(), line.GetLength());
+        file.write(line.c_str(), line.GetLength());
     }
 
-    file.Close();
+    file.close();
 }

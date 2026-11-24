@@ -14,11 +14,14 @@
 //#define NO_USING_NAMESPACE        // Don't use Win32xx namespace
 
 // Rarely modified header files should be included here
-#include <vector>               // Add support for std::vector
+#include <cassert>              // Add support for the assert macro
+#include <filesystem>           // Add support for file paths, directories, and regular files
+#include <fstream>              // Add support for std::fstream, std::ifstream, std::ofstream
 #include <map>                  // Add support for std::map
 #include <string>               // Add support for std::string
 #include <sstream>              // Add support for stringstream
-#include <cassert>              // Add support for the assert macro
+#include <vector>               // Add support for std::vector
+
 #include <stdio.h>              // Add support for C style printf, sprintf, etc.
 #include <stdlib.h>             // Add support for C style character conversions atoi etc.
 #include <tchar.h>              // Add support for C style TCHARs.
@@ -34,7 +37,6 @@
 #include <wxx_dockframe.h>      // Add CDockFrame, CMDIDockFrame
 #include <wxx_docking.h>        // Add CDocker, CDockContainer
 #include <wxx_exception.h>      // Add CException, CFileException, CNotSupportedException, CResourceException, CUserException, CWinException
-#include <wxx_file.h>           // Add CFile
 #include <wxx_filefind.h>       // Add CFileFind
 #include <wxx_folderdialog.h>   // Add CFolderDialog
 #include <wxx_frame.h>          // Add CFrame

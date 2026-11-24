@@ -12,19 +12,40 @@
 // App function definitions.
 //
 
+// Retrieve this application's file name.
+CString CApp::GetAppFileName()
+{
+    CString path;
+    DWORD size = MAX_PATH; // Initial buffer size.
+
+    while (true)
+    {
+        LPTSTR buffer = path.GetBuffer(size);
+        DWORD length = ::GetModuleFileName(nullptr, buffer, size);
+        path.ReleaseBuffer(length);
+
+        if (length == 0)
+            return _T(""); // Call failed.
+
+        if (length < size)
+            break; // Buffer size OK. Call succeeded.
+
+        size *= 2; // Buffer was too small, double it and try again.
+    }
+
+    // Strip the folder path from the file name.
+    int slashIndex = path.ReverseFind(_T('\\'));
+    CString fileName = (slashIndex != -1) ? path.Mid(slashIndex + 1) : path;
+    return fileName;
+}
+
 // This method creates the frame, performs initialization of the app and
 // returns TRUE on success. Returning FALSE terminates the program.
 BOOL CApp::InitInstance()
 {
     // Initialize data strings containing the AboutBox information, the
     // app path, the app directory, the app name, and the archive path.
-    CString appName;
-    ::GetModuleFileName(nullptr, appName.GetBuffer(FILENAME_MAX), FILENAME_MAX);
-    appName.ReleaseBuffer();
-
-    CFile f; // No file opened here, just used for GetFileNameWOExt.
-    f.SetFilePath(appName);
-    appName  = f.GetFileNameWOExt();
+    CString appName = GetAppFileName();
     m_frame.SetDocExt(LoadString(IDS_DOC_DEFAULT_EXT));
     m_frame.SetDocFilter(LoadString(IDS_FILE_FILTER));
 
@@ -51,7 +72,7 @@ BOOL CApp::InitInstance()
 
     // Generate the About Box text.
     CString aboutBoxInfo;
-    aboutBoxInfo.Format(L"%s\n\n(%s.exe)\n%s\n%s\ncompiled with "
+    aboutBoxInfo.Format(L"%s\n\n(%s)\n%s\n%s\ncompiled with "
         L"%s\nbuild date: %s", LoadString(IDW_MAIN).c_str(), appName.c_str(),
         LoadString(IDS_APP_VERSION).c_str(), Win32xxVersion.c_str(),
         compiler.c_str(), compileDate.c_str());
